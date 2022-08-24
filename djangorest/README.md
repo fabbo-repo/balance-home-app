@@ -43,6 +43,10 @@ djangorest/
 
 ## Useful commands
 
+* Install project requirements:
+~~~
+pip install -r requirements.txt
+~~~
 * For the project creation it was used:
 ~~~
 django-admin startproject core
