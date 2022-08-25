@@ -1,2 +1,6 @@
 django==4.1
 djangorestframework==3.13.1
+django-configurations==2.3.2
+dj-database-url==1.0.0
+django-filter==22.1
+drf-yasg==1.21.3
