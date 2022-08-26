@@ -87,3 +87,21 @@ python manage.py dumpdata > db.json
 ~~~
 python manage.py loaddata db.json
 ~~~
+* Launch testing:
+~~~
+python manage.py test
+~~~
+
+## Environment Variables:
+
+* APP_DOMAIN
+* APP_PORT
+* DEBUG
+* TIME_ZONE
+* SECRET_KEY
+* ALLOWED_HOSTS
+* PG_USER
+* PG_PASSWORD
+* PG_DOMAIN
+* PG_PORT
+* PG_DB_NAME
