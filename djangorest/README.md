@@ -7,6 +7,10 @@ djangorest/
     │   │   └── ... (This is optional)
     │   ├── migrations/
     │   │   └── ...
+    |   ├── tests/
+    |   │   ├── __init__.py
+    |   │   ├── tests_1.py
+    |   │   └── ...
     │   ├── __init__.py
     │   ├── views.py
     │   ├── tasks.py
@@ -24,6 +28,13 @@ djangorest/
     │   ├── client.py
     │   └── django_client.py
     ├── core/
+    |   ├── tests/
+    |   │   ├── __init__.py
+    |   │   ├── tests_settings.py
+    |   │   └── ...
+    |   ├── swagger/
+    |   │   ├── __init__.py
+    |   │   └── urls.py
     │   ├── __init__.py
     │   ├── asgi.py
     │   ├── celery.py
@@ -32,10 +43,6 @@ djangorest/
     │   └── wsgi.py
     ├── templates/
     │   └── ... (This is optional)
-    ├── tests/
-    │   ├── __init__.py
-    │   ├── tests_app_1.py
-    │   └── ...
     ├── manage.py
     └── db.sqlite3
 ~~~
