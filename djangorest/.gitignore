@@ -103,4 +103,4 @@ GitHub.sublime-settings
 .history
 
 # Sqlite 
-.sqlite3
+*.sqlite3
