@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MinLengthValidator
 
 class BalanceUserManager(UserManager):
 
@@ -51,8 +51,16 @@ class User(AbstractUser):
     verified = models.BooleanField(
         default=False
     )
+    # Last code sent for email verification, 
+    # length is 6 characters 
+    code_sent = models.CharField(
+        validators=[MinLengthValidator(6)],
+        max_length=6,
+        blank=True,
+        null=True
+    )
     # Date of the last code sent
-    code_sent = models.DateTimeField(
+    date_code_sent = models.DateTimeField(
         blank=True,
         null=True
     )
