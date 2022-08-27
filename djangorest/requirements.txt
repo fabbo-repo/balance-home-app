@@ -5,5 +5,5 @@ dj-database-url==1.0.0
 django-configurations[cache,database,email,search]==2.3.2
 django-filter==22.1
 drf-yasg==1.21.3
+djangorestframework-simplejwt==5.2.0
 PyJWT==2.4.0
-djoser==2.1.0

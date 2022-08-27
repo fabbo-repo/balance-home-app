@@ -58,7 +58,6 @@ class Dev(Configuration):
         'django.contrib.staticfiles',
         'rest_framework',
         'django_filters',
-        'djoser',
         'drf_yasg',
         # Custom apps:
         'custom_auth'
