@@ -58,6 +58,7 @@ class Dev(Configuration):
         'django.contrib.staticfiles',
         'rest_framework',
         'django_filters',
+        'djoser',
         'drf_yasg',
         # Custom apps:
         'custom_auth'
@@ -199,6 +200,8 @@ class Dev(Configuration):
             },
         }
     }
+
+    AUTH_USER_MODEL = "custom_auth.User"
 
 class Prod(Dev):
     DEBUG = False
