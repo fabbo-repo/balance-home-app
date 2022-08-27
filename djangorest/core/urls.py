@@ -15,14 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from core.swagger import urls as swagger_urls
 from django.conf import settings
+from core.swagger import urls as swagger_urls
+from custom_auth import urls as auth_urls
 
 urlpatterns = [
     path('api/v1/admin/', admin.site.urls),
-    path("api/v1/jwt/", TokenObtainPairView.as_view(), name="jwt_obtain_pair"),
-    path("api/v1/jwt/refresh/", TokenRefreshView.as_view(), name="jwt_refresh"),
+    # Auth app urls:
+    path("api/v1/", include(auth_urls)),
 ]
 
 # Swagger will only be available in DEBUG mode

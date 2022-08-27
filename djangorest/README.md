@@ -16,6 +16,7 @@ djangorest/
     │   ├── tasks.py
     │   ├── signals.py
     │   ├── models.py
+    │   ├── serializers.py
     │   ├── notifications.py
     │   ├── apps.py
     │   └── admin.py

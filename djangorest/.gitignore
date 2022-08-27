@@ -1,5 +1,3 @@
-
-
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
@@ -103,3 +101,6 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+# Sqlite 
+.sqlite3

@@ -58,7 +58,9 @@ class Dev(Configuration):
         'django.contrib.staticfiles',
         'rest_framework',
         'django_filters',
-        'drf_yasg'
+        'drf_yasg',
+        # Custom apps:
+        'custom_auth'
     ]
 
     MIDDLEWARE = [
