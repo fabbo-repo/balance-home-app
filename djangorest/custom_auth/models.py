@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator, MinLengthValidator
+from django.core.exceptions import ValidationError
 
 class BalanceUserManager(UserManager):
 
@@ -9,7 +10,9 @@ class BalanceUserManager(UserManager):
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         if not email:
-            raise ValueError("The given email must be set")
+            raise ValueError(_("The given email must be set."))
+        if not username:
+            raise ValueError(_("The given username must be set."))
         return self._create_user(username, email, password, **extra_fields)
 
     def create_superuser(self, username, email, password, **extra_fields):
@@ -17,12 +20,14 @@ class BalanceUserManager(UserManager):
         extra_fields.setdefault("is_superuser", True)
 
         if extra_fields.get("is_staff") is not True:
-            raise ValueError("Superuser must have is_staff=True.")
+            raise ValueError(_("Superuser must have is_staff=True."))
         if extra_fields.get("is_superuser") is not True:
-            raise ValueError("Superuser must have is_superuser=True.")
+            raise ValueError(_("Superuser must have is_superuser=True."))
 
         if not email:
-            raise ValueError("The given email must be set")
+            raise ValueError(_("The given email must be set."))
+        if not username:
+            raise ValueError(_("The given username must be set."))
         return self._create_user(username, email, password, **extra_fields)
 
 
@@ -71,3 +76,8 @@ class User(AbstractUser):
     
     def __str__(self):
         return self.email
+
+    def clean(self):
+        if self.username == self.password or self.email == self.password:
+            raise ValidationError(
+                {'password': "Password field can not match another attribute."})

@@ -1,5 +1,6 @@
 from rest_framework.test import APITestCase
 from custom_auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 class TestModel(APITestCase):
     def setUp(self):
@@ -10,17 +11,17 @@ class TestModel(APITestCase):
         }
         return super().setUp()
     
-    def register_user(self):
+    def create_user(self):
         return User.objects.create_user(**self.user_data)
 
-    def register_super_user(self):
+    def create_super_user(self):
         return User.objects.create_superuser(**self.user_data)
 
     """
     Checks if User is created  as norma user
     """
     def test_creates_user(self):
-        user = self.register_user()
+        user = self.create_user()
         self.assertEqual(user.username, "username")
         self.assertFalse(user.is_staff)
         self.assertFalse(user.is_superuser)
@@ -29,7 +30,7 @@ class TestModel(APITestCase):
     Checks if User is created as super user
     """
     def test_creates_super_user(self):
-        user = self.register_super_user()
+        user = self.create_super_user()
         self.assertEqual(user.username, "username")
         self.assertEqual(user.is_staff, True)
         self.assertEqual(user.is_superuser, True)
@@ -62,9 +63,7 @@ class TestModel(APITestCase):
             is_superuser=False,
             **self.user_data
         )
-        with self.assertRaisesMessage(
-            ValueError, 
-            'Superuser must have is_superuser=True.'):
+        with self.assertRaisesMessage(ValueError, 'Superuser must have is_superuser=True.'):
             User.objects.create_superuser(
                 is_superuser=False,
                 **self.user_data
@@ -82,7 +81,7 @@ class TestModel(APITestCase):
             password=self.user_data['password'],
             username=""
         )
-        with self.assertRaisesMessage(ValueError, 'The given username must be set'):
+        with self.assertRaisesMessage(ValueError, 'The given username must be set.'):
             User.objects.create_user(
                 email=self.user_data['email'],
                 password=self.user_data['password'],
@@ -101,7 +100,7 @@ class TestModel(APITestCase):
             password=self.user_data['password'],
             username=self.user_data['username']
         )
-        with self.assertRaisesMessage(ValueError, 'The given email must be set'):
+        with self.assertRaisesMessage(ValueError, 'The given email must be set.'):
             User.objects.create_user(
                 email='',
                 password=self.user_data['password'],
