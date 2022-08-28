@@ -3,7 +3,20 @@ from custom_auth.models import InvitationCode, User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.db import transaction
 
+
+"""
+Race condition at usage left update in an InvitationCode
+"""
+@transaction.atomic()
+def decrease_inv_code_usage(code):
+    sid = transaction.savepoint()
+    inv_code = code #InvitationCode.objects.select_for_update().get(code=code)
+    inv_code.usage_left -= 1
+    if inv_code.usage_left <= 0: inv_code.is_active = False
+    inv_code.save()
+    transaction.savepoint_commit(sid)
 
 class RegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
@@ -16,7 +29,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     )
     inv_code = serializers.SlugRelatedField(
         required=True,
-        slug_field="code", many=True,
+        slug_field="code", many=False,
         queryset=InvitationCode.objects.all()
     )
     password = serializers.CharField(
@@ -46,15 +59,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
 
     def validate_inv_code(self, value):
+        inv_code = None
         try:
-            InvitationCode.objects.get(code=value[0].code)
+            inv_code = InvitationCode.objects.get(code=value.code)
         except IndexError:
-            raise serializers.ValidationError("None inv_code provided")
+            raise serializers.ValidationError("None InvitationCode provided")
         except:
-            raise serializers.ValidationError("domain must be example.com")
-        #if domain != "example.com":
-        #    raise serializers.ValidationError("domain must be
-        #example.com")
+            raise serializers.ValidationError("InvitationCode not found")
+        if not inv_code.is_active:
+            raise serializers.ValidationError("Invalid InvitationCode")
         return value
 
     def validate(self, attrs):
@@ -65,11 +78,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        inv_code = validated_data['inv_code']
         user = User.objects.create(
             username=validated_data['username'],
             email=validated_data['email'],
+            inv_code=inv_code
         )
         user.set_password(validated_data['password'])
+        decrease_inv_code_usage(inv_code)
         user.save()
         return user
 
@@ -78,6 +94,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     @classmethod
     def get_token(cls, user):
+        if not user.inv_code:
+            raise serializers.ValidationError({"inv_code": "No InvitationCode stored"})
         if not user.verified:
             raise serializers.ValidationError({"verified": "Email is not verified"})
         token = super(CustomTokenObtainPairSerializer, cls).get_token(user)
