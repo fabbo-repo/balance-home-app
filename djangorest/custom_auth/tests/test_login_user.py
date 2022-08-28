@@ -1,3 +1,42 @@
+from rest_framework.test import APITestCase
+from rest_framework import status
+from django.urls import reverse
+from custom_auth.models import User
+import logging
+
+class LoginTests(APITestCase):
+    def setUp(self):
+        # Avoid WARNING logs while testing wrong requests 
+        logging.disable(logging.WARNING)
+
+        self.jwt_obtain_url=reverse('jwt_obtain_pair')
+        self.jwt_refresh_url=reverse('jwt_refresh')
+
+        self.user_data={
+            'username':"username",
+            'email':"email@test.com",
+            "password": "password1@212",
+            "password2": "password1@212"
+        }
+        # Register User:
+        self.client.post(
+            reverse('register'),
+            self.user_data
+        )
+        return super().setUp()
+
+
+    """
+    Checks that an unverified user should not be able to login
+    """
+    def test_login_unverified_user(self):
+        response=self.client.post(
+            self.jwt_obtain_url,
+            self.user_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
 
 """
 * Must try login an inactive user

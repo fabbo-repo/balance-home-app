@@ -7,3 +7,4 @@ django-filter==22.1
 drf-yasg==1.21.3
 djangorestframework-simplejwt==5.2.0
 PyJWT==2.4.0
+Pillow==9.2.0

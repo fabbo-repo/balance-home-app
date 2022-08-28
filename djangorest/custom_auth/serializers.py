@@ -2,6 +2,7 @@ from rest_framework import serializers
 from custom_auth.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -35,10 +36,8 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username',
-            'email',
-            'password',
-            'password2',
+            'username', 'email',
+            'password', 'password2',
         )
 
     def validate(self, attrs):
@@ -56,3 +55,17 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    @classmethod
+    def get_token(cls, user):
+        if not user.verified:
+            raise serializers.ValidationError({"verified": "Email is not verified"})
+        token = super(CustomTokenObtainPairSerializer, cls).get_token(user)
+
+        # Custom keys added in PAYLOAD
+        token['username'] = user.username
+        token['email'] = user.email
+        return token

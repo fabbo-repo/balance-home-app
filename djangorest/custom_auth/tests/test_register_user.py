@@ -4,13 +4,11 @@ from django.urls import reverse
 from custom_auth.models import User
 import logging
 
-class TestViews(APITestCase):
+class RegisterTests(APITestCase):
     def setUp(self):
         # Avoid WARNING logs while testing wrong requests 
         logging.disable(logging.WARNING)
 
-        self.jwt_obtain_url=reverse('jwt_obtain_pair')
-        self.jwt_refresh_url=reverse('jwt_refresh')
         self.register_url=reverse('register')
 
         self.user_data={
@@ -20,9 +18,6 @@ class TestViews(APITestCase):
             "password2": "password1@212"
         }
         return super().setUp()
-    
-    def create_user(self):
-        return User.objects.create_user(**self.user_data)
 
 
     """

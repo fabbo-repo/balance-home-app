@@ -31,6 +31,10 @@ class BalanceUserManager(UserManager):
         return self._create_user(username, email, password, **extra_fields)
 
 
+def _image_user_dir(instance, filename):
+    # File will be uploaded to MEDIA_ROOT / user_<id>/<filename>
+    return 'user_{0}/{1}'.format(instance.id, filename)
+
 class User(AbstractUser):
     # Fields to iggnore in db form default User model:
     first_name = None
@@ -39,6 +43,11 @@ class User(AbstractUser):
     email = models.EmailField(
         _("email address"),
         unique=True,
+    )
+    # Profile image
+    image = models.ImageField(
+        upload_to=_image_user_dir, 
+        default='users/default_user.jpg'
     )
     # Expected annual balance at the end of a year, 
     # subtracted with the actual balance of each year

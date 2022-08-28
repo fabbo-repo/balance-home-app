@@ -44,6 +44,10 @@ djangorest/
     │   └── wsgi.py
     ├── templates/
     │   └── ... (This is optional)
+    ├── media/
+    │   └── ... (This is optional)
+    ├── static/
+    │   └── ... (This is optional)
     ├── manage.py
     └── db.sqlite3
 ~~~

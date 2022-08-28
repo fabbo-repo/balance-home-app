@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from core.swagger import urls as swagger_urls
 from custom_auth import urls as auth_urls
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('api/v1/admin/', admin.site.urls),
@@ -30,3 +31,7 @@ if settings.DEBUG:
     urlpatterns += [
         path("api/v1/swagger/", include(swagger_urls)),
     ]
+    urlpatterns += static(
+        settings.MEDIA_URL, 
+        document_root=settings.MEDIA_ROOT
+    )
