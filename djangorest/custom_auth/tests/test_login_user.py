@@ -47,6 +47,35 @@ class LoginTests(APITestCase):
         self.assertIn('verified', response.data)
 
     """
+    Checks that an inactive user should not be able to login
+    """
+    def test_login_inactive_user(self):
+        user=User.objects.get(email=self.user_data['email'])
+        user.is_active=False
+        user.save()
+        response=self.client.post(
+            self.jwt_obtain_url,
+            self.credentials
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.data['detail'], 'No active account found with the given credentials')
+
+    """
+    Checks that an nonexistent user should not be able to login
+    """
+    def test_login_nonexistent_user(self):
+        credentials2 = {
+            'email':"none@none.com",
+            "password": "password1@212"
+        }
+        response=self.client.post(
+            self.jwt_obtain_url,
+            credentials2
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.data['detail'], 'No active account found with the given credentials')
+
+    """
     Checks that an user without inv_code should not be able to login
     """
     def test_login_user_without_inv_code(self):
@@ -55,35 +84,23 @@ class LoginTests(APITestCase):
             'email':"email2@test.com",
             "password": "password1@212",
         }
+        user = User.objects.create_user(**user_data2)
+        user.set_password(user_data2['password'])
+        user.save()
         credentials2={
             'email':"email2@test.com",
             "password": "password1@212",
         }
-        print(User.objects.create(**user_data2))
         response=self.client.post(
             self.jwt_obtain_url,
             credentials2
         )
-        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('inv_code', response.data)
 
 
 """
-* Must try login an inactive user
-* Must try login an inexistant user
-* Must try login an unverified user
 * Must try send wrong email code
 * Must try send invalid code
 * Must try resend code
-
-    def test_logins_user(self):
-        user=self.register_user()
-        response=self.client.post(self.login_url, {'email':user.email,'password':self.user_data['password']})
-        self.assertEqual(response.status_code,status.HTTP_200_OK)
-        self.assertIsInstance(response.data['token'],str)
-
-    def test_gives_descriptive_errors_on_login(self):
-        response=self.client.post(self.login_url, {'email':'test@site.com','password':self.user_data['password']})
-        self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
         """

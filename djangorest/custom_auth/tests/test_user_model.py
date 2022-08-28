@@ -12,10 +12,16 @@ class UserTests(APITestCase):
         return super().setUp()
     
     def create_user(self):
-        return User.objects.create_user(**self.user_data)
+        user = User.objects.create_user(**self.user_data)
+        user.set_password(self.user_data['password'])
+        user.save()
+        return user
 
     def create_super_user(self):
-        return User.objects.create_superuser(**self.user_data)
+        user = User.objects.create_superuser(**self.user_data)
+        user.set_password(self.user_data['password'])
+        user.save()
+        return user
 
     """
     Checks if User is created  as norma user
