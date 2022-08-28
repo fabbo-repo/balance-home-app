@@ -1,9 +1,13 @@
 from django.contrib import admin
-from custom_auth.models import User
+from custom_auth.models import InvitationCode, User
 from django.contrib.auth.models import Group
 
 # Remove Groups from admin
 admin.site.unregister(Group)
+
+@admin.register(InvitationCode)
+class InvitationCodeAdmin(admin.ModelAdmin):
+    readonly_fields = ('created', 'updated')
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -11,11 +15,16 @@ class UserAdmin(admin.ModelAdmin):
         'username', 
         'email',
         'image',
+        'inv_code',
         ('last_login', 'date_joined'),
         ('is_superuser', 'is_staff',),
         ('verified', 'is_active',),
         ('code_sent', 'date_code_sent',),
         ('annual_balance', 'monthly_balance')
+    )
+    readonly_fields = (
+        'last_login', 'date_joined', 
+        'code_sent', 'date_code_sent'
     )
     list_display = (
         'email', 

@@ -1,8 +1,29 @@
+import uuid
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator, MinLengthValidator
 from django.core.exceptions import ValidationError
+
+
+class InvitationCode(models.Model):
+    code = models.UUIDField(
+        primary_key=True, 
+        default=uuid.uuid4,
+        editable=False
+    )
+    usage_left = models.PositiveIntegerField(default=1)
+    is_active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'InvitationCode'
+        verbose_name_plural = 'InvitationCodes'
+    
+    def __str__(self) -> str:
+        return "CODE="+str(self.code)
+
 
 class BalanceUserManager(UserManager):
 
@@ -40,6 +61,9 @@ class User(AbstractUser):
     first_name = None
     last_name = None
 
+    # Change default id to uuid will make 
+    # an enumeration attack more difficult
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(
         _("email address"),
         unique=True,
@@ -48,6 +72,11 @@ class User(AbstractUser):
     image = models.ImageField(
         upload_to=_image_user_dir, 
         default='users/default_user.jpg'
+    )
+    inv_code = models.ForeignKey(
+        InvitationCode, on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True
     )
     # Expected annual balance at the end of a year, 
     # subtracted with the actual balance of each year

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from custom_auth.models import User
+from custom_auth.models import InvitationCode, User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -13,6 +13,11 @@ class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    inv_code = serializers.SlugRelatedField(
+        required=True,
+        slug_field="code", many=True,
+        queryset=InvitationCode.objects.all()
     )
     password = serializers.CharField(
         write_only=True,
@@ -36,9 +41,21 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username', 'email',
+            'username', 'email', 'inv_code',
             'password', 'password2',
         )
+
+    def validate_inv_code(self, value):
+        try:
+            InvitationCode.objects.get(code=value[0].code)
+        except IndexError:
+            raise serializers.ValidationError("None inv_code provided")
+        except:
+            raise serializers.ValidationError("domain must be example.com")
+        #if domain != "example.com":
+        #    raise serializers.ValidationError("domain must be
+        #example.com")
+        return value
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:

@@ -1,7 +1,8 @@
+import uuid
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
-from custom_auth.models import User
+from custom_auth.models import User, InvitationCode
 import logging
 
 class RegisterTests(APITestCase):
@@ -11,11 +12,16 @@ class RegisterTests(APITestCase):
 
         self.register_url=reverse('register')
 
+        # Create InvitationCode
+        inv_code = InvitationCode.objects.create()
+        inv_code.save()
+        # Test user data
         self.user_data={
             'username':"username",
             'email':"email@test.com",
             "password": "password1@212",
-            "password2": "password1@212"
+            "password2": "password1@212",
+            'inv_code': inv_code.code
         }
         return super().setUp()
 
@@ -85,6 +91,39 @@ class RegisterTests(APITestCase):
         self.assertIn('password2', response.data)
     
     """
+    Checks that an user with no inv_code is not created
+    """
+    def test_wrong_inv_code(self):
+        response=self.client.post(
+            self.register_url,
+            {
+                'inv_cod': str(uuid.uuid4()),
+                'username': self.user_data['username'],
+                'email': self.user_data['email'],
+                "password": self.user_data['password'],
+                "password2": self.user_data['password2']
+            }
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('inv_code', response.data)
+   
+    """
+    Checks that an user with no inv_code is not created
+    """
+    def test_none_inv_code(self):
+        response=self.client.post(
+            self.register_url,
+            {
+                'username': self.user_data['username'],
+                'email': self.user_data['email'],
+                "password": self.user_data['password'],
+                "password2": self.user_data['password2']
+            }
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('inv_code', response.data)
+   
+    """
     Checks that an user with no email is not created
     """
     def test_none_email(self):
@@ -92,6 +131,7 @@ class RegisterTests(APITestCase):
             self.register_url,
             {
                 'username': self.user_data['username'],
+                'inv_code': self.user_data['inv_code'],
                 "password": self.user_data['password'],
                 "password2": self.user_data['password2']
             }
@@ -107,6 +147,7 @@ class RegisterTests(APITestCase):
             self.register_url,
             {
                 'email': self.user_data['email'],
+                'inv_code': self.user_data['inv_code'],
                 "password": self.user_data['password'],
                 "password2": self.user_data['password2']
             }
@@ -123,6 +164,7 @@ class RegisterTests(APITestCase):
             {
                 'username': self.user_data['username'],
                 'email': self.user_data['email'],
+                'inv_code': self.user_data['inv_code'],
                 "password": self.user_data['password'],
                 "password2": 'pass12'
             }
