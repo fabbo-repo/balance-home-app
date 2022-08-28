@@ -20,7 +20,7 @@ def decrease_inv_code_usage(code):
 
 class RegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
-        required=True,
+        required=True, max_length=15,
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
     email = serializers.EmailField(
