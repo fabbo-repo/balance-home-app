@@ -104,6 +104,3 @@ GitHub.sublime-settings
 
 # Sqlite 
 *.sqlite3
-
-# Media files
-*/media/user*
