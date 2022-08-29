@@ -7,11 +7,17 @@ admin.site.unregister(Group)
 
 @admin.register(InvitationCode)
 class InvitationCodeAdmin(admin.ModelAdmin):
+    list_display = (
+        'code', 
+        'usage_left',
+        'is_active',
+    )
     readonly_fields = ('created', 'updated')
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     fields = (
+        'id',
         'username', 
         'email',
         'image',
@@ -23,7 +29,7 @@ class UserAdmin(admin.ModelAdmin):
         ('annual_balance', 'monthly_balance')
     )
     readonly_fields = (
-        'last_login', 'date_joined', 
+        'id', 'last_login', 'date_joined', 
         'code_sent', 'date_code_sent'
     )
     list_display = (
@@ -31,6 +37,7 @@ class UserAdmin(admin.ModelAdmin):
         'username',
         'last_login',
         'is_active',
+        'verified',
         'code_sent',
         'date_code_sent',
     )

@@ -103,6 +103,11 @@ python manage.py loaddata db.json
 ~~~
 python manage.py test
 ~~~
+* Launch celery for development:
+~~~
+celery -A core worker -l INFO -P eventlet
+~~~
+> ***redis*** must be launched too
 
 ## Environment Variables:
 
@@ -122,3 +127,5 @@ python manage.py test
 * EMAIL_HOST_USER
 * EMAIL_HOST_PASSWORD
 * CELERY_BROKER_URL
+* EMAIL_CODE_THRESHOLD
+* EMAIL_CODE_VALID

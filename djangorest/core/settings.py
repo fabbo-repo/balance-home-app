@@ -213,6 +213,11 @@ class Dev(Configuration):
     CELERY_RESULT_BACKEND = "django-db"
     CELERY_BROKER_URL = "redis://localhost:6379/0"
 
+    # Time to wait for a new email verification code generation 
+    EMAIL_CODE_THRESHOLD = values.PositiveIntegerValue(120)
+    # Email verification code validity duration
+    EMAIL_CODE_VALID = values.PositiveIntegerValue(120)
+
 class Prod(Dev):
     DEBUG = False
     APP_DOMAIN = str(values.Value('127.0.0.1'))

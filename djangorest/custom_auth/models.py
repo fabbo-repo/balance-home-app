@@ -22,7 +22,7 @@ class InvitationCode(models.Model):
         verbose_name_plural = 'InvitationCodes'
     
     def __str__(self) -> str:
-        return "CODE="+str(self.code)
+        return str(self.code)
 
 
 class BalanceUserManager(UserManager):

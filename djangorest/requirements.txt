@@ -12,3 +12,4 @@ celery==5.2.7
 django-celery-results==2.4.0
 django-celery-beat==2.3.0
 redis==4.3.4
+eventlet==0.33.1

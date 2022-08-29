@@ -9,7 +9,7 @@ class RegisterTests(APITestCase):
         # Avoid WARNING logs while testing wrong requests 
         logging.disable(logging.WARNING)
 
-        self.register_url=reverse('register')
+        self.register_url=reverse('user_post')
 
         # Create InvitationCode
         self.inv_code = InvitationCode.objects.create()
