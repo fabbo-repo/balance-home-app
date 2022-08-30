@@ -1,4 +1,5 @@
 import time
+import json
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
@@ -11,6 +12,7 @@ class LoginTests(APITestCase):
         # Avoid WARNING logs while testing wrong requests 
         logging.disable(logging.WARNING)
 
+        self.register_url=reverse('user_post')
         self.jwt_obtain_url=reverse('jwt_obtain_pair')
         self.jwt_refresh_url=reverse('jwt_refresh')
         self.email_code_send=reverse('email_code_send')
@@ -25,18 +27,23 @@ class LoginTests(APITestCase):
             'email':"email@test.com",
             "password": "password1@212",
             "password2": "password1@212",
-            'inv_code': inv_code.code
+            'inv_code': str(inv_code.code)
         }
         self.credentials = {
             'email':"email@test.com",
             "password": "password1@212"
         }
         # Register User:
-        self.client.post(
-            reverse('user_post'),
-            self.user_data
-        )
+        self.register_user()
         return super().setUp()
+    
+    def register_user(self, user_data=None) :
+        if user_data == None: user_data = self.user_data
+        return self.client.post(
+            self.register_url,
+            data=json.dumps(user_data),
+            content_type="application/json"
+        )
 
 
     """

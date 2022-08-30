@@ -1,3 +1,4 @@
+from typing_extensions import Required
 from rest_framework import serializers
 from custom_auth.models import InvitationCode, User
 from rest_framework.validators import UniqueValidator
@@ -97,7 +98,7 @@ class UserCreationSerializer(serializers.ModelSerializer):
 
 
 """
-Serializer to update user data
+Serializer to get, update or delete user data
 """
 class UserUpdateSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
@@ -111,26 +112,18 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     )
     annual_balance = serializers.IntegerField(required=False)
     monthly_balance = serializers.IntegerField(required=False)
+    image = serializers.ImageField(required=False)
+    last_login = serializers.ReadOnlyField()
 
     class Meta:
         model = User
         fields = (
             'username', 'email',
-            'annual_balance', 'monthly_balance'
+            'annual_balance', 'monthly_balance',
+            'image', 'last_login'
         )
 
     def update(self, instance, validated_data):
         if 'email' in validated_data:
             validated_data['verified'] = False
         return super(UserUpdateSerializer, self).update(instance, validated_data)
-
-"""
-Serializer to get or del user
-"""
-class UserRetrieveDestroySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = (
-            'username', 'email', 'last_login', 'image',
-            'annual_balance', 'monthly_balance'
-        )

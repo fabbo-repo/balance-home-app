@@ -1,4 +1,5 @@
 import uuid
+import json
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
@@ -21,18 +22,23 @@ class InvitationCodeTests(APITestCase):
             'email':"email@test.com",
             "password": "password1@212",
             "password2": "password1@212",
-            'inv_code': self.inv_code.code
+            'inv_code': str(self.inv_code.code)
         }
         return super().setUp()
+
+    def register_user(self, user_data=None) :
+        if user_data == None: user_data = self.user_data
+        return self.client.post(
+            self.register_url,
+            data=json.dumps(user_data),
+            content_type="application/json"
+        )
 
     """
     Checks that an invitation code gets updated after user registration
     """
     def test_inv_code_update(self):
-        self.client.post(
-            self.register_url,
-            self.user_data
-        )
+        self.register_user()
         User.objects.get(email=self.user_data['email'])
         # Cheks if InvitationCode gets updated
         self.assertFalse(InvitationCode.objects.get(code=self.inv_code.code).is_active)
@@ -53,13 +59,10 @@ class InvitationCodeTests(APITestCase):
             'email':"email@test.com",
             "password": "password1@212",
             "password2": "password1@212",
-            'inv_code': inv_code2.code
+            'inv_code': str(inv_code2.code)
         }
         
-        response=self.client.post(
-            self.register_url,
-            user_data2
-        )
+        response=self.register_user(user_data2)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('inv_code', response.data)
         
@@ -67,8 +70,7 @@ class InvitationCodeTests(APITestCase):
     Checks that an user with no inv_code is not created
     """
     def test_wrong_inv_code(self):
-        response=self.client.post(
-            self.register_url,
+        response=self.register_user(
             {
                 'inv_cod': str(uuid.uuid4()),
                 'username': self.user_data['username'],
@@ -84,8 +86,7 @@ class InvitationCodeTests(APITestCase):
     Checks that an user with no inv_code is not created
     """
     def test_none_inv_code(self):
-        response=self.client.post(
-            self.register_url,
+        response=self.register_user(
             {
                 'username': self.user_data['username'],
                 'email': self.user_data['email'],

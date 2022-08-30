@@ -3,6 +3,7 @@ from rest_framework import status
 from django.urls import reverse
 from custom_auth.models import User, InvitationCode
 import logging
+import json
 
 class RegisterTests(APITestCase):
     def setUp(self):
@@ -16,23 +17,28 @@ class RegisterTests(APITestCase):
         self.inv_code.save()
         # Test user data
         self.user_data={
-            'username':"username",
-            'email':"email@test.com",
+            "username":"username",
+            "email":"email@test.com",
             "password": "password1@212",
             "password2": "password1@212",
-            'inv_code': self.inv_code.code
+            "inv_code": str(self.inv_code.code)
         }
         return super().setUp()
 
+    def register_user(self, user_data=None) :
+        if user_data == None: user_data = self.user_data
+        return self.client.post(
+            self.register_url,
+            data=json.dumps(user_data),
+            content_type="application/json"
+        )
+    
 
     """
     Checks that an user with register url is created
     """
     def test_user(self):
-        response=self.client.post(
-            self.register_url,
-            self.user_data
-        )
+        response=self.register_user()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         new_user = User.objects.get(email=self.user_data['email'])
         self.assertIsNotNone(new_user)
@@ -42,17 +48,11 @@ class RegisterTests(APITestCase):
     """
     def test_two_user_with_username(self):
         # User 1 creation
-        self.client.post(
-            self.register_url,
-            self.user_data
-        )
+        self.register_user()
         # User 2 creation
         user_data2 = self.user_data
         user_data2['email'] = 'email2@test.com'
-        response=self.client.post(
-            self.register_url,
-            user_data2
-        )
+        response=self.register_user(user_data2)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['username'][0], 'This field must be unique.')
 
@@ -61,17 +61,11 @@ class RegisterTests(APITestCase):
     """
     def test_two_user_with_email(self):
         # User 1 creation
-        self.client.post(
-            self.register_url,
-            self.user_data
-        )
+        self.register_user()
         # User 2 creation
         user_data2 = self.user_data
         user_data2['username'] = 'username2'
-        response=self.client.post(
-            self.register_url,
-            user_data2
-        )
+        response=self.register_user(user_data2)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['email'][0], 'This field must be unique.')
     
@@ -79,10 +73,7 @@ class RegisterTests(APITestCase):
     Checks that an user with no data is not created
     """
     def test_empty_user(self):
-        response=self.client.post(
-            self.register_url,
-            {}
-        )
+        response=self.register_user({})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('email', response.data)
         self.assertIn('username', response.data)
@@ -94,8 +85,7 @@ class RegisterTests(APITestCase):
     Checks that an user with no email is not created
     """
     def test_none_email(self):
-        response=self.client.post(
-            self.register_url,
+        response=self.register_user(
             {
                 'username': self.user_data['username'],
                 'inv_code': self.user_data['inv_code'],
@@ -110,8 +100,7 @@ class RegisterTests(APITestCase):
     Checks that an user with no username is not created
     """
     def test_none_username(self):
-        response=self.client.post(
-            self.register_url,
+        response=self.register_user(
             {
                 'email': self.user_data['email'],
                 'inv_code': self.user_data['inv_code'],
@@ -126,8 +115,7 @@ class RegisterTests(APITestCase):
     Checks that an user with diferent passwords is not created
     """
     def test_different_passwords(self):
-        response=self.client.post(
-            self.register_url,
+        response=self.register_user(
             {
                 'username': self.user_data['username'],
                 'email': self.user_data['email'],
@@ -143,8 +131,7 @@ class RegisterTests(APITestCase):
     Checks that an user with a short password is not created
     """
     def test_short_password(self):
-        response=self.client.post(
-            self.register_url,
+        response=self.register_user(
             {
                 'username': self.user_data['username'],
                 'email': self.user_data['email'],
@@ -159,8 +146,7 @@ class RegisterTests(APITestCase):
     Checks that an user with a too common password is not created
     """
     def test_common_password(self):
-        response=self.client.post(
-            self.register_url,
+        response=self.register_user(
             {
                 'username': self.user_data['username'],
                 'email': self.user_data['email'],
@@ -175,8 +161,7 @@ class RegisterTests(APITestCase):
     Checks that an user with a too common password is not created
     """
     def test_only_username_register(self):
-        response=self.client.post(
-            self.register_url,
+        response=self.register_user(
             {
                 'username': 'username@1L24',
                 'email': self.user_data['email'],
@@ -191,8 +176,7 @@ class RegisterTests(APITestCase):
     Checks that an user with a numeric password is not created
     """
     def test_only_username_register(self):
-        response=self.client.post(
-            self.register_url,
+        response=self.register_user(
             {
                 'username': self.user_data['username'],
                 'email': self.user_data['email'],

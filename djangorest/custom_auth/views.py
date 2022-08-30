@@ -2,28 +2,25 @@ from core.permissions import IsCurrentVerifiedUser
 from custom_auth.models import User
 from custom_auth.serializers.login_serializers import CodeSerializer, CodeVerificationSerializer, CustomTokenObtainPairSerializer
 from rest_framework import generics
+from rest_framework.parsers import FormParser, MultiPartParser, JSONParser
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from custom_auth.serializers.user_serializers import (
     UserCreationSerializer,
-    UserUpdateSerializer,
-    UserRetrieveDestroySerializer
+    UserUpdateSerializer
 )
 
 class UserCreationView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = UserCreationSerializer
+    parser_classes = (FormParser, JSONParser,)
 
-class UserUpdateView(generics.UpdateAPIView):
+class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     permission_classes = (IsCurrentVerifiedUser,)
     serializer_class = UserUpdateSerializer
-
-class UserRetrieveDestroyView(generics.RetrieveDestroyAPIView):
-    queryset = User.objects.all()
-    permission_classes = (IsCurrentVerifiedUser,)
-    serializer_class = UserRetrieveDestroySerializer
+    parser_classes = (FormParser, MultiPartParser, JSONParser)
 
 class CodeView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
