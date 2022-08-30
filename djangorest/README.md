@@ -11,12 +11,16 @@ djangorest/
     |   │   ├── __init__.py
     |   │   ├── tests_1.py
     |   │   └── ...
+    │   ├── serializers/
+    │   │   ├── model1_serializers.py
+    │   │   ├── ... (This is optional)
+    │   │   └── model2_serializers.py
     │   ├── __init__.py
     │   ├── views.py
     │   ├── tasks.py
     │   ├── signals.py
     │   ├── models.py
-    │   ├── serializers.py
+    │   ├── serializers.py  (This is optional)
     │   ├── notifications.py
     │   ├── apps.py
     │   └── admin.py

@@ -127,3 +127,13 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         if 'email' in validated_data:
             validated_data['verified'] = False
         return super(UserUpdateSerializer, self).update(instance, validated_data)
+
+
+"""
+Serializer for password change (needs old password)
+"""
+class ChangePasswordSerializer(serializers.Serializer):
+    model = User
+
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)

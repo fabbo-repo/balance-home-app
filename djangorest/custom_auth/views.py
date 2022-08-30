@@ -1,11 +1,13 @@
 from core.permissions import IsCurrentVerifiedUser
 from custom_auth.models import User
-from custom_auth.serializers.login_serializers import CodeSerializer, CodeVerificationSerializer, CustomTokenObtainPairSerializer
-from rest_framework import generics
+from custom_auth.serializers.jwt_code_serializers import CodeSerializer, CodeVerificationSerializer, CustomTokenObtainPairSerializer
+from rest_framework import generics, status
 from rest_framework.parsers import FormParser, MultiPartParser, JSONParser
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from custom_auth.serializers.user_serializers import (
+    ChangePasswordSerializer,
     UserCreationSerializer,
     UserUpdateSerializer
 )
@@ -20,7 +22,7 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     permission_classes = (IsCurrentVerifiedUser,)
     serializer_class = UserUpdateSerializer
-    parser_classes = (FormParser, MultiPartParser, JSONParser)
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
 
 class CodeView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
@@ -34,22 +36,35 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)
     serializer_class = CustomTokenObtainPairSerializer
 
+class ChangePasswordView(generics.UpdateAPIView):
+    """
+    An endpoint for changing password.
+    """
+    serializer_class = ChangePasswordSerializer
+    model = User
+    permission_classes = (IsCurrentVerifiedUser,)
 
-"""
-class UserViewSet(viewsets.ModelViewSet) :
-    queryset = User.objects.all()
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
 
-    def get_serializer_class(self):
-        if self.action in ('retrieve', 'update', 'destroy'):
-            return UserRetrieveUpdateSerializer
-        return UserCreationSerializer
-    
-    def get_permissions(self):
-        # UserPermission for user changes
-        if self.action in ('retrieve', 'update', 'destroy'):
-            self.permission_classes = (IsCurrentUser,)
-        # Allow any only for user creation
-        self.permission_classes = (AllowAny,)
-        
-        return super().get_permissions()
-"""
+    def update(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            # Check old password
+            if not self.object.check_password(serializer.data.get("old_password")):
+                return Response(
+                    {"old_password": ["Wrong password."]}, 
+                    status=status.HTTP_400_BAD_REQUEST)
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            response = {
+                'status': 'success',
+                'code': status.HTTP_200_OK,
+                'message': 'Password updated successfully',
+                'data': []
+            }
+            return Response(response)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

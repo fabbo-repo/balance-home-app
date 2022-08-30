@@ -11,3 +11,13 @@ def send_email_code(code, email):
         [email],
         fail_silently=False
     )
+
+@shared_task
+def send_password_code(code, email):   
+    send_mail(
+        'Change password',
+        "Code generated to change password: "+str(code),
+        settings.EMAIL_HOST_USER,
+        [email],
+        fail_silently=False
+    )

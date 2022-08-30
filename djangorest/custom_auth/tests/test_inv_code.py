@@ -11,7 +11,7 @@ class InvitationCodeTests(APITestCase):
         # Avoid WARNING logs while testing wrong requests 
         logging.disable(logging.WARNING)
 
-        self.register_url=reverse('user_post')
+        self.user_post_url=reverse('user_post')
 
         # Create InvitationCode
         self.inv_code = InvitationCode.objects.create()
@@ -26,10 +26,10 @@ class InvitationCodeTests(APITestCase):
         }
         return super().setUp()
 
-    def register_user(self, user_data=None) :
+    def user_post(self, user_data=None) :
         if user_data == None: user_data = self.user_data
         return self.client.post(
-            self.register_url,
+            self.user_post_url,
             data=json.dumps(user_data),
             content_type="application/json"
         )
@@ -38,7 +38,7 @@ class InvitationCodeTests(APITestCase):
     Checks that an invitation code gets updated after user registration
     """
     def test_inv_code_update(self):
-        self.register_user()
+        self.user_post()
         User.objects.get(email=self.user_data['email'])
         # Cheks if InvitationCode gets updated
         self.assertFalse(InvitationCode.objects.get(code=self.inv_code.code).is_active)
@@ -62,7 +62,7 @@ class InvitationCodeTests(APITestCase):
             'inv_code': str(inv_code2.code)
         }
         
-        response=self.register_user(user_data2)
+        response=self.user_post(user_data2)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('inv_code', response.data)
         
@@ -70,7 +70,7 @@ class InvitationCodeTests(APITestCase):
     Checks that an user with no inv_code is not created
     """
     def test_wrong_inv_code(self):
-        response=self.register_user(
+        response=self.user_post(
             {
                 'inv_cod': str(uuid.uuid4()),
                 'username': self.user_data['username'],
@@ -86,7 +86,7 @@ class InvitationCodeTests(APITestCase):
     Checks that an user with no inv_code is not created
     """
     def test_none_inv_code(self):
-        response=self.register_user(
+        response=self.user_post(
             {
                 'username': self.user_data['username'],
                 'email': self.user_data['email'],
