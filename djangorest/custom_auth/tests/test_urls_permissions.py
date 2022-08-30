@@ -1,4 +1,5 @@
 """
+Test all urls permissions
 * Try to fetch my user data
 * Try to fetch other user data
 * Try to change my data (including email)

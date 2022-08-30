@@ -17,6 +17,7 @@ class UserPutTests(APITestCase):
 
         self.user_post_url=reverse('user_post')
         self.jwt_obtain_url=reverse('jwt_obtain_pair')
+        self.change_password_url=reverse('change_password')
 
         # Create InvitationCode
         self.inv_code = InvitationCode.objects.create()
@@ -125,3 +126,22 @@ class UserPutTests(APITestCase):
         self.assertTrue(os.path.exists(generated_dir))
         if os.path.exists(generated_dir):
             shutil.rmtree(generated_dir)
+
+    """
+    Checks that password is changed
+    """
+    def test_change_password(self):
+        response=self.client.put(
+            self.change_password_url,
+            data=json.dumps(
+                {
+                    "old_password": "password1@212",
+                    "new_password": "password1@213"
+                }
+            ),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.credentials["password"]= "password1@213"
+        response = self.jwt_obtain()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

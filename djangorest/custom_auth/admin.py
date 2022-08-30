@@ -26,6 +26,7 @@ class UserAdmin(admin.ModelAdmin):
         ('is_superuser', 'is_staff',),
         ('verified', 'is_active',),
         ('code_sent', 'date_code_sent',),
+        ('pass_reset', 'date_pass_reset',),
         ('annual_balance', 'monthly_balance')
     )
     readonly_fields = (

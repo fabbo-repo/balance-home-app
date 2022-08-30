@@ -102,8 +102,21 @@ class User(AbstractUser):
         blank=True,
         null=True
     )
-    # Date of the last code sent
+    # Date of the last email verification code sent
     date_code_sent = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+    # Last code sent for password reset, 
+    # length is 6 characters 
+    pass_reset = models.CharField(
+        validators=[MinLengthValidator(6)],
+        max_length=6,
+        blank=True,
+        null=True
+    )
+    # Date of the last password reset code sent
+    date_pass_reset = models.DateTimeField(
         blank=True,
         null=True
     )
