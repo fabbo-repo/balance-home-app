@@ -1,9 +1,3 @@
-""" path('user/password/change', ChangePasswordView.as_view(), name='change_password'),
-    path('user/password/reset', ResetPasswordView.as_view(), name='reset_password'),
-    path("email_code/send", CodeView.as_view(), name="email_code_send"),
-    path("email_code/verify", CodeVerificationView.as_view(), name="email_code_verify"),
-"""
-
 import json
 from rest_framework.test import APITestCase
 from rest_framework import status
