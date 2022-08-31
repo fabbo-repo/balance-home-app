@@ -63,10 +63,6 @@ class ChangePasswordView(generics.CreateAPIView):
         if serializer.is_valid():
             self.user.set_password(serializer.data["new_password"])
             self.user.save()
-            response = {
-                'status': status.HTTP_200_OK,
-                'data': []
-            }
             return Response([], status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

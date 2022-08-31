@@ -218,6 +218,10 @@ class Dev(Configuration):
     # Email verification code validity duration
     EMAIL_CODE_VALID = values.PositiveIntegerValue(120)
 
+    ADMIN_APP_USERNAME=values.Value('')
+    ADMIN_APP_EMAIL=values.Value('')
+    ADMIN_APP_PASSWORD=values.Value('')
+
 class Prod(Dev):
     DEBUG = False
     APP_DOMAIN = str(values.Value('127.0.0.1'))
