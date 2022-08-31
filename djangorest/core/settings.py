@@ -14,6 +14,7 @@ from pathlib import Path
 from configurations import Configuration, values
 import dj_database_url
 from datetime import timedelta
+import os
 
 class Dev(Configuration):
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -58,7 +59,11 @@ class Dev(Configuration):
         'django.contrib.staticfiles',
         'rest_framework',
         'django_filters',
-        'drf_yasg'
+        'drf_yasg',
+        'django_celery_results',
+        'django_celery_beat',
+        # Custom apps:
+        'custom_auth'
     ]
 
     MIDDLEWARE = [
@@ -138,6 +143,9 @@ class Dev(Configuration):
 
     STATIC_URL = 'static/'
 
+    MEDIA_URL = 'media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
     # Default primary key field type
     # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -198,6 +206,22 @@ class Dev(Configuration):
         }
     }
 
+    AUTH_USER_MODEL = "custom_auth.User"
+
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+    CELERY_RESULT_BACKEND = "django-db"
+    CELERY_BROKER_URL = "redis://localhost:6379/0"
+
+    # Time to wait for a new email verification code generation 
+    EMAIL_CODE_THRESHOLD = values.PositiveIntegerValue(120)
+    # Email verification code validity duration
+    EMAIL_CODE_VALID = values.PositiveIntegerValue(120)
+
+    ADMIN_APP_USERNAME=values.Value('')
+    ADMIN_APP_EMAIL=values.Value('')
+    ADMIN_APP_PASSWORD=values.Value('')
+
 class Prod(Dev):
     DEBUG = False
     APP_DOMAIN = str(values.Value('127.0.0.1'))
@@ -244,3 +268,13 @@ class Prod(Dev):
         "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
         "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     }
+
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    # It is setup for gmail
+    EMAIL_HOST = values.Value('smtp.gmail.com')
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = values.PositiveIntegerValue(587)
+    EMAIL_HOST_USER = values.Value('example@gmail.com')
+    EMAIL_HOST_PASSWORD = values.Value('password')
+    
+    CELERY_BROKER_URL = values.Value("redis://localhost:6379/0")

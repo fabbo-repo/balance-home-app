@@ -7,11 +7,20 @@ djangorest/
     │   │   └── ... (This is optional)
     │   ├── migrations/
     │   │   └── ...
+    |   ├── tests/
+    |   │   ├── __init__.py
+    |   │   ├── tests_1.py
+    |   │   └── ...
+    │   ├── serializers/
+    │   │   ├── model1_serializers.py
+    │   │   ├── ... (This is optional)
+    │   │   └── model2_serializers.py
     │   ├── __init__.py
     │   ├── views.py
     │   ├── tasks.py
     │   ├── signals.py
     │   ├── models.py
+    │   ├── serializers.py  (This is optional)
     │   ├── notifications.py
     │   ├── apps.py
     │   └── admin.py
@@ -24,6 +33,13 @@ djangorest/
     │   ├── client.py
     │   └── django_client.py
     ├── core/
+    |   ├── tests/
+    |   │   ├── __init__.py
+    |   │   ├── tests_settings.py
+    |   │   └── ...
+    |   ├── swagger/
+    |   │   ├── __init__.py
+    |   │   └── urls.py
     │   ├── __init__.py
     │   ├── asgi.py
     │   ├── celery.py
@@ -32,10 +48,10 @@ djangorest/
     │   └── wsgi.py
     ├── templates/
     │   └── ... (This is optional)
-    ├── tests/
-    │   ├── __init__.py
-    │   ├── tests_app_1.py
-    │   └── ...
+    ├── media/
+    │   └── ... (This is optional)
+    ├── static/
+    │   └── ... (This is optional)
     ├── manage.py
     └── db.sqlite3
 ~~~
@@ -91,6 +107,11 @@ python manage.py loaddata db.json
 ~~~
 python manage.py test
 ~~~
+* Launch celery for development:
+~~~
+celery -A core worker -l INFO -P eventlet
+~~~
+> ***redis*** must be launched too
 
 ## Environment Variables:
 
@@ -105,3 +126,13 @@ python manage.py test
 * PG_DOMAIN
 * PG_PORT
 * PG_DB_NAME
+* EMAIL_HOST
+* EMAIL_PORT
+* EMAIL_HOST_USER
+* EMAIL_HOST_PASSWORD
+* CELERY_BROKER_URL
+* EMAIL_CODE_THRESHOLD
+* EMAIL_CODE_VALID
+* ADMIN_APP_USERNAME
+* ADMIN_APP_EMAIL
+* ADMIN_APP_PASSWORD
