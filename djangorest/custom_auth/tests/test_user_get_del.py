@@ -4,11 +4,6 @@ from django.urls import reverse
 from custom_auth.models import User, InvitationCode
 import logging
 import json
-from django.conf import settings
-import tempfile
-from PIL import Image
-import shutil
-import os
 
 class UserPutTests(APITestCase):
     def setUp(self):
@@ -18,6 +13,7 @@ class UserPutTests(APITestCase):
         self.user_post_url=reverse('user_post')
         self.jwt_obtain_url=reverse('jwt_obtain_pair')
         self.change_password_url=reverse('change_password')
+        self.user_get_del_url=reverse('user_put_get_del')
 
         # Create InvitationCode
         self.inv_code = InvitationCode.objects.create()
@@ -43,7 +39,6 @@ class UserPutTests(APITestCase):
         )
         user.set_password(self.user_data['password'])
         user.save()
-        self.user_get_del_url=reverse('user_put_get_del', args=[user.id])
         # Jwt obtain
         self.jwt = self.jwt_obtain().data["access"]
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(self.jwt))

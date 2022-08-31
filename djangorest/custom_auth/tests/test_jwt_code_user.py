@@ -161,7 +161,7 @@ class JwtCodeTests(APITestCase):
     """
     Checks that sending a right code should modify the user as verified
     """
-    def test_send_wrong_code(self):
+    def test_send_right_code(self):
         # Code generation first:
         self.send_code()
         # Get enerated code
@@ -176,7 +176,7 @@ class JwtCodeTests(APITestCase):
         # Code generation first:
         self.send_code()
         # Set code validity to 1 second
-        settings.EMAIL_CODE_VALID = 0
+        settings.EMAIL_CODE_VALID = 1
         # Get generated code
         code=User.objects.get(email=self.user_data['email']).code_sent
         # Sleep for 2 seconds

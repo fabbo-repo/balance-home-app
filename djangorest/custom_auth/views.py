@@ -1,16 +1,20 @@
+import os
 from core.permissions import IsCurrentVerifiedUser
 from custom_auth.models import User
 from custom_auth.serializers.jwt_code_serializers import CodeSerializer, CodeVerificationSerializer, CustomTokenObtainPairSerializer
-from rest_framework import generics, status
+from rest_framework import generics, status, mixins
 from rest_framework.parsers import FormParser, MultiPartParser, JSONParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from custom_auth.serializers.user_serializers import (
     ChangePasswordSerializer,
+    ResetPasswordSerializer,
     UserCreationSerializer,
     UserUpdateSerializer
 )
+from custom_auth.tasks import send_password_code
+from django.utils.timezone import now
 
 class UserCreationView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -23,48 +27,75 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsCurrentVerifiedUser,)
     serializer_class = UserUpdateSerializer
     parser_classes = (MultiPartParser, FormParser, JSONParser)
+    
+    def get_object(self, queryset=None):
+        return self.request.user
 
 class CodeView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = CodeSerializer
+    parser_classes = (JSONParser,)
 
 class CodeVerificationView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = CodeVerificationSerializer
+    parser_classes = (JSONParser,)
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)
     serializer_class = CustomTokenObtainPairSerializer
+    parser_classes = (JSONParser,)
 
-class ChangePasswordView(generics.UpdateAPIView):
-    """
-    An endpoint for changing password.
-    """
+"""
+An endpoint for changing password
+"""
+class ChangePasswordView(generics.CreateAPIView):   
     serializer_class = ChangePasswordSerializer
-    model = User
     permission_classes = (IsCurrentVerifiedUser,)
+    parser_classes = (JSONParser,)
 
     def get_object(self, queryset=None):
-        obj = self.request.user
-        return obj
+        return self.request.user
 
-    def update(self, request, *args, **kwargs):
-        self.object = self.get_object()
+    def create(self, request, *args, **kwargs):
+        self.user = self.get_object()
         serializer = self.get_serializer(data=request.data)
-
         if serializer.is_valid():
-            # Check old password
-            if not self.object.check_password(serializer.data.get("old_password")):
-                return Response(
-                    {"old_password": ["Wrong password."]}, 
-                    status=status.HTTP_400_BAD_REQUEST)
-            self.object.set_password(serializer.data.get("new_password"))
-            self.object.save()
+            self.user.set_password(serializer.data["new_password"])
+            self.user.save()
             response = {
-                'status': 'success',
-                'code': status.HTTP_200_OK,
-                'message': 'Password updated successfully',
+                'status': status.HTTP_200_OK,
                 'data': []
             }
-            return Response(response)
+            return Response([], status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+"""
+An endpoint for password reset
+"""
+class ResetPasswordView(generics.GenericAPIView, mixins.CreateModelMixin, mixins.RetrieveModelMixin):
+    serializer_class = ResetPasswordSerializer
+    permission_classes = (IsCurrentVerifiedUser,)
+    parser_classes = (JSONParser,)
+
+    def get_object(self, queryset=None):
+        return self.request.user
+    
+    def get(self, request, *args, **kwargs):
+        self.user = self.get_object()
+        code = os.urandom(3).hex()
+        self.user.pass_reset = code
+        self.user.date_pass_reset = now()
+        send_password_code.delay(code, self.user.email)
+        self.user.save()
+        return Response([], status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        self.user = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        serializer.user = self.user
+        if serializer.is_valid():
+            self.user.set_password(serializer.data["new_password"])
+            self.user.save()
+            return Response([], status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -18,6 +18,7 @@ class UserPutTests(APITestCase):
         self.user_post_url=reverse('user_post')
         self.jwt_obtain_url=reverse('jwt_obtain_pair')
         self.change_password_url=reverse('change_password')
+        self.user_put_url=reverse('user_put_get_del')
 
         # Create InvitationCode
         self.inv_code = InvitationCode.objects.create()
@@ -43,7 +44,6 @@ class UserPutTests(APITestCase):
         )
         user.set_password(self.user_data['password'])
         user.save()
-        self.user_put_url=reverse('user_put_get_del', args=[user.id])
         # Jwt obtain
         self.jwt = self.jwt_obtain().data["access"]
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(self.jwt))
@@ -131,7 +131,7 @@ class UserPutTests(APITestCase):
     Checks that password is changed
     """
     def test_change_password(self):
-        response=self.client.put(
+        response=self.client.post(
             self.change_password_url,
             data=json.dumps(
                 {

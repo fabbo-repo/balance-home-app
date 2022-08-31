@@ -1,9 +1,10 @@
-from typing_extensions import Required
 from rest_framework import serializers
 from custom_auth.models import InvitationCode, User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
+from django.utils.timezone import now
+from django.conf import settings
 
 
 """
@@ -133,7 +134,38 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 Serializer for password change (needs old password)
 """
 class ChangePasswordSerializer(serializers.Serializer):
-    model = User
+    old_password = serializers.CharField(
+        required=True,
+        validators=[validate_password]
+    )
+    new_password = serializers.CharField(
+        required=True,
+        validators=[validate_password]
+    )
 
-    old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True)
+"""
+Serializer for password reset (code verification)
+"""
+class ResetPasswordSerializer(serializers.Serializer):
+    code = serializers.CharField(
+        required=True, 
+        min_length=6, max_length=6
+    )
+    new_password = serializers.CharField(
+        required=True,
+        validators=[validate_password]
+    )
+
+    def validate_code(self, code):
+        user = self.user
+        if not user.date_pass_reset:
+            raise serializers.ValidationError("None code sent")
+        if user.date_pass_reset:
+            duration_s = (now() - user.date_pass_reset).total_seconds()
+            if duration_s > settings.EMAIL_CODE_VALID :
+                raise serializers.ValidationError(
+                    "Code is no longer valid")
+        if user.pass_reset != code :
+            raise serializers.ValidationError(
+                "Invalid code")
+        return code
