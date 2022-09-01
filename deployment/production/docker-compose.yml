@@ -1,0 +1,105 @@
+version: '2'
+services:
+  balance_app_backend:
+    image: example.com:5000/myapp/myapp-backend
+    env_file:
+      - extras_app.env
+    expose:
+      - "8000"
+    links:
+      - db:db
+      - redis:redis
+    volumes:
+      - static:/code/static
+      - media:/code/media
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+    labels:
+      io.rancher.container.pull_image: 'always'
+
+  celery:
+    image: rexample.com:5000/myapp/myapp-backend
+    env_file:
+      - extras_app.env
+    links:
+      - db:db
+      - redis:redis
+    volumes:
+      - static:/code/static
+      - media:/code/media
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+    labels:
+      io.rancher.container.pull_image: 'always'
+    command: bash -c "/venv/bin/celery -A moyobo.celery worker -l info"
+
+  nginx:
+    restart: always
+    image: argo22/nginx-for-python
+    expose:
+      - "8000"
+    links:
+      - web:app
+    volumes:
+      - static:/code/static
+      - media:/code/media
+    depends_on:
+      - web
+    labels:
+      io.rancher.container.pull_image: 'always'
+
+  collectstatic:
+    restart: on-failure
+    image: example.com:5000/myapp/myapp-backend
+    env_file:
+      - extras_app.env
+    command: bash -c "/venv/bin/python manage.py graphql_schema && /venv/bin/python manage.py collectstatic --no-input"
+    links:
+      - db:db
+      - redis:redis
+    volumes:
+      - static:/code/static
+      - media:/code/media
+    depends_on:
+      - db
+    labels:
+      io.rancher.container.start_once: 'true'
+      io.rancher.container.pull_image: 'always'
+
+  migrate:
+    restart: on-failure
+    image: example.com:5000/myapp/myapp-backend
+    env_file:
+      - extras_app.env
+    command: /venv/bin/python manage.py migrate --no-input
+    links:
+      - db:db
+      - redis:redis
+    depends_on:
+      - db
+    labels:
+      io.rancher.container.start_once: 'true'
+      io.rancher.container.pull_image: 'always'
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+
+  db:
+    image: postgres:alpine
+    env_file:
+      - extras_db.env
+    expose:
+      - "5432"
+    restart: unless-stopped
+    volumes:
+      - database:/var/lib/postgresql/data
+
+volumes:
+  database:
+  static:
+  media:
