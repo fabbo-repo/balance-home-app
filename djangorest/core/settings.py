@@ -20,9 +20,9 @@ class Dev(Configuration):
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
     BASE_DIR = Path(__file__).resolve().parent.parent
 
-    APP_DOMAIN = str(values.Value('127.0.0.1'))
-    APP_PORT = str(values.Value('8000'))
-    BASE_URL = APP_DOMAIN + ':' + APP_PORT
+    DOMAIN = str(values.Value('127.0.0.1', environ_prefix='APP'))
+    PORT = str(values.Value('8000', environ_prefix='APP'))
+    BASE_URL = DOMAIN + ':' + PORT
 
     # Quick-start development settings - unsuitable for production
     # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -31,7 +31,7 @@ class Dev(Configuration):
     SECRET_KEY = 'django-insecure-5bmqrmx9io3#onh8t9am()96q82!npe9&-m57c+3&6=4b2u-u-'
 
     # True by default but have the option to set it false with an environment variable
-    DEBUG = values.BooleanValue(True)
+    DEBUG = values.BooleanValue(True, environ_prefix='APP')
 
     ALLOWED_HOSTS = [ '*' ]
     # X_FRAME_OPTIONS = 'ALLOW-FROM ' + os.environ.get('HOSTNAME')
@@ -129,7 +129,7 @@ class Dev(Configuration):
 
     LANGUAGE_CODE = 'en-us'
 
-    TIME_ZONE = values.Value("UTC")
+    TIME_ZONE = values.Value("UTC", environ_prefix='APP')
 
     USE_I18N = True
 
@@ -142,6 +142,7 @@ class Dev(Configuration):
     # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
     STATIC_URL = 'static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
     MEDIA_URL = 'media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -214,30 +215,31 @@ class Dev(Configuration):
     CELERY_BROKER_URL = "redis://localhost:6379/0"
 
     # Time to wait for a new email verification code generation 
-    EMAIL_CODE_THRESHOLD = values.PositiveIntegerValue(120)
+    EMAIL_CODE_THRESHOLD = values.PositiveIntegerValue(120, environ_prefix='APP')
     # Email verification code validity duration
-    EMAIL_CODE_VALID = values.PositiveIntegerValue(120)
+    EMAIL_CODE_VALID = values.PositiveIntegerValue(120, environ_prefix='APP')
 
-    ADMIN_APP_USERNAME=values.Value('')
-    ADMIN_APP_EMAIL=values.Value('')
-    ADMIN_APP_PASSWORD=values.Value('')
+    ADMIN_USERNAME=values.Value('', environ_prefix='APP')
+    ADMIN_EMAIL=values.Value('', environ_prefix='APP')
+    ADMIN_PASSWORD=values.Value('', environ_prefix='APP')
 
 class Prod(Dev):
     DEBUG = False
-    APP_DOMAIN = str(values.Value('127.0.0.1'))
-    APP_PORT = str(values.Value('80'))
+    
+    DOMAIN = str(values.Value('127.0.0.1', environ_name='APP_DOMAIN'))
+    PORT = str(values.Value('80', environ_prefix='APP'))
     SECRET_KEY = values.SecretValue()
-    ALLOWED_HOSTS = values.ListValue([ "localhost", "0.0.0.0" ])
+    ALLOWED_HOSTS = values.ListValue([ "localhost", "0.0.0.0" ], environ_prefix='APP')
     CSRF_TRUSTED_ORIGINS = [ 
-        "http://"+APP_DOMAIN,
-        "https://"+APP_DOMAIN
+        "http://"+DOMAIN,
+        "https://"+DOMAIN
     ]
 
-    PG_USER = values.Value("admin")
-    PG_PASSWORD = values.Value("admin")
-    PG_DOMAIN = values.Value("postgres")
-    PG_PORT = values.IntegerValue(5432)
-    PG_DB_NAME = values.Value("postgres")
+    PG_USER = values.Value("admin", environ_prefix='APP')
+    PG_PASSWORD = values.Value("admin", environ_prefix='APP')
+    PG_DOMAIN = values.Value("postgres", environ_prefix='APP')
+    PG_PORT = values.IntegerValue(5432, environ_prefix='APP')
+    PG_DB_NAME = values.Value("postgres", environ_prefix='APP')
     DATABASES = values.DatabaseURLValue(
         f"postgres://{PG_USER}:{PG_PASSWORD}@{PG_DOMAIN}:{PG_PORT}?{PG_DB_NAME}"
     )
@@ -253,8 +255,8 @@ class Prod(Dev):
         },
         "handlers": {
             "logfile": {
-                "class": "logging.StreamHandler",
-                "stream": "/var/log/balance_app.log",
+                "class": "logging.FileHandler",
+                "filename": "/var/log/balance_app/app.log",
                 "formatter": "verbose",
             },
         },
@@ -271,10 +273,21 @@ class Prod(Dev):
 
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     # It is setup for gmail
-    EMAIL_HOST = values.Value('smtp.gmail.com')
+    EMAIL_HOST = values.Value('smtp.gmail.com', environ_prefix='APP')
     EMAIL_USE_TLS = True
-    EMAIL_PORT = values.PositiveIntegerValue(587)
-    EMAIL_HOST_USER = values.Value('example@gmail.com')
-    EMAIL_HOST_PASSWORD = values.Value('password')
+    EMAIL_PORT = values.PositiveIntegerValue(587, environ_prefix='APP')
+    EMAIL_HOST_USER = values.Value('example@gmail.com', environ_prefix='APP')
+    EMAIL_HOST_PASSWORD = values.Value('password', environ_prefix='APP')
     
-    CELERY_BROKER_URL = values.Value("redis://localhost:6379/0")
+    CELERY_BROKER_URL = values.Value("redis://localhost:6379/0", environ_prefix='APP')
+
+    # import the logging library
+    import logging
+    # Get an instance of a logger
+    logger = logging.getLogger(__name__)
+
+    logger.error('------------------> '+str(DOMAIN))
+    logger.error('------------------> '+str(PORT))
+    logger.error('------------------> '+str(ALLOWED_HOSTS))
+    logger.error('------------------> '+str(CELERY_BROKER_URL))
+    

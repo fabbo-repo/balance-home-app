@@ -1,7 +1,7 @@
 version: '2'
 services:
   balance_app_backend:
-    image: example.com:5000/myapp/myapp-backend
+    build: .
     env_file:
       - extras_app.env
     expose:
@@ -10,96 +10,100 @@ services:
       - db:db
       - redis:redis
     volumes:
-      - static:/code/static
-      - media:/code/media
+      - ./static:/code/static
+      - ./media:/code/media
+      - ./logs:/var/log/balance_app
     depends_on:
       - db
       - redis
     restart: unless-stopped
-    labels:
-      io.rancher.container.pull_image: 'always'
+    #labels:
+    #  io.rancher.container.pull_image: 'always'
 
   celery:
-    image: rexample.com:5000/myapp/myapp-backend
+    build: .
     env_file:
       - extras_app.env
+    environment:
+      - APP_DEBUG=False
     links:
       - db:db
       - redis:redis
     volumes:
-      - static:/code/static
-      - media:/code/media
+      - ./static:/code/static
+      - ./media:/code/media
     depends_on:
       - db
       - redis
     restart: unless-stopped
-    labels:
-      io.rancher.container.pull_image: 'always'
-    command: bash -c "/venv/bin/celery -A moyobo.celery worker -l info"
+    #labels:
+    #  io.rancher.container.pull_image: 'always'
+    command: bash -c "/venv/bin/celery -A core worker -l INFO"
 
-  nginx:
-    restart: always
-    image: argo22/nginx-for-python
-    expose:
-      - "8000"
-    links:
-      - web:app
-    volumes:
-      - static:/code/static
-      - media:/code/media
-    depends_on:
-      - web
-    labels:
-      io.rancher.container.pull_image: 'always'
-
-  collectstatic:
-    restart: on-failure
-    image: example.com:5000/myapp/myapp-backend
+  migrations:
+    build: .
     env_file:
       - extras_app.env
-    command: bash -c "/venv/bin/python manage.py graphql_schema && /venv/bin/python manage.py collectstatic --no-input"
-    links:
-      - db:db
-      - redis:redis
-    volumes:
-      - static:/code/static
-      - media:/code/media
-    depends_on:
-      - db
-    labels:
-      io.rancher.container.start_once: 'true'
-      io.rancher.container.pull_image: 'always'
-
-  migrate:
-    restart: on-failure
-    image: example.com:5000/myapp/myapp-backend
-    env_file:
-      - extras_app.env
-    command: /venv/bin/python manage.py migrate --no-input
+    command: bash -c "/venv/bin/python manage.py makemigrations --no-input && /venv/bin/python manage.py migrate --no-input"
     links:
       - db:db
       - redis:redis
     depends_on:
       - db
+    restart: on-failure
     labels:
       io.rancher.container.start_once: 'true'
-      io.rancher.container.pull_image: 'always'
+      #io.rancher.container.pull_image: 'always'
 
   redis:
-    image: redis:alpine
+    image: redis:latest
     restart: unless-stopped
 
   db:
-    image: postgres:alpine
+    image: postgres:latest
     env_file:
       - extras_db.env
     expose:
       - "5432"
     restart: unless-stopped
     volumes:
-      - database:/var/lib/postgresql/data
+      - ./database:/var/lib/postgresql/data
 
-volumes:
-  database:
-  static:
-  media:
+  nginx:
+    image: nginx:latest
+    ports: 
+      - "8000:80"
+  #  expose:
+  #    - "80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./static:/code/static
+      - ./media:/code/media
+    depends_on:
+      - balance_app_backend
+    env_file:
+      - extras_nginx.env
+    restart: unless-stopped
+
+  #nginx_proxy:
+  #  image: jwilder/nginx-proxy
+  #  ports: 
+  #    - "8000:80"
+  #    - "8001:443"
+  #  volumes:
+  #    - /var/run/docker.sock:/tmp/docker.sock:ro
+  #    - ./nginx/certs:/etc/nginx/certs:ro
+  #    - /etc/nginx/vhost.d
+  #    - /usr/share/nginx/html
+  #  labels:
+  #    - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+  #  restart: unless-stopped
+
+  #letsencrypt:
+  #  image: jrcs/letsencrypt-nginx-proxy-companion
+  #  volumes:
+  #    - ./nginx/certs:/etc/nginx/certs:rw
+  #    - /var/run/docker.sock:/var/run/docker.sock:ro
+  #  volumes_from:
+  #    - nginx_proxy:rw
+  #  restart: unless-stopped

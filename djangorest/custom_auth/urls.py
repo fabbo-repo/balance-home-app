@@ -24,13 +24,13 @@ urlpatterns = [
 # Automated super user creation 
 from django.conf import settings
 from custom_auth.models import User
-if settings.ADMIN_APP_USERNAME \
-    and settings.ADMIN_APP_USERNAME \
-    and settings.ADMIN_APP_USERNAME \
-    and not User.objects.filter(username=settings.ADMIN_APP_USERNAME).exists() \
-    and not User.objects.filter(email=settings.ADMIN_APP_EMAIL).exists():
+if settings.ADMIN_USERNAME \
+    and settings.ADMIN_USERNAME \
+    and settings.ADMIN_USERNAME \
+    and not User.objects.filter(username=settings.ADMIN_USERNAME).exists() \
+    and not User.objects.filter(email=settings.ADMIN_EMAIL).exists():
     User.objects.create_superuser(
-        settings.ADMIN_APP_USERNAME, 
-        settings.ADMIN_APP_EMAIL, 
-        settings.ADMIN_APP_PASSWORD
+        settings.ADMIN_USERNAME, 
+        settings.ADMIN_EMAIL, 
+        settings.ADMIN_PASSWORD
     )
