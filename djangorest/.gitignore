@@ -104,3 +104,4 @@ GitHub.sublime-settings
 
 # Sqlite 
 *.sqlite3
+static/*
