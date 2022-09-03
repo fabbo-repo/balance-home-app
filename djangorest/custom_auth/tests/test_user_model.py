@@ -24,7 +24,7 @@ class UserTests(APITestCase):
         return user
 
     """
-    Checks if User is created  as norma user
+    Checks if User is created as normal user
     """
     def test_creates_user(self):
         user = self.create_user()
