@@ -20,17 +20,3 @@ urlpatterns = [
     path('user/password/change', ChangePasswordView.as_view(), name='change_password'),
     path('user/password/reset', ResetPasswordView.as_view(), name='reset_password'),
 ]
-
-# Automated super user creation 
-from django.conf import settings
-from custom_auth.models import User
-if settings.ADMIN_APP_USERNAME \
-    and settings.ADMIN_APP_USERNAME \
-    and settings.ADMIN_APP_USERNAME \
-    and not User.objects.filter(username=settings.ADMIN_APP_USERNAME).exists() \
-    and not User.objects.filter(email=settings.ADMIN_APP_EMAIL).exists():
-    User.objects.create_superuser(
-        settings.ADMIN_APP_USERNAME, 
-        settings.ADMIN_APP_EMAIL, 
-        settings.ADMIN_APP_PASSWORD
-    )
