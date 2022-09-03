@@ -71,7 +71,8 @@ class Dev(Configuration):
         'django_celery_results',
         'django_celery_beat',
         # Custom apps:
-        'custom_auth'
+        'custom_auth',
+        'balance'
     ]
 
     MIDDLEWARE = [
