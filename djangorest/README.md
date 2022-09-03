@@ -21,6 +21,7 @@ djangorest/
     │   ├── signals.py
     │   ├── models.py
     │   ├── serializers.py  (This is optional)
+    │   ├── filters.py
     │   ├── notifications.py
     │   ├── apps.py
     │   └── admin.py

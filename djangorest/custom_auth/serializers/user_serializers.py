@@ -136,7 +136,7 @@ Serializer for password change (needs old password)
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(
         required=True,
-        validators=[validate_password]
+        #validators=[validate_password]
     )
     new_password = serializers.CharField(
         required=True,
