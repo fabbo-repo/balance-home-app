@@ -11,17 +11,31 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-from configurations import Configuration, values
-import dj_database_url
+from configurations import Configuration
 from datetime import timedelta
 import os
+
+def get_env(environ_name, default_value):
+    return os.environ.get(environ_name) or default_value
+
+def get_int_env(environ_name, default_value):
+    return int(os.environ.get(environ_name) or default_value)
+
+def get_bool_env(environ_name, default_value):
+    if not os.environ.get(environ_name): return default_value
+    if os.environ.get(environ_name).lower() in ['true', '1', 't', 'y', 'yes']: return True
+    return False
+
+def get_list_env(environ_name, default_value):
+    if not os.environ.get(environ_name): return default_value
+    return os.environ.get(environ_name).split(',')
 
 class Dev(Configuration):
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
     BASE_DIR = Path(__file__).resolve().parent.parent
 
-    DOMAIN = str(values.Value('127.0.0.1', environ_prefix='APP'))
-    PORT = str(values.Value('8000', environ_prefix='APP'))
+    DOMAIN = get_env('APP_DOMAIN', '127.0.0.1')
+    PORT = get_env('APP_PORT', '8000')
     BASE_URL = DOMAIN + ':' + PORT
 
     # Quick-start development settings - unsuitable for production
@@ -31,18 +45,12 @@ class Dev(Configuration):
     SECRET_KEY = 'django-insecure-5bmqrmx9io3#onh8t9am()96q82!npe9&-m57c+3&6=4b2u-u-'
 
     # True by default but have the option to set it false with an environment variable
-    DEBUG = values.BooleanValue(True, environ_prefix='APP')
+    DEBUG = get_bool_env('APP_DEBUG', True)
 
     ALLOWED_HOSTS = [ '*' ]
     # X_FRAME_OPTIONS = 'ALLOW-FROM ' + os.environ.get('HOSTNAME')
     # CSRF_COOKIE_SAMESITE = None
     # CSRF_TRUSTED_ORIGINS = [os.environ.get('HOSTNAME')]
-    CSRF_TRUSTED_ORIGINS = [ 
-        "http://localhost", 
-        "http://127.0.0.1", 
-        "https://localhost", 
-        "https://127.0.0.1" 
-    ]
     # CSRF_COOKIE_SECURE = True
     # SESSION_COOKIE_SECURE = True
     # CSRF_COOKIE_SAMESITE = 'None'
@@ -100,9 +108,12 @@ class Dev(Configuration):
     # Database
     # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-    DATABASES = values.DatabaseURLValue(
-        f"sqlite:///{BASE_DIR}/db.sqlite3"
-    )
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'default.sqlite3'),
+        }
+    }
 
 
     # Password validation
@@ -129,7 +140,7 @@ class Dev(Configuration):
 
     LANGUAGE_CODE = 'en-us'
 
-    TIME_ZONE = values.Value("UTC", environ_prefix='APP')
+    TIME_ZONE = get_env('APP_TIME_ZONE', "UTC")
 
     USE_I18N = True
 
@@ -215,34 +226,37 @@ class Dev(Configuration):
     CELERY_BROKER_URL = "redis://localhost:6379/0"
 
     # Time to wait for a new email verification code generation 
-    EMAIL_CODE_THRESHOLD = values.PositiveIntegerValue(120, environ_prefix='APP')
+    EMAIL_CODE_THRESHOLD = get_int_env('APP_EMAIL_CODE_THRESHOLD', 120)
     # Email verification code validity duration
-    EMAIL_CODE_VALID = values.PositiveIntegerValue(120, environ_prefix='APP')
-
-    ADMIN_USERNAME=values.Value('', environ_prefix='APP')
-    ADMIN_EMAIL=values.Value('', environ_prefix='APP')
-    ADMIN_PASSWORD=values.Value('', environ_prefix='APP')
+    EMAIL_CODE_VALID = get_int_env('APP_EMAIL_CODE_VALID', 120)
 
 class Prod(Dev):
     DEBUG = False
     
-    DOMAIN = str(values.Value('127.0.0.1', environ_name='APP_DOMAIN'))
-    PORT = str(values.Value('80', environ_prefix='APP'))
-    SECRET_KEY = values.SecretValue()
-    ALLOWED_HOSTS = values.ListValue([ "localhost", "0.0.0.0" ], environ_prefix='APP')
-    CSRF_TRUSTED_ORIGINS = [ 
-        "http://"+DOMAIN,
-        "https://"+DOMAIN
-    ]
+    DOMAIN = get_env('APP_DOMAIN', '127.0.0.1')
+    PORT = get_env('APP_PORT', '80')
+    #SECRET_KEY = get_env('DJANGO_SECRET_KEY', os.urandom(20).hex())
+    SECRET_KEY = os.urandom(20).hex()
+    ALLOWED_HOSTS = get_list_env('APP_ALLOWED_HOSTS', 
+        [ "localhost", "0.0.0.0" ])
+    CSRF_TRUSTED_ORIGINS = get_list_env('APP_CSRF_TRUSTED_ORIGINS', 
+        [ "http://localhost:8000", "http://127.0.0.1:8000" ])
 
-    PG_USER = values.Value("admin", environ_prefix='APP')
-    PG_PASSWORD = values.Value("admin", environ_prefix='APP')
-    PG_DOMAIN = values.Value("postgres", environ_prefix='APP')
-    PG_PORT = values.IntegerValue(5432, environ_prefix='APP')
-    PG_DB_NAME = values.Value("postgres", environ_prefix='APP')
-    DATABASES = values.DatabaseURLValue(
-        f"postgres://{PG_USER}:{PG_PASSWORD}@{PG_DOMAIN}:{PG_PORT}?{PG_DB_NAME}"
-    )
+    PG_USER = get_env('APP_PG_USER',  "admin")
+    PG_PASSWORD = get_env('APP_PG_PASSWORD',  "admin")
+    PG_DOMAIN = get_env('APP_PG_DOMAIN',  "postgres")
+    PG_PORT = get_int_env('APP_PG_PORT', 5432)
+    PG_DB_NAME = get_env('APP_PG_DB_NAME', "postgres")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': PG_DB_NAME,
+            'USER': PG_USER,
+            'PASSWORD': PG_PASSWORD,
+            'HOST': PG_DOMAIN,
+            'PORT': PG_PORT,
+        }
+    }
     
     LOGGING = {
         "version": 1,
@@ -273,21 +287,10 @@ class Prod(Dev):
 
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     # It is setup for gmail
-    EMAIL_HOST = values.Value('smtp.gmail.com', environ_prefix='APP')
+    EMAIL_HOST = get_env('APP_EMAIL_HOST', 'smtp.gmail.com')
     EMAIL_USE_TLS = True
-    EMAIL_PORT = values.PositiveIntegerValue(587, environ_prefix='APP')
-    EMAIL_HOST_USER = values.Value('example@gmail.com', environ_prefix='APP')
-    EMAIL_HOST_PASSWORD = values.Value('password', environ_prefix='APP')
+    EMAIL_PORT = get_int_env('APP_EMAIL_PORT', 587)
+    EMAIL_HOST_USER = get_env('APP_EMAIL_HOST_USER', 'example@gmail.com')
+    EMAIL_HOST_PASSWORD = get_env('APP_EMAIL_HOST_PASSWORD', 'password')
     
-    CELERY_BROKER_URL = values.Value("redis://localhost:6379/0", environ_prefix='APP')
-
-    # import the logging library
-    import logging
-    # Get an instance of a logger
-    logger = logging.getLogger(__name__)
-
-    logger.error('------------------> '+str(DOMAIN))
-    logger.error('------------------> '+str(PORT))
-    logger.error('------------------> '+str(ALLOWED_HOSTS))
-    logger.error('------------------> '+str(CELERY_BROKER_URL))
-    
+    CELERY_BROKER_URL = get_env('APP_CELERY_BROKER_URL', "redis://localhost:6379/0")

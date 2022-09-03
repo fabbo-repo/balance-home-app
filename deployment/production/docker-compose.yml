@@ -1,9 +1,9 @@
-version: '2'
+version: '2.1'
 services:
-  balance_app_backend:
+  backend:
     build: .
     env_file:
-      - extras_app.env
+      - ./extras_app.env
     expose:
       - "8000"
     links:
@@ -14,18 +14,16 @@ services:
       - ./media:/code/media
       - ./logs:/var/log/balance_app
     depends_on:
-      - db
       - redis
+      - db
     restart: unless-stopped
-    #labels:
-    #  io.rancher.container.pull_image: 'always'
 
   celery:
     build: .
     env_file:
-      - extras_app.env
+      - ./extras_app.env
     environment:
-      - APP_DEBUG=False
+      - DJANGO_CONFIGURATION=Prod
     links:
       - db:db
       - redis:redis
@@ -33,18 +31,23 @@ services:
       - ./static:/code/static
       - ./media:/code/media
     depends_on:
-      - db
       - redis
+      - db
     restart: unless-stopped
-    #labels:
-    #  io.rancher.container.pull_image: 'always'
-    command: bash -c "/venv/bin/celery -A core worker -l INFO"
+    command: bash -c "mkdir -p /var/log/balance_app && \
+      touch /var/log/balance_app/app.log && sleep 30 &&  \
+      /venv/bin/celery -A core worker -l INFO"
 
   migrations:
     build: .
     env_file:
-      - extras_app.env
-    command: bash -c "/venv/bin/python manage.py makemigrations --no-input && /venv/bin/python manage.py migrate --no-input"
+      - ./extras_app.env
+    environment:
+      - DJANGO_CONFIGURATION=Prod
+    command: bash -c "mkdir -p /var/log/balance_app && \
+      touch /var/log/balance_app/app.log && sleep 15 && \
+      /venv/bin/python manage.py makemigrations && \
+      /venv/bin/python manage.py migrate --no-input"
     links:
       - db:db
       - redis:redis
@@ -53,7 +56,46 @@ services:
     restart: on-failure
     labels:
       io.rancher.container.start_once: 'true'
-      #io.rancher.container.pull_image: 'always'
+  
+  super_user:
+    build: .
+    env_file:
+      - ./extras_app.env
+    environment:
+      - DJANGO_CONFIGURATION=Prod
+    command: bash -c "mkdir -p /var/log/balance_app && \
+      touch /var/log/balance_app/app.log && sleep 30 && \
+      /venv/bin/python manage.py makemigrations && \
+      /venv/bin/python manage.py createsuperuser --no-input"
+    links:
+      - db:db
+      - redis:redis
+    depends_on:
+      - db
+    restart: on-failure
+    labels:
+      io.rancher.container.start_once: 'true'
+  
+  collectstatic:
+    build: .
+    env_file:
+      - ./extras_app.env
+    environment:
+      - DJANGO_CONFIGURATION=Prod
+    command: bash -c "mkdir -p /var/log/balance_app && \
+      touch /var/log/balance_app/app.log && sleep 30 && \
+      /venv/bin/python manage.py collectstatic --no-input"
+    links:
+      - db:db
+      - redis:redis
+    volumes:
+      - ./static:/code/static
+      - ./media:/code/media
+    depends_on:
+      - db
+    restart: on-failure
+    labels:
+      io.rancher.container.start_once: 'true'
 
   redis:
     image: redis:latest
@@ -62,7 +104,7 @@ services:
   db:
     image: postgres:latest
     env_file:
-      - extras_db.env
+      - ./extras_db.env
     expose:
       - "5432"
     restart: unless-stopped
@@ -80,9 +122,9 @@ services:
       - ./static:/code/static
       - ./media:/code/media
     depends_on:
-      - balance_app_backend
+      - backend
     env_file:
-      - extras_nginx.env
+      - ./extras_nginx.env
     restart: unless-stopped
 
   #nginx_proxy:
