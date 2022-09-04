@@ -79,8 +79,8 @@ class RevenuePermissionsTests(APITestCase):
             content_type="application/json"
         )
     
-    def put(self, url, data={}) :
-        return self.client.put(
+    def patch(self, url, data={}) :
+        return self.client.patch(
             url, json.dumps(data),
             content_type="application/json"
         )
@@ -140,3 +140,45 @@ class RevenuePermissionsTests(APITestCase):
         # Gets an empty dict
         self.assertEqual(response.data, 
             OrderedDict([('count', 0), ('next', None), ('previous', None), ('results', [])]))
+        # Try with an specific revenue
+        revenue = Revenue.objects.get(name='Test name')
+        response = self.get(self.revenue_url+'/'+str(revenue.id))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    """
+    Checks permissions with Revenue patch (almost same as put)
+    """
+    def test_revenue_put_url(self):
+        data = self.get_revenue_data()
+        # Add new revenue as user1
+        self.authenticate_user(self.credentials1)
+        self.post(self.revenue_url, data)
+        revenue = Revenue.objects.get(name='Test name')
+        # Try update as user1
+        response=self.patch(self.revenue_url+'/'+str(revenue.id), {'quantity': 35.0})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Check revenue
+        revenue = Revenue.objects.get(name='Test name')
+        self.assertEqual(revenue.quantity, 35.0)
+        # Try update as user2
+        self.authenticate_user(self.credentials2)
+        response=self.patch(self.revenue_url+'/'+str(revenue.id), {'quantity': 30.0})
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    """
+    Checks permissions with Revenue delete
+    """
+    def test_revenue_delete_url(self):
+        data = self.get_revenue_data()
+        # Add new revenue as user1
+        self.authenticate_user(self.credentials1)
+        self.post(self.revenue_url, data)
+        # Delete revenue data as user2
+        self.authenticate_user(self.credentials2)
+        revenue = Revenue.objects.get(name='Test name')
+        response = self.delete(self.revenue_url+'/'+str(revenue.id))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        # Delete revenue data as user1
+        self.authenticate_user(self.credentials1)
+        response = self.delete(self.revenue_url+'/'+str(revenue.id))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
