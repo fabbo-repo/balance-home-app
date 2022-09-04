@@ -4,8 +4,8 @@ from django.core.validators import MinValueValidator
 
 
 class CoinType(models.Model):
+    simb = models.CharField(max_length=4, primary_key=True)
     name = models.CharField(max_length=15, unique=True)
-    simb = models.CharField(max_length=4, unique=True)
 
     class Meta:
         verbose_name = 'CoinType'
@@ -44,6 +44,7 @@ class Balance(models.Model):
         verbose_name = 'Balance'
         verbose_name_plural = 'Balances'
         abstract = True
+        ordering = ['-id']
     
     def __str__(self) -> str:
         return str(self.name)

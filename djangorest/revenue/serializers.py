@@ -3,9 +3,11 @@ from revenue.models import Revenue
 
 
 class RevenueSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
     class Meta:
         model = Revenue
         fields = [
+            'id',
             'name',
             'description',
             'quantity',

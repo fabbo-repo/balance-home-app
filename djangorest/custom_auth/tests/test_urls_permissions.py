@@ -23,23 +23,20 @@ class UrlPermissionsTests(APITestCase):
         self.email_code_verify_url=reverse('email_code_verify')
 
         # Create InvitationCode
-        inv_code = InvitationCode.objects.create()
-        inv_code.save()
+        self.inv_code = InvitationCode.objects.create()
+        self.inv_code.save()
         # Test user data
         self.user_data={
             'username':"username",
             'email':"email@test.com",
             "password": "password1@212",
             "password2": "password1@212",
-            'inv_code': str(inv_code.code)
+            'inv_code': str(self.inv_code.code)
         }
         self.credentials = {
             'email':"email@test.com",
             "password": "password1@212"
         }
-        # Create InvitationCode
-        self.inv_code = InvitationCode.objects.create()
-        self.inv_code.save()
         # User creation
         user = User.objects.create(
             username=self.user_data["username"],

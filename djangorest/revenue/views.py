@@ -9,3 +9,15 @@ class RevenueView(viewsets.ModelViewSet):
     serializer_class = RevenueSerializer
     permission_classes = (IsCurrentVerifiedUser,)
     filterset_class = RevenueFilterSet
+
+    """
+    Filter objects by owner
+    """
+    def get_queryset(self):
+        return Revenue.objects.filter(owner=self.request.user)
+
+    """
+    Inject owner data to the serializer
+    """
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
