@@ -44,7 +44,7 @@ class Balance(models.Model):
         verbose_name = 'Balance'
         verbose_name_plural = 'Balances'
         abstract = True
-        ordering = ['-id']
+        ordering = ['-date']
     
     def __str__(self) -> str:
         return str(self.name)

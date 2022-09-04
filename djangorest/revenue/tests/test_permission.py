@@ -32,10 +32,6 @@ class RevenuePermissionsTests(APITestCase):
             "password2": "password1@212",
             'inv_code': str(self.inv_code1.code)
         }
-        self.credentials = {
-            'email':"email@test.com",
-            "password": "password1@212"
-        }
         self.user_data2={
             'username':"username2",
             'email':"email2@test.com",
