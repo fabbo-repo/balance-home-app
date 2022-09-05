@@ -17,10 +17,6 @@ class RevenueModelTests(APITestCase):
             "password2": "password1@212",
             'inv_code': str(self.inv_code.code)
         }
-        self.credentials = {
-            'email':"email@test.com",
-            "password": "password1@212"
-        }
         self.rev_type_data={'name':"test"}
         return super().setUp()
     
