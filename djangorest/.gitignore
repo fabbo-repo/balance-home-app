@@ -105,3 +105,6 @@ GitHub.sublime-settings
 # Sqlite 
 *.sqlite3
 static/*
+
+# Migration files
+0001_initial.py
