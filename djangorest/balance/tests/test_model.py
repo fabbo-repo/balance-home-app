@@ -4,14 +4,14 @@ from balance.models import Balance, CoinType
 from custom_auth.models import User
 from django.utils.translation import gettext_lazy as _
 
-class UserTests(APITestCase):
+class BalanceModelTests(APITestCase):
     def setUp(self):
         self.user_data={
             'username':"username",
             'email':"email@test.com",
             "password": "password1@212"
         }
-        self.coint_type_data={
+        self.coin_type_data={
             'simb':"EUR",
             'name':"euro"
         }
@@ -24,7 +24,7 @@ class UserTests(APITestCase):
         return user
     
     def create_coin_type(self):
-        coin_type = CoinType.objects.create(**self.coint_type_data)
+        coin_type = CoinType.objects.create(**self.coin_type_data)
         coin_type.save()
         return coin_type
 
@@ -34,5 +34,5 @@ class UserTests(APITestCase):
     """
     def test_creates_coin_type(self):
         coin_type = self.create_coin_type()
-        self.assertEqual(coin_type.simb, self.coint_type_data["simb"])
-        self.assertEqual(coin_type.name, self.coint_type_data["name"])
+        self.assertEqual(coin_type.simb, self.coin_type_data["simb"])
+        self.assertEqual(coin_type.name, self.coin_type_data["name"])

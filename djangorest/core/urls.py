@@ -18,12 +18,15 @@ from django.urls import path, include
 from django.conf import settings
 from core.swagger import urls as swagger_urls
 from custom_auth import urls as auth_urls
+from revenue import urls as revenue_urls
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('api/v1/admin/', admin.site.urls),
     # Auth app urls:
     path("api/v1/", include(auth_urls)),
+    # Revenue app urls:
+    path("api/v1/", include(revenue_urls)),
 ]
 
 # Swagger will only be available in DEBUG mode
