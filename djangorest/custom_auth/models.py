@@ -78,6 +78,7 @@ class User(AbstractUser):
         blank=True,
         null=True
     )
+    balance = models.FloatField(default=0.0)
     # Expected annual balance at the end of a year, 
     # subtracted with the actual balance of each year
     annual_balance = models.FloatField(

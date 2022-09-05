@@ -76,7 +76,8 @@ class RevenueLogicTests(APITestCase):
             username=self.user_data['username'],
             email=self.user_data['email'],
             inv_code=self.inv_code,
-            verified=True
+            verified=True,
+            balance= 1
         )
         user.set_password(self.user_data['password'])
         user.save()
@@ -104,69 +105,35 @@ class RevenueLogicTests(APITestCase):
     def test_revenue_post(self):
         data = self.get_revenue_data()
         self.authenticate_user(self.credentials)
-        response=self.post(self.revenue_url, data)
+        self.post(self.revenue_url, data)
         user=User.objects.get(email=self.user_data['email'])
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        # Compare owner
-        revenue = Revenue.objects.get(name="Test name")
-        self.assertEqual(revenue.owner.email, self.user_data1['email'])
-
+        self.assertEqual(user.balance, 3)
+    
     """
-    Checks permissions with Revenue get
+    Checks balance gets updated with Revenue patch (similar to put)
     """
-    def test_revenue_get_url(self):
+    def test_revenue_patch(self):
         data = self.get_revenue_data()
-        # Add new revenue as user1
-        self.authenticate_user(self.credentials1)
-        self.post(self.revenue_url, data)
-        # Get revenue data as user1
-        response = self.get(self.revenue_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # Get revenue data as user2
-        self.authenticate_user(self.credentials2)
-        response = self.get(self.revenue_url)
-        # Gets an empty dict
-        self.assertEqual(response.data, 
-            OrderedDict([('count', 0), ('next', None), ('previous', None), ('results', [])]))
-        # Try with an specific revenue
-        revenue = Revenue.objects.get(name='Test name')
-        response = self.get(self.revenue_url+'/'+str(revenue.id))
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    """
-    Checks permissions with Revenue patch (almost same as put)
-    """
-    def test_revenue_put_url(self):
-        data = self.get_revenue_data()
-        # Add new revenue as user1
-        self.authenticate_user(self.credentials1)
+        self.authenticate_user(self.credentials)
         self.post(self.revenue_url, data)
         revenue = Revenue.objects.get(name='Test name')
-        # Try update as user1
-        response=self.patch(self.revenue_url+'/'+str(revenue.id), {'quantity': 35.0})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # Check revenue
-        revenue = Revenue.objects.get(name='Test name')
-        self.assertEqual(revenue.quantity, 35.0)
-        # Try update as user2
-        self.authenticate_user(self.credentials2)
-        response=self.patch(self.revenue_url+'/'+str(revenue.id), {'quantity': 30.0})
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        # Patch method
+        self.patch(self.revenue_url+'/'+str(revenue.id), {'quantity': 35.0})
+        user = User.objects.get(email=self.user_data['email'])
+        self.assertEqual(user.balance, 36)
 
     """
-    Checks permissions with Revenue delete
+    Checks balance gets updated with Revenue delete
     """
     def test_revenue_delete_url(self):
         data = self.get_revenue_data()
-        # Add new revenue as user1
-        self.authenticate_user(self.credentials1)
+        self.authenticate_user(self.credentials)
         self.post(self.revenue_url, data)
-        # Delete revenue data as user2
-        self.authenticate_user(self.credentials2)
+        data2 = data
+        data2['name']='test'
+        self.post(self.revenue_url, data2)
         revenue = Revenue.objects.get(name='Test name')
-        response = self.delete(self.revenue_url+'/'+str(revenue.id))
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        # Delete revenue data as user1
-        self.authenticate_user(self.credentials1)
-        response = self.delete(self.revenue_url+'/'+str(revenue.id))
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        # Delete method
+        self.delete(self.revenue_url+'/'+str(revenue.id))
+        user = User.objects.get(email=self.user_data['email'])
+        self.assertEqual(user.balance, 3)

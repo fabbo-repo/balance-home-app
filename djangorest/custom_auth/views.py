@@ -11,7 +11,7 @@ from custom_auth.serializers.user_serializers import (
     ChangePasswordSerializer,
     ResetPasswordSerializer,
     UserCreationSerializer,
-    UserUpdateSerializer
+    UserRetrieveUpdateDestroySerializer
 )
 from custom_auth.tasks import send_password_code
 from django.utils.timezone import now
@@ -25,7 +25,7 @@ class UserCreationView(generics.CreateAPIView):
 class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     permission_classes = (IsCurrentVerifiedUser,)
-    serializer_class = UserUpdateSerializer
+    serializer_class = UserRetrieveUpdateDestroySerializer
     parser_classes = (MultiPartParser, FormParser, JSONParser)
     
     def get_object(self, queryset=None):
