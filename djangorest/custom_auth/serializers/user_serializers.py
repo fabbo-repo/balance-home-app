@@ -111,17 +111,21 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(queryset=User.objects.all())],
         required=False
     )
+    receive_email_balance = serializers.BooleanField(required=False)
     balance = serializers.FloatField(read_only=True)
-    annual_balance = serializers.FloatField(required=False)
-    monthly_balance = serializers.FloatField(required=False)
+    expected_annual_balance = serializers.FloatField(required=False)
+    last_annual_balance = serializers.ReadOnlyField()
+    expected_monthly_balance = serializers.FloatField(required=False)
+    last_monthly_balance = serializers.ReadOnlyField()
     image = serializers.ImageField(required=False)
     last_login = serializers.ReadOnlyField()
 
     class Meta:
         model = User
         fields = (
-            'username', 'email', 'balance',
-            'annual_balance', 'monthly_balance',
+            'username', 'email', 'receive_email_balance', 'balance',
+            'expected_annual_balance', 'last_annual_balance', 
+            'expected_monthly_balance', 'last_monthly_balance',
             'image', 'last_login'
         )
 

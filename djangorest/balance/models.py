@@ -53,7 +53,10 @@ class Balance(models.Model):
 
 class DateBalance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    quantity = models.FloatField(
+    gross_quantity = models.FloatField(
+        validators=[MinValueValidator(0.0)],
+    )
+    net_quantity = models.FloatField(
         validators=[MinValueValidator(0.0)],
     )
     coin_type = models.ForeignKey(
