@@ -8,16 +8,16 @@ from balance.models import CoinType
 from custom_auth.models import InvitationCode, User
 import logging
 from django.conf import settings
-from revenue.models import Revenue, RevenueType
+from expense.models import Expense, ExpenseType
 
 
-class RevenuePaginationTests(APITestCase):
+class ExpensePaginationTests(APITestCase):
     def setUp(self):
         # Avoid WARNING logs while testing wrong requests 
         logging.disable(logging.WARNING)
 
         self.jwt_obtain_url=reverse('jwt_obtain_pair')
-        self.revenue_url=reverse('revenue-list')
+        self.expense_url=reverse('expense-list')
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
         self.inv_code.save()
@@ -35,7 +35,7 @@ class RevenuePaginationTests(APITestCase):
         self.user = self.create_user()
         
         self.coin_type = self.create_coin_type()
-        self.rev_type = self.create_rev_type()
+        self.exp_type = self.create_exp_type()
         return super().setUp()
     
     def get(self, url) :
@@ -52,13 +52,13 @@ class RevenuePaginationTests(APITestCase):
         jwt=self.post(self.jwt_obtain_url, credentials).data['access']
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
     
-    def get_revenue_data(self):
+    def get_expense_data(self):
         return {
             'name': 'Test name',
             'description': 'Test description',
             'quantity': 2.0,
             'coin_type': self.coin_type.simb,
-            'rev_type': self.rev_type.name,
+            'exp_type': self.exp_type.name,
             'date': str(date.today()),
             'owner': str(self.user),
         }
@@ -74,10 +74,10 @@ class RevenuePaginationTests(APITestCase):
         user.save()
         return user
     
-    def create_rev_type(self):
-        rev_type = RevenueType.objects.create(name="test")
-        rev_type.save()
-        return rev_type
+    def create_exp_type(self):
+        exp_type = ExpenseType.objects.create(name="test")
+        exp_type.save()
+        return exp_type
     
     def create_coin_type(self):
         coin_type = CoinType.objects.create(simb='EUR', name='euro')
@@ -85,15 +85,15 @@ class RevenuePaginationTests(APITestCase):
         return coin_type
     
     """
-    Checks Revenue pagination scheme is correct
+    Checks Expense pagination scheme is correct
     """
-    def test_revenue_pagination_scheme(self):
-        data = self.get_revenue_data()
-        # Add new revenue
+    def test_expense_pagination_scheme(self):
+        data = self.get_expense_data()
+        # Add new expense
         self.authenticate_user(self.credentials)
-        self.post(self.revenue_url, data)
-        # Get revenue data
-        response = self.get(self.revenue_url)
+        self.post(self.expense_url, data)
+        # Get expense data
+        response = self.get(self.expense_url)
         scheme = dict(response.data)
         scheme['results'] = []
         results = dict(response.data)['results']
@@ -110,29 +110,29 @@ class RevenuePaginationTests(APITestCase):
                     'quantity': 2.0, 
                     'date': str(date.today()), 
                     'coin_type': 'EUR', 
-                    'rev_type': 'test'
+                    'exp_type': 'test'
                 }
             ]
         }
         self.assertEqual(scheme, expected_scheme)
 
     """
-    Checks 2 pages of Revenue data is correct
+    Checks 2 pages of Expense data is correct
     """
-    def test_revenue_two_pages(self):
+    def test_expense_two_pages(self):
         self.authenticate_user(self.credentials)
         for i in range(20):
-            data = self.get_revenue_data()
-            # Add new revenue
-            self.post(self.revenue_url, data)
-        # Get First page revenue data
-        response = self.get(self.revenue_url)
+            data = self.get_expense_data()
+            # Add new expense
+            self.post(self.expense_url, data)
+        # Get First page expense data
+        response = self.get(self.expense_url)
         data = dict(response.data)
         self.assertEqual(data['count'], 20)
-        # 10 revenues in the first page
+        # 10 expenses in the first page
         self.assertEqual(len(data['results']), 10)
         # Second page
         response = self.get(data['next'])
         self.assertEqual(data['count'], 20)
-        # 10 revenues in the first page
+        # 10 expenses in the first page
         self.assertEqual(len(data['results']), 10)

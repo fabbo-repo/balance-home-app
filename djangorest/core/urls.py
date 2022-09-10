@@ -19,6 +19,7 @@ from django.conf import settings
 from core.swagger import urls as swagger_urls
 from custom_auth import urls as auth_urls
 from revenue import urls as revenue_urls
+from expense import urls as expense_urls
 from django.conf.urls.static import static
 
 urlpatterns = [
@@ -27,6 +28,8 @@ urlpatterns = [
     path("api/v1/", include(auth_urls)),
     # Revenue app urls:
     path("api/v1/", include(revenue_urls)),
+    # Expense app urls:
+    path("api/v1/", include(expense_urls)),
 ]
 
 # Swagger will only be available in DEBUG mode

@@ -8,16 +8,16 @@ from balance.models import CoinType
 from custom_auth.models import InvitationCode, User
 import logging
 from django.conf import settings
-from revenue.models import Revenue, RevenueType
+from expense.models import Expense, ExpenseType
 
 
-class RevenuePaginationTests(APITestCase):
+class ExpenseLogicTests(APITestCase):
     def setUp(self):
         # Avoid WARNING logs while testing wrong requests 
         logging.disable(logging.WARNING)
 
         self.jwt_obtain_url=reverse('jwt_obtain_pair')
-        self.revenue_url=reverse('revenue-list')
+        self.expense_url=reverse('expense-list')
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
         self.inv_code.save()
@@ -35,8 +35,7 @@ class RevenuePaginationTests(APITestCase):
         self.user = self.create_user()
         
         self.coin_type = self.create_coin_type()
-        self.rev_type = self.create_rev_type()
-        return super().setUp()
+        self.exp_type = self.create_exp_type()
     
     def get(self, url) :
         return self.client.get(url)
@@ -47,18 +46,27 @@ class RevenuePaginationTests(APITestCase):
             content_type="application/json"
         )
     
+    def patch(self, url, data={}) :
+        return self.client.patch(
+            url, json.dumps(data),
+            content_type="application/json"
+        )
+    
+    def delete(self, url) :
+        return self.client.delete(url)
+    
     def authenticate_user(self, credentials):
         # Get jwt token
         jwt=self.post(self.jwt_obtain_url, credentials).data['access']
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
     
-    def get_revenue_data(self):
+    def get_expense_data(self):
         return {
             'name': 'Test name',
             'description': 'Test description',
             'quantity': 2.0,
             'coin_type': self.coin_type.simb,
-            'rev_type': self.rev_type.name,
+            'exp_type': self.exp_type.name,
             'date': str(date.today()),
             'owner': str(self.user),
         }
@@ -68,71 +76,66 @@ class RevenuePaginationTests(APITestCase):
             username=self.user_data['username'],
             email=self.user_data['email'],
             inv_code=self.inv_code,
-            verified=True
+            verified=True,
+            balance= 10
         )
         user.set_password(self.user_data['password'])
         user.save()
         return user
     
-    def create_rev_type(self):
-        rev_type = RevenueType.objects.create(name="test")
-        rev_type.save()
-        return rev_type
+    def create_exp_type(self):
+        exp_type = ExpenseType.objects.create(name="test")
+        exp_type.save()
+        return exp_type
     
     def create_coin_type(self):
         coin_type = CoinType.objects.create(simb='EUR', name='euro')
         coin_type.save()
         return coin_type
+
+    def authenticate_add_expense(self):
+        self.authenticate_user(self.credentials)
+        data = self.get_expense_data()
+        # Add new expense
+        self.post(self.expense_url, data)
     
     """
-    Checks Revenue pagination scheme is correct
+    Checks balance gets updated with Expense post
     """
-    def test_revenue_pagination_scheme(self):
-        data = self.get_revenue_data()
-        # Add new revenue
+    def test_expense_post(self):
+        data = self.get_expense_data()
         self.authenticate_user(self.credentials)
-        self.post(self.revenue_url, data)
-        # Get revenue data
-        response = self.get(self.revenue_url)
-        scheme = dict(response.data)
-        scheme['results'] = []
-        results = dict(response.data)['results']
-            
-        for result in results:
-            scheme['results'] += [dict(result)]
-        expected_scheme = {
-            'count': 1, 'next': None, 'previous': None, 
-            'results': [
-                {
-                    'id': 1, 
-                    'name': 'Test name', 
-                    'description': 'Test description', 
-                    'quantity': 2.0, 
-                    'date': str(date.today()), 
-                    'coin_type': 'EUR', 
-                    'rev_type': 'test'
-                }
-            ]
-        }
-        self.assertEqual(scheme, expected_scheme)
+        self.post(self.expense_url, data)
+        user=User.objects.get(email=self.user_data['email'])
+        self.assertEqual(user.balance, 8)
+    
+    """
+    Checks balance gets updated with Expense patch (similar to put)
+    """
+    def test_expense_patch(self):
+        data = self.get_expense_data()
+        self.authenticate_user(self.credentials)
+        self.post(self.expense_url, data)
+        expense = Expense.objects.get(name='Test name')
+        # Patch method
+        self.patch(self.expense_url+'/'+str(expense.id), {'quantity': 5.0})
+        user = User.objects.get(email=self.user_data['email'])
+        self.assertEqual(user.balance, 5)
 
     """
-    Checks 2 pages of Revenue data is correct
+    Checks balance gets updated with Expense delete
     """
-    def test_revenue_two_pages(self):
+    def test_expense_delete_url(self):
+        # Add first expense
+        data = self.get_expense_data()
         self.authenticate_user(self.credentials)
-        for i in range(20):
-            data = self.get_revenue_data()
-            # Add new revenue
-            self.post(self.revenue_url, data)
-        # Get First page revenue data
-        response = self.get(self.revenue_url)
-        data = dict(response.data)
-        self.assertEqual(data['count'], 20)
-        # 10 revenues in the first page
-        self.assertEqual(len(data['results']), 10)
-        # Second page
-        response = self.get(data['next'])
-        self.assertEqual(data['count'], 20)
-        # 10 revenues in the first page
-        self.assertEqual(len(data['results']), 10)
+        self.post(self.expense_url, data)
+        data2 = data
+        data2['name']='test'
+        # Add second expense
+        self.post(self.expense_url, data2)
+        expense = Expense.objects.get(name='Test name')
+        # Delete second expense
+        self.delete(self.expense_url+'/'+str(expense.id))
+        user = User.objects.get(email=self.user_data['email'])
+        self.assertEqual(user.balance, 8)

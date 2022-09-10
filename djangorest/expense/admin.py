@@ -1,0 +1,33 @@
+from django.contrib import admin
+from expense.models import Expense, ExpenseType
+
+
+@admin.register(ExpenseType)
+class ExpenseTypeAdmin(admin.ModelAdmin):
+    fields = (
+        'name',
+        'images'
+    )
+
+
+@admin.register(Expense)
+class ExpenseAdmin(admin.ModelAdmin):
+    fields = (
+        'name',
+        'description',
+        ('quantity', 'date',),
+        ('coin_type', 'exp_type',),
+        'owner',
+        ('created', 'updated',),
+    )
+    readonly_fields = (
+        'owner', 'created', 'updated',
+    )
+    list_display = (
+        'name', 
+        'quantity',
+        'date',
+        'owner',
+    )
+    search_fields = ('owner',)
+    ordering = ('owner','date',)

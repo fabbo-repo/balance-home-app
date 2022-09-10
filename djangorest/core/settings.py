@@ -73,7 +73,8 @@ class Dev(Configuration):
         # Custom apps:
         'custom_auth',
         'balance',
-        'revenue'
+        'revenue',
+        'expense'
     ]
 
     MIDDLEWARE = [

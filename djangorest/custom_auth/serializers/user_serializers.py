@@ -101,7 +101,7 @@ class UserCreationSerializer(serializers.ModelSerializer):
 """
 Serializer to get, update or delete user data
 """
-class UserUpdateSerializer(serializers.ModelSerializer):
+class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         max_length=15,
         validators=[UniqueValidator(queryset=User.objects.all())],
@@ -111,15 +111,16 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(queryset=User.objects.all())],
         required=False
     )
-    annual_balance = serializers.IntegerField(required=False)
-    monthly_balance = serializers.IntegerField(required=False)
+    balance = serializers.FloatField(read_only=True)
+    annual_balance = serializers.FloatField(required=False)
+    monthly_balance = serializers.FloatField(required=False)
     image = serializers.ImageField(required=False)
     last_login = serializers.ReadOnlyField()
 
     class Meta:
         model = User
         fields = (
-            'username', 'email',
+            'username', 'email', 'balance',
             'annual_balance', 'monthly_balance',
             'image', 'last_login'
         )
@@ -127,7 +128,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         if 'email' in validated_data:
             validated_data['verified'] = False
-        return super(UserUpdateSerializer, self).update(instance, validated_data)
+        return super(UserRetrieveUpdateDestroySerializer, self).update(instance, validated_data)
 
 
 """

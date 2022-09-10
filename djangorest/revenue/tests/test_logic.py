@@ -11,7 +11,7 @@ from django.conf import settings
 from revenue.models import Revenue, RevenueType
 
 
-class RevenuePaginationTests(APITestCase):
+class RevenueLogicTests(APITestCase):
     def setUp(self):
         # Avoid WARNING logs while testing wrong requests 
         logging.disable(logging.WARNING)
@@ -36,7 +36,6 @@ class RevenuePaginationTests(APITestCase):
         
         self.coin_type = self.create_coin_type()
         self.rev_type = self.create_rev_type()
-        return super().setUp()
     
     def get(self, url) :
         return self.client.get(url)
@@ -46,6 +45,15 @@ class RevenuePaginationTests(APITestCase):
             url, json.dumps(data),
             content_type="application/json"
         )
+    
+    def patch(self, url, data={}) :
+        return self.client.patch(
+            url, json.dumps(data),
+            content_type="application/json"
+        )
+    
+    def delete(self, url) :
+        return self.client.delete(url)
     
     def authenticate_user(self, credentials):
         # Get jwt token
@@ -68,7 +76,8 @@ class RevenuePaginationTests(APITestCase):
             username=self.user_data['username'],
             email=self.user_data['email'],
             inv_code=self.inv_code,
-            verified=True
+            verified=True,
+            balance= 1
         )
         user.set_password(self.user_data['password'])
         user.save()
@@ -83,56 +92,48 @@ class RevenuePaginationTests(APITestCase):
         coin_type = CoinType.objects.create(simb='EUR', name='euro')
         coin_type.save()
         return coin_type
-    
-    """
-    Checks Revenue pagination scheme is correct
-    """
-    def test_revenue_pagination_scheme(self):
+
+    def authenticate_add_revenue(self):
+        self.authenticate_user(self.credentials)
         data = self.get_revenue_data()
         # Add new revenue
+        self.post(self.revenue_url, data)
+    
+    """
+    Checks balance gets updated with Revenue post
+    """
+    def test_revenue_post(self):
+        data = self.get_revenue_data()
         self.authenticate_user(self.credentials)
         self.post(self.revenue_url, data)
-        # Get revenue data
-        response = self.get(self.revenue_url)
-        scheme = dict(response.data)
-        scheme['results'] = []
-        results = dict(response.data)['results']
-            
-        for result in results:
-            scheme['results'] += [dict(result)]
-        expected_scheme = {
-            'count': 1, 'next': None, 'previous': None, 
-            'results': [
-                {
-                    'id': 1, 
-                    'name': 'Test name', 
-                    'description': 'Test description', 
-                    'quantity': 2.0, 
-                    'date': str(date.today()), 
-                    'coin_type': 'EUR', 
-                    'rev_type': 'test'
-                }
-            ]
-        }
-        self.assertEqual(scheme, expected_scheme)
+        user=User.objects.get(email=self.user_data['email'])
+        self.assertEqual(user.balance, 3)
+    
+    """
+    Checks balance gets updated with Revenue patch (similar to put)
+    """
+    def test_revenue_patch(self):
+        data = self.get_revenue_data()
+        self.authenticate_user(self.credentials)
+        self.post(self.revenue_url, data)
+        revenue = Revenue.objects.get(name='Test name')
+        # Patch method
+        self.patch(self.revenue_url+'/'+str(revenue.id), {'quantity': 35.0})
+        user = User.objects.get(email=self.user_data['email'])
+        self.assertEqual(user.balance, 36)
 
     """
-    Checks 2 pages of Revenue data is correct
+    Checks balance gets updated with Revenue delete
     """
-    def test_revenue_two_pages(self):
+    def test_revenue_delete_url(self):
+        data = self.get_revenue_data()
         self.authenticate_user(self.credentials)
-        for i in range(20):
-            data = self.get_revenue_data()
-            # Add new revenue
-            self.post(self.revenue_url, data)
-        # Get First page revenue data
-        response = self.get(self.revenue_url)
-        data = dict(response.data)
-        self.assertEqual(data['count'], 20)
-        # 10 revenues in the first page
-        self.assertEqual(len(data['results']), 10)
-        # Second page
-        response = self.get(data['next'])
-        self.assertEqual(data['count'], 20)
-        # 10 revenues in the first page
-        self.assertEqual(len(data['results']), 10)
+        self.post(self.revenue_url, data)
+        data2 = data
+        data2['name']='test'
+        self.post(self.revenue_url, data2)
+        revenue = Revenue.objects.get(name='Test name')
+        # Delete method
+        self.delete(self.revenue_url+'/'+str(revenue.id))
+        user = User.objects.get(email=self.user_data['email'])
+        self.assertEqual(user.balance, 3)
