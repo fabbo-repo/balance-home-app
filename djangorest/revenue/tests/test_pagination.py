@@ -108,7 +108,7 @@ class RevenuePaginationTests(APITestCase):
                     'name': 'Test name', 
                     'description': 'Test description', 
                     'quantity': 2.0, 
-                    'date': '2022-09-05', 
+                    'date': str(date.today()), 
                     'coin_type': 'EUR', 
                     'rev_type': 'test'
                 }

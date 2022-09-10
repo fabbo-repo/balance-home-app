@@ -16,8 +16,23 @@ class ExpenseView(viewsets.ModelViewSet):
     def get_queryset(self):
         return Expense.objects.filter(owner=self.request.user)
 
-    """
-    Inject owner data to the serializer
-    """
     def perform_create(self, serializer):
+        if serializer.validated_data.get('quantity'):
+            self.request.user.balance -= \
+                serializer.validated_data.get('quantity')
+            self.request.user.save()
+        # Inject owner data to the serializer
         serializer.save(owner=self.request.user)
+
+    def perform_update(self, serializer):
+        if serializer.validated_data.get('quantity'):
+            self.request.user.balance -= \
+                serializer.validated_data.get('quantity') \
+                - serializer.instance.quantity
+            self.request.user.save()
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        self.request.user.balance += instance.quantity
+        self.request.user.save()
+        instance.delete()

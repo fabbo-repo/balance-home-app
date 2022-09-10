@@ -11,7 +11,7 @@ from django.conf import settings
 from expense.models import Expense, ExpenseType
 
 
-class ExpensePaginationTests(APITestCase):
+class ExpenseLogicTests(APITestCase):
     def setUp(self):
         # Avoid WARNING logs while testing wrong requests 
         logging.disable(logging.WARNING)
@@ -36,7 +36,6 @@ class ExpensePaginationTests(APITestCase):
         
         self.coin_type = self.create_coin_type()
         self.exp_type = self.create_exp_type()
-        return super().setUp()
     
     def get(self, url) :
         return self.client.get(url)
@@ -46,6 +45,15 @@ class ExpensePaginationTests(APITestCase):
             url, json.dumps(data),
             content_type="application/json"
         )
+    
+    def patch(self, url, data={}) :
+        return self.client.patch(
+            url, json.dumps(data),
+            content_type="application/json"
+        )
+    
+    def delete(self, url) :
+        return self.client.delete(url)
     
     def authenticate_user(self, credentials):
         # Get jwt token
@@ -68,7 +76,8 @@ class ExpensePaginationTests(APITestCase):
             username=self.user_data['username'],
             email=self.user_data['email'],
             inv_code=self.inv_code,
-            verified=True
+            verified=True,
+            balance= 10
         )
         user.set_password(self.user_data['password'])
         user.save()
@@ -83,56 +92,50 @@ class ExpensePaginationTests(APITestCase):
         coin_type = CoinType.objects.create(simb='EUR', name='euro')
         coin_type.save()
         return coin_type
-    
-    """
-    Checks Expense pagination scheme is correct
-    """
-    def test_expense_pagination_scheme(self):
+
+    def authenticate_add_expense(self):
+        self.authenticate_user(self.credentials)
         data = self.get_expense_data()
         # Add new expense
+        self.post(self.expense_url, data)
+    
+    """
+    Checks balance gets updated with Expense post
+    """
+    def test_expense_post(self):
+        data = self.get_expense_data()
         self.authenticate_user(self.credentials)
         self.post(self.expense_url, data)
-        # Get expense data
-        response = self.get(self.expense_url)
-        scheme = dict(response.data)
-        scheme['results'] = []
-        results = dict(response.data)['results']
-            
-        for result in results:
-            scheme['results'] += [dict(result)]
-        expected_scheme = {
-            'count': 1, 'next': None, 'previous': None, 
-            'results': [
-                {
-                    'id': 1, 
-                    'name': 'Test name', 
-                    'description': 'Test description', 
-                    'quantity': 2.0, 
-                    'date': str(date.today()), 
-                    'coin_type': 'EUR', 
-                    'exp_type': 'test'
-                }
-            ]
-        }
-        self.assertEqual(scheme, expected_scheme)
+        user=User.objects.get(email=self.user_data['email'])
+        self.assertEqual(user.balance, 8)
+    
+    """
+    Checks balance gets updated with Expense patch (similar to put)
+    """
+    def test_expense_patch(self):
+        data = self.get_expense_data()
+        self.authenticate_user(self.credentials)
+        self.post(self.expense_url, data)
+        expense = Expense.objects.get(name='Test name')
+        # Patch method
+        self.patch(self.expense_url+'/'+str(expense.id), {'quantity': 5.0})
+        user = User.objects.get(email=self.user_data['email'])
+        self.assertEqual(user.balance, 5)
 
     """
-    Checks 2 pages of Expense data is correct
+    Checks balance gets updated with Expense delete
     """
-    def test_expense_two_pages(self):
+    def test_expense_delete_url(self):
+        # Add first expense
+        data = self.get_expense_data()
         self.authenticate_user(self.credentials)
-        for i in range(20):
-            data = self.get_expense_data()
-            # Add new expense
-            self.post(self.expense_url, data)
-        # Get First page expense data
-        response = self.get(self.expense_url)
-        data = dict(response.data)
-        self.assertEqual(data['count'], 20)
-        # 10 expenses in the first page
-        self.assertEqual(len(data['results']), 10)
-        # Second page
-        response = self.get(data['next'])
-        self.assertEqual(data['count'], 20)
-        # 10 expenses in the first page
-        self.assertEqual(len(data['results']), 10)
+        self.post(self.expense_url, data)
+        data2 = data
+        data2['name']='test'
+        # Add second expense
+        self.post(self.expense_url, data2)
+        expense = Expense.objects.get(name='Test name')
+        # Delete second expense
+        self.delete(self.expense_url+'/'+str(expense.id))
+        user = User.objects.get(email=self.user_data['email'])
+        self.assertEqual(user.balance, 8)
