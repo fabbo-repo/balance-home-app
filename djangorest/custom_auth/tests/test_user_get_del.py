@@ -71,13 +71,15 @@ class UserPutTests(APITestCase):
         user_data2 = {
             "username": self.user_data["username"],
             "email": self.user_data["email"],
-            "monthly_balance": 0,
-            "annual_balance": 0,
+            "expected_monthly_balance": 0,
+            "expected_annual_balance": 0,
         }
         self.assertEqual(response.data["username"], user_data2["username"])
         self.assertEqual(response.data["email"], user_data2["email"])
-        self.assertEqual(response.data["monthly_balance"], user_data2["monthly_balance"])
-        self.assertEqual(response.data["annual_balance"], user_data2["annual_balance"])
+        self.assertEqual(response.data["expected_monthly_balance"], 
+            user_data2["expected_monthly_balance"])
+        self.assertEqual(response.data["expected_annual_balance"], 
+            user_data2["expected_annual_balance"])
 
     """
     Checks that user gets deleted

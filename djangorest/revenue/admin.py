@@ -6,7 +6,7 @@ from revenue.models import Revenue, RevenueType
 class RevenueTypeAdmin(admin.ModelAdmin):
     fields = (
         'name',
-        'images'
+        'image'
     )
 
 

@@ -24,14 +24,17 @@ class UserAdmin(admin.ModelAdmin):
         'inv_code',
         ('last_login', 'date_joined'),
         ('is_superuser', 'is_staff',),
-        ('verified', 'is_active',),
+        ('verified', 'is_active', 'receive_email_balance',),
         ('code_sent', 'date_code_sent',),
         ('pass_reset', 'date_pass_reset',),
-        ('annual_balance', 'monthly_balance')
+        'balance',
+        ('expected_annual_balance', 'last_annual_balance'),
+        ('expected_monthly_balance', 'last_monthly_balance'),
     )
     readonly_fields = (
         'id', 'last_login', 'date_joined', 
-        'code_sent', 'date_code_sent'
+        'code_sent', 'date_code_sent', 'balance',
+        'last_annual_balance', 'last_monthly_balance',
     )
     list_display = (
         'email', 

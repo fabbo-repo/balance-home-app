@@ -6,7 +6,7 @@ from expense.models import Expense, ExpenseType
 class ExpenseTypeAdmin(admin.ModelAdmin):
     fields = (
         'name',
-        'images'
+        'image'
     )
 
 

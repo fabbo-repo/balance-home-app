@@ -79,18 +79,25 @@ class User(AbstractUser):
         null=True
     )
     balance = models.FloatField(default=0.0)
+    receive_email_balance = models.BooleanField(
+        default=True
+    )
     # Expected annual balance at the end of a year, 
-    # subtracted with the actual balance of each year
-    annual_balance = models.FloatField(
+    # it is used to be subtracted with the gross balance of each year
+    # and get the net balance
+    expected_annual_balance = models.FloatField(
         validators=[MinValueValidator(0.0)],
         default=0.0
     )
+    last_annual_balance = models.FloatField(default=0.0)
     # Expected monthly balance at the end of a month, 
-    # subtracted with the actual balance of each month
-    monthly_balance = models.FloatField(
+    # it is used to be subtracted with the gross balance of each month
+    # and get the net balance
+    expected_monthly_balance = models.FloatField(
         validators=[MinValueValidator(0.0)],
         default=0.0
     )
+    last_monthly_balance = models.FloatField(default=0.0)
     # Field corresponding to email verification
     verified = models.BooleanField(
         default=False

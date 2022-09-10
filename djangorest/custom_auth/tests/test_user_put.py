@@ -99,19 +99,19 @@ class UserPutTests(APITestCase):
     Checks that annual balance is changed
     """
     def test_change_user_annual_balance(self):
-        response = self.user_put({"annual_balance":10})
+        response = self.user_put({"expected_annual_balance":10})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user = User.objects.get(email=self.user_data["email"])
-        self.assertEqual(user.annual_balance, 10)
+        self.assertEqual(user.expected_annual_balance, 10)
     
     """
     Checks that montly balance is changed
     """
     def test_change_user_monthly_balance(self):
-        response = self.user_put({"monthly_balance":10})
+        response = self.user_put({"expected_monthly_balance":10})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user = User.objects.get(email=self.user_data["email"])
-        self.assertEqual(user.monthly_balance, 10)
+        self.assertEqual(user.expected_monthly_balance, 10)
         
 
     """

@@ -108,6 +108,12 @@ class ExpenseLogicTests(APITestCase):
         self.post(self.expense_url, data)
         user=User.objects.get(email=self.user_data['email'])
         self.assertEqual(user.balance, 8)
+        # Negative quantity not allowed
+        data['quantity'] = -10.0
+        response = self.post(self.expense_url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('quantity', response.data)
+
     
     """
     Checks balance gets updated with Expense patch (similar to put)
