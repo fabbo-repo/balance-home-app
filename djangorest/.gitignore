@@ -108,3 +108,5 @@ static/*
 
 # Migration files
 0001_initial.py
+0002_user_balance.py
+0002_annualbalance_monthlybalance.py
