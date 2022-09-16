@@ -29,7 +29,7 @@ class RevenueModelTests(APITestCase):
             'quantity': 2.0,
             'coin_type': coin_type,
             'rev_type': self.create_rev_type(),
-            'date': str(date.today()),
+            'date': date.today(),
             'owner': self.create_user()
         }
     

@@ -1,19 +1,16 @@
-from datetime import date
+from datetime import date, timedelta
 from django.core.mail import send_mail
 from django.conf import settings
 from celery import shared_task
 from balance.models import AnnualBalance, MonthlyBalance
 from expense.models import Expense
 from revenue.models import Revenue
+from custom_auth.models import User
+from balance import notifications
 
 import logging
 logger = logging.getLogger(__name__)
 
-MONTHS={
-    1: "January", 2: "February", 3: "March", 4: "April", 5:"May", 
-    6: "June", 7: "July", 8: "August", 9: "September", 
-    10: "October", 11: "November", 12: "December"
-}
 
 def _calculate_balance_by_month(user, month, year):
     monthly_revenues = Revenue.objects.filter(
@@ -46,9 +43,6 @@ def compute_montly_balance(
     ):
     monthly_balance = _calculate_balance_by_month(user, month, year)
     montly_result = str(user.expected_monthly_balance-monthly_balance)
-    body = MONTHS[month]+" balance: "+str(monthly_balance) \
-        +", expected balance: "+str(user.expected_monthly_balance) \
-        +". Result: "+str(montly_result)
     try:
         model=MonthlyBalance.objects.get(month=month, year=year)
         if is_last:
@@ -61,10 +55,13 @@ def compute_montly_balance(
         if is_last:
             user.last_monthly_balance=monthly_balance
             user.save()
-        send_mail(
-            'Balance summary', body,
-            settings.EMAIL_HOST_USER,
-            [user.email], fail_silently=False
+        notifications.send_monthly_balance(
+            user.email,
+            month,
+            year,
+            monthly_balance,
+            user.expected_monthly_balance,
+            montly_result
         )
 
 @shared_task
@@ -74,9 +71,6 @@ def compute_annual_balance(
     ):
     annual_balance = _calculate_balance_by_year(user, year)
     annual_result = str(user.expected_annual_balance-annual_balance)
-    body = str(year)+" balance: "+str(annual_balance) \
-        +", expected balance: "+str(user.expected_annual_balance) \
-        +". Result: "+str(annual_result)
     try:
         model=AnnualBalance.objects.get(year=year)
         if is_last:
@@ -89,8 +83,29 @@ def compute_annual_balance(
         if is_last:
             user.last_annual_balance=annual_balance
             user.save()
-        send_mail(
-            'Balance summary', body,
-            settings.EMAIL_HOST_USER,
-            [user.email], fail_silently=False
+        notifications.send_annual_balance(
+            user.email,
+            year,
+            annual_balance,
+            user.expected_annual_balance,
+            annual_result
         )
+
+
+@shared_task
+def periodic_monthly_balance():
+    yesterday = date.today() - timedelta(days=1)
+    month = yesterday.month
+    year = yesterday.year
+    for user in User.objects:
+        if user.verified and user.receive_email_balance:
+            compute_montly_balance(user, month, year, True).delay()
+
+
+@shared_task
+def periodic_annual_balance():
+    yesterday = date.today() - timedelta(days=1)
+    year = yesterday.year
+    for user in User.objects:
+        if user.verified and user.receive_email_balance:
+            compute_annual_balance(user, year, True).delay()

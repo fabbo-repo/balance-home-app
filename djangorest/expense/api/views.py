@@ -1,24 +1,24 @@
 from rest_framework import viewsets
-from revenue.models import Revenue
-from revenue.serializers import RevenueSerializer
+from expense.models import Expense
+from expense.api.serializers import ExpenseSerializer
 from core.permissions import IsCurrentVerifiedUser
-from revenue.filters import RevenueFilterSet
+from expense.filters import ExpenseFilterSet
 
-class RevenueView(viewsets.ModelViewSet):
-    queryset = Revenue.objects.all()
-    serializer_class = RevenueSerializer
+class ExpenseView(viewsets.ModelViewSet):
+    queryset = Expense.objects.all()
+    serializer_class = ExpenseSerializer
     permission_classes = (IsCurrentVerifiedUser,)
-    filterset_class = RevenueFilterSet
+    filterset_class = ExpenseFilterSet
 
     """
     Filter objects by owner
     """
     def get_queryset(self):
-        return Revenue.objects.filter(owner=self.request.user)
+        return Expense.objects.filter(owner=self.request.user)
 
     def perform_create(self, serializer):
         if serializer.validated_data.get('quantity'):
-            self.request.user.balance += \
+            self.request.user.balance -= \
                 serializer.validated_data.get('quantity')
             self.request.user.save()
         # Inject owner data to the serializer
@@ -26,13 +26,13 @@ class RevenueView(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         if serializer.validated_data.get('quantity'):
-            self.request.user.balance += \
+            self.request.user.balance -= \
                 serializer.validated_data.get('quantity') \
                 - serializer.instance.quantity
             self.request.user.save()
         serializer.save()
 
     def perform_destroy(self, instance):
-        self.request.user.balance -= instance.quantity
+        self.request.user.balance += instance.quantity
         self.request.user.save()
         instance.delete()
