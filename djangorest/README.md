@@ -127,6 +127,10 @@ python manage.py test
 celery -A core worker -l INFO -P eventlet
 ~~~
 > ***redis*** must be launched too
+* Schedule periodic tasks:
+~~~
+python manage.py schedule_setup
+~~~
 
 ## Environment Variables:
 

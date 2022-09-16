@@ -8,13 +8,13 @@ def schedule_setup():
 
 
 def schedule_monthly_balance():
-    schedule, created = CrontabSchedule.objects.get_or_create(
+    schedule, created = CrontabSchedule.objects.update_or_create(
         minute="30", 
         hour="7",
         day_of_month="1"
     )
     args = json.dumps([])
-    PeriodicTask.objects.create(
+    PeriodicTask.objects.update_or_create(
         name="Monthly balance email and result",
         crontab=schedule,
         args=args,
@@ -23,13 +23,14 @@ def schedule_monthly_balance():
 
 
 def schedule_annual_balance():
-    schedule, created = CrontabSchedule.objects.get_or_create(
+    schedule, created = CrontabSchedule.objects.update_or_create(
         minute="30", 
         hour="7",
-        day_of_year="1"
+        day_of_month="1",
+        month_of_year="1"
     )
     args = json.dumps([])
-    PeriodicTask.objects.create(
+    PeriodicTask.objects.update_or_create(
         name="Annual balance email and result",
         crontab=schedule,
         args=args,
