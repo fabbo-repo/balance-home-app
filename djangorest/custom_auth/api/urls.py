@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
-from custom_auth.views import (
+from custom_auth.api.views import (
     ChangePasswordView,
     CodeVerificationView, 
     CodeView, 

@@ -1,5 +1,5 @@
 from django.urls import path, include
-from expense.views import ExpenseView
+from expense.api.views import ExpenseView
 from rest_framework import routers
 
 # trailing_slash=False erase the '/' character at the end of the url

@@ -3,6 +3,12 @@
 ~~~
 djangorest/
     ├── app_1/
+    │   ├── management/
+    |   |   ├── __init__.py
+    │   │   └── commands/
+    |   |       ├── __init__.py
+    |   |       ├── schedule_setup.py
+    │   │       └── ... (This is optional)
     │   ├── templates/
     │   │   └── ... (This is optional)
     │   ├── migrations/
@@ -11,16 +17,23 @@ djangorest/
     |   │   ├── __init__.py
     |   │   ├── tests_1.py
     |   │   └── ...
-    │   ├── serializers/
-    │   │   ├── model1_serializers.py
-    │   │   ├── ... (This is optional)
-    │   │   └── model2_serializers.py
+    │   ├── api/
+    |   │   ├── serializers.py  (This is optional)
+    |   │   ├── serializers/
+    │   |   │   ├── model1_serializers.py
+    │   |   │   ├── ... (This is optional)
+    │   |   │   └── model2_serializers.py
+    |   │   ├── views.py  (This is optional)
+    |   │   ├── views/
+    │   |   │   ├── model1_views.py
+    │   |   │   ├── ... (This is optional)
+    │   |   │   └── model2_views.py
+    |   │   └── urls.py
     │   ├── __init__.py
-    │   ├── views.py
     │   ├── tasks.py
     │   ├── signals.py
+    │   ├── schedule_setup.py
     │   ├── models.py
-    │   ├── serializers.py  (This is optional)
     │   ├── filters.py
     │   ├── notifications.py
     │   ├── apps.py
@@ -46,6 +59,7 @@ djangorest/
     │   ├── celery.py
     │   ├── settings.py
     │   ├── urls.py
+    │   ├── api_urls.py
     │   └── wsgi.py
     ├── templates/
     │   └── ... (This is optional)
@@ -113,6 +127,10 @@ python manage.py test
 celery -A core worker -l INFO -P eventlet
 ~~~
 > ***redis*** must be launched too
+* Schedule periodic tasks:
+~~~
+python manage.py schedule_setup
+~~~
 
 ## Environment Variables:
 

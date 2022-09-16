@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from expense.models import Expense
-from expense.serializers import ExpenseSerializer
+from expense.api.serializers import ExpenseSerializer
 from core.permissions import IsCurrentVerifiedUser
 from expense.filters import ExpenseFilterSet
 
@@ -14,6 +14,8 @@ class ExpenseView(viewsets.ModelViewSet):
     Filter objects by owner
     """
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return Expense.objects.none()  # return empty queryset
         return Expense.objects.filter(owner=self.request.user)
 
     def perform_create(self, serializer):

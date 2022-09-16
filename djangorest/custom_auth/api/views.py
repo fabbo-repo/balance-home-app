@@ -1,13 +1,13 @@
 import os
 from core.permissions import IsCurrentVerifiedUser
 from custom_auth.models import User
-from custom_auth.serializers.jwt_code_serializers import CodeSerializer, CodeVerificationSerializer, CustomTokenObtainPairSerializer
+from custom_auth.api.serializers.jwt_code_serializers import CodeSerializer, CodeVerificationSerializer, CustomTokenObtainPairSerializer
 from rest_framework import generics, status, mixins
 from rest_framework.parsers import FormParser, MultiPartParser, JSONParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
-from custom_auth.serializers.user_serializers import (
+from custom_auth.api.serializers.user_serializers import (
     ChangePasswordSerializer,
     ResetPasswordSerializer,
     UserCreationSerializer,

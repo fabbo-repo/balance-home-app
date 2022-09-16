@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from custom_auth.models import User
 import os
-from custom_auth.serializers.utils import check_user_with_email
+from custom_auth.api.serializers.utils import check_user_with_email
 from custom_auth.tasks import send_email_code
 from django.utils.timezone import now
 from django.conf import settings
