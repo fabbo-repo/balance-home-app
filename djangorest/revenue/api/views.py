@@ -14,6 +14,8 @@ class RevenueView(viewsets.ModelViewSet):
     Filter objects by owner
     """
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return Revenue.objects.none()  # return empty queryset
         return Revenue.objects.filter(owner=self.request.user)
 
     def perform_create(self, serializer):
