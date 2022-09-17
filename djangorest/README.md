@@ -131,6 +131,10 @@ celery -A core worker -l INFO -P eventlet
 ~~~
 python manage.py schedule_setup
 ~~~
+* Create default coin types, revenue types and expense types:
+~~~
+python manage.py create_balance_models
+~~~
 
 ## Environment Variables:
 
