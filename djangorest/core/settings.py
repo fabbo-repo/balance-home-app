@@ -14,6 +14,7 @@ from pathlib import Path
 from configurations import Configuration
 from datetime import timedelta
 import os
+import dj_database_url
 
 def get_env(environ_name, default_value):
     return os.environ.get(environ_name) or default_value
@@ -111,12 +112,11 @@ class Dev(Configuration):
     # Database
     # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'default.sqlite3'),
-        }
-    }
+    # conn_max_age is the lifetime of a database connection in seconds
+    DATABASES = {'default': dj_database_url.config(
+        default='sqlite:///'+os.path.join(BASE_DIR, 'default.sqlite3'),
+        conn_max_age=600
+    )}
 
 
     # Password validation
@@ -244,22 +244,6 @@ class Prod(Dev):
         [ "localhost", "0.0.0.0" ])
     CSRF_TRUSTED_ORIGINS = get_list_env('APP_CSRF_TRUSTED_ORIGINS', 
         [ "http://localhost:8000", "http://127.0.0.1:8000" ])
-
-    PG_USER = get_env('APP_PG_USER',  "admin")
-    PG_PASSWORD = get_env('APP_PG_PASSWORD',  "admin")
-    PG_DOMAIN = get_env('APP_PG_DOMAIN',  "postgres")
-    PG_PORT = get_int_env('APP_PG_PORT', 5432)
-    PG_DB_NAME = get_env('APP_PG_DB_NAME', "postgres")
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': PG_DB_NAME,
-            'USER': PG_USER,
-            'PASSWORD': PG_PASSWORD,
-            'HOST': PG_DOMAIN,
-            'PORT': PG_PORT,
-        }
-    }
     
     LOGGING = {
         "version": 1,

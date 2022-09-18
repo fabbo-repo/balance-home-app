@@ -38,65 +38,6 @@ services:
       touch /var/log/balance_app/app.log && sleep 30 &&  \
       /venv/bin/celery -A core worker -l INFO"
 
-  migrations:
-    build: .
-    env_file:
-      - ./extras_app.env
-    environment:
-      - DJANGO_CONFIGURATION=Prod
-    command: bash -c "mkdir -p /var/log/balance_app && \
-      touch /var/log/balance_app/app.log && sleep 15 && \
-      /venv/bin/python manage.py makemigrations && \
-      /venv/bin/python manage.py migrate --no-input"
-    links:
-      - db:db
-      - redis:redis
-    depends_on:
-      - db
-    restart: on-failure
-    labels:
-      io.rancher.container.start_once: 'true'
-  
-  super_user:
-    build: .
-    env_file:
-      - ./extras_app.env
-    environment:
-      - DJANGO_CONFIGURATION=Prod
-    command: bash -c "mkdir -p /var/log/balance_app && \
-      touch /var/log/balance_app/app.log && sleep 30 && \
-      /venv/bin/python manage.py makemigrations && \
-      /venv/bin/python manage.py createsuperuser --no-input"
-    links:
-      - db:db
-      - redis:redis
-    depends_on:
-      - db
-    restart: on-failure
-    labels:
-      io.rancher.container.start_once: 'true'
-  
-  collectstatic:
-    build: .
-    env_file:
-      - ./extras_app.env
-    environment:
-      - DJANGO_CONFIGURATION=Prod
-    command: bash -c "mkdir -p /var/log/balance_app && \
-      touch /var/log/balance_app/app.log && sleep 30 && \
-      /venv/bin/python manage.py collectstatic --no-input"
-    links:
-      - db:db
-      - redis:redis
-    volumes:
-      - ./static:/code/static
-      - ./media:/code/media
-    depends_on:
-      - db
-    restart: on-failure
-    labels:
-      io.rancher.container.start_once: 'true'
-
   redis:
     image: redis:latest
     restart: unless-stopped
