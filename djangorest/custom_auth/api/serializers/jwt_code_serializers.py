@@ -1,11 +1,12 @@
+import os
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from custom_auth.models import User
-import os
 from custom_auth.api.serializers.utils import check_user_with_email
 from custom_auth.tasks import send_email_code
 from django.utils.timezone import now
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -13,9 +14,11 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         if not user.inv_code:
-            raise serializers.ValidationError({"inv_code": "No InvitationCode stored"})
+            raise serializers.ValidationError(
+                {"inv_code": _("No invitation code stored")})
         if not user.verified:
-            raise serializers.ValidationError({"verified": "Email is not verified"})
+            raise serializers.ValidationError(
+                {"verified": _("Unverified email")})
         token = super(CustomTokenObtainPairSerializer, cls).get_token(user)
 
         # Custom keys added in PAYLOAD
@@ -38,8 +41,9 @@ class CodeSerializer(serializers.Serializer):
         if user.date_code_sent:
             duration_s = (now() - user.date_code_sent).total_seconds()
             if duration_s < settings.EMAIL_CODE_THRESHOLD :
-                raise serializers.ValidationError("Code has already been sent, wait "
-                    +str(settings.EMAIL_CODE_THRESHOLD-duration_s))
+                raise serializers.ValidationError(
+                    {"code": _("Code has already been sent, wait {} seconds")
+                        .format(str(settings.EMAIL_CODE_THRESHOLD-duration_s))})
         return data
 
     def create(self, validated_data):
@@ -70,14 +74,14 @@ class CodeVerificationSerializer(serializers.Serializer):
     def validate(self, data):
         user = User.objects.get(email=data.get('email'))
         if not user.date_code_sent:
-            raise serializers.ValidationError({"code": "None code sent"})
+            raise serializers.ValidationError({"code": _("No code sent")})
         if user.date_code_sent:
             duration_s = (now() - user.date_code_sent).total_seconds()
             if duration_s > settings.EMAIL_CODE_VALID :
                 raise serializers.ValidationError(
-                    {"code": "Code is no longer valid"})
+                    {"code": _("Code is no longer valid")})
         if user.code_sent != data.get('code') :
-            raise serializers.ValidationError({"code": "Invalid code"})
+            raise serializers.ValidationError({"code": _("Invalid code")})
         return data
 
     def create(self, validated_data):

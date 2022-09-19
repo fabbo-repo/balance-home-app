@@ -149,7 +149,6 @@ class Dev(Configuration):
     ]
     LANGUAGES = (
         ('en', _('English')),
-        ('fr', _('French')),
         ('es', _('Spanish')),
     )
 

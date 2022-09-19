@@ -5,6 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
 from django.utils.timezone import now
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 
 
 """
@@ -25,9 +26,9 @@ Checks if an invitation code is created and valid
 def check_inv_code(code):
     inv_code = None
     try: inv_code = InvitationCode.objects.get(code=code)
-    except: raise serializers.ValidationError("InvitationCode not found")
+    except: raise serializers.ValidationError(_("Invitation code not found"))
     if not inv_code.is_active:
-        raise serializers.ValidationError("Invalid InvitationCode")
+        raise serializers.ValidationError(_("Invalid invitation code"))
 
 """
 Checks if 2 passwords are different, also that username and email 
@@ -36,10 +37,10 @@ are different to the passwords
 def check_username_pass12(username, email, password1, password2):
     if password1 != password2:
         raise serializers.ValidationError(
-            {"password": "Password fields didn't match."})
+            {"password": _("Password fields do not match")})
     if username == password1 or email == password1:
         raise serializers.ValidationError(
-            {"password": "Password field can not match another attribute."})
+            {"password": _("Password cannot match other profile data")})
 
 
 """
@@ -169,8 +170,8 @@ class ResetPasswordSerializer(serializers.Serializer):
             duration_s = (now() - user.date_pass_reset).total_seconds()
             if duration_s > settings.EMAIL_CODE_VALID :
                 raise serializers.ValidationError(
-                    "Code is no longer valid")
+                    _("Code is no longer valid"))
         if user.pass_reset != code :
             raise serializers.ValidationError(
-                "Invalid code")
+                _("Invalid code"))
         return code

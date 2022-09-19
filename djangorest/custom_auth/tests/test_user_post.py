@@ -125,7 +125,7 @@ class UserPostTests(APITestCase):
             }
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['password'][0], "Password fields didn't match.")
+        self.assertEqual(response.data['password'][0], "Password fields do not match")
     
     """
     Checks that an user with a short password is not created

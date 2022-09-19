@@ -52,7 +52,7 @@ class UserTests(APITestCase):
             is_staff=False,
             **self.user_data
         )
-        with self.assertRaisesMessage(ValueError, 'Superuser must have is_staff=True.'):
+        with self.assertRaisesMessage(ValueError, 'Superuser must have is_staff=True'):
             User.objects.create_superuser(
                 is_staff=False,
                 **self.user_data
@@ -69,7 +69,7 @@ class UserTests(APITestCase):
             is_superuser=False,
             **self.user_data
         )
-        with self.assertRaisesMessage(ValueError, 'Superuser must have is_superuser=True.'):
+        with self.assertRaisesMessage(ValueError, 'Superuser must have is_superuser=True'):
             User.objects.create_superuser(
                 is_superuser=False,
                 **self.user_data
@@ -87,7 +87,7 @@ class UserTests(APITestCase):
             password=self.user_data['password'],
             username=""
         )
-        with self.assertRaisesMessage(ValueError, 'The given username must be set.'):
+        with self.assertRaisesMessage(ValueError, 'An username must be provided'):
             User.objects.create_user(
                 email=self.user_data['email'],
                 password=self.user_data['password'],
@@ -106,7 +106,7 @@ class UserTests(APITestCase):
             password=self.user_data['password'],
             username=self.user_data['username']
         )
-        with self.assertRaisesMessage(ValueError, 'The given email must be set.'):
+        with self.assertRaisesMessage(ValueError, 'An email address must be provided'):
             User.objects.create_user(
                 email='',
                 password=self.user_data['password'],
