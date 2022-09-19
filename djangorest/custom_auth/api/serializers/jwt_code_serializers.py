@@ -7,6 +7,7 @@ from custom_auth.tasks import send_email_code
 from django.utils.timezone import now
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import get_language
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -53,7 +54,7 @@ class CodeSerializer(serializers.Serializer):
         user = User.objects.get(email=email)    
         user.code_sent = code
         user.date_code_sent = now()
-        send_email_code.delay(code, email)
+        send_email_code.delay(code, email, get_language())
         user.save()
         return {'email':email}
 

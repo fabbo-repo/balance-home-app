@@ -15,6 +15,8 @@ from custom_auth.api.serializers.user_serializers import (
 )
 from custom_auth.tasks import send_password_code
 from django.utils.timezone import now
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import get_language
 
 class UserCreationView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -82,7 +84,7 @@ class ResetPasswordView(generics.GenericAPIView, mixins.CreateModelMixin, mixins
         code = os.urandom(3).hex()
         self.user.pass_reset = code
         self.user.date_pass_reset = now()
-        send_password_code.delay(code, self.user.email)
+        send_password_code.delay(code, self.user.email, get_language())
         self.user.save()
         return Response([], status.HTTP_200_OK)
 

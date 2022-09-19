@@ -5,12 +5,12 @@ from django.conf import settings
 from django.utils.translation import get_language
 
 
-def send_email_code(code, email):
+def send_email_code(code, email, lang):
     subject = render_to_string(
-        "auth/notifications/email_code_subject.txt"
+        "auth/notifications/{}/email_code_subject.txt".format(lang)
     )
     body = render_to_string(
-        "auth/notifications/email_code_body.txt",
+        "auth/notifications/{}/email_code_body.txt".format(lang),
         {"code": code},
     )
     send_mail(
@@ -21,12 +21,12 @@ def send_email_code(code, email):
         fail_silently=False
     )
 
-def send_password_code(code, email):
+def send_password_code(code, email, lang):
     subject = render_to_string(
-        "auth/notifications/password_code_subject.txt"
+        "auth/notifications/{}/password_code_subject.txt".format(lang)
     )
     body = render_to_string(
-        "auth/notifications/password_code_body.txt",
+        "auth/notifications/{}/password_code_body.txt".format(lang),
         {"code": code},
     )
     send_mail(
