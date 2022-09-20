@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-19 20:10+0200\n"
+"POT-Creation-Date: 2022-09-20 17:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,48 +26,52 @@ msgstr "Inglés"
 msgid "Spanish"
 msgstr "Español"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:18
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:19
 msgid "No invitation code stored"
 msgstr "No hay código de invitación almacenado"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:21
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:22
 msgid "Unverified email"
 msgstr "Correo no verificado"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:45
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:46
 msgid "Code has already been sent, wait {} seconds"
 msgstr "El código se ha enviado, espere {} segundos"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:77
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:78
 msgid "No code sent"
 msgstr "Ningún código enviado"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:82
-#: .\custom_auth\api\serializers\user_serializers.py:173
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:83
+#: .\custom_auth\api\serializers\user_serializers.py:184
 msgid "Code is no longer valid"
 msgstr "El código ya no es válido"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:84
-#: .\custom_auth\api\serializers\user_serializers.py:176
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:85
+#: .\custom_auth\api\serializers\user_serializers.py:187
 msgid "Invalid code"
 msgstr "Código invalido"
 
-#: .\custom_auth\api\serializers\user_serializers.py:29
+#: .\custom_auth\api\serializers\user_serializers.py:30
 msgid "Invitation code not found"
 msgstr "Código de invitación no encontrado"
 
-#: .\custom_auth\api\serializers\user_serializers.py:31
+#: .\custom_auth\api\serializers\user_serializers.py:32
 msgid "Invalid invitation code"
 msgstr "Código de invitación no válido"
 
-#: .\custom_auth\api\serializers\user_serializers.py:40
+#: .\custom_auth\api\serializers\user_serializers.py:41
 msgid "Password fields do not match"
 msgstr "Los campos de contraseña no coinciden"
 
-#: .\custom_auth\api\serializers\user_serializers.py:43
-#: .\custom_auth\models.py:167
+#: .\custom_auth\api\serializers\user_serializers.py:44
+#: .\custom_auth\models.py:173
 msgid "Password cannot match other profile data"
 msgstr "La contraseña no puede coincidir con otro dato del perfil"
+
+#: .\custom_auth\api\serializers\user_serializers.py:88
+msgid "Language not supported"
+msgstr "Lenguaje no soportado"
 
 #: .\custom_auth\api\serializers\utils.py:12
 msgid "User not found"
@@ -117,54 +121,58 @@ msgstr "El superusuario debe tener is_superuser=True"
 msgid "email address"
 msgstr "dirección de correo electrónico"
 
-#: .\custom_auth\models.py:79
+#: .\custom_auth\models.py:78
+msgid "language"
+msgstr "lenguaje"
+
+#: .\custom_auth\models.py:85
 msgid "profile image"
 msgstr "imagen de perfil"
 
-#: .\custom_auth\models.py:85
+#: .\custom_auth\models.py:91
 msgid "invitation code"
 msgstr "código de invitación"
 
-#: .\custom_auth\models.py:90
+#: .\custom_auth\models.py:96
 msgid "current balance"
 msgstr "balance actual"
 
-#: .\custom_auth\models.py:94
+#: .\custom_auth\models.py:100
 msgid "receive email about balance"
 msgstr "recibir correo electrónico sobre el balance"
 
-#: .\custom_auth\models.py:101
+#: .\custom_auth\models.py:107
 msgid "expected annual balance"
 msgstr "balance anual esperado"
 
-#: .\custom_auth\models.py:106
+#: .\custom_auth\models.py:112
 msgid "last annual balance"
 msgstr "último balance anual"
 
-#: .\custom_auth\models.py:113
+#: .\custom_auth\models.py:119
 msgid "expected monthly balance"
 msgstr "balance mensual esperado"
 
-#: .\custom_auth\models.py:118
+#: .\custom_auth\models.py:124
 msgid "last monthly balance"
 msgstr "último balance mensual"
 
-#: .\custom_auth\models.py:123
+#: .\custom_auth\models.py:129
 msgid "verified"
 msgstr "verificado"
 
-#: .\custom_auth\models.py:129
+#: .\custom_auth\models.py:135
 msgid "last code sent"
 msgstr "último código enviado"
 
-#: .\custom_auth\models.py:137
+#: .\custom_auth\models.py:143
 msgid "date of last code sent"
 msgstr "fecha del último código enviado"
 
-#: .\custom_auth\models.py:144
+#: .\custom_auth\models.py:150
 msgid "last password reset code sent"
 msgstr "último código de restablecimiento de contraseña enviado"
 
-#: .\custom_auth\models.py:152
+#: .\custom_auth\models.py:158
 msgid "date of last password reset code sent"
 msgstr "fecha del último código de restablecimiento de contraseña enviado"

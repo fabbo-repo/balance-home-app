@@ -20,6 +20,7 @@ class UserAdmin(admin.ModelAdmin):
         'id',
         'username', 
         'email',
+        'language',
         'image',
         'inv_code',
         'last_login', 

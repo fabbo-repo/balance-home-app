@@ -74,6 +74,12 @@ class User(AbstractUser):
         _("email address"),
         unique=True,
     )
+    language = models.CharField(
+        _("language"),
+        validators=[MinLengthValidator(2)],
+        max_length=2,
+        default='en'
+    )
     # Profile image
     image = models.ImageField(
         _("profile image"),

@@ -19,6 +19,7 @@ class UserPostTests(APITestCase):
         self.user_data={
             "username":"username",
             "email":"email@test.com",
+            "language":"en",
             "password": "password1@212",
             "password2": "password1@212",
             "inv_code": str(self.inv_code.code)

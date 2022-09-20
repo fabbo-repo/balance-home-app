@@ -6,6 +6,7 @@ from django.db import transaction
 from django.utils.timezone import now
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import check_for_language
 
 
 """
@@ -55,6 +56,10 @@ class UserCreationSerializer(serializers.ModelSerializer):
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
+    language = serializers.CharField(
+        required=False,
+        min_length=2, max_length=2
+    )
     inv_code = serializers.SlugRelatedField(
         required=True,
         slug_field="code", many=False,
@@ -73,9 +78,15 @@ class UserCreationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username', 'email', 'inv_code',
-            'password', 'password2',
+            'username', 'email', 'language',
+            'inv_code', 'password', 'password2',
         )
+
+    def validate_language(self, value):
+        if not check_for_language(value):
+            raise serializers.ValidationError(
+                _("Language not supported"))
+        return value
 
     def validate_inv_code(self, value):
         check_inv_code(value.code)
