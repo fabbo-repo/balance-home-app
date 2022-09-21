@@ -24,7 +24,7 @@ class Revenue(Balance):
 
     class Meta(Balance.Meta):
         verbose_name = _('Revenue')
-        verbose_name_plural = 'Revenues'
+        verbose_name_plural = _('Revenues')
     
     def __str__(self) -> str:
         return super().__str__()
