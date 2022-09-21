@@ -21,7 +21,7 @@ class RevenueModelTests(APITestCase):
         return super().setUp()
     
     def get_revenue_data(self):
-        coin_type = CoinType.objects.create(simb='EUR', name='euro')
+        coin_type = CoinType.objects.create(code='EUR', name='euro')
         coin_type.save()
         return {
             'name': 'Test name',

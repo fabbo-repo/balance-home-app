@@ -49,7 +49,7 @@ def compute_montly_balance(
             logger.error('Last monthly balance already created with id: '
                 +str(model.id)+', skipping')
             return
-        model.quantity=monthly_balance
+        model.quantity = monthly_balance
         model.save()
     except:
         if is_last:
@@ -61,7 +61,8 @@ def compute_montly_balance(
             year,
             monthly_balance,
             user.expected_monthly_balance,
-            montly_result
+            montly_result,
+            user.language
         )
 
 @shared_task
@@ -77,18 +78,19 @@ def compute_annual_balance(
             logger.error('Last annual balance already created with id: '
                 +str(model.id)+', skipping')
             return
-        model.quantity=annual_balance
+        model.quantity = annual_balance
         model.save()
     except:
         if is_last:
-            user.last_annual_balance=annual_balance
+            user.last_annual_balance = annual_balance
             user.save()
         notifications.send_annual_balance(
             user.email,
             year,
             annual_balance,
             user.expected_annual_balance,
-            annual_result
+            annual_result,
+            user.language
         )
 
 

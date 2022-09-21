@@ -15,6 +15,7 @@ from configurations import Configuration
 from datetime import timedelta
 import os
 import dj_database_url
+from django.utils.translation import gettext_lazy as _
 
 def get_env(environ_name, default_value):
     return os.environ.get(environ_name) or default_value
@@ -81,6 +82,7 @@ class Dev(Configuration):
     MIDDLEWARE = [
         'django.middleware.security.SecurityMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.locale.LocaleMiddleware',
         'django.middleware.common.CommonMiddleware',
         #'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -141,14 +143,21 @@ class Dev(Configuration):
     # Internationalization
     # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-    LANGUAGE_CODE = 'en-us'
+    LANGUAGE_CODE = 'en'
+    LOCALE_PATHS = [
+        BASE_DIR / 'locale/',
+    ]
+    LANGUAGES = (
+        ('en', _('English')),
+        ('es', _('Spanish')),
+    )
 
     TIME_ZONE = get_env('APP_TIME_ZONE', "UTC")
-
+    # Enables Django’s translation system
     USE_I18N = True
-
+    # Django will display numbers and dates using the format of the current locale
     USE_L10N = True
-
+    # Datetimes will be timezone-aware
     USE_TZ = True
 
 

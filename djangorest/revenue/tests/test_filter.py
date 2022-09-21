@@ -55,7 +55,7 @@ class RevenueFilterTests(APITestCase):
             'name': 'Test name',
             'description': 'Test description',
             'quantity': 2.0,
-            'coin_type': self.coin_type.simb,
+            'coin_type': self.coin_type.code,
             'rev_type': self.rev_type.name,
             'date': str(date.today()),
             'owner': str(self.user),
@@ -78,7 +78,7 @@ class RevenueFilterTests(APITestCase):
         return rev_type
     
     def create_coin_type(self):
-        coin_type = CoinType.objects.create(simb='EUR', name='euro')
+        coin_type = CoinType.objects.create(code='EUR', name='euro')
         coin_type.save()
         return coin_type
 

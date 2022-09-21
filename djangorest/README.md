@@ -135,6 +135,16 @@ python manage.py schedule_setup
 ~~~
 python manage.py create_balance_models
 ~~~
+* Generate locale messages files
+~~~
+django-admin makemessages --all --ignore=en
+~~~
+> Before executing it, a locale folder with all languages folders inside must be created
+* Generate compiled messages
+~~~
+django-admin compilemessages --ignore=env
+~~~
+
 
 ## Environment Variables:
 

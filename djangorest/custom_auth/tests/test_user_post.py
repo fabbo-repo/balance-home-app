@@ -19,6 +19,7 @@ class UserPostTests(APITestCase):
         self.user_data={
             "username":"username",
             "email":"email@test.com",
+            "language":"en",
             "password": "password1@212",
             "password2": "password1@212",
             "inv_code": str(self.inv_code.code)
@@ -125,7 +126,7 @@ class UserPostTests(APITestCase):
             }
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['password'][0], "Password fields didn't match.")
+        self.assertEqual(response.data['password'][0], "Password fields do not match")
     
     """
     Checks that an user with a short password is not created
@@ -186,3 +187,36 @@ class UserPostTests(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('password', response.data)
+    
+    """
+    Checks that an user with same email and username is not created
+    """
+    def test_same_email_username(self):
+        response=self.user_post(
+            {
+                'username': self.user_data['email'],
+                'email': self.user_data['email'],
+                "password": self.user_data['password'],
+                "password2": self.user_data['password'],
+                "inv_code": self.user_data['inv_code']
+            }
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('common_fields', response.data)
+    
+    """
+    Checks that an user with a wrong language is not created
+    """
+    def test_wrong_language(self):
+        response=self.user_post(
+            {
+                'username': self.user_data['username'],
+                'email': self.user_data['email'],
+                "password": self.user_data['password'],
+                "password2": self.user_data['password'],
+                "inv_code": self.user_data['inv_code'],
+                "language": "lm"
+            }
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('language', response.data)

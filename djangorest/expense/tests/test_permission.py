@@ -92,13 +92,13 @@ class ExpensePermissionsTests(APITestCase):
     def get_expense_data(self):
         exp_type = ExpenseType.objects.create(name='test')
         exp_type.save()
-        coin_type = CoinType.objects.create(simb='EUR', name='euro')
+        coin_type = CoinType.objects.create(code='EUR', name='euro')
         coin_type.save()
         return {
             'name': 'Test name',
             'description': 'Test description',
             'quantity': 2.0,
-            'coin_type': coin_type.simb,
+            'coin_type': coin_type.code,
             'exp_type': exp_type.name,
             'date': str(date.today())
         }

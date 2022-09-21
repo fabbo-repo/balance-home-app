@@ -1,5 +1,6 @@
 from rest_framework.test import APITestCase
 from custom_auth.models import User
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 class UserTests(APITestCase):
@@ -52,7 +53,7 @@ class UserTests(APITestCase):
             is_staff=False,
             **self.user_data
         )
-        with self.assertRaisesMessage(ValueError, 'Superuser must have is_staff=True.'):
+        with self.assertRaisesMessage(ValueError, 'Superuser must have is_staff=True'):
             User.objects.create_superuser(
                 is_staff=False,
                 **self.user_data
@@ -69,7 +70,7 @@ class UserTests(APITestCase):
             is_superuser=False,
             **self.user_data
         )
-        with self.assertRaisesMessage(ValueError, 'Superuser must have is_superuser=True.'):
+        with self.assertRaisesMessage(ValueError, 'Superuser must have is_superuser=True'):
             User.objects.create_superuser(
                 is_superuser=False,
                 **self.user_data
@@ -87,7 +88,7 @@ class UserTests(APITestCase):
             password=self.user_data['password'],
             username=""
         )
-        with self.assertRaisesMessage(ValueError, 'The given username must be set.'):
+        with self.assertRaisesMessage(ValueError, 'An username must be provided'):
             User.objects.create_user(
                 email=self.user_data['email'],
                 password=self.user_data['password'],
@@ -106,9 +107,49 @@ class UserTests(APITestCase):
             password=self.user_data['password'],
             username=self.user_data['username']
         )
-        with self.assertRaisesMessage(ValueError, 'The given email must be set.'):
+        with self.assertRaisesMessage(ValueError, 'An email address must be provided'):
             User.objects.create_user(
                 email='',
                 password=self.user_data['password'],
                 username=self.user_data['username']
+            )
+    
+    """
+    Checks that an User with same email and username
+    raises an Exception when it is checked
+    """
+    def test_cant_create_user_with_same_email_and_username(self):
+        self.assertRaises(
+            ValueError, 
+            User.objects.create,
+            email=self.user_data['email'],
+            password=self.user_data['password'],
+            username=self.user_data['email']
+        )
+        with self.assertRaisesMessage(ValueError, 'Username and email can not be the same'):
+            User.objects.create(
+                email=self.user_data['email'],
+                password=self.user_data['password'],
+                username=self.user_data['email']
+            )
+    
+    """
+    Checks that an User with wrong languages
+    raises an Exception when it is saved
+    """
+    def test_cant_create_user_wrong_language(self):
+        self.assertRaises(
+            ValueError, 
+            User.objects.create,
+            email=self.user_data['email'],
+            password=self.user_data['password'],
+            username=self.user_data['username'],
+            language='lm'
+        )
+        with self.assertRaisesMessage(ValueError, 'Language not supported'):
+            User.objects.create(
+                email=self.user_data['email'],
+                password=self.user_data['password'],
+                username=self.user_data['username'],
+                language='lm'
             )

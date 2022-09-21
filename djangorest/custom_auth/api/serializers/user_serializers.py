@@ -5,6 +5,9 @@ from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
 from django.utils.timezone import now
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import check_for_language
+from django.core.exceptions import ValidationError
 
 
 """
@@ -25,9 +28,9 @@ Checks if an invitation code is created and valid
 def check_inv_code(code):
     inv_code = None
     try: inv_code = InvitationCode.objects.get(code=code)
-    except: raise serializers.ValidationError("InvitationCode not found")
+    except: raise serializers.ValidationError(_("Invitation code not found"))
     if not inv_code.is_active:
-        raise serializers.ValidationError("Invalid InvitationCode")
+        raise serializers.ValidationError(_("Invalid invitation code"))
 
 """
 Checks if 2 passwords are different, also that username and email 
@@ -36,10 +39,10 @@ are different to the passwords
 def check_username_pass12(username, email, password1, password2):
     if password1 != password2:
         raise serializers.ValidationError(
-            {"password": "Password fields didn't match."})
+            {"password": _("Password fields do not match")})
     if username == password1 or email == password1:
         raise serializers.ValidationError(
-            {"password": "Password field can not match another attribute."})
+            {"password": _("Password cannot match other profile data")})
 
 
 """
@@ -53,6 +56,10 @@ class UserCreationSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    language = serializers.CharField(
+        required=False,
+        min_length=2, max_length=2
     )
     inv_code = serializers.SlugRelatedField(
         required=True,
@@ -72,9 +79,15 @@ class UserCreationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username', 'email', 'inv_code',
-            'password', 'password2',
+            'username', 'email', 'language',
+            'inv_code', 'password', 'password2',
         )
+
+    def validate_language(self, value):
+        if not check_for_language(value):
+            raise serializers.ValidationError(
+                _("Language not supported"))
+        return value
 
     def validate_inv_code(self, value):
         check_inv_code(value.code)
@@ -83,6 +96,9 @@ class UserCreationSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         check_username_pass12(attrs['username'], attrs['email'], 
             attrs['password'], attrs['password2'])
+        if attrs['username'] == attrs['email']:
+            raise ValidationError(
+                {'common_fields': _("Username and email can not be the same")})
         return attrs
 
     def create(self, validated_data):
@@ -169,8 +185,8 @@ class ResetPasswordSerializer(serializers.Serializer):
             duration_s = (now() - user.date_pass_reset).total_seconds()
             if duration_s > settings.EMAIL_CODE_VALID :
                 raise serializers.ValidationError(
-                    "Code is no longer valid")
+                    _("Code is no longer valid"))
         if user.pass_reset != code :
             raise serializers.ValidationError(
-                "Invalid code")
+                _("Invalid code"))
         return code
