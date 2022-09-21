@@ -61,7 +61,8 @@ def compute_montly_balance(
             year,
             monthly_balance,
             user.expected_monthly_balance,
-            montly_result
+            montly_result,
+            user.language
         )
 
 @shared_task
@@ -88,7 +89,8 @@ def compute_annual_balance(
             year,
             annual_balance,
             user.expected_annual_balance,
-            annual_result
+            annual_result,
+            user.language
         )
 
 

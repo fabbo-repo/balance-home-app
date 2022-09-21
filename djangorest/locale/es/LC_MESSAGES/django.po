@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 17:03+0200\n"
+"POT-Creation-Date: 2022-09-21 18:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,90 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\balance\models.py:10
+msgid "code"
+msgstr "código"
+
+#: .\balance\models.py:15 .\balance\models.py:34
+msgid "name"
+msgstr "nombre"
+
+#: .\balance\models.py:21
+msgid "Coin type"
+msgstr "Tipo de moneda"
+
+#: .\balance\models.py:22
+msgid "Coin types"
+msgstr "Tipos de moneda"
+
+#: .\balance\models.py:38
+msgid "description"
+msgstr "descripción"
+
+#: .\balance\models.py:43
+msgid "quantity"
+msgstr "cantidad"
+
+#: .\balance\models.py:47
+msgid "date"
+msgstr "fecha"
+
+#: .\balance\models.py:51 .\balance\models.py:88
+msgid "coin type"
+msgstr "tipo de moneda"
+
+#: .\balance\models.py:56 .\balance\models.py:93
+msgid "owner"
+msgstr "propietario"
+
+#: .\balance\models.py:63
+msgid "Balance"
+msgstr "Balance"
+
+#: .\balance\models.py:64
+msgid "Balances"
+msgstr "Balances"
+
+#: .\balance\models.py:80
+msgid "gross quantity"
+msgstr "cantidad bruta"
+
+#: .\balance\models.py:84
+msgid "net quantity"
+msgstr "cantidad neta"
+
+#: .\balance\models.py:100
+msgid "Date balance"
+msgstr "Balance actual"
+
+#: .\balance\models.py:101
+msgid "Date balances"
+msgstr "Balances actuales"
+
+#: .\balance\models.py:110
+msgid "year"
+msgstr "año"
+
+#: .\balance\models.py:118
+msgid "Annual balance"
+msgstr "Balance anual"
+
+#: .\balance\models.py:119
+msgid "Annual balances"
+msgstr "Balances anuales"
+
+#: .\balance\models.py:126
+msgid "month"
+msgstr "mes"
+
+#: .\balance\models.py:134
+msgid "Monthly balance"
+msgstr "Balance mensual"
+
+#: .\balance\models.py:135
+msgid "Monthly balances"
+msgstr "Balances mensuales"
 
 #: .\core\settings.py:151
 msgid "English"

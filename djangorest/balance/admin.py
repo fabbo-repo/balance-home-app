@@ -5,7 +5,7 @@ from balance.models import CoinType, AnnualBalance, MonthlyBalance
 @admin.register(CoinType)
 class CoinTypeAdmin(admin.ModelAdmin):
     fields = (
-        'simb',
+        'code',
         'name'
     )
 

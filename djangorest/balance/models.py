@@ -2,15 +2,24 @@ import uuid
 from django.db import models
 from custom_auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils.translation import gettext_lazy as _
 
 
 class CoinType(models.Model):
-    simb = models.CharField(max_length=4, primary_key=True)
-    name = models.CharField(max_length=15, unique=True)
+    code = models.CharField(
+        verbose_name = _('code'),
+        max_length = 4, 
+        primary_key = True
+    )
+    name = models.CharField(
+        verbose_name = _('name'),
+        max_length = 15, 
+        unique = True
+    )
 
     class Meta:
-        verbose_name = 'CoinType'
-        verbose_name_plural = 'CoinTypes'
+        verbose_name = _('Coin type')
+        verbose_name_plural = _('Coin types')
     
     def __str__(self) -> str:
         return self.name
@@ -18,32 +27,41 @@ class CoinType(models.Model):
 
 class Balance(models.Model):
     id = models.BigAutoField(
-        primary_key=True,
-        editable=False
+        primary_key = True,
+        editable = False
     )
-    name = models.CharField(max_length=40)
+    name = models.CharField(
+        verbose_name = _('name'),
+        max_length = 40
+    )
     description = models.CharField(
-        max_length=2000, 
-        default=""
+        verbose_name = _('description'),
+        max_length = 2000, 
+        default = ""
     )
     quantity = models.FloatField(
-        validators=[MinValueValidator(0.0)],
+        verbose_name = _('quantity'),
+        validators = [MinValueValidator(0.0)],
     )
-    date = models.DateField()
+    date = models.DateField(
+        verbose_name = _('date')
+    )
     coin_type = models.ForeignKey(
         CoinType, 
-        on_delete=models.DO_NOTHING
+        verbose_name = _('coin type'),
+        on_delete = models.DO_NOTHING
     )
     owner = models.ForeignKey(
         User, 
-        on_delete=models.CASCADE
+        verbose_name = _('owner'),
+        on_delete = models.CASCADE
     )
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = 'Balance'
-        verbose_name_plural = 'Balances'
+        verbose_name = _('Balance')
+        verbose_name_plural = _('Balances')
         abstract = True
         ordering = ['-date']
     
@@ -52,25 +70,35 @@ class Balance(models.Model):
 
 
 class DateBalance(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(
+        primary_key=True, 
+        default=uuid.uuid4, 
+        editable=False
+    )
     # All revenues and expenses
-    gross_quantity = models.FloatField()
+    gross_quantity = models.FloatField(
+        verbose_name = _('gross quantity')
+    )
     # expected_quantity - gross_quantity
-    net_quantity = models.FloatField()
+    net_quantity = models.FloatField(
+        verbose_name = _('net quantity')
+    )
     coin_type = models.ForeignKey(
-        CoinType, 
+        CoinType,
+        verbose_name = _('coin type'),
         on_delete=models.DO_NOTHING
     )
     owner = models.ForeignKey(
-        User, 
+        User,
+        verbose_name = _('owner'),
         on_delete=models.CASCADE
     )
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = 'Date Balance'
-        verbose_name_plural = 'Date Balances'
+        verbose_name = _('Date balance')
+        verbose_name_plural = _('Date balances')
         abstract = True
         ordering = ['-created']
     
@@ -79,6 +107,7 @@ class DateBalance(models.Model):
 
 class AnnualBalance(DateBalance):
     year = models.PositiveIntegerField(
+        verbose_name = _('year'),
         validators=[
             MinValueValidator(1),
             MaxValueValidator(5000),
@@ -86,14 +115,15 @@ class AnnualBalance(DateBalance):
     )
 
     class Meta:
-        verbose_name = 'Annual Balance'
-        verbose_name_plural = 'Annual Balances'
+        verbose_name = _('Annual balance')
+        verbose_name_plural = _('Annual balances')
     
     def __str__(self) -> str:
         return str(self.year)
 
 class MonthlyBalance(AnnualBalance):
     month = models.PositiveIntegerField(
+        verbose_name = _('month'),
         validators=[
             MinValueValidator(1),
             MaxValueValidator(12),
@@ -101,8 +131,8 @@ class MonthlyBalance(AnnualBalance):
     )
 
     class Meta:
-        verbose_name = 'Monthly Balance'
-        verbose_name_plural = 'Monthly Balances'
+        verbose_name = _('Monthly balance')
+        verbose_name_plural = _('Monthly balances')
     
     def __str__(self) -> str:
         return str(self.month)+' - '+str(self.year)
