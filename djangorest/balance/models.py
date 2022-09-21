@@ -71,9 +71,9 @@ class Balance(models.Model):
 
 class DateBalance(models.Model):
     id = models.UUIDField(
-        primary_key=True, 
-        default=uuid.uuid4, 
-        editable=False
+        primary_key = True, 
+        default = uuid.uuid4, 
+        editable = False
     )
     # All revenues and expenses
     gross_quantity = models.FloatField(

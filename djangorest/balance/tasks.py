@@ -49,7 +49,7 @@ def compute_montly_balance(
             logger.error('Last monthly balance already created with id: '
                 +str(model.id)+', skipping')
             return
-        model.quantity=monthly_balance
+        model.quantity = monthly_balance
         model.save()
     except:
         if is_last:
@@ -78,11 +78,11 @@ def compute_annual_balance(
             logger.error('Last annual balance already created with id: '
                 +str(model.id)+', skipping')
             return
-        model.quantity=annual_balance
+        model.quantity = annual_balance
         model.save()
     except:
         if is_last:
-            user.last_annual_balance=annual_balance
+            user.last_annual_balance = annual_balance
             user.save()
         notifications.send_annual_balance(
             user.email,

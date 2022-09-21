@@ -4,20 +4,23 @@ from revenue.models import Revenue
 
 class RevenueFilterSet(filters.FilterSet):
     quantity_min = filters.BooleanFilter(
-        field_name="quantity", lookup_expr="gte",
-        label="Min quantity"
+        field_name = "quantity",
+        lookup_expr = "gte",
+        label = "Min quantity"
     )
     quantity_max = filters.BooleanFilter(
-        field_name="quantity", lookup_expr="lte",
-        label="Max quantity"
+        field_name = "quantity",
+        lookup_expr = "lte",
+        label = "Max quantity"
     )
     date_from = filters.DateFilter(
-        field_name="date", lookup_expr="gte",
-        label="Date From"
+        field_name = "date", lookup_expr = "gte",
+        label = "Date From"
     )
     date_to = filters.DateFilter(
-        field_name="date", lookup_expr="lte",
-        label="Date To"
+        field_name = "date", 
+        lookup_expr = "lte",
+        label = "Date To"
     )
     class Meta:
         model = Revenue

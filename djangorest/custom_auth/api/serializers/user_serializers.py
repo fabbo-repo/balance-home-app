@@ -7,6 +7,7 @@ from django.utils.timezone import now
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import check_for_language
+from django.core.exceptions import ValidationError
 
 
 """
@@ -95,6 +96,9 @@ class UserCreationSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         check_username_pass12(attrs['username'], attrs['email'], 
             attrs['password'], attrs['password2'])
+        if attrs['username'] == attrs['email']:
+            raise ValidationError(
+                {'common_fields': _("Username and email can not be the same")})
         return attrs
 
     def create(self, validated_data):

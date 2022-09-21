@@ -1,25 +1,29 @@
 from django.db import models
 from balance.models import Balance
+from django.utils.translation import gettext_lazy as _
 
 
 class RevenueType(models.Model):
     name = models.CharField(
-        max_length=15,
-        primary_key=True
+        verbose_name = _('name'),
+        max_length = 15,
+        primary_key = True
     )
     image = models.ImageField(
-        upload_to='revenue', 
-        default='core/default_image.jpg'
+        verbose_name = _('image'),
+        upload_to = 'revenue', 
+        default = 'core/default_image.jpg'
     )
 
 class Revenue(Balance):
     rev_type = models.ForeignKey(
         RevenueType,
+        verbose_name = _('revenue type'),
         on_delete = models.DO_NOTHING
     )
 
     class Meta(Balance.Meta):
-        verbose_name = 'Revenue'
+        verbose_name = _('Revenue')
         verbose_name_plural = 'Revenues'
     
     def __str__(self) -> str:
