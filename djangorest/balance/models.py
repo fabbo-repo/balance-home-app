@@ -63,6 +63,7 @@ class Balance(models.Model):
         verbose_name = _('Balance')
         verbose_name_plural = _('Balances')
         abstract = True
+        # Greater to lower date
         ordering = ['-date']
     
     def __str__(self) -> str:
@@ -114,7 +115,7 @@ class AnnualBalance(DateBalance):
         ]
     )
 
-    class Meta:
+    class Meta(DateBalance.Meta):
         verbose_name = _('Annual balance')
         verbose_name_plural = _('Annual balances')
     
@@ -130,7 +131,7 @@ class MonthlyBalance(AnnualBalance):
         ]
     )
 
-    class Meta:
+    class Meta(AnnualBalance.Meta):
         verbose_name = _('Monthly balance')
         verbose_name_plural = _('Monthly balances')
     
