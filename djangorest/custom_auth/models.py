@@ -28,6 +28,7 @@ class InvitationCode(models.Model):
     class Meta:
         verbose_name = _('Invitation code')
         verbose_name_plural = _('Invitation codes')
+        ordering = ['-usage_left']
     
     def __str__(self) -> str:
         return str(self.code)
