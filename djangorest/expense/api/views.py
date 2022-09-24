@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from expense.models import Expense
 from expense.api.serializers import ExpenseSerializer
 from core.permissions import IsCurrentVerifiedUser
-from expense.filters import ExpenseFilterSet
+from expense.api.filters import ExpenseFilterSet
 
 class ExpenseView(viewsets.ModelViewSet):
     queryset = Expense.objects.all()

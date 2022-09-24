@@ -118,9 +118,13 @@ python manage.py dumpdata > db.json
 ~~~
 python manage.py loaddata db.json
 ~~~
-* Launch testing:
+* Launch testing: (coverage included)
 ~~~
 python manage.py test
+~~~
+* Generate html with coverage report:
+~~~
+coverage html
 ~~~
 * Launch celery for development:
 ~~~
