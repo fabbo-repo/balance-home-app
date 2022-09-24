@@ -3,12 +3,12 @@ from revenue.models import Revenue
 
 
 class RevenueFilterSet(filters.FilterSet):
-    quantity_min = filters.BooleanFilter(
+    quantity_min = filters.NumberFilter(
         field_name = "quantity",
         lookup_expr = "gte",
         label = "Min quantity"
     )
-    quantity_max = filters.BooleanFilter(
+    quantity_max = filters.NumberFilter(
         field_name = "quantity",
         lookup_expr = "lte",
         label = "Max quantity"

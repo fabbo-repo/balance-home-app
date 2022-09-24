@@ -120,9 +120,9 @@ class RevenuePermissionsTests(APITestCase):
         self.assertEqual(revenue.owner.email, self.user_data1['email'])
 
     """
-    Checks permissions with Revenue get
+    Checks permissions with Revenue get and list
     """
-    def test_revenue_get_url(self):
+    def test_revenue_get_list_url(self):
         data = self.get_revenue_data()
         # Add new revenue as user1
         self.authenticate_user(self.credentials1)
@@ -130,12 +130,13 @@ class RevenuePermissionsTests(APITestCase):
         # Get revenue data as user1
         response = self.get(self.revenue_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(dict(response.data)['count'], 1)
         # Get revenue data as user2
         self.authenticate_user(self.credentials2)
         response = self.get(self.revenue_url)
         # Gets an empty dict
-        self.assertEqual(response.data, 
-            OrderedDict([('count', 0), ('next', None), ('previous', None), ('results', [])]))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(dict(response.data)['count'], 0)
         # Try with an specific revenue
         revenue = Revenue.objects.get(name='Test name')
         response = self.get(self.revenue_url+'/'+str(revenue.id))

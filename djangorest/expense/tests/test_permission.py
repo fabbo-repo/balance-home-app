@@ -120,9 +120,9 @@ class ExpensePermissionsTests(APITestCase):
         self.assertEqual(expense.owner.email, self.user_data1['email'])
 
     """
-    Checks permissions with Expense get
+    Checks permissions with Expense get and list
     """
-    def test_expense_get_url(self):
+    def test_expense_get_list_url(self):
         data = self.get_expense_data()
         # Add new expense as user1
         self.authenticate_user(self.credentials1)
@@ -130,12 +130,13 @@ class ExpensePermissionsTests(APITestCase):
         # Get expense data as user1
         response = self.get(self.expense_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(dict(response.data)['count'], 1)
         # Get expense data as user2
         self.authenticate_user(self.credentials2)
         response = self.get(self.expense_url)
         # Gets an empty dict
-        self.assertEqual(response.data, 
-            OrderedDict([('count', 0), ('next', None), ('previous', None), ('results', [])]))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(dict(response.data)['count'], 0)
         # Try with an specific expense
         expense = Expense.objects.get(name='Test name')
         response = self.get(self.expense_url+'/'+str(expense.id))

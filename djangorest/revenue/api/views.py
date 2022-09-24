@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from revenue.models import Revenue
 from revenue.api.serializers import RevenueSerializer
 from core.permissions import IsCurrentVerifiedUser
-from revenue.filters import RevenueFilterSet
+from revenue.api.filters import RevenueFilterSet
 
 class RevenueView(viewsets.ModelViewSet):
     queryset = Revenue.objects.all()
