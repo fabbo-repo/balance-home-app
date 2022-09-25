@@ -16,7 +16,7 @@ Some of the advantages of using this app:
 
 ## For developers
 
-This app is divided into two components, backend and frontend. On the bckend side, the Django framework was chosen with celery and redis for tasks scheduling. On the other hand, the flutter framework was used in fronted, thanks to its multiplatform capability.
+This app is divided into two components, backend and frontend. On the bckend side, the Django framework was chosen with celery and redis for tasks scheduling. On the other hand, the flutter framework was used in fronted, due to its multiplatform capability.
 
 There is some extra information to those who wants to check the source code or test the system. Just check the next links:
 
