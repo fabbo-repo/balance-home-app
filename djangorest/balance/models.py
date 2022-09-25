@@ -1,28 +1,9 @@
 import uuid
 from django.db import models
-from custom_auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import gettext_lazy as _
-
-
-class CoinType(models.Model):
-    code = models.CharField(
-        verbose_name = _('code'),
-        max_length = 4, 
-        primary_key = True
-    )
-    name = models.CharField(
-        verbose_name = _('name'),
-        max_length = 15, 
-        unique = True
-    )
-
-    class Meta:
-        verbose_name = _('Coin type')
-        verbose_name_plural = _('Coin types')
-    
-    def __str__(self) -> str:
-        return self.name
+from coin.models import CoinType
+from custom_auth.models import User
 
 
 class Balance(models.Model):

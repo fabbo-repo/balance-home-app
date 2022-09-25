@@ -31,7 +31,7 @@ class UserAdmin(admin.ModelAdmin):
         'date_code_sent',
         'pass_reset', 
         'date_pass_reset',
-        'balance',
+        ('balance', 'pref_coin_type',),
         ('expected_annual_balance', 'last_annual_balance'),
         ('expected_monthly_balance', 'last_monthly_balance'),
     )

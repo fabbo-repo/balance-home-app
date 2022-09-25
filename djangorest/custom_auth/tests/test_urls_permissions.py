@@ -57,8 +57,8 @@ class UrlPermissionsTests(APITestCase):
             content_type="application/json"
         )
     
-    def put(self, url, data={}) :
-        return self.client.put(
+    def patch(self, url, data={}) :
+        return self.client.patch(
             url, json.dumps(data),
             content_type="application/json"
         )
@@ -92,18 +92,18 @@ class UrlPermissionsTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     
     """
-    Checks permissions with User put
+    Checks permissions with User patch
     """
-    def test_user_put_url(self):
+    def test_user_patch_url(self):
         # Try without authentications
         user_data2={'username':'test2'}
-        response=self.put(self.user_put_get_del_url, user_data2)
+        response=self.patch(self.user_put_get_del_url, user_data2)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         # Get jwt token
         jwt=self.post(self.jwt_obtain_url, self.credentials).data['access']
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
         # Try with authentication
-        response=self.put(self.user_put_get_del_url, user_data2)
+        response=self.patch(self.user_put_get_del_url, user_data2)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     """

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-21 21:47+0200\n"
+"POT-Creation-Date: 2022-09-25 12:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,96 +18,96 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\balance\models.py:10
-msgid "code"
-msgstr "código"
-
-#: .\balance\models.py:15 .\balance\models.py:34 .\expense\models.py:8
+#: .\balance\models.py:15 .\coin\models.py:12 .\expense\models.py:8
 #: .\revenue\models.py:8
 msgid "name"
 msgstr "nombre"
 
-#: .\balance\models.py:21
-msgid "Coin type"
-msgstr "Tipo de moneda"
-
-#: .\balance\models.py:22
-msgid "Coin types"
-msgstr "Tipos de moneda"
-
-#: .\balance\models.py:38
+#: .\balance\models.py:19
 msgid "description"
 msgstr "descripción"
 
-#: .\balance\models.py:43
+#: .\balance\models.py:24
 msgid "quantity"
 msgstr "cantidad"
 
-#: .\balance\models.py:47
+#: .\balance\models.py:28
 msgid "date"
 msgstr "fecha"
 
-#: .\balance\models.py:51 .\balance\models.py:88
+#: .\balance\models.py:32 .\balance\models.py:70
 msgid "coin type"
 msgstr "tipo de moneda"
 
-#: .\balance\models.py:56 .\balance\models.py:93
+#: .\balance\models.py:37 .\balance\models.py:75
 msgid "owner"
 msgstr "propietario"
 
-#: .\balance\models.py:63
+#: .\balance\models.py:44
 msgid "Balance"
 msgstr "Balance"
 
-#: .\balance\models.py:64
+#: .\balance\models.py:45
 msgid "Balances"
 msgstr "Balances"
 
-#: .\balance\models.py:80
+#: .\balance\models.py:62
 msgid "gross quantity"
 msgstr "cantidad bruta"
 
-#: .\balance\models.py:84
+#: .\balance\models.py:66
 msgid "net quantity"
 msgstr "cantidad neta"
 
-#: .\balance\models.py:100
+#: .\balance\models.py:82
 msgid "Date balance"
 msgstr "Balance actual"
 
-#: .\balance\models.py:101
+#: .\balance\models.py:83
 msgid "Date balances"
 msgstr "Balances actuales"
 
-#: .\balance\models.py:110
+#: .\balance\models.py:92
 msgid "year"
 msgstr "año"
 
-#: .\balance\models.py:118
+#: .\balance\models.py:100
 msgid "Annual balance"
 msgstr "Balance anual"
 
-#: .\balance\models.py:119
+#: .\balance\models.py:101
 msgid "Annual balances"
 msgstr "Balances anuales"
 
-#: .\balance\models.py:126
+#: .\balance\models.py:108
 msgid "month"
 msgstr "mes"
 
-#: .\balance\models.py:134
+#: .\balance\models.py:116
 msgid "Monthly balance"
 msgstr "Balance mensual"
 
-#: .\balance\models.py:135
+#: .\balance\models.py:117
 msgid "Monthly balances"
 msgstr "Balances mensuales"
 
-#: .\core\settings.py:151
+#: .\coin\models.py:7
+msgid "code"
+msgstr "código"
+
+#: .\coin\models.py:18
+msgid "Coin type"
+msgstr "Tipo de moneda"
+
+#: .\coin\models.py:19
+msgid "Coin types"
+msgstr "Tipos de monedas"
+
+#: .\core\settings.py:152
 msgid "English"
 msgstr "Inglés"
 
-#: .\core\settings.py:152
+#: .\core\settings.py:153
 msgid "Spanish"
 msgstr "Español"
 
@@ -128,12 +128,12 @@ msgid "No code sent"
 msgstr "Ningún código enviado"
 
 #: .\custom_auth\api\serializers\jwt_code_serializers.py:83
-#: .\custom_auth\api\serializers\user_serializers.py:188
+#: .\custom_auth\api\serializers\user_serializers.py:194
 msgid "Code is no longer valid"
 msgstr "El código ya no es válido"
 
 #: .\custom_auth\api\serializers\jwt_code_serializers.py:85
-#: .\custom_auth\api\serializers\user_serializers.py:191
+#: .\custom_auth\api\serializers\user_serializers.py:197
 msgid "Invalid code"
 msgstr "Código invalido"
 
@@ -150,17 +150,17 @@ msgid "Password fields do not match"
 msgstr "Los campos de contraseña no coinciden"
 
 #: .\custom_auth\api\serializers\user_serializers.py:45
-#: .\custom_auth\models.py:177
+#: .\custom_auth\models.py:183
 msgid "Password cannot match other profile data"
 msgstr "La contraseña no puede coincidir con otro dato del perfil"
 
-#: .\custom_auth\api\serializers\user_serializers.py:89
-#: .\custom_auth\models.py:174
+#: .\custom_auth\api\serializers\user_serializers.py:90
+#: .\custom_auth\models.py:180
 msgid "Language not supported"
 msgstr "Lenguaje no soportado"
 
-#: .\custom_auth\api\serializers\user_serializers.py:101
-#: .\custom_auth\models.py:180
+#: .\custom_auth\api\serializers\user_serializers.py:102
+#: .\custom_auth\models.py:186
 msgid "Username and email can not be the same"
 msgstr "Nombre de usuario y correo electrónico no pueden contener lo mismo"
 
@@ -192,27 +192,27 @@ msgstr "Código de invitación"
 msgid "Invitation codes"
 msgstr "Códigos de invitación"
 
-#: .\custom_auth\models.py:42 .\custom_auth\models.py:57
+#: .\custom_auth\models.py:43 .\custom_auth\models.py:58
 msgid "An email address must be provided"
 msgstr "Se debe proveer un correo electrónico"
 
-#: .\custom_auth\models.py:44 .\custom_auth\models.py:59
+#: .\custom_auth\models.py:45 .\custom_auth\models.py:60
 msgid "An username must be provided"
 msgstr "Se debe proveer un nombre de usuario"
 
-#: .\custom_auth\models.py:52
+#: .\custom_auth\models.py:53
 msgid "Superuser must have is_staff=True"
 msgstr "El superusuario debe tener is_staff=True"
 
-#: .\custom_auth\models.py:54
+#: .\custom_auth\models.py:55
 msgid "Superuser must have is_superuser=True"
 msgstr "El superusuario debe tener is_superuser=True"
 
-#: .\custom_auth\models.py:76
+#: .\custom_auth\models.py:77
 msgid "email address"
 msgstr "dirección de correo electrónico"
 
-#: .\custom_auth\models.py:80
+#: .\custom_auth\models.py:81
 msgid "language"
 msgstr "lenguaje"
 
@@ -268,30 +268,50 @@ msgstr "último código de restablecimiento de contraseña enviado"
 msgid "date of last password reset code sent"
 msgstr "fecha del último código de restablecimiento de contraseña enviado"
 
+#: .\custom_auth\models.py:166
+msgid "preferred coin type"
+msgstr "tipo de moneda preferida"
+
 #: .\expense\models.py:13 .\revenue\models.py:13
 msgid "image"
 msgstr "imagen"
 
-#: .\expense\models.py:21
+#: .\expense\models.py:19
+msgid "Expense type"
+msgstr "Tipo de gasto"
+
+#: .\expense\models.py:20
+msgid "Expense types"
+msgstr "Tipos de gastos"
+
+#: .\expense\models.py:28
 msgid "expense type"
 msgstr "tipo de gasto"
 
-#: .\expense\models.py:26
+#: .\expense\models.py:33
 msgid "Expense"
 msgstr "Gasto"
 
-#: .\expense\models.py:27
+#: .\expense\models.py:34
 msgid "Expenses"
 msgstr "Gastos"
 
-#: .\revenue\models.py:21
+#: .\revenue\models.py:19
+msgid "Revenue type"
+msgstr "Tipo de ingreso"
+
+#: .\revenue\models.py:20
+msgid "Revenue types"
+msgstr "Tipos de ingresos"
+
+#: .\revenue\models.py:28
 msgid "revenue type"
 msgstr "tipo de ingreso"
 
-#: .\revenue\models.py:26
+#: .\revenue\models.py:33
 msgid "Revenue"
 msgstr "Ingreso"
 
-#: .\revenue\models.py:27
+#: .\revenue\models.py:34
 msgid "Revenues"
 msgstr "Ingresos"

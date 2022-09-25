@@ -54,33 +54,34 @@ class UserCreationSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
     email = serializers.EmailField(
-        required=True,
+        required=True, 
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
-    language = serializers.CharField(
-        required=False,
-        min_length=2, max_length=2
-    )
     inv_code = serializers.SlugRelatedField(
-        required=True,
+        required=True, 
         slug_field="code", many=False,
         queryset=InvitationCode.objects.all()
     )
     password = serializers.CharField(
+        required=True, 
         write_only=True,
-        required=True,
         validators=[validate_password]
     )
     password2 = serializers.CharField(
+        required=True, 
         write_only=True,
-        required=True
     )
 
     class Meta:
         model = User
         fields = (
-            'username', 'email', 'language',
-            'inv_code', 'password', 'password2',
+            'username',
+            'email',
+            'language',
+            'inv_code',
+            'pref_coin_type',
+            'password',
+            'password2',
         )
 
     def validate_language(self, value):
@@ -120,29 +121,34 @@ Serializer to get, update or delete user data
 class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         max_length=15,
-        validators=[UniqueValidator(queryset=User.objects.all())],
-        required=False
+        validators=[UniqueValidator(queryset=User.objects.all())]
     )
     email = serializers.EmailField(
-        validators=[UniqueValidator(queryset=User.objects.all())],
-        required=False
+        validators=[UniqueValidator(queryset=User.objects.all())]
     )
-    receive_email_balance = serializers.BooleanField(required=False)
-    balance = serializers.FloatField(read_only=True)
-    expected_annual_balance = serializers.FloatField(required=False)
-    last_annual_balance = serializers.ReadOnlyField()
-    expected_monthly_balance = serializers.FloatField(required=False)
-    last_monthly_balance = serializers.ReadOnlyField()
-    image = serializers.ImageField(required=False)
-    last_login = serializers.ReadOnlyField()
 
     class Meta:
         model = User
         fields = (
-            'username', 'email', 'receive_email_balance', 'balance',
-            'expected_annual_balance', 'last_annual_balance', 
-            'expected_monthly_balance', 'last_monthly_balance',
-            'image', 'last_login'
+            'username', 
+            'email', 
+            'receive_email_balance', 
+            'balance',
+            'expected_annual_balance', 
+            'last_annual_balance', 
+            'expected_monthly_balance', 
+            'last_monthly_balance',
+            'receive_email_balance', 
+            'language',
+            'pref_coin_type',
+            'image', 
+            'last_login',
+        )
+        read_only_fields = (
+            'balance',
+            'last_annual_balance', 
+            'last_monthly_balance',
+            'last_login',
         )
 
     def update(self, instance, validated_data):

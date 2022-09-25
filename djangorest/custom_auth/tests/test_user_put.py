@@ -57,15 +57,15 @@ class UserPutTests(APITestCase):
             content_type="application/json"
         )
 
-    def user_put(self, data) :
-        return self.client.put(
+    def user_patch(self, data) :
+        return self.client.patch(
             self.user_put_url,
             data=json.dumps(data),
             content_type="application/json"
         )
     
-    def user_put_image(self, image) :
-        return self.client.put(
+    def user_patch_image(self, image) :
+        return self.client.patch(
             self.user_put_url,
             data={'image':image}
         )
@@ -81,7 +81,7 @@ class UserPutTests(APITestCase):
     Checks that username is changed
     """
     def test_change_user_name(self):
-        response = self.user_put({"username":"test_2"})
+        response = self.user_patch({"username":"test_2"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user = User.objects.get(email=self.user_data["email"])
         self.assertEqual(user.username, "test_2")
@@ -90,7 +90,7 @@ class UserPutTests(APITestCase):
     Checks that email is changed
     """
     def test_change_user_email(self):
-        response = self.user_put({"email":"test2@gmail.com"})
+        response = self.user_patch({"email":"test2@gmail.com"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user = User.objects.get(email="test2@gmail.com")
         self.assertFalse(user.verified)
@@ -99,7 +99,7 @@ class UserPutTests(APITestCase):
     Checks that annual balance is changed
     """
     def test_change_user_annual_balance(self):
-        response = self.user_put({"expected_annual_balance":10})
+        response = self.user_patch({"expected_annual_balance":10})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user = User.objects.get(email=self.user_data["email"])
         self.assertEqual(user.expected_annual_balance, 10)
@@ -108,7 +108,7 @@ class UserPutTests(APITestCase):
     Checks that montly balance is changed
     """
     def test_change_user_monthly_balance(self):
-        response = self.user_put({"expected_monthly_balance":10})
+        response = self.user_patch({"expected_monthly_balance":10})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user = User.objects.get(email=self.user_data["email"])
         self.assertEqual(user.expected_monthly_balance, 10)
@@ -118,7 +118,7 @@ class UserPutTests(APITestCase):
     Checks that image is uploaded
     """
     def test_change_user_image(self):
-        response = self.user_put_image(self.temporary_image())
+        response = self.user_patch_image(self.temporary_image())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user = User.objects.get(email=self.user_data["email"])
         generated_dir = os.path.join(
