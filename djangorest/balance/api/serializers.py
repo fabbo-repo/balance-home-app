@@ -3,6 +3,7 @@ from balance.models import AnnualBalance, MonthlyBalance
 
 
 class AnnualBalanceSerializer(serializers.ModelSerializer):
+    # Foreign Key fields like coin_type will only show its primary key
     class Meta:
         model = AnnualBalance
         fields = [
@@ -14,6 +15,7 @@ class AnnualBalanceSerializer(serializers.ModelSerializer):
         ]
 
 class MonthlyBalanceSerializer(serializers.ModelSerializer):
+    # Foreign Key fields like coin_type will only show its primary key
     class Meta:
         model = MonthlyBalance
         fields = [

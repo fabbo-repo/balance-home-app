@@ -2,9 +2,9 @@ import uuid
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.core.validators import MinValueValidator, MinLengthValidator
-from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import check_for_language
+from coin.models import CoinType
 
 
 class InvitationCode(models.Model):
@@ -83,7 +83,6 @@ class User(AbstractUser):
         max_length = 2,
         default = 'en'
     )
-    # Profile image
     image = models.ImageField(
         verbose_name = _("profile image"),
         upload_to = _image_user_dir, 
@@ -159,6 +158,12 @@ class User(AbstractUser):
     # Date of the last password reset code sent
     date_pass_reset = models.DateTimeField(
         verbose_name = _("date of last password reset code sent"),
+        blank = True,
+        null = True
+    )
+    pref_coin_type = models.ForeignKey(
+        CoinType, on_delete = models.DO_NOTHING,
+        verbose_name = _("preferred coin type"),
         blank = True,
         null = True
     )

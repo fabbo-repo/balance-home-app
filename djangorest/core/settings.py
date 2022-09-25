@@ -76,7 +76,8 @@ class Dev(Configuration):
         'custom_auth',
         'balance',
         'revenue',
-        'expense'
+        'expense',
+        'coin'
     ]
 
     MIDDLEWARE = [

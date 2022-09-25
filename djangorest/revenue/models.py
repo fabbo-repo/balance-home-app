@@ -15,6 +15,13 @@ class RevenueType(models.Model):
         default = 'core/default_image.jpg'
     )
 
+    class Meta:
+        verbose_name = _('Revenue type')
+        verbose_name_plural = _('Revenue types')
+    
+    def __str__(self) -> str:
+        return self.name
+
 class Revenue(Balance):
     rev_type = models.ForeignKey(
         RevenueType,

@@ -26,12 +26,12 @@ class Command(BaseCommand):
     def _create_default_coin_type(self):
         # Euro coin
         CoinType.objects.update_or_create(
-            simb='EUR',
+            code='EUR',
             name='euro'
         )
         # Unite State dollar
         CoinType.objects.update_or_create(
-            simb='USD',
+            code='USD',
             name='dollar'
         )
 

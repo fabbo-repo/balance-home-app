@@ -15,6 +15,13 @@ class ExpenseType(models.Model):
         default = 'core/default_image.jpg'
     )
 
+    class Meta:
+        verbose_name = _('Expense type')
+        verbose_name_plural = _('Expense types')
+    
+    def __str__(self) -> str:
+        return self.name
+
 class Expense(Balance):
     exp_type = models.ForeignKey(
         ExpenseType,

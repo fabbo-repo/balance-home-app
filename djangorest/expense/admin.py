@@ -21,7 +21,7 @@ class ExpenseAdmin(admin.ModelAdmin):
         ('created', 'updated',),
     )
     readonly_fields = (
-        'owner', 'created', 'updated',
+        'created', 'updated',
     )
     list_display = (
         'name', 
