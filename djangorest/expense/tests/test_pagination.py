@@ -99,7 +99,9 @@ class ExpensePaginationTests(APITestCase):
         results = dict(response.data)['results']
             
         for result in results:
-            scheme['results'] += [dict(result)]
+            result = dict(result)
+            result['exp_type'] = dict(result['exp_type'])
+            scheme['results'] += [result]
         expected_scheme = {
             'count': 1, 'next': None, 'previous': None, 
             'results': [
@@ -110,7 +112,10 @@ class ExpensePaginationTests(APITestCase):
                     'quantity': 2.0, 
                     'date': str(date.today()), 
                     'coin_type': 'EUR', 
-                    'exp_type': 'test'
+                    'exp_type': {
+                        'name': 'test',
+                        'image': 'http://testserver/media/core/default_image.jpg'
+                    }
                 }
             ]
         }

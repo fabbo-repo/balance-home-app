@@ -18,6 +18,7 @@ class RevenuePermissionsTests(APITestCase):
 
         self.jwt_obtain_url=reverse('jwt_obtain_pair')
         self.revenue_url=reverse('revenue-list')
+        self.rev_type_list_url=reverse('rev_type_list')
         
         # Create InvitationCodes
         self.inv_code1 = InvitationCode.objects.create()
@@ -89,9 +90,16 @@ class RevenuePermissionsTests(APITestCase):
         jwt=self.post(self.jwt_obtain_url, credentials).data['access']
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
     
-    def get_revenue_data(self):
+    def get_revenue_type_data(self):
         rev_type = RevenueType.objects.create(name='test')
         rev_type.save()
+        return {
+            'name': rev_type.name,
+            'image': rev_type.image
+        }
+    
+    def get_revenue_data(self):
+        rev_type = self.get_revenue_type_data()
         coin_type = CoinType.objects.create(code='EUR', name='euro')
         coin_type.save()
         return {
@@ -99,9 +107,29 @@ class RevenuePermissionsTests(APITestCase):
             'description': 'Test description',
             'quantity': 2.0,
             'coin_type': coin_type.code,
-            'rev_type': rev_type.name,
+            'rev_type': rev_type['name'],
             'date': str(date.today())
         }
+
+
+    """
+    Checks permissions with Revenue Type get and list
+    """
+    def test_revenue_type_get_list_url(self):
+        data = self.get_revenue_type_data()
+        # Get revenue type data without authentication
+        response = self.get(self.rev_type_list_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        # Try with an specific revenue
+        response = self.get(self.rev_type_list_url+'/'+str(data['name']))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        # Get revenue type data with authentication
+        self.authenticate_user(self.credentials1)
+        response = self.get(self.rev_type_list_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Try with an specific revenue
+        response = self.get(self.rev_type_list_url+'/'+str(data['name']))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     """
     Checks permissions with Revenue post

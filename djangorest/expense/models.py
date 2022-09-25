@@ -18,6 +18,7 @@ class ExpenseType(models.Model):
     class Meta:
         verbose_name = _('Expense type')
         verbose_name_plural = _('Expense types')
+        ordering = ['name']
     
     def __str__(self) -> str:
         return self.name

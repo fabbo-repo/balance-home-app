@@ -18,6 +18,7 @@ class ExpensePermissionsTests(APITestCase):
 
         self.jwt_obtain_url=reverse('jwt_obtain_pair')
         self.expense_url=reverse('expense-list')
+        self.exp_type_list_url=reverse('exp_type_list')
         
         # Create InvitationCodes
         self.inv_code1 = InvitationCode.objects.create()
@@ -89,6 +90,14 @@ class ExpensePermissionsTests(APITestCase):
         jwt=self.post(self.jwt_obtain_url, credentials).data['access']
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
     
+    def get_expense_type_data(self):
+        exp_type = ExpenseType.objects.create(name='test')
+        exp_type.save()
+        return {
+            'name': exp_type.name,
+            'image': exp_type.image
+        }
+    
     def get_expense_data(self):
         exp_type = ExpenseType.objects.create(name='test')
         exp_type.save()
@@ -102,6 +111,26 @@ class ExpensePermissionsTests(APITestCase):
             'exp_type': exp_type.name,
             'date': str(date.today())
         }
+
+
+    """
+    Checks permissions with Expense Type get and list
+    """
+    def test_expense_type_get_list_url(self):
+        data = self.get_expense_type_data()
+        # Get expense type data without authentication
+        response = self.get(self.exp_type_list_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        # Try with an specific expense
+        response = self.get(self.exp_type_list_url+'/'+str(data['name']))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        # Get expense type data with authentication
+        self.authenticate_user(self.credentials1)
+        response = self.get(self.exp_type_list_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Try with an specific expense
+        response = self.get(self.exp_type_list_url+'/'+str(data['name']))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     """
     Checks permissions with Expense post

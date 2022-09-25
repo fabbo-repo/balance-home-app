@@ -1,9 +1,16 @@
 from rest_framework import serializers
-from expense.models import Expense
+from expense.models import Expense, ExpenseType
 
 
-class ExpenseSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
+class ExpenseTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExpenseType
+        fields = [
+            'name',
+            'image'
+        ]
+    
+class ExpensePostPutDelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
         fields = [
@@ -15,3 +22,9 @@ class ExpenseSerializer(serializers.ModelSerializer):
             'coin_type',
             'exp_type'
         ]
+        read_only_fields = [
+            'id'
+        ]
+
+class ExpenseListDetailSerializer(ExpensePostPutDelSerializer):
+    exp_type = ExpenseTypeSerializer(many=False)

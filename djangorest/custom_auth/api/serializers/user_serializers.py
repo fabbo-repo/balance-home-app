@@ -74,15 +74,15 @@ class UserCreationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = (
+        fields = [
             'username',
             'email',
             'language',
             'inv_code',
             'pref_coin_type',
             'password',
-            'password2',
-        )
+            'password2'
+        ]
 
     def validate_language(self, value):
         if not check_for_language(value):
@@ -129,7 +129,7 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = (
+        fields = [
             'username', 
             'email', 
             'receive_email_balance', 
@@ -142,14 +142,14 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
             'language',
             'pref_coin_type',
             'image', 
-            'last_login',
-        )
-        read_only_fields = (
+            'last_login'
+        ]
+        read_only_fields = [
             'balance',
             'last_annual_balance', 
             'last_monthly_balance',
-            'last_login',
-        )
+            'last_login'
+        ]
 
     def update(self, instance, validated_data):
         if 'email' in validated_data:
