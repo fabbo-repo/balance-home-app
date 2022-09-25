@@ -1,3 +1,11 @@
 from django.contrib import admin
+from coin.models import CoinType
 
-# Register your models here.
+
+@admin.register(CoinType)
+class CoinTypeAdmin(admin.ModelAdmin):
+    fields = [
+        'code',
+        'name',
+        'exchange'
+    ]

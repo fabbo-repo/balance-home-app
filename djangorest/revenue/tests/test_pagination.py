@@ -1,14 +1,11 @@
-from collections import OrderedDict
 from datetime import date
 import json
 from rest_framework.test import APITestCase
-from rest_framework import status
 from django.urls import reverse
-from balance.models import CoinType
+from coin.models import CoinType
 from custom_auth.models import InvitationCode, User
 import logging
-from django.conf import settings
-from revenue.models import Revenue, RevenueType
+from revenue.models import RevenueType
 
 
 class RevenuePaginationTests(APITestCase):

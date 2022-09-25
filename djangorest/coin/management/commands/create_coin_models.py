@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from balance.models import CoinType
+from coin.models import CoinType
 
 """
 Will be executed with:

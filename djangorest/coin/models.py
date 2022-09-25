@@ -13,10 +13,17 @@ class CoinType(models.Model):
         max_length = 15, 
         unique = True
     )
+    # Exchange compared to USD
+    exchange = models.FloatField(
+        verbose_name = _('exhange to USD'),
+        default = 1.0
+    )
 
     class Meta:
         verbose_name = _('Coin type')
         verbose_name_plural = _('Coin types')
+        # Lower to greater exchange
+        ordering = ['exchange']
     
     def __str__(self) -> str:
         return self.name

@@ -1,6 +1,6 @@
 from datetime import date
 from rest_framework.test import APITestCase
-from balance.models import Balance, CoinType
+from coin.models import CoinType
 from custom_auth.models import User
 from django.utils.translation import gettext_lazy as _
 

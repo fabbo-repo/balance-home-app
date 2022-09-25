@@ -1,8 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
 import os
-
-from balance.models import CoinType
 from revenue.models import RevenueType
 from expense.models import ExpenseType
 
