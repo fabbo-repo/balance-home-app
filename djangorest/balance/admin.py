@@ -1,13 +1,6 @@
 from django.contrib import admin
-from balance.models import CoinType, AnnualBalance, MonthlyBalance
+from balance.models import AnnualBalance, MonthlyBalance
 
-
-@admin.register(CoinType)
-class CoinTypeAdmin(admin.ModelAdmin):
-    fields = (
-        'code',
-        'name'
-    )
 
 
 @admin.register(AnnualBalance)

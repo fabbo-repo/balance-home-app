@@ -2,10 +2,10 @@ from datetime import date, timedelta
 import json
 from rest_framework.test import APITestCase
 from django.urls import reverse
-from balance.models import CoinType
+from coin.models import CoinType
 from custom_auth.models import InvitationCode, User
 import logging
-from revenue.models import Revenue, RevenueType
+from revenue.models import RevenueType
 from rest_framework import status
 
 

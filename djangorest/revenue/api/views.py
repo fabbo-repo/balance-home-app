@@ -1,12 +1,28 @@
 from rest_framework import viewsets
-from revenue.models import Revenue
-from revenue.api.serializers import RevenueSerializer
+from revenue.models import Revenue, RevenueType
+from revenue.api.serializers import (
+    RevenueTypeSerializer,
+    RevenuePostPutDelSerializer, 
+    RevenueListDetailSerializer
+)
 from core.permissions import IsCurrentVerifiedUser
+from rest_framework.permissions import IsAuthenticated
 from revenue.api.filters import RevenueFilterSet
+from rest_framework import generics
+
+
+class RevenueTypeRetrieveView(generics.RetrieveAPIView):
+    queryset = RevenueType.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = RevenueTypeSerializer
+
+class RevenueTypeListView(generics.ListAPIView):
+    queryset = RevenueType.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = RevenueTypeSerializer
 
 class RevenueView(viewsets.ModelViewSet):
     queryset = Revenue.objects.all()
-    serializer_class = RevenueSerializer
     permission_classes = (IsCurrentVerifiedUser,)
     filterset_class = RevenueFilterSet
 
@@ -17,6 +33,11 @@ class RevenueView(viewsets.ModelViewSet):
         if getattr(self, 'swagger_fake_view', False):
             return Revenue.objects.none()  # return empty queryset
         return Revenue.objects.filter(owner=self.request.user)
+    
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return RevenueListDetailSerializer
+        return RevenuePostPutDelSerializer
 
     def perform_create(self, serializer):
         if serializer.validated_data.get('quantity'):

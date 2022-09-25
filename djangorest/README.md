@@ -131,13 +131,21 @@ coverage html
 celery -A core worker -l INFO -P eventlet
 ~~~
 > ***redis*** must be launched too
-* Schedule periodic tasks:
+* Schedule balance periodic tasks:
 ~~~
-python manage.py schedule_setup
+python manage.py balance_schedule_setup
 ~~~
-* Create default coin types, revenue types and expense types:
+* Create default revenue types and expense types:
 ~~~
 python manage.py create_balance_models
+~~~
+* Schedule coin periodic tasks:
+~~~
+python manage.py coin_schedule_setup
+~~~
+* Create default coin types:
+~~~
+python manage.py create_coin_models
 ~~~
 * Generate locale messages files
 ~~~

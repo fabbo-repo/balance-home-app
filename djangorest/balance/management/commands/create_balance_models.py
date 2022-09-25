@@ -1,8 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
 import os
-
-from balance.models import CoinType
 from revenue.models import RevenueType
 from expense.models import ExpenseType
 
@@ -14,26 +12,12 @@ python manage.py create_balance_models
 """
 class Command(BaseCommand):
     help = "Run the create_balance_models function "\
-        + "that creates default CoinType, RevenueType and ExpenseType" \
+        + "that creates default RevenueType and ExpenseType" \
         + "models"
 
     def handle(self, *args, **options):
-        self._create_default_coin_type()
         self._create_default_rev_type()
         self._create_default_exp_type()
-
-
-    def _create_default_coin_type(self):
-        # Euro coin
-        CoinType.objects.update_or_create(
-            code='EUR',
-            name='euro'
-        )
-        # Unite State dollar
-        CoinType.objects.update_or_create(
-            code='USD',
-            name='dollar'
-        )
 
 
     def _create_default_rev_type(self):

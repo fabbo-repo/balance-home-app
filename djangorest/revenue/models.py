@@ -18,6 +18,7 @@ class RevenueType(models.Model):
     class Meta:
         verbose_name = _('Revenue type')
         verbose_name_plural = _('Revenue types')
+        ordering = ['name']
     
     def __str__(self) -> str:
         return self.name

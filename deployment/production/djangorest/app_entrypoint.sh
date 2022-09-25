@@ -34,8 +34,10 @@ else
 fi
 
 # App commands
-/venv/bin/python manage.py schedule_setup
+/venv/bin/python manage.py balance_schedule_setup
 /venv/bin/python manage.py create_balance_models
+/venv/bin/python manage.py coin_schedule_setup
+/venv/bin/python manage.py create_coin_models
 
 cat << "EOF"
 

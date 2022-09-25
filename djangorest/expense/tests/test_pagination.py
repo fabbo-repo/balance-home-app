@@ -1,14 +1,11 @@
-from collections import OrderedDict
 from datetime import date
 import json
 from rest_framework.test import APITestCase
-from rest_framework import status
 from django.urls import reverse
-from balance.models import CoinType
+from coin.models import CoinType
 from custom_auth.models import InvitationCode, User
 import logging
-from django.conf import settings
-from expense.models import Expense, ExpenseType
+from expense.models import ExpenseType
 
 
 class ExpensePaginationTests(APITestCase):
@@ -99,7 +96,9 @@ class ExpensePaginationTests(APITestCase):
         results = dict(response.data)['results']
             
         for result in results:
-            scheme['results'] += [dict(result)]
+            result = dict(result)
+            result['exp_type'] = dict(result['exp_type'])
+            scheme['results'] += [result]
         expected_scheme = {
             'count': 1, 'next': None, 'previous': None, 
             'results': [
@@ -110,7 +109,10 @@ class ExpensePaginationTests(APITestCase):
                     'quantity': 2.0, 
                     'date': str(date.today()), 
                     'coin_type': 'EUR', 
-                    'exp_type': 'test'
+                    'exp_type': {
+                        'name': 'test',
+                        'image': 'http://testserver/media/core/default_image.jpg'
+                    }
                 }
             ]
         }
