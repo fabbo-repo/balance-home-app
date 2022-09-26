@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -8,22 +9,40 @@ class CoinType(models.Model):
         max_length = 4, 
         primary_key = True
     )
+
+    class Meta:
+        verbose_name = _('Coin type')
+        verbose_name_plural = _('Coin types')
+        ordering = ['code']
+    
+    def __str__(self) -> str:
+        return self.code
+
+
+class CoinExchange(models.Model):
+    id = models.UUIDField(
+        verbose_name = _("uuid"),
+        primary_key = True, 
+        default = uuid.uuid4,
+        editable = False
+    )
     # Json for exchange data parsed to string
     # To save it:
     # coinX.exchange = json.dumps(data)
     # To retrive it:
     # json.loads(coinX.exchange)
     # Note: Every key and value would have type str
-    exchange = models.TextField(
-        verbose_name = _('exhange data dictionary'),
+    exchange_data = models.TextField(
+        verbose_name = _('data exhange dictionary'),
         default = '{}'
     )
+    created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = _('Coin type')
-        verbose_name_plural = _('Coin types')
+        verbose_name = _('Coin exchange')
+        verbose_name_plural = _('Coin exchanges')
         # Lower to greater exchange
-        ordering = ['code']
+        ordering = ['-created']
     
     def __str__(self) -> str:
-        return self.code
+        return self.created

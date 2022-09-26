@@ -1,2 +1,2 @@
 *.env
-deployment/production/balance_app
+deployment/release/balance_app
