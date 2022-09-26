@@ -4,7 +4,7 @@ It is a multi platform app which allows people to manage their day-to-day expens
 
 Some of the advantages of using this app:
 
-* It supports different types of currencies, transparently managing the exchange between currencies by adding an expense or income. More types can be added from the admin panel.
+* It supports different types of currencies, transparently managing the exchange between currencies by adding an expense or income. More types can be added.
 
 * By default, at the end of each month it sends an email with the summary of the monthly balance. T also applies to each year.
 
