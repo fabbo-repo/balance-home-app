@@ -17,7 +17,7 @@ class CurrencyData:
         return self.data[currency_to][currency_from] * ammount
 
 
-class CurrencyConverterClient:
+class CurrencyConverterService:
     def __init__(self, currency_codes):
         self.currency_codes = currency_codes
 

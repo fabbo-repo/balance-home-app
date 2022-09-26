@@ -8,22 +8,22 @@ class CoinType(models.Model):
         max_length = 4, 
         primary_key = True
     )
-    name = models.CharField(
-        verbose_name = _('name'),
-        max_length = 15, 
-        unique = True
-    )
-    # Exchange compared to USD
-    exchange = models.FloatField(
-        verbose_name = _('exhange to USD'),
-        default = 1.0
+    # Json for exchange data parsed to string
+    # To save it:
+    # coinX.exchange = json.dumps(data)
+    # To retrive it:
+    # json.loads(coinX.exchange)
+    # Note: Every key and value would have type str
+    exchange = models.TextField(
+        verbose_name = _('exhange data dictionary'),
+        default = '{}'
     )
 
     class Meta:
         verbose_name = _('Coin type')
         verbose_name_plural = _('Coin types')
         # Lower to greater exchange
-        ordering = ['exchange']
+        ordering = ['code']
     
     def __str__(self) -> str:
-        return self.name
+        return self.code
