@@ -21,9 +21,8 @@ class DateBalancePermissionsTests(APITestCase):
         
         # Create InvitationCodes
         self.inv_code1 = InvitationCode.objects.create()
-        self.inv_code1.save()
         self.inv_code2 = InvitationCode.objects.create()
-        self.inv_code2.save()
+        self.coin_type = CoinType.objects.create(code='EUR')
         # Test user data
         self.user_data1={
             'username':"username1",
@@ -64,8 +63,6 @@ class DateBalancePermissionsTests(APITestCase):
         )
         self.user2.set_password(self.user_data2['password'])
         self.user2.save()
-
-        self.coin_type = self.create_coin_type()
         return super().setUp()
     
     def get(self, url) :
@@ -100,11 +97,6 @@ class DateBalancePermissionsTests(APITestCase):
             'year': date.today().year,
             'month': date.today().month
         }
-    
-    def create_coin_type(self):
-        coin_type = CoinType.objects.create(code='EUR', name='euro')
-        coin_type.save()
-        return coin_type
     
     def add_annual_balance(self, user):
         data = self.get_annual_balance_data(user)

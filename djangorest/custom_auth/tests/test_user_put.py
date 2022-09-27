@@ -1,6 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
+from coin.models import CoinType
 from custom_auth.models import User, InvitationCode
 import logging
 import json
@@ -29,7 +30,10 @@ class UserPutTests(APITestCase):
             "email":"email@test.com",
             "password": "password1@212",
             "password2": "password1@212",
-            "inv_code": str(self.inv_code.code)
+            "inv_code": str(self.inv_code.code),
+            'pref_coin_type': 
+                str(CoinType.objects.create(code='EUR').code),
+            'language': 'en'
         }
         self.credentials = {
             "email": "email@test.com",

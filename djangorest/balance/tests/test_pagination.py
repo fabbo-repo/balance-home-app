@@ -17,7 +17,7 @@ class DateBalancePaginationTests(APITestCase):
         self.monthly_balance_list=reverse('monthly-balance-list')
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
-        self.inv_code.save()
+        self.coin_type = CoinType.objects.create(code='EUR')
         self.user_data={
             'username':"username",
             'email':"email@test.com",
@@ -30,8 +30,6 @@ class DateBalancePaginationTests(APITestCase):
             "password": "password1@212"
         }
         self.user = self.create_user()
-        
-        self.coin_type = self.create_coin_type()
         return super().setUp()
     
     def get(self, url) :
@@ -77,11 +75,6 @@ class DateBalancePaginationTests(APITestCase):
         user.set_password(self.user_data['password'])
         user.save()
         return user
-    
-    def create_coin_type(self):
-        coin_type = CoinType.objects.create(code='EUR', name='euro')
-        coin_type.save()
-        return coin_type
 
     def authenticate_add_annual_balance(self):
         self.authenticate_user(self.credentials)
