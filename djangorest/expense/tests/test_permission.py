@@ -21,20 +21,23 @@ class ExpensePermissionsTests(APITestCase):
         # Create InvitationCodes
         self.inv_code1 = InvitationCode.objects.create()
         self.inv_code2 = InvitationCode.objects.create()
+        self.coin_type = CoinType.objects.create(code='EUR')
         # Test user data
         self.user_data1={
             'username':"username1",
             'email':"email1@test.com",
             "password": "password1@212",
             "password2": "password1@212",
-            'inv_code': str(self.inv_code1.code)
+            'inv_code': str(self.inv_code1.code),
+            'pref_coin_type': str(self.coin_type.code)
         }
         self.user_data2={
             'username':"username2",
             'email':"email2@test.com",
             "password": "password1@212",
             "password2": "password1@212",
-            'inv_code': str(self.inv_code2.code)
+            'inv_code': str(self.inv_code2.code),
+            'pref_coin_type': str(self.coin_type.code)
         }
         self.credentials1 = {
             'email':"email1@test.com",
@@ -44,7 +47,6 @@ class ExpensePermissionsTests(APITestCase):
             'email':"email2@test.com",
             "password": "password1@212"
         }
-        self.coin_type = CoinType.objects.create(code='EUR')
         # User creation
         user1 = User.objects.create(
             username=self.user_data1["username"],
