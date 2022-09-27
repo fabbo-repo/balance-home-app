@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-26 20:55+0200\n"
+"POT-Creation-Date: 2022-09-27 10:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,13 +90,17 @@ msgstr "Monthly balance"
 msgid "Monthly balances"
 msgstr "Monthly balances"
 
-#: .\coin\currency_converter_integration.py:18
+#: .\coin\currency_converter_integration.py:17
 msgid "No coin exchange"
-msgstr ""
+msgstr "No coin exchange"
 
-#: .\coin\currency_converter_integration.py:23
-msgid "No data exchange data for {}"
-msgstr ""
+#: .\coin\currency_converter_integration.py:22
+msgid "Exchange data not updated in the past 24 hours"
+msgstr "Exchange data not updated in the past 24 hours"
+
+#: .\coin\currency_converter_integration.py:27
+msgid "No exchange data for the given coin type"
+msgstr "No exchange data for the given coin type"
 
 #: .\coin\models.py:8
 msgid "code"
