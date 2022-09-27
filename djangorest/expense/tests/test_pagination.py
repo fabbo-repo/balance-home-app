@@ -17,22 +17,21 @@ class ExpensePaginationTests(APITestCase):
         self.expense_url=reverse('expense-list')
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
-        self.inv_code.save()
+        self.coin_type = CoinType.objects.create(code='EUR')
         self.user_data={
             'username':"username",
             'email':"email@test.com",
             "password": "password1@212",
             "password2": "password1@212",
             'inv_code': str(self.inv_code.code),
+            'pref_coin_type': str(self.coin_type.code)
         }
         self.credentials = {
             'email':"email@test.com",
             "password": "password1@212"
         }
         self.user = self.create_user()
-        
-        self.coin_type = self.create_coin_type()
-        self.exp_type = self.create_exp_type()
+        self.exp_type = ExpenseType.objects.create(name="test")
         return super().setUp()
     
     def get(self, url) :
@@ -65,21 +64,13 @@ class ExpensePaginationTests(APITestCase):
             username=self.user_data['username'],
             email=self.user_data['email'],
             inv_code=self.inv_code,
-            verified=True
+            verified=True,
+            pref_coin_type=self.coin_type,
         )
         user.set_password(self.user_data['password'])
         user.save()
         return user
     
-    def create_exp_type(self):
-        exp_type = ExpenseType.objects.create(name="test")
-        exp_type.save()
-        return exp_type
-    
-    def create_coin_type(self):
-        coin_type = CoinType.objects.create(code='EUR', name='euro')
-        coin_type.save()
-        return coin_type
     
     """
     Checks Expense pagination scheme is correct

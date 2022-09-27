@@ -20,9 +20,7 @@ class ExpensePermissionsTests(APITestCase):
         
         # Create InvitationCodes
         self.inv_code1 = InvitationCode.objects.create()
-        self.inv_code1.save()
         self.inv_code2 = InvitationCode.objects.create()
-        self.inv_code2.save()
         # Test user data
         self.user_data1={
             'username':"username1",
@@ -46,12 +44,14 @@ class ExpensePermissionsTests(APITestCase):
             'email':"email2@test.com",
             "password": "password1@212"
         }
+        self.coin_type = CoinType.objects.create(code='EUR')
         # User creation
         user1 = User.objects.create(
             username=self.user_data1["username"],
             email=self.user_data1["email"],
             inv_code=self.inv_code1,
-            verified=True
+            verified=True,
+            pref_coin_type=self.coin_type
         )
         user1.set_password(self.user_data1['password'])
         user1.save()
@@ -59,7 +59,8 @@ class ExpensePermissionsTests(APITestCase):
             username=self.user_data2["username"],
             email=self.user_data2["email"],
             inv_code=self.inv_code2,
-            verified=True
+            verified=True,
+            pref_coin_type=self.coin_type
         )
         user2.set_password(self.user_data2['password'])
         user2.save()
@@ -90,7 +91,6 @@ class ExpensePermissionsTests(APITestCase):
     
     def get_expense_type_data(self):
         exp_type = ExpenseType.objects.create(name='test')
-        exp_type.save()
         return {
             'name': exp_type.name,
             'image': exp_type.image
@@ -98,14 +98,11 @@ class ExpensePermissionsTests(APITestCase):
     
     def get_expense_data(self):
         exp_type = ExpenseType.objects.create(name='test')
-        exp_type.save()
-        coin_type = CoinType.objects.create(code='EUR', name='euro')
-        coin_type.save()
         return {
             'name': 'Test name',
             'description': 'Test description',
             'quantity': 2.0,
-            'coin_type': coin_type.code,
+            'coin_type': self.coin_type.code,
             'exp_type': exp_type.name,
             'date': str(date.today())
         }
