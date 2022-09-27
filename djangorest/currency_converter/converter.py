@@ -24,8 +24,9 @@ class CurrencyData:
         """Data is a dict with the currency conversions"""
         self.data = data
 
-    def convert(self, currency_from, currency_to, ammount: float):
-        return float(self.data[currency_from][currency_to]) * ammount
+    def convert(self, currency_from, currency_to, amount: float):
+        if currency_from == currency_to: return amount
+        return float(self.data[currency_from][currency_to]) * amount
 
 
 class CurrencyConverterService:

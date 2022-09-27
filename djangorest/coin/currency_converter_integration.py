@@ -29,6 +29,8 @@ class UnsupportedExchangeException(Exception):
 
 
 def _convert(coin_from: CoinType, coin_to: CoinType, amount: float):
+    if coin_from.code == coin_to.code: return amount
+    
     last_coin_exchange = CoinExchange.objects.last()
     if not last_coin_exchange: raise NoCoinExchangeException()
 
