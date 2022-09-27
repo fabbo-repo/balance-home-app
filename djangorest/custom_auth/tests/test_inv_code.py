@@ -16,7 +16,6 @@ class InvitationCodeTests(APITestCase):
 
         # Create InvitationCode
         self.inv_code = InvitationCode.objects.create()
-        self.inv_code.save()
         # Test user data
         self.user_data={
             'username':"username",
@@ -56,7 +55,6 @@ class InvitationCodeTests(APITestCase):
             is_active=False,
             usage_left=0
         )
-        inv_code2.save()
         # Test user data 2
         user_data2={
             'username':"username",

@@ -21,7 +21,6 @@ class JwtCodeTests(APITestCase):
 
         # Create InvitationCode
         inv_code = InvitationCode.objects.create()
-        inv_code.save()
         # Test user data
         self.user_data={
             'username':"username",

@@ -18,7 +18,6 @@ class UserPutTests(APITestCase):
 
         # Create InvitationCode
         self.inv_code = InvitationCode.objects.create()
-        self.inv_code.save()
         # User data
         self.user_data={
             "username":"username",
