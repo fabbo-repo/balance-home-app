@@ -4,9 +4,9 @@ It is a multi platform app which allows people to manage their day-to-day expens
 
 Some of the advantages of using this app:
 
-* It supports different types of currencies, transparently managing the exchange between currencies by adding an expense or income. More types can be added.
+* It supports different types of currencies, managing in a transparent way the exchange between currencies by adding an expense or income. More types can be added.
 
-* By default, at the end of each month it sends an email with the summary of the monthly balance. T also applies to each year.
+* By default, at the end of each month it sends an email with the summary of the monthly balance. It also applies to each year.
 
 * It offers classification of expenses and income by types. More can be added to those that come by default from the admin panel.
 
@@ -25,4 +25,4 @@ There is some extra information to those who wants to check the source code or t
 
 ## Usage
 
-To use the app, the server of the content located in the [deployment](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/deployment/production) folder must be previously deployed. For this it is recommended to read its [documentation](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/deployment#readme)
+To use the app, the server of the content located in the [deployment](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/deployment/release) folder must be previously deployed. For this it is recommended to read its [documentation](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/deployment#readme)
