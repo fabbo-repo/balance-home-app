@@ -11,7 +11,6 @@ class BalanceModelTests(APITestCase):
             'email':"email@test.com",
             "password": "password1@212"
         }
-        self.coin_type = CoinType.objects.create(code="EUR")
         return super().setUp()
     
     def create_user(self):
@@ -25,5 +24,5 @@ class BalanceModelTests(APITestCase):
     Checks if coin_type is created
     """
     def test_creates_coin_type(self):
-        coin_type = self.coin_type
-        self.assertEqual(coin_type.code, self.coin_type_data["code"])
+        coin_type = CoinType.objects.create(code="EUR")
+        self.assertEqual(coin_type.code, "EUR")
