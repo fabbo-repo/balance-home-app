@@ -28,9 +28,9 @@ class CoinExchange(models.Model):
     )
     # Json for exchange data parsed to string
     # To save it:
-    # coinX.exchange = json.dumps(data)
+    # coinX.exchange_data = json.dumps(data)
     # To retrive it:
-    # json.loads(coinX.exchange)
+    # json.loads(coinX.exchange_data)
     # Note: Every key and value would have type str
     exchange_data = models.TextField(
         verbose_name = _('data exhange dictionary'),

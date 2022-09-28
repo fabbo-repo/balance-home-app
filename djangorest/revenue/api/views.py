@@ -54,25 +54,37 @@ class RevenueView(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         owner = self.request.user
+        # In case there is a quantity update
         if serializer.validated_data.get('quantity'):
+            # In case coin_type is not changed, coin_from as the same
             if not serializer.validated_data.get('coin_type'):
                 coin_from = serializer.instance.coin_type
+            # In case coin_type is changed, coin_from is the new coin_type
             else: coin_from = serializer.validated_data['coin_type']
             coin_to = owner.pref_coin_type
-            amount = serializer.validated_data['quantity']
-            owner.balance += \
-                convert_or_fetch(coin_from, coin_to, amount) \
-                - convert_or_fetch(
-                    serializer.instance.coin_type, coin_to, 
-                    serializer.instance.quantity)
+            quantity = serializer.validated_data['quantity']
+            converted_new_quantity = convert_or_fetch(
+                coin_from, coin_to, quantity
+            )
+            converted_old_quantity = convert_or_fetch(
+                serializer.instance.coin_type, coin_to, 
+                serializer.instance.quantity
+            )
+            owner.balance +=  converted_new_quantity \
+                - converted_old_quantity
             owner.save()
+        # In case there is a coin_type update without a quantity update
+        # the quantity will remains the same as before, so it wont be
+        # converted
         serializer.save()
 
     def perform_destroy(self, instance):
         owner = self.request.user
         coin_to = owner.pref_coin_type
-        owner.balance -= convert_or_fetch(
+        converted_quantity = convert_or_fetch(
             instance.coin_type, coin_to, 
-            instance.quantity)
+            instance.quantity
+        )
+        owner.balance -= converted_quantity
         owner.save()
         instance.delete()

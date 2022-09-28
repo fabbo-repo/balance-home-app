@@ -35,12 +35,12 @@ def _convert(coin_from: CoinType, coin_to: CoinType, amount: float):
     if not last_coin_exchange: raise NoCoinExchangeException()
 
     # More than 24 hours:
-    if last_coin_exchange.created > now() - timedelta(days=1):
+    if last_coin_exchange.created < now() - timedelta(days=1):
         raise OldExchangeException()
     
     data = dict(json.loads(last_coin_exchange.exchange_data))
     if not data or not coin_from.code in data.keys(): 
-        raise NoCoinExchangeException()
+        raise UnsupportedExchangeException()
 
     currency_converter = get_converter_from_settings()
     currency_data = currency_converter.get_currency_data_from_json(
