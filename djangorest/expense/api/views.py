@@ -48,6 +48,7 @@ class ExpenseView(viewsets.ModelViewSet):
             amount = serializer.validated_data['quantity']
             owner.balance -= \
                 convert_or_fetch(coin_from, coin_to, amount)
+            owner.balance = round(owner.balance, 2)
             owner.save()
         # Inject owner data to the serializer
         serializer.save(owner=owner)
@@ -72,6 +73,7 @@ class ExpenseView(viewsets.ModelViewSet):
             )
             owner.balance -= converted_new_quantity \
                 - converted_old_quantity
+            owner.balance = round(owner.balance, 2)
             owner.save()
         # In case there is a coin_type update without a quantity update
         # the quantity will remains the same as before, so it wont be
@@ -86,5 +88,6 @@ class ExpenseView(viewsets.ModelViewSet):
             instance.quantity
         )
         owner.balance += converted_quantity
+        owner.balance = round(owner.balance, 2)
         owner.save()
         instance.delete()

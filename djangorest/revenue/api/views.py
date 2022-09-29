@@ -72,6 +72,7 @@ class RevenueView(viewsets.ModelViewSet):
             )
             owner.balance +=  converted_new_quantity \
                 - converted_old_quantity
+            owner.balance = round(owner.balance, 2)
             owner.save()
         # In case there is a coin_type update without a quantity update
         # the quantity will remains the same as before, so it wont be
