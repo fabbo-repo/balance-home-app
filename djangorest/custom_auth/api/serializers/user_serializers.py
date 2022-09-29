@@ -8,6 +8,7 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import check_for_language
 from django.core.exceptions import ValidationError
+from coin.currency_converter_integration import convert_or_fetch
 
 
 """
@@ -83,6 +84,10 @@ class UserCreationSerializer(serializers.ModelSerializer):
             'password',
             'password2'
         ]
+        extra_kwargs = {
+            "pref_coin_type": {"required": True},
+            "language": {"required": True}
+        }
 
     def validate_language(self, value):
         if not check_for_language(value):
@@ -145,7 +150,6 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
             'last_login'
         ]
         read_only_fields = [
-            'balance',
             'last_annual_balance', 
             'last_monthly_balance',
             'last_login'
@@ -154,6 +158,16 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         if 'email' in validated_data:
             validated_data['verified'] = False
+        # The user balance should only be converted if
+        # the same balance is provided in the request
+        # and the pref_coin_type is changed
+        if 'pref_coin_type' in validated_data \
+            and 'balance' in validated_data:
+            validated_data['balance'] = round(convert_or_fetch(
+                instance.pref_coin_type, 
+                validated_data['pref_coin_type'],
+                validated_data['balance']
+            ), 2)
         return super(UserRetrieveUpdateDestroySerializer, self).update(instance, validated_data)
 
 

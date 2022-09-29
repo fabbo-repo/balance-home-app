@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-25 12:15+0200\n"
+"POT-Creation-Date: 2022-09-27 10:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,8 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\balance\models.py:15 .\coin\models.py:12 .\expense\models.py:8
-#: .\revenue\models.py:8
+#: .\balance\models.py:15 .\expense\models.py:8 .\revenue\models.py:8
 msgid "name"
 msgstr "nombre"
 
@@ -91,17 +90,45 @@ msgstr "Balance mensual"
 msgid "Monthly balances"
 msgstr "Balances mensuales"
 
-#: .\coin\models.py:7
+#: .\coin\currency_converter_integration.py:17
+msgid "No coin exchange"
+msgstr "No hay intercambio de moneda"
+
+#: .\coin\currency_converter_integration.py:22
+msgid "Exchange data not updated in the past 24 hours"
+msgstr "Los datos de intercambio no han sido actualizados en 24 horas"
+
+#: .\coin\currency_converter_integration.py:27
+msgid "No exchange data for the given coin type"
+msgstr "No hay datos de intercambio para el tipo de moneda dado"
+
+#: .\coin\models.py:8
 msgid "code"
 msgstr "código"
 
-#: .\coin\models.py:18
+#: .\coin\models.py:14
 msgid "Coin type"
 msgstr "Tipo de moneda"
 
-#: .\coin\models.py:19
+#: .\coin\models.py:15
 msgid "Coin types"
 msgstr "Tipos de monedas"
+
+#: .\coin\models.py:24
+msgid "uuid"
+msgstr "uuid"
+
+#: .\coin\models.py:36
+msgid "data exhange dictionary"
+msgstr "diccionariod de datos de intercambio"
+
+#: .\coin\models.py:42
+msgid "Coin exchange"
+msgstr "Intercambio de moneda"
+
+#: .\coin\models.py:43
+msgid "Coin exchanges"
+msgstr "Intercambio de monedas"
 
 #: .\core\settings.py:152
 msgid "English"
@@ -284,15 +311,15 @@ msgstr "Tipo de gasto"
 msgid "Expense types"
 msgstr "Tipos de gastos"
 
-#: .\expense\models.py:28
+#: .\expense\models.py:29
 msgid "expense type"
 msgstr "tipo de gasto"
 
-#: .\expense\models.py:33
+#: .\expense\models.py:34
 msgid "Expense"
 msgstr "Gasto"
 
-#: .\expense\models.py:34
+#: .\expense\models.py:35
 msgid "Expenses"
 msgstr "Gastos"
 
@@ -304,14 +331,14 @@ msgstr "Tipo de ingreso"
 msgid "Revenue types"
 msgstr "Tipos de ingresos"
 
-#: .\revenue\models.py:28
+#: .\revenue\models.py:29
 msgid "revenue type"
 msgstr "tipo de ingreso"
 
-#: .\revenue\models.py:33
+#: .\revenue\models.py:34
 msgid "Revenue"
 msgstr "Ingreso"
 
-#: .\revenue\models.py:34
+#: .\revenue\models.py:35
 msgid "Revenues"
 msgstr "Ingresos"

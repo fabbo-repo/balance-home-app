@@ -9,26 +9,25 @@ class ExpenseModelTests(APITestCase):
     def setUp(self):
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
-        self.inv_code.save()
+        self.coin_type = CoinType.objects.create(code='EUR')
         self.user_data={
             'username':"username1",
             'email':"email1@test.com",
             "password": "password1@212",
             "password2": "password1@212",
-            'inv_code': str(self.inv_code.code)
+            'inv_code': str(self.inv_code.code),
+            'pref_coin_type': str(self.coin_type.code)
         }
-        self.exp_type_data={'name':"test"}
+        self.exp_type = ExpenseType.objects.create(name="test")
         return super().setUp()
     
     def get_expense_data(self):
-        coin_type = CoinType.objects.create(code='EUR', name='euro')
-        coin_type.save()
         return {
             'name': 'Test name',
             'description': 'Test description',
             'quantity': 2.0,
-            'coin_type': coin_type,
-            'exp_type': self.create_exp_type(),
+            'coin_type': self.coin_type,
+            'exp_type': self.exp_type,
             'date': str(date.today()),
             'owner': self.create_user()
         }
@@ -37,29 +36,26 @@ class ExpenseModelTests(APITestCase):
         user = User.objects.create(
             username=self.user_data['username'],
             email=self.user_data['email'],
-            inv_code=self.inv_code
+            inv_code=self.inv_code,
+            verified=True,
+            pref_coin_type=self.coin_type,
         )
         user.set_password(self.user_data['password'])
         user.save()
         return user
-    
-    def create_exp_type(self):
-        exp_type = ExpenseType.objects.create(**self.exp_type_data)
-        exp_type.save()
-        return exp_type
 
 
     """
     Checks if exp_type is created
     """
     def test_creates_exp_type(self):
-        exp_type = self.create_exp_type()
-        self.assertEqual(exp_type.name, self.exp_type_data["name"])
+        exp_type = ExpenseType.objects.create(name="test2")
+        self.assertEqual(exp_type.name, "test2")
 
     """
     Checks if expense is created
     """
-    def test_creates_exp_type(self):
+    def test_creates_expense(self):
         data = self.get_expense_data()
         expense = Expense.objects.create(**data)
         self.assertEqual(expense.name, data["name"])

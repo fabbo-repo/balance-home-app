@@ -17,9 +17,8 @@ class CoinPermissionsTests(APITestCase):
         
         # Create InvitationCodes
         self.inv_code1 = InvitationCode.objects.create()
-        self.inv_code1.save()
         self.inv_code2 = InvitationCode.objects.create()
-        self.inv_code2.save()
+        self.coin_type = CoinType.objects.create(code='EUR')
         # Test user data
         self.user_data1={
             'username':"username1",
@@ -48,7 +47,8 @@ class CoinPermissionsTests(APITestCase):
             username=self.user_data1["username"],
             email=self.user_data1["email"],
             inv_code=self.inv_code1,
-            verified=True
+            verified=True,
+            pref_coin_type=self.coin_type
         )
         user1.set_password(self.user_data1['password'])
         user1.save()
@@ -84,32 +84,21 @@ class CoinPermissionsTests(APITestCase):
         # Get jwt token
         jwt=self.post(self.jwt_obtain_url, credentials).data['access']
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
-    
-    def get_coin_type_data(self):
-        coin_type = CoinType.objects.create(code='EUR', name='euro')
-        coin_type.save()
-        return {
-            'code': coin_type.code,
-            'name': coin_type.name,
-            'exchange': coin_type.exchange
-        }
-    
 
     """
     Checks permissions with Coin Type get and list
     """
     def test_coin_type_get_list_url(self):
-        data = self.get_coin_type_data()
         # Get coin type data without authentication
         response = self.get(self.coin_type_list_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         # Try with an specific coin
-        response = self.get(self.coin_type_list_url+'/'+str(data['code']))
+        response = self.get(self.coin_type_list_url+'/'+str(self.coin_type.code))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         # Get coin type data with authentication
         self.authenticate_user(self.credentials1)
         response = self.get(self.coin_type_list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Try with an specific coin
-        response = self.get(self.coin_type_list_url+'/'+str(data['code']))
+        response = self.get(self.coin_type_list_url+'/'+str(self.coin_type.code))
         self.assertEqual(response.status_code, status.HTTP_200_OK)

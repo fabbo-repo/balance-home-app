@@ -17,7 +17,7 @@ class RevenuePaginationTests(APITestCase):
         self.revenue_url=reverse('revenue-list')
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
-        self.inv_code.save()
+        self.coin_type = CoinType.objects.create(code='EUR')
         self.user_data={
             'username':"username",
             'email':"email@test.com",
@@ -30,9 +30,7 @@ class RevenuePaginationTests(APITestCase):
             "password": "password1@212"
         }
         self.user = self.create_user()
-        
-        self.coin_type = self.create_coin_type()
-        self.rev_type = self.create_rev_type()
+        self.rev_type = RevenueType.objects.create(name="test")
         return super().setUp()
     
     def get(self, url) :
@@ -65,21 +63,13 @@ class RevenuePaginationTests(APITestCase):
             username=self.user_data['username'],
             email=self.user_data['email'],
             inv_code=self.inv_code,
-            verified=True
+            verified=True,
+            pref_coin_type=self.coin_type,
         )
         user.set_password(self.user_data['password'])
         user.save()
         return user
-    
-    def create_rev_type(self):
-        rev_type = RevenueType.objects.create(name="test")
-        rev_type.save()
-        return rev_type
-    
-    def create_coin_type(self):
-        coin_type = CoinType.objects.create(code='EUR', name='euro')
-        coin_type.save()
-        return coin_type
+        
     
     """
     Checks Revenue pagination scheme is correct

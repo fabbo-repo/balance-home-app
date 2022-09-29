@@ -3,6 +3,7 @@ import json
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
+from coin.models import CoinType
 from custom_auth.models import User, InvitationCode
 import logging
 
@@ -15,14 +16,16 @@ class InvitationCodeTests(APITestCase):
 
         # Create InvitationCode
         self.inv_code = InvitationCode.objects.create()
-        self.inv_code.save()
         # Test user data
         self.user_data={
             'username':"username",
             'email':"email@test.com",
             "password": "password1@212",
             "password2": "password1@212",
-            'inv_code': str(self.inv_code.code)
+            'inv_code': str(self.inv_code.code),
+            'pref_coin_type': 
+                str(CoinType.objects.create(code='EUR').code),
+            'language': 'en'
         }
         return super().setUp()
 
@@ -52,7 +55,6 @@ class InvitationCodeTests(APITestCase):
             is_active=False,
             usage_left=0
         )
-        inv_code2.save()
         # Test user data 2
         user_data2={
             'username':"username",

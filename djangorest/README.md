@@ -143,7 +143,7 @@ python manage.py create_balance_models
 ~~~
 python manage.py coin_schedule_setup
 ~~~
-* Create default coin types:
+* Create defined coin types:
 ~~~
 python manage.py create_coin_models
 ~~~
@@ -176,3 +176,4 @@ django-admin compilemessages --ignore=env
 * DJANGO_SUPERUSER_EMAIL
 * DJANGO_SUPERUSER_PASSWORD
 * DATABASE_URL
+* COIN_TYPE_CODES

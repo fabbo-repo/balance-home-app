@@ -6,7 +6,5 @@ class CoinTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CoinType
         fields = [
-            'code',
-            'name',
-            'exchange'
+            'code'
         ]
