@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from balance.schedule_setup import schedule_setup
+from coin.schedule_setup import schedule_setup
 
 """
 Will be executed with:

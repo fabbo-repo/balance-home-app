@@ -243,7 +243,7 @@ class Dev(Configuration):
     # Email verification code validity duration
     EMAIL_CODE_VALID = get_int_env('APP_EMAIL_CODE_VALID', 120)
 
-    COIN_TYPE_CODES = get_list_env('CURRENCY_CODES', ['EUR', 'USD'])
+    COIN_TYPE_CODES = get_list_env('COIN_TYPE_CODES', ['EUR', 'USD'])
 
 class Prod(Dev):
     DEBUG = False
