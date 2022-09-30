@@ -1,12 +1,9 @@
 import json
 import logging
-
 from datetime import timedelta
 from django.utils.timezone import now
 from coin.models import CoinExchange, CoinType
-
 from django.utils.translation import gettext_lazy as _
-
 from currency_converter.django_client import get_converter_from_settings
 
 logger = logging.getLogger(__name__)
@@ -66,8 +63,13 @@ def update_exchange_data():
     """
     Create a new CoinExchange for today
     """
+    last_coin_exchange = CoinExchange.objects.last()
     currency_converter = get_converter_from_settings()
-    CoinExchange.objects.create(
-        exchange_data = json.dumps(
-            dict(currency_converter.get_currency_data().data))
-    )
+    # A coin exchange for today should be created if there is no coin exchange 
+    # or the last one created has a date diferent compàred to today
+    if not last_coin_exchange \
+        or last_coin_exchange.created.date() != now().date():
+        CoinExchange.objects.create(
+            exchange_data = json.dumps(
+                dict(currency_converter.get_currency_data().data))
+        )
