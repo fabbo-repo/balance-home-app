@@ -20,9 +20,9 @@ class BalanceModelTests(APITestCase):
         return user
 
 
-    """
-    Checks if coin_type is created
-    """
     def test_creates_coin_type(self):
+        """
+        Checks if coin_type is created
+        """
         coin_type = CoinType.objects.create(code="EUR")
         self.assertEqual(coin_type.code, "EUR")

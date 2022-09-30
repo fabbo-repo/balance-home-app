@@ -27,10 +27,10 @@ class ExpenseView(viewsets.ModelViewSet):
     permission_classes = (IsCurrentVerifiedUser,)
     filterset_class = ExpenseFilterSet
 
-    """
-    Filter objects by owner
-    """
     def get_queryset(self):
+        """
+        Filter objects by owner
+        """
         if getattr(self, 'swagger_fake_view', False):
             return Expense.objects.none()  # return empty queryset
         return Expense.objects.filter(owner=self.request.user)
