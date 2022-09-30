@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 10:01+0200\n"
+"POT-Creation-Date: 2022-09-30 17:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,6 +90,14 @@ msgstr "Balance mensual"
 msgid "Monthly balances"
 msgstr "Balances mensuales"
 
+#: .\coin\api\views.py:35
+msgid "{} code not supported"
+msgstr "Código {} no soportado"
+
+#: .\coin\api\views.py:42
+msgid "No exchange data, try later"
+msgstr "No hay datos de intercambio, intentalo más tarde"
+
 #: .\coin\currency_converter_integration.py:17
 msgid "No coin exchange"
 msgstr "No hay intercambio de moneda"
@@ -155,38 +163,38 @@ msgid "No code sent"
 msgstr "Ningún código enviado"
 
 #: .\custom_auth\api\serializers\jwt_code_serializers.py:83
-#: .\custom_auth\api\serializers\user_serializers.py:194
+#: .\custom_auth\api\serializers\user_serializers.py:208
 msgid "Code is no longer valid"
 msgstr "El código ya no es válido"
 
 #: .\custom_auth\api\serializers\jwt_code_serializers.py:85
-#: .\custom_auth\api\serializers\user_serializers.py:197
+#: .\custom_auth\api\serializers\user_serializers.py:211
 msgid "Invalid code"
 msgstr "Código invalido"
 
-#: .\custom_auth\api\serializers\user_serializers.py:31
+#: .\custom_auth\api\serializers\user_serializers.py:32
 msgid "Invitation code not found"
 msgstr "Código de invitación no encontrado"
 
-#: .\custom_auth\api\serializers\user_serializers.py:33
+#: .\custom_auth\api\serializers\user_serializers.py:34
 msgid "Invalid invitation code"
 msgstr "Código de invitación no válido"
 
-#: .\custom_auth\api\serializers\user_serializers.py:42
+#: .\custom_auth\api\serializers\user_serializers.py:43
 msgid "Password fields do not match"
 msgstr "Los campos de contraseña no coinciden"
 
-#: .\custom_auth\api\serializers\user_serializers.py:45
+#: .\custom_auth\api\serializers\user_serializers.py:46
 #: .\custom_auth\models.py:183
 msgid "Password cannot match other profile data"
 msgstr "La contraseña no puede coincidir con otro dato del perfil"
 
-#: .\custom_auth\api\serializers\user_serializers.py:90
+#: .\custom_auth\api\serializers\user_serializers.py:95
 #: .\custom_auth\models.py:180
 msgid "Language not supported"
 msgstr "Lenguaje no soportado"
 
-#: .\custom_auth\api\serializers\user_serializers.py:102
+#: .\custom_auth\api\serializers\user_serializers.py:107
 #: .\custom_auth\models.py:186
 msgid "Username and email can not be the same"
 msgstr "Nombre de usuario y correo electrónico no pueden contener lo mismo"

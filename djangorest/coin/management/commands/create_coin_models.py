@@ -3,13 +3,15 @@ from django.core.management.base import BaseCommand
 from coin.currency_converter_integration import update_exchange_data
 from coin.models import CoinType
 
-"""
-Will be executed with:
-~~~
-python manage.py create_coin_models
-~~~
-"""
+
 class Command(BaseCommand):
+    """
+    Will be executed with:
+    ~~~
+    python manage.py create_coin_models
+    ~~~
+    """
+
     help = "Run the create_balance_models function "\
         + "that creates default CoinType models"
     

@@ -5,6 +5,7 @@ from django.urls import reverse
 from coin.models import CoinType
 from custom_auth.models import InvitationCode, User
 import logging
+from coin.currency_converter_integration import update_exchange_data
 
 
 class CoinPermissionsTests(APITestCase):
@@ -14,6 +15,8 @@ class CoinPermissionsTests(APITestCase):
 
         self.jwt_obtain_url=reverse('jwt_obtain_pair')
         self.coin_type_list_url=reverse('coin_type_list')
+        self.coin_exchange_list_url=reverse('coin_exchange_list', args=['1'])
+        self.coin_exchange_code_url=reverse('coin_exchange_code', args=['EUR'])
         
         # Create InvitationCodes
         self.inv_code1 = InvitationCode.objects.create()
@@ -85,20 +88,52 @@ class CoinPermissionsTests(APITestCase):
         jwt=self.post(self.jwt_obtain_url, credentials).data['access']
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
 
-    """
-    Checks permissions with Coin Type get and list
-    """
-    def test_coin_type_get_list_url(self):
-        # Get coin type data without authentication
-        response = self.get(self.coin_type_list_url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_coin_type_get_url(self):
+        """
+        Checks permissions with Coin Type get
+        """
         # Try with an specific coin
         response = self.get(self.coin_type_list_url+'/'+str(self.coin_type.code))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        # Get coin type data with authentication
+        # Try with an specific coin with authentication
+        self.authenticate_user(self.credentials1)
+        response = self.get(self.coin_type_list_url+'/'+str(self.coin_type.code))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
+    def test_coin_type_list_url(self):
+        """
+        Checks permissions with Coin Type list
+        """
+        # List coin type data without authentication
+        response = self.get(self.coin_type_list_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        # List coin type data with authentication
         self.authenticate_user(self.credentials1)
         response = self.get(self.coin_type_list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # Try with an specific coin
-        response = self.get(self.coin_type_list_url+'/'+str(self.coin_type.code))
+    
+    def test_coin_exchange_list_url(self):
+        """
+        Checks permissions with Coin Exchange list
+        """
+        # List coin exchange list without authentication
+        response = self.get(self.coin_exchange_list_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        # List coin exchange list with authentication
+        self.authenticate_user(self.credentials1)
+        response = self.get(self.coin_exchange_list_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_coin_exchange_code_url(self):
+        """
+        Checks permissions with Coin Exchange code
+        """
+        update_exchange_data()
+        # List coin exchange list without authentication
+        response = self.get(self.coin_exchange_code_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        # List coin exchange list with authentication
+        self.authenticate_user(self.credentials1)
+        response = self.get(self.coin_exchange_code_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
