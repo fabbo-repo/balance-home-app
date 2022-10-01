@@ -107,8 +107,8 @@ class RevenueView(viewsets.ModelViewSet):
         # In case there is a change of date without quantity 
         # month and year needs to be checked
         elif serializer.validated_data.get('date'):
-            coin_from = serializer.validated_data['date'] \
-                if serializer.validated_data.get('date') \
+            coin_from = serializer.validated_data['coin_type'] \
+                if serializer.validated_data.get('coin_type') \
                 else serializer.instance.coin_type
             converted_quantity = convert_or_fetch(
                 coin_from, owner.pref_coin_type, 

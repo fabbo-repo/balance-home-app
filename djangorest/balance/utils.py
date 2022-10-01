@@ -14,7 +14,7 @@ def check_dates_and_update_date_balances(
     year = instance.date.year
     owner = instance.owner
     if new_date:
-        if year != new_date.year:
+        if year != new_date.year or month != new_date.month:
             # Remove quantity for old date_balances
             update_or_create_annual_balance(
                 - converted_quantity, owner, year, is_revenue
@@ -29,20 +29,6 @@ def check_dates_and_update_date_balances(
                 else converted_quantity,
                 owner, new_date.year, is_revenue
             )
-            update_or_create_monthly_balance(
-                converted_new_quantity if converted_new_quantity \
-                else converted_quantity, owner, 
-                new_date.year, new_date.month,
-                is_revenue
-            )
-            return
-        elif month != new_date.month:
-            # Remove quantity for old date_balances
-            update_or_create_monthly_balance(
-                - converted_quantity, owner, year, month,
-                is_revenue
-            )
-            # Add quantity for new date_balances
             update_or_create_monthly_balance(
                 converted_new_quantity if converted_new_quantity \
                 else converted_quantity, owner, 
