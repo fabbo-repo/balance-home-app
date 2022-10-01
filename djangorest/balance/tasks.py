@@ -3,6 +3,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from celery import shared_task
 from balance.models import AnnualBalance, MonthlyBalance
+from coin.currency_converter_integration import convert_or_fetch
 from expense.models import Expense
 from revenue.models import Revenue
 from custom_auth.models import User
@@ -12,102 +13,80 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def _calculate_balance_by_month(user, month, year):
-    monthly_revenues = Revenue.objects.filter(
-        owner=user, date__month=str(month), date__year=str(year))
-    monthly_expenses = Expense.objects.filter(
-        owner=user, date__month=str(month), date__year=str(year))
-    balance = 0.0
-    for revenue in monthly_revenues:
-        balance += revenue.quantity
-    for expense in monthly_expenses:
-        balance -= expense.quantity
-    return balance
-
-def _calculate_balance_by_year(user, year):
-    annual_revenues = Revenue.objects.filter(
-        owner=user, date__year=str(year))
-    annual_expenses = Expense.objects.filter(
-        owner=user, date__year=str(year))
-    balance = 0.0
-    for revenue in annual_revenues:
-        balance += revenue.quantity
-    for expense in annual_expenses:
-        balance -= expense.quantity
-    return balance
+@shared_task
+def send_monthly_balance(user, month, year):
+    monthly_balance, created = MonthlyBalance.objects.get_or_create(
+        owner = user,
+        year = year
+    )
+    monthly_balance.coin_type = user.pref_coin_type
+    # If an monthly_balance already existed, its gross_quantity 
+    # must be converted
+    if not created:
+        monthly_balance.gross_quantity = convert_or_fetch(
+            monthly_balance.coin_type, 
+            user.pref_coin_type,
+            monthly_balance.gross_quantity
+        )
+    monthly_balance.net_quantity = round(user.expected_monthly_balance \
+        - monthly_balance.gross_quantity, 2)
+    monthly_balance.save()
+    # Email sent
+    notifications.send_monthly_balance(
+        user.email,
+        month,
+        year,
+        monthly_balance.gross_quantity,
+        user.expected_monthly_balance,
+        monthly_balance.net_quantity,
+        user.language
+    )
 
 @shared_task
-def compute_montly_balance(
-        user, month, year,
-        is_last=False
-    ):
-    monthly_balance = _calculate_balance_by_month(user, month, year)
-    montly_result = str(user.expected_monthly_balance-monthly_balance)
-    try:
-        model=MonthlyBalance.objects.get(month=month, year=year)
-        if is_last:
-            logger.error('Last monthly balance already created with id: '
-                +str(model.id)+', skipping')
-            return
-        model.quantity = monthly_balance
-        model.save()
-    except:
-        if is_last:
-            user.last_monthly_balance=monthly_balance
-            user.save()
-        notifications.send_monthly_balance(
-            user.email,
-            month,
-            year,
-            monthly_balance,
-            user.expected_monthly_balance,
-            montly_result,
-            user.language
+def send_annual_balance(user, year):
+    annual_balance, created = AnnualBalance.objects.get_or_create(
+        owner = user,
+        year = year
+    )
+    annual_balance.coin_type = user.pref_coin_type
+    # If an annual_balance already existed, its gross_quantity 
+    # must be converted
+    if not created:
+        annual_balance.gross_quantity = convert_or_fetch(
+            annual_balance.coin_type, 
+            user.pref_coin_type,
+            annual_balance.gross_quantity
         )
-
-@shared_task
-def compute_annual_balance(
-        user, year,
-        is_last=False
-    ):
-    annual_balance = _calculate_balance_by_year(user, year)
-    annual_result = str(user.expected_annual_balance-annual_balance)
-    try:
-        model=AnnualBalance.objects.get(year=year)
-        if is_last:
-            logger.error('Last annual balance already created with id: '
-                +str(model.id)+', skipping')
-            return
-        model.quantity = annual_balance
-        model.save()
-    except:
-        if is_last:
-            user.last_annual_balance = annual_balance
-            user.save()
-        notifications.send_annual_balance(
-            user.email,
-            year,
-            annual_balance,
-            user.expected_annual_balance,
-            annual_result,
-            user.language
-        )
+    annual_balance.net_quantity = round(user.expected_annual_balance \
+        - annual_balance.gross_quantity, 2)
+    annual_balance.save()
+    # Email sent
+    notifications.send_annual_balance(
+        user.email,
+        year,
+        annual_balance.gross_quantity,
+        user.expected_annual_balance,
+        annual_balance.net_quantity,
+        user.language
+    )
 
 
 @shared_task
 def periodic_monthly_balance():
+    # Yesterday is last day of month
     yesterday = date.today() - timedelta(days=1)
     month = yesterday.month
     year = yesterday.year
     for user in User.objects:
         if user.verified and user.receive_email_balance:
-            compute_montly_balance(user, month, year, True).delay()
+            send_monthly_balance(user, month, year).delay()
 
 
 @shared_task
 def periodic_annual_balance():
+    # Yesterday is last day of year
     yesterday = date.today() - timedelta(days=1)
     year = yesterday.year
     for user in User.objects:
         if user.verified and user.receive_email_balance:
-            compute_annual_balance(user, year, True).delay()
+            send_annual_balance(user, year).delay()

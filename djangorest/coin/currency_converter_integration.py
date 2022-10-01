@@ -1,12 +1,9 @@
 import json
 import logging
-
 from datetime import timedelta
 from django.utils.timezone import now
 from coin.models import CoinExchange, CoinType
-
 from django.utils.translation import gettext_lazy as _
-
 from currency_converter.django_client import get_converter_from_settings
 
 logger = logging.getLogger(__name__)
@@ -56,18 +53,24 @@ def convert_or_fetch(coin_from: CoinType, coin_to: CoinType, amount: float):
     the past 24 hours it will be fetched from the online converter
     """
     try:
-        return _convert(coin_from, coin_to, amount)
+        return round(_convert(coin_from, coin_to, amount), 2)
     except Exception as e:
         logger.error(str(e))
         currency_converter = get_converter_from_settings()
-        return currency_converter.make_conversion(coin_from.code, coin_to.code, amount)
+        return round(currency_converter.make_conversion(
+            coin_from.code, coin_to.code, amount), 2)
 
 def update_exchange_data():
     """
     Create a new CoinExchange for today
     """
+    last_coin_exchange = CoinExchange.objects.last()
     currency_converter = get_converter_from_settings()
-    CoinExchange.objects.create(
-        exchange_data = json.dumps(
-            dict(currency_converter.get_currency_data().data))
-    )
+    # A coin exchange for today should be created if there is no coin exchange 
+    # or the last one created has a date diferent compàred to today
+    if not last_coin_exchange \
+        or last_coin_exchange.created.date() != now().date():
+        CoinExchange.objects.create(
+            exchange_data = json.dumps(
+                dict(currency_converter.get_currency_data().data))
+        )

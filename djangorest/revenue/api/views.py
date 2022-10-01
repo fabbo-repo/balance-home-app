@@ -1,4 +1,9 @@
 from rest_framework import viewsets
+from balance.utils import (
+    check_dates_and_update_date_balances, 
+    update_or_create_annual_balance, 
+    update_or_create_monthly_balance
+)
 from revenue.models import Revenue, RevenueType
 from revenue.api.serializers import (
     RevenueTypeSerializer,
@@ -46,13 +51,31 @@ class RevenueView(viewsets.ModelViewSet):
             coin_from = serializer.validated_data['coin_type']
             coin_to = owner.pref_coin_type
             amount = serializer.validated_data['quantity']
-            owner.balance += \
-                convert_or_fetch(coin_from, coin_to, amount)
+            coverted_quantity = convert_or_fetch(coin_from, coin_to, amount)
+            owner.balance += coverted_quantity
+            owner.balance = round(owner.balance, 2)
             owner.save()
+            # Create AnnualBalance or update it
+            update_or_create_annual_balance(
+                coverted_quantity, owner,
+                serializer.validated_data['date'].year, True
+            )
+            # Create MonthlyBalance or update it
+            update_or_create_monthly_balance(
+                coverted_quantity, owner,
+                serializer.validated_data['date'].year,
+                serializer.validated_data['date'].month, True
+            )
         # Inject owner data to the serializer
         serializer.save(owner=owner)
 
     def perform_update(self, serializer):
+        """
+        In case there is a coin_type update without a quantity update
+        the quantity will remains the same as before, so it wont be
+        converted. Conversions will only be made if quantity is included
+        with a coin_type change
+        """
         owner = self.request.user
         # In case there is a quantity update
         if serializer.validated_data.get('quantity'):
@@ -70,13 +93,32 @@ class RevenueView(viewsets.ModelViewSet):
                 serializer.instance.coin_type, coin_to, 
                 serializer.instance.quantity
             )
-            owner.balance +=  converted_new_quantity \
+            owner.balance += converted_new_quantity \
                 - converted_old_quantity
             owner.balance = round(owner.balance, 2)
             owner.save()
-        # In case there is a coin_type update without a quantity update
-        # the quantity will remains the same as before, so it wont be
-        # converted
+            # Create DateBalance or update it
+            check_dates_and_update_date_balances(
+                serializer.instance, 
+                converted_old_quantity,
+                converted_new_quantity,
+                serializer.validated_data.get('date')
+            )
+        # In case there is a change of date without quantity 
+        # month and year needs to be checked
+        elif serializer.validated_data.get('date'):
+            coin_from = serializer.validated_data['coin_type'] \
+                if serializer.validated_data.get('coin_type') \
+                else serializer.instance.coin_type
+            converted_quantity = convert_or_fetch(
+                coin_from, owner.pref_coin_type, 
+                serializer.instance.quantity
+            )
+            # Create DateBalance or update it
+            check_dates_and_update_date_balances(
+                serializer.instance, converted_quantity, None,
+                serializer.validated_data['date']
+            )
         serializer.save()
 
     def perform_destroy(self, instance):
@@ -87,5 +129,16 @@ class RevenueView(viewsets.ModelViewSet):
             instance.quantity
         )
         owner.balance -= converted_quantity
+        owner.balance = round(owner.balance, 2)
         owner.save()
+        # Create AnnualBalance or update it
+        update_or_create_annual_balance(
+            - converted_quantity, owner,
+            instance.date.year, True
+        )
+        # Create MonthlyBalance or update it
+        update_or_create_monthly_balance(
+            - converted_quantity, owner,
+            instance.date.year, instance.date.month, True
+        )
         instance.delete()

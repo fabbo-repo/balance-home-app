@@ -110,20 +110,12 @@ class User(AbstractUser):
         validators = [MinValueValidator(0.0)],
         default = 0.0
     )
-    last_annual_balance = models.FloatField(
-        verbose_name = _("last annual balance"),
-        default = 0.0
-    )
     # Expected monthly balance at the end of a month, 
     # it is used to be subtracted with the gross balance of each month
     # and get the net balance
     expected_monthly_balance = models.FloatField(
         verbose_name = _("expected monthly balance"),
         validators = [MinValueValidator(0.0)],
-        default = 0.0
-    )
-    last_monthly_balance = models.FloatField(
-        verbose_name = _("last monthly balance"),
         default = 0.0
     )
     # Field corresponding to email verification

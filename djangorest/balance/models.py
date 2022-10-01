@@ -1,3 +1,4 @@
+from email.policy import default
 import uuid
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -59,16 +60,20 @@ class DateBalance(models.Model):
     )
     # All revenues and expenses
     gross_quantity = models.FloatField(
-        verbose_name = _('gross quantity')
+        verbose_name = _('gross quantity'),
+        default = 0
     )
     # expected_quantity - gross_quantity
     net_quantity = models.FloatField(
-        verbose_name = _('net quantity')
+        verbose_name = _('net quantity'),
+        default = 0
     )
     coin_type = models.ForeignKey(
         CoinType,
         verbose_name = _('coin type'),
-        on_delete=models.DO_NOTHING
+        on_delete=models.DO_NOTHING,
+        blank = True,
+        null = True
     )
     owner = models.ForeignKey(
         User,
@@ -103,7 +108,14 @@ class AnnualBalance(DateBalance):
     def __str__(self) -> str:
         return str(self.year)
 
-class MonthlyBalance(AnnualBalance):
+class MonthlyBalance(DateBalance):
+    year = models.PositiveIntegerField(
+        verbose_name = _('year'),
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5000),
+        ]
+    )
     month = models.PositiveIntegerField(
         verbose_name = _('month'),
         validators=[
@@ -112,7 +124,7 @@ class MonthlyBalance(AnnualBalance):
         ]
     )
 
-    class Meta(AnnualBalance.Meta):
+    class Meta(DateBalance.Meta):
         verbose_name = _('Monthly balance')
         verbose_name_plural = _('Monthly balances')
     

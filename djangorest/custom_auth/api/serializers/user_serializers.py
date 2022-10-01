@@ -140,9 +140,7 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
             'receive_email_balance', 
             'balance',
             'expected_annual_balance', 
-            'last_annual_balance', 
             'expected_monthly_balance', 
-            'last_monthly_balance',
             'receive_email_balance', 
             'language',
             'pref_coin_type',
@@ -150,8 +148,6 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
             'last_login'
         ]
         read_only_fields = [
-            'last_annual_balance', 
-            'last_monthly_balance',
             'last_login'
         ]
 
@@ -160,14 +156,28 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
             validated_data['verified'] = False
         # The user balance should only be converted if
         # the same balance is provided in the request
-        # and the pref_coin_type is changed
-        if 'pref_coin_type' in validated_data \
-            and 'balance' in validated_data:
-            validated_data['balance'] = round(convert_or_fetch(
-                instance.pref_coin_type, 
-                validated_data['pref_coin_type'],
-                validated_data['balance']
-            ), 2)
+        # and the pref_coin_type is changed, same for
+        # expected_annual_balance and expected_monthly_balance
+        if 'pref_coin_type' in validated_data:
+            if 'balance' in validated_data:
+                validated_data['balance'] = convert_or_fetch(
+                    instance.pref_coin_type, 
+                    validated_data['pref_coin_type'],
+                    validated_data['balance']
+                )
+            if 'expected_annual_balance' in validated_data:
+                validated_data['expected_annual_balance'] = convert_or_fetch(
+                    instance.pref_coin_type, 
+                    validated_data['pref_coin_type'],
+                    validated_data['expected_annual_balance']
+                )
+            if 'expected_monthly_balance' in validated_data:
+                validated_data['expected_monthly_balance'] = convert_or_fetch(
+                    instance.pref_coin_type, 
+                    validated_data['pref_coin_type'],
+                    validated_data['expected_monthly_balance']
+                )
+
         return super(UserRetrieveUpdateDestroySerializer, self).update(instance, validated_data)
 
 
