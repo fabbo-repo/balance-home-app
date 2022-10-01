@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 from configurations import Configuration
-from datetime import timedelta
+from django.utils.timezone import timedelta
 import os
 import dj_database_url
 from django.utils.translation import gettext_lazy as _

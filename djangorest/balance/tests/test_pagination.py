@@ -1,4 +1,4 @@
-from datetime import date
+from django.utils.timezone import now
 import json
 from rest_framework.test import APITestCase
 from django.urls import reverse
@@ -52,7 +52,7 @@ class DateBalancePaginationTests(APITestCase):
             'net_quantity': 2.2,
             'coin_type': self.coin_type,
             'owner': self.user,
-            'year': date.today().year
+            'year': now().date().year
         }
     
     def get_monthly_balance_data(self):
@@ -61,8 +61,8 @@ class DateBalancePaginationTests(APITestCase):
             'net_quantity': 2.2,
             'coin_type': self.coin_type,
             'owner': self.user,
-            'year': date.today().year,
-            'month': date.today().month
+            'year': now().date().year,
+            'month': now().date().month
         }
     
     def create_user(self):
@@ -128,7 +128,7 @@ class DateBalancePaginationTests(APITestCase):
                     'gross_quantity': 1.1, 
                     'net_quantity': 2.2,
                     'coin_type': 'EUR',
-                    'year': date.today().year
+                    'year': now().date().year
                 }
             ]
         }
@@ -176,8 +176,8 @@ class DateBalancePaginationTests(APITestCase):
                     'gross_quantity': 1.1, 
                     'net_quantity': 2.2,
                     'coin_type': 'EUR',
-                    'year': date.today().year,
-                    'month': date.today().month
+                    'year': now().date().year,
+                    'month': now().date().month
                 }
             ]
         }
