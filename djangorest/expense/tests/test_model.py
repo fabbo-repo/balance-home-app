@@ -1,4 +1,4 @@
-from datetime import date
+from django.utils.timezone import now
 from rest_framework.test import APITestCase
 from coin.models import CoinType
 from expense.models import Expense, ExpenseType
@@ -28,7 +28,7 @@ class ExpenseModelTests(APITestCase):
             'quantity': 2.0,
             'coin_type': self.coin_type,
             'exp_type': self.exp_type,
-            'date': str(date.today()),
+            'date': str(now().date()),
             'owner': self.create_user()
         }
     

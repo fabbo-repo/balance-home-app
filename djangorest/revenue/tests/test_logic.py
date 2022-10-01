@@ -1,4 +1,4 @@
-from datetime import date
+from django.utils.timezone import now
 import json
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -64,7 +64,7 @@ class RevenueLogicTests(APITestCase):
             'quantity': 2.0,
             'coin_type': self.coin_type.code,
             'rev_type': self.rev_type.name,
-            'date': str(date.today()),
+            'date': str(now().date()),
             'owner': str(self.user),
         }
     

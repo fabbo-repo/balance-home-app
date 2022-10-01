@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from django.utils.timezone import now, timedelta
 import json
 from rest_framework.test import APITestCase
 from django.urls import reverse
@@ -56,7 +56,7 @@ class ExpenseFilterTests(APITestCase):
             'quantity': 2.5,
             'coin_type': self.coin_type.code,
             'exp_type': self.exp_type.name,
-            'date': str(date.today()),
+            'date': str(now().date()),
             'owner': str(self.user),
         }
     
@@ -85,7 +85,7 @@ class ExpenseFilterTests(APITestCase):
     def test_expense_filter_date(self):
         self.authenticate_add_expense()
         # Get expense data
-        url = self.expense_url+'?date='+str(date.today())
+        url = self.expense_url+'?date='+str(now().date())
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
@@ -99,10 +99,10 @@ class ExpenseFilterTests(APITestCase):
         # Get expense data
         url = self.expense_url+'?date_from=' \
             +str(
-                date.today() - timedelta(days=1)
+                now().date() - timedelta(days=1)
             )+'&date_to=' \
             +str(
-                date.today() + timedelta(days=1)
+                now().date() + timedelta(days=1)
             )
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

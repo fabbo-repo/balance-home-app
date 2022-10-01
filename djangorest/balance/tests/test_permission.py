@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from datetime import date
+from django.utils.timezone import now
 import json
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -85,7 +85,7 @@ class DateBalancePermissionsTests(APITestCase):
             'net_quantity': 2.2,
             'coin_type': self.coin_type,
             'owner': user,
-            'year': date.today().year
+            'year': now().date().year
         }
     
     def get_monthly_balance_data(self, user):
@@ -94,8 +94,8 @@ class DateBalancePermissionsTests(APITestCase):
             'net_quantity': 2.2,
             'coin_type': self.coin_type,
             'owner': user,
-            'year': date.today().year,
-            'month': date.today().month
+            'year': now().date().year,
+            'month': now().date().month
         }
     
     def add_annual_balance(self, user):

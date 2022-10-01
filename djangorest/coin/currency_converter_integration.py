@@ -1,7 +1,6 @@
 import json
 import logging
-from datetime import timedelta
-from django.utils.timezone import now
+from django.utils.timezone import now, timedelta
 from coin.models import CoinExchange, CoinType
 from django.utils.translation import gettext_lazy as _
 from currency_converter.django_client import get_converter_from_settings

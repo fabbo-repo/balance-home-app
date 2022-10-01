@@ -1,13 +1,9 @@
-import datetime
-from http import HTTPStatus
 import json
-from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from coin.models import CoinExchange, CoinType
-from coin.api.serializers import CoinExchangeSerializer, CoinTypeSerializer
+from coin.api.serializers import CoinTypeSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics, status
 from rest_framework.response import Response
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone

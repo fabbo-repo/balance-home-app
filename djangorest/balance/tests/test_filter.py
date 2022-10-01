@@ -1,4 +1,4 @@
-from datetime import date
+from django.utils.timezone import now
 import json
 from rest_framework.test import APITestCase
 from django.urls import reverse
@@ -54,7 +54,7 @@ class DateBalanceFilterTests(APITestCase):
             'net_quantity': 2.2,
             'coin_type': self.coin_type,
             'owner': self.user,
-            'year': date.today().year
+            'year': now().date().year
         }
     
     def get_monthly_balance_data(self):
@@ -63,8 +63,8 @@ class DateBalanceFilterTests(APITestCase):
             'net_quantity': 2.2,
             'coin_type': self.coin_type,
             'owner': self.user,
-            'year': date.today().year,
-            'month': date.today().month
+            'year': now().date().year,
+            'month': now().date().month
         }
     
     def create_user(self):
@@ -193,7 +193,7 @@ class DateBalanceFilterTests(APITestCase):
     """
     def test_annual_balance_filter_year(self):
         self.authenticate_add_annual_balance()
-        url = self.annual_balance_list+'?year='+str(date.today().year)
+        url = self.annual_balance_list+'?year='+str(now().date().year)
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
@@ -204,7 +204,7 @@ class DateBalanceFilterTests(APITestCase):
     """
     def test_annual_monthly_filter_year(self):
         self.authenticate_add_monthly_balance()
-        url = self.monthly_balance_list+'?year='+str(date.today().year)
+        url = self.monthly_balance_list+'?year='+str(now().date().year)
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
@@ -215,7 +215,7 @@ class DateBalanceFilterTests(APITestCase):
     """
     def test_annual_monthly_filter_year(self):
         self.authenticate_add_monthly_balance()
-        url = self.monthly_balance_list+'?month='+str(date.today().month)
+        url = self.monthly_balance_list+'?month='+str(now().date().month)
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)

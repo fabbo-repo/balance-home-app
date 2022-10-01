@@ -1,4 +1,3 @@
-from datetime import timedelta
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
@@ -14,7 +13,7 @@ from coin.currency_converter_integration import (
     _convert, update_exchange_data
 )
 from revenue.models import Revenue, RevenueType
-from django.utils.timezone import now
+from django.utils.timezone import now, timedelta
 
 
 class ExchangeLogicTests(APITestCase):
