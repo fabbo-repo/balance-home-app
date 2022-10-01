@@ -53,11 +53,12 @@ def convert_or_fetch(coin_from: CoinType, coin_to: CoinType, amount: float):
     the past 24 hours it will be fetched from the online converter
     """
     try:
-        return _convert(coin_from, coin_to, amount)
+        return round(_convert(coin_from, coin_to, amount), 2)
     except Exception as e:
         logger.error(str(e))
         currency_converter = get_converter_from_settings()
-        return currency_converter.make_conversion(coin_from.code, coin_to.code, amount)
+        return round(currency_converter.make_conversion(
+            coin_from.code, coin_to.code, amount), 2)
 
 def update_exchange_data():
     """
