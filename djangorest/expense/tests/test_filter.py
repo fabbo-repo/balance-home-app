@@ -5,7 +5,7 @@ from django.urls import reverse
 from coin.models import CoinType
 from custom_auth.models import InvitationCode, User
 import logging
-from expense.models import Expense, ExpenseType
+from expense.models import ExpenseType
 from rest_framework import status
 
 
@@ -79,10 +79,10 @@ class ExpenseFilterTests(APITestCase):
         self.post(self.expense_url, data)
     
 
-    """
-    Checks Expense filter by date
-    """
     def test_expense_filter_date(self):
+        """
+        Checks Expense filter by date
+        """
         self.authenticate_add_expense()
         # Get expense data
         url = self.expense_url+'?date='+str(now().date())
@@ -91,10 +91,10 @@ class ExpenseFilterTests(APITestCase):
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
         
-    """
-    Checks Expense filter by date form to
-    """
     def test_expense_filter_date_from_to(self):
+        """
+        Checks Expense filter by date form to
+        """
         self.authenticate_add_expense()
         # Get expense data
         url = self.expense_url+'?date_from=' \
@@ -109,10 +109,10 @@ class ExpenseFilterTests(APITestCase):
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
     
-    """
-    Checks Expense filter by exp_type
-    """
     def test_expense_filter_exp_type(self):
+        """
+        Checks Expense filter by exp_type
+        """
         self.authenticate_add_expense()
         # Get expense data
         url = self.expense_url+'?exp_type=test'
@@ -121,10 +121,10 @@ class ExpenseFilterTests(APITestCase):
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
 
-    """
-    Checks Expense filter by coin_type
-    """
     def test_expense_filter_coin_type(self):
+        """
+        Checks Expense filter by coin_type
+        """
         self.authenticate_add_expense()
         # Get expense data
         url = self.expense_url+'?coin_type=EUR'
@@ -133,10 +133,10 @@ class ExpenseFilterTests(APITestCase):
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
     
-    """
-    Checks Expense filter by quantity min and max
-    """
     def test_expense_filter_quantity_min_and_max(self):
+        """
+        Checks Expense filter by quantity min and max
+        """
         self.authenticate_add_expense()
         # Get expense data
         url = self.expense_url+'?quantity_min=1.0&quantity_max=3.0'

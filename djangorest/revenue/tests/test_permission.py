@@ -110,10 +110,10 @@ class RevenuePermissionsTests(APITestCase):
         }
 
 
-    """
-    Checks permissions with Revenue Type get and list
-    """
     def test_revenue_type_get_list_url(self):
+        """
+        Checks permissions with Revenue Type get and list
+        """
         data = self.get_revenue_type_data()
         # Get revenue type data without authentication
         response = self.get(self.rev_type_list_url)
@@ -129,10 +129,10 @@ class RevenuePermissionsTests(APITestCase):
         response = self.get(self.rev_type_list_url+'/'+str(data['name']))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    """
-    Checks permissions with Revenue post
-    """
     def test_revenue_post_url(self):
+        """
+        Checks permissions with Revenue post
+        """
         data = self.get_revenue_data()
         # Try without authentication
         response=self.post(self.revenue_url, data)
@@ -145,10 +145,10 @@ class RevenuePermissionsTests(APITestCase):
         revenue = Revenue.objects.get(name="Test name")
         self.assertEqual(revenue.owner.email, self.user_data1['email'])
 
-    """
-    Checks permissions with Revenue get and list
-    """
     def test_revenue_get_list_url(self):
+        """
+        Checks permissions with Revenue get and list
+        """
         data = self.get_revenue_data()
         # Add new revenue as user1
         self.authenticate_user(self.credentials1)
@@ -168,10 +168,10 @@ class RevenuePermissionsTests(APITestCase):
         response = self.get(self.revenue_url+'/'+str(revenue.id))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    """
-    Checks permissions with Revenue patch (almost same as put)
-    """
     def test_revenue_put_url(self):
+        """
+        Checks permissions with Revenue patch (almost same as put)
+        """
         data = self.get_revenue_data()
         # Add new revenue as user1
         self.authenticate_user(self.credentials1)
@@ -188,10 +188,10 @@ class RevenuePermissionsTests(APITestCase):
         response=self.patch(self.revenue_url+'/'+str(revenue.id), {'quantity': 30.0})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    """
-    Checks permissions with Revenue delete
-    """
     def test_revenue_delete_url(self):
+        """
+        Checks permissions with Revenue delete
+        """
         data = self.get_revenue_data()
         # Add new revenue as user1
         self.authenticate_user(self.credentials1)

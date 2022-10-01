@@ -48,10 +48,10 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
     parser_classes = (JSONParser,)
 
-"""
-An endpoint for changing password
-"""
-class ChangePasswordView(generics.CreateAPIView):   
+class ChangePasswordView(generics.CreateAPIView): 
+    """
+    An endpoint for changing password
+    """  
     serializer_class = ChangePasswordSerializer
     permission_classes = (IsCurrentVerifiedUser,)
     parser_classes = (JSONParser,)
@@ -68,10 +68,11 @@ class ChangePasswordView(generics.CreateAPIView):
             return Response([], status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-"""
-An endpoint for password reset
-"""
-class ResetPasswordView(generics.GenericAPIView, mixins.CreateModelMixin, mixins.RetrieveModelMixin):
+class ResetPasswordView(generics.GenericAPIView, mixins.CreateModelMixin, 
+    mixins.RetrieveModelMixin):
+    """
+    An endpoint for password reset
+    """
     serializer_class = ResetPasswordSerializer
     permission_classes = (IsCurrentVerifiedUser,)
     parser_classes = (JSONParser,)

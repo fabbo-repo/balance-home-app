@@ -71,10 +71,10 @@ class RevenuePaginationTests(APITestCase):
         return user
         
     
-    """
-    Checks Revenue pagination scheme is correct
-    """
     def test_revenue_pagination_scheme(self):
+        """
+        Checks Revenue pagination scheme is correct
+        """
         data = self.get_revenue_data()
         # Add new revenue
         self.authenticate_user(self.credentials)
@@ -108,10 +108,10 @@ class RevenuePaginationTests(APITestCase):
         }
         self.assertEqual(scheme, expected_scheme)
 
-    """
-    Checks 2 pages of Revenue data is correct
-    """
     def test_revenue_two_pages(self):
+        """
+        Checks 2 pages of Revenue data is correct
+        """
         self.authenticate_user(self.credentials)
         for i in range(20):
             data = self.get_revenue_data()

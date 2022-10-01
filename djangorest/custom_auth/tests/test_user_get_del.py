@@ -65,10 +65,10 @@ class UserPutTests(APITestCase):
             self.user_get_del_url
         )
 
-    """
-    Checks that user data is correct
-    """
     def test_get_user_data(self):
+        """
+        Checks that user data is correct
+        """
         response = self.user_get()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user_data2 = {
@@ -84,9 +84,9 @@ class UserPutTests(APITestCase):
         self.assertEqual(response.data["expected_annual_balance"], 
             user_data2["expected_annual_balance"])
 
-    """
-    Checks that user gets deleted
-    """
     def test_delete_user(self):
+        """
+        Checks that user gets deleted
+        """
         response = self.user_del()
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

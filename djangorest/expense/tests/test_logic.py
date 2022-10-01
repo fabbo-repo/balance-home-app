@@ -87,10 +87,10 @@ class ExpenseLogicTests(APITestCase):
         # Add new expense
         self.post(self.expense_url, data)
     
-    """
-    Checks balance gets updated with Expense post
-    """
     def test_expense_post(self):
+        """
+        Checks balance gets updated with Expense post
+        """
         data = self.get_expense_data()
         self.authenticate_user(self.credentials)
         self.post(self.expense_url, data)
@@ -101,12 +101,11 @@ class ExpenseLogicTests(APITestCase):
         response = self.post(self.expense_url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('quantity', response.data)
-
     
-    """
-    Checks balance gets updated with Expense patch (similar to put)
-    """
     def test_expense_patch(self):
+        """
+        Checks balance gets updated with Expense patch (similar to put)
+        """
         data = self.get_expense_data()
         self.authenticate_user(self.credentials)
         self.post(self.expense_url, data)
@@ -116,10 +115,10 @@ class ExpenseLogicTests(APITestCase):
         user = User.objects.get(email=self.user_data['email'])
         self.assertEqual(user.balance, 5)
 
-    """
-    Checks balance gets updated with Expense delete
-    """
     def test_expense_delete_url(self):
+        """
+        Checks balance gets updated with Expense delete
+        """
         # Add first expense
         data = self.get_expense_data()
         self.authenticate_user(self.credentials)

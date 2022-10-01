@@ -106,10 +106,10 @@ class DateBalancePaginationTests(APITestCase):
         )
     
     
-    """
-    Checks AnnualBalance pagination scheme is correct
-    """
     def test_annual_balance_pagination_scheme(self):
+        """
+        Checks AnnualBalance pagination scheme is correct
+        """
         # Add new AnnualBalance
         self.authenticate_add_annual_balance()
         # Get AnnualBalance data
@@ -134,10 +134,10 @@ class DateBalancePaginationTests(APITestCase):
         }
         self.assertEqual(scheme, expected_scheme)
 
-    """
-    Checks 2 pages of AnnualBalance data is correct
-    """
     def test_annual_balance_two_pages(self):
+        """
+        Checks 2 pages of AnnualBalance data is correct
+        """
         # Add First AnnualBalance
         self.authenticate_add_annual_balance()
         for i in range(19):
@@ -154,10 +154,10 @@ class DateBalancePaginationTests(APITestCase):
         # 10 AnnualBalance in the first page
         self.assertEqual(len(data['results']), 10)
 
-    """
-    Checks MonthlyBalance pagination scheme is correct
-    """
     def test_monthly_balance_pagination_scheme(self):
+        """
+        Checks MonthlyBalance pagination scheme is correct
+        """
         # Add new MonthlyBalance
         self.authenticate_add_monthly_balance()
         # Get MonthlyBalance data
@@ -183,10 +183,10 @@ class DateBalancePaginationTests(APITestCase):
         }
         self.assertEqual(scheme, expected_scheme)
 
-    """
-    Checks 2 pages of MonthlyBalance data is correct
-    """
     def test_monthly_balance_two_pages(self):
+        """
+        Checks 2 pages of MonthlyBalance data is correct
+        """
         # Add First MonthlyBalance
         self.authenticate_add_monthly_balance()
         for i in range(19):

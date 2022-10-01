@@ -5,27 +5,26 @@ from django.test import TestCase
 
 class DevTestCase(TestCase):
 
-
-    """
-    Testing that Dev class is a child of Configuration class
-    """
     def test_dev_settings_class(self):
+        """
+        Testing that Dev class is a child of Configuration class
+        """
         from core.settings import Dev
         self.assertTrue(issubclass(Dev, Configuration))
     
-    """
-    Testing DEBUG const is setup correctly in Dev and Prod
-    """
     def test_debug_settings(self):
+        """
+        Testing DEBUG const is setup correctly in Dev and Prod
+        """
         from core.settings import Dev
         self.assertTrue(Dev.DEBUG)
         from core.settings import Prod
         self.assertFalse(Prod.DEBUG)
     
-    """
-    Testing logging config in Debug mode
-    """
     def test_logging_settings(self):
+        """
+        Testing logging config in Debug mode
+        """
         logging_settings = settings.LOGGING
 
         self.assertEqual(logging_settings["version"], 1)

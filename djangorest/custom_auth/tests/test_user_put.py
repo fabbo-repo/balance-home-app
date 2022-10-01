@@ -80,47 +80,46 @@ class UserPutTests(APITestCase):
         tmp_file.seek(0)
         return tmp_file
 
-    """
-    Checks that username is changed
-    """
     def test_change_user_name(self):
+        """
+        Checks that username is changed
+        """
         response = self.user_patch({"username":"test_2"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user = User.objects.get(email=self.user_data["email"])
         self.assertEqual(user.username, "test_2")
 
-    """
-    Checks that email is changed
-    """
     def test_change_user_email(self):
+        """
+        Checks that email is changed
+        """
         response = self.user_patch({"email":"test2@gmail.com"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user = User.objects.get(email="test2@gmail.com")
         self.assertFalse(user.verified)
 
-    """
-    Checks that annual balance is changed
-    """
     def test_change_user_annual_balance(self):
+        """
+        Checks that annual balance is changed
+        """
         response = self.user_patch({"expected_annual_balance":10})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user = User.objects.get(email=self.user_data["email"])
         self.assertEqual(user.expected_annual_balance, 10)
     
-    """
-    Checks that montly balance is changed
-    """
     def test_change_user_monthly_balance(self):
+        """
+        Checks that montly balance is changed
+        """
         response = self.user_patch({"expected_monthly_balance":10})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user = User.objects.get(email=self.user_data["email"])
         self.assertEqual(user.expected_monthly_balance, 10)
         
-
-    """
-    Checks that image is uploaded
-    """
     def test_change_user_image(self):
+        """
+        Checks that image is uploaded
+        """
         response = self.user_patch_image(self.temporary_image())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user = User.objects.get(email=self.user_data["email"])
@@ -130,10 +129,10 @@ class UserPutTests(APITestCase):
         if os.path.exists(generated_dir):
             shutil.rmtree(generated_dir)
 
-    """
-    Checks that password is changed
-    """
     def test_change_password(self):
+        """
+        Checks that password is changed
+        """
         response=self.client.post(
             self.change_password_url,
             data=json.dumps(

@@ -37,19 +37,19 @@ class InvitationCodeTests(APITestCase):
             content_type="application/json"
         )
 
-    """
-    Checks that an invitation code gets updated after user registration
-    """
     def test_inv_code_update(self):
+        """
+        Checks that an invitation code gets updated after user registration
+        """
         self.user_post()
         User.objects.get(email=self.user_data['email'])
         # Cheks if InvitationCode gets updated
         self.assertFalse(InvitationCode.objects.get(code=self.inv_code.code).is_active)
         
-    """
-    Checks that an user with inactive invitation code is not created
-    """
     def test_user_with_inactive_inv_code(self):
+        """
+        Checks that an user with inactive invitation code is not created
+        """
         # Create inactive InvitationCode
         inv_code2 = InvitationCode.objects.create(
             is_active=False,
@@ -68,10 +68,10 @@ class InvitationCodeTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('inv_code', response.data)
         
-    """
-    Checks that an user with no inv_code is not created
-    """
     def test_wrong_inv_code(self):
+        """
+        Checks that an user with no inv_code is not created
+        """
         response=self.user_post(
             {
                 'inv_cod': str(uuid.uuid4()),
@@ -84,10 +84,10 @@ class InvitationCodeTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('inv_code', response.data)
    
-    """
-    Checks that an user with no inv_code is not created
-    """
     def test_none_inv_code(self):
+        """
+        Checks that an user with no inv_code is not created
+        """
         response=self.user_post(
             {
                 'username': self.user_data['username'],

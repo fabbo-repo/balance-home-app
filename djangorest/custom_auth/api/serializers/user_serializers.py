@@ -11,11 +11,11 @@ from django.core.exceptions import ValidationError
 from coin.currency_converter_integration import convert_or_fetch
 
 
-"""
-Race condition at usage left update in an InvitationCode
-"""
 @transaction.atomic()
 def decrease_inv_code_usage(code):
+    """
+    Race condition at usage left update in an InvitationCode
+    """
     sid = transaction.savepoint()
     inv_code = code
     inv_code.usage_left -= 1
@@ -23,21 +23,21 @@ def decrease_inv_code_usage(code):
     inv_code.save()
     transaction.savepoint_commit(sid)
 
-"""
-Checks if an invitation code is created and valid
-"""
 def check_inv_code(code):
+    """
+    Checks if an invitation code is created and valid
+    """
     inv_code = None
     try: inv_code = InvitationCode.objects.get(code=code)
     except: raise serializers.ValidationError(_("Invitation code not found"))
     if not inv_code.is_active:
         raise serializers.ValidationError(_("Invalid invitation code"))
 
-"""
-Checks if 2 passwords are different, also that username and email 
-are different to the passwords
-"""
 def check_username_pass12(username, email, password1, password2):
+    """
+    Checks if 2 passwords are different, also that username and email 
+    are different to the passwords
+    """
     if password1 != password2:
         raise serializers.ValidationError(
             {"password": _("Password fields do not match")})
@@ -46,10 +46,10 @@ def check_username_pass12(username, email, password1, password2):
             {"password": _("Password cannot match other profile data")})
 
 
-"""
-Serializer for User creation (register)
-"""
 class UserCreationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for User creation (register)
+    """
     username = serializers.CharField(
         required=True, max_length=15,
         validators=[UniqueValidator(queryset=User.objects.all())]
@@ -120,10 +120,10 @@ class UserCreationSerializer(serializers.ModelSerializer):
         return user
 
 
-"""
-Serializer to get, update or delete user data
-"""
 class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
+    """
+    Serializer to get, update or delete user data
+    """
     username = serializers.CharField(
         max_length=15,
         validators=[UniqueValidator(queryset=User.objects.all())]
@@ -181,10 +181,10 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
         return super(UserRetrieveUpdateDestroySerializer, self).update(instance, validated_data)
 
 
-"""
-Serializer for password change (needs old password)
-"""
 class ChangePasswordSerializer(serializers.Serializer):
+    """
+    Serializer for password change (needs old password)
+    """
     old_password = serializers.CharField(
         required=True,
         #validators=[validate_password]
@@ -194,10 +194,10 @@ class ChangePasswordSerializer(serializers.Serializer):
         validators=[validate_password]
     )
 
-"""
-Serializer for password reset (code verification)
-"""
 class ResetPasswordSerializer(serializers.Serializer):
+    """
+    Serializer for password reset (code verification)
+    """
     code = serializers.CharField(
         required=True, 
         min_length=6, max_length=6

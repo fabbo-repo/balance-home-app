@@ -79,10 +79,10 @@ class RevenueFilterTests(APITestCase):
         self.post(self.revenue_url, data)
     
 
-    """
-    Checks Revenue filter by date
-    """
     def test_revenue_filter_date(self):
+        """
+        Checks Revenue filter by date
+        """
         self.authenticate_add_revenue()
         # Get revenue data
         url = self.revenue_url+'?date='+str(now().date())
@@ -91,10 +91,10 @@ class RevenueFilterTests(APITestCase):
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
         
-    """
-    Checks Revenue filter by date form to
-    """
     def test_revenue_filter_date_from_to(self):
+        """
+        Checks Revenue filter by date form to
+        """
         self.authenticate_add_revenue()
         # Get revenue data
         url = self.revenue_url+'?date_from=' \
@@ -109,10 +109,10 @@ class RevenueFilterTests(APITestCase):
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
     
-    """
-    Checks Revenue filter by rev_type
-    """
     def test_revenue_filter_rev_type(self):
+        """
+        Checks Revenue filter by rev_type
+        """
         self.authenticate_add_revenue()
         # Get revenue data
         url = self.revenue_url+'?rev_type=test'
@@ -121,10 +121,10 @@ class RevenueFilterTests(APITestCase):
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
 
-    """
-    Checks Revenue filter by coin_type
-    """
     def test_revenue_filter_coin_type(self):
+        """
+        Checks Revenue filter by coin_type
+        """
         self.authenticate_add_revenue()
         # Get revenue data
         url = self.revenue_url+'?coin_type=EUR'
@@ -133,10 +133,10 @@ class RevenueFilterTests(APITestCase):
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
     
-    """
-    Checks Revenue filter by quantity min and max
-    """
     def test_revenue_filter_quantity_min_and_max(self):
+        """
+        Checks Revenue filter by quantity min and max
+        """
         self.authenticate_add_revenue()
         # Get revenue data
         url = self.revenue_url+'?quantity_min=1.0&quantity_max=3.0'

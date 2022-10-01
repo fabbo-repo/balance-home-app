@@ -72,10 +72,10 @@ class ExpensePaginationTests(APITestCase):
         return user
     
     
-    """
-    Checks Expense pagination scheme is correct
-    """
     def test_expense_pagination_scheme(self):
+        """
+        Checks Expense pagination scheme is correct
+        """
         data = self.get_expense_data()
         # Add new expense
         self.authenticate_user(self.credentials)
@@ -109,10 +109,10 @@ class ExpensePaginationTests(APITestCase):
         }
         self.assertEqual(scheme, expected_scheme)
 
-    """
-    Checks 2 pages of Expense data is correct
-    """
     def test_expense_two_pages(self):
+        """
+        Checks 2 pages of Expense data is correct
+        """
         self.authenticate_user(self.credentials)
         for i in range(20):
             data = self.get_expense_data()

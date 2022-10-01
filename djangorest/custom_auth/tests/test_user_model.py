@@ -24,29 +24,30 @@ class UserTests(APITestCase):
         user.save()
         return user
 
-    """
-    Checks if User is created as normal user
-    """
+
     def test_creates_user(self):
+        """
+        Checks if User is created as normal user
+        """
         user = self.create_user()
         self.assertEqual(user.username, "username")
         self.assertFalse(user.is_staff)
         self.assertFalse(user.is_superuser)
 
-    """
-    Checks if User is created as super user
-    """
     def test_creates_super_user(self):
+        """
+        Checks if User is created as super user
+        """
         user = self.create_super_user()
         self.assertEqual(user.username, "username")
         self.assertEqual(user.is_staff, True)
         self.assertEqual(user.is_superuser, True)
 
-    """
-    Checks that an User with is_staff set to False
-    raises an Exception when it is created as super user
-    """
     def test_creates_super_user_with_is_staff(self):
+        """
+        Checks that an User with is_staff set to False
+        raises an Exception when it is created as super user
+        """
         self.assertRaises(
             ValueError, 
             User.objects.create_superuser,
@@ -59,11 +60,11 @@ class UserTests(APITestCase):
                 **self.user_data
             )
 
-    """
-    Checks that an User with is_superuser set to False
-    raises an Exception when it is created as super user
-    """
     def test_creates_super_user_with_is_superuser(self):
+        """
+        Checks that an User with is_superuser set to False
+        raises an Exception when it is created as super user
+        """
         self.assertRaises(
             ValueError, 
             User.objects.create_superuser,
@@ -76,11 +77,11 @@ class UserTests(APITestCase):
                 **self.user_data
             )
     
-    """
-    Checks that an User without username (same as empty or None)
-    raises an Exception when it is created
-    """
     def test_cant_create_user_without_username(self):
+        """
+        Checks that an User without username (same as empty or None)
+        raises an Exception when it is created
+        """
         self.assertRaises(
             ValueError, 
             User.objects.create_user, 
@@ -95,11 +96,11 @@ class UserTests(APITestCase):
                 username=""
             )
 
-    """
-    Checks that an User without email (same as empty or None)
-    raises an Exception when it is created
-    """
     def test_cant_create_user_without_email(self):
+        """
+        Checks that an User without email (same as empty or None)
+        raises an Exception when it is created
+        """
         self.assertRaises(
             ValueError, 
             User.objects.create_user,
@@ -114,11 +115,11 @@ class UserTests(APITestCase):
                 username=self.user_data['username']
             )
     
-    """
-    Checks that an User with same email and username
-    raises an Exception when it is checked
-    """
     def test_cant_create_user_with_same_email_and_username(self):
+        """
+        Checks that an User with same email and username
+        raises an Exception when it is checked
+        """
         self.assertRaises(
             ValueError, 
             User.objects.create,
@@ -133,11 +134,11 @@ class UserTests(APITestCase):
                 username=self.user_data['email']
             )
     
-    """
-    Checks that an User with wrong languages
-    raises an Exception when it is saved
-    """
     def test_cant_create_user_wrong_language(self):
+        """
+        Checks that an User with wrong languages
+        raises an Exception when it is saved
+        """
         self.assertRaises(
             ValueError, 
             User.objects.create,

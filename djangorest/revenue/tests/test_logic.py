@@ -87,10 +87,11 @@ class RevenueLogicTests(APITestCase):
         # Add new revenue
         self.post(self.revenue_url, data)
     
-    """
-    Checks balance gets updated with Revenue post
-    """
+
     def test_revenue_post(self):
+        """
+        Checks balance gets updated with Revenue post
+        """
         data = self.get_revenue_data()
         self.authenticate_user(self.credentials)
         self.post(self.revenue_url, data)
@@ -102,10 +103,10 @@ class RevenueLogicTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('quantity', response.data)
     
-    """
-    Checks balance gets updated with Revenue patch (similar to put)
-    """
     def test_revenue_patch(self):
+        """
+        Checks balance gets updated with Revenue patch (similar to put)
+        """
         data = self.get_revenue_data()
         self.authenticate_user(self.credentials)
         self.post(self.revenue_url, data)
@@ -115,10 +116,10 @@ class RevenueLogicTests(APITestCase):
         user = User.objects.get(email=self.user_data['email'])
         self.assertEqual(user.balance, 36)
 
-    """
-    Checks balance gets updated with Revenue delete
-    """
     def test_revenue_delete_url(self):
+        """
+        Checks balance gets updated with Revenue delete
+        """
         data = self.get_revenue_data()
         self.authenticate_user(self.credentials)
         self.post(self.revenue_url, data)

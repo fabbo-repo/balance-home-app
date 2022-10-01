@@ -69,35 +69,35 @@ class UrlPermissionsTests(APITestCase):
     def delete(self, url) :
         return self.client.delete(url)
     
-    """
-    Checks permissions with JWT obtain
-    """
     def test_jwt_obtain_url(self):
+        """
+        Checks permissions with JWT obtain
+        """
         response=self.post(self.jwt_obtain_url, self.credentials)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    """
-    Checks permissions with JWT refresh
-    """
     def test_jwt_refresh_url(self):
+        """
+        Checks permissions with JWT refresh
+        """
         refresh=self.post(self.jwt_obtain_url, self.credentials).data['refresh']
         response=self.post(self.jwt_refresh_url, {'refresh':refresh})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
-    """
-    Checks permissions with User post
-    """
     def test_user_post_url(self):
+        """
+        Checks permissions with User post
+        """
         user_data2=self.user_data
         user_data2['email']='test2@email.com'
         user_data2['username']='test2'
         response=self.post(self.user_post_url, user_data2)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     
-    """
-    Checks permissions with User patch
-    """
     def test_user_patch_url(self):
+        """
+        Checks permissions with User patch
+        """
         # Try without authentications
         user_data2={'username':'test2'}
         response=self.patch(self.user_put_get_del_url, user_data2)
@@ -109,10 +109,10 @@ class UrlPermissionsTests(APITestCase):
         response=self.patch(self.user_put_get_del_url, user_data2)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    """
-    Checks permissions with User get
-    """
     def test_user_get_url(self):
+        """
+        Checks permissions with User get
+        """
         # Try without authentications
         response=self.get(self.user_put_get_del_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -123,10 +123,10 @@ class UrlPermissionsTests(APITestCase):
         response=self.get(self.user_put_get_del_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    """
-    Checks permissions with User del
-    """
     def test_user_get_url(self):
+        """
+        Checks permissions with User del
+        """
         # Try without authentications
         response=self.delete(self.user_put_get_del_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -137,20 +137,20 @@ class UrlPermissionsTests(APITestCase):
         response=self.delete(self.user_put_get_del_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    """
-    Checks permissions with email code send
-    """
     def test_email_code_send_url(self):
+        """
+        Checks permissions with email code send
+        """
         user=User.objects.get(email=self.user_data['email'])
         user.verified=False
         user.save()
         response=self.post(self.email_code_send_url, {'email':self.user_data['email']})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    """
-    Checks permissions with email code verify
-    """
     def test_email_code_verify_url(self):
+        """
+        Checks permissions with email code verify
+        """
         # Send code
         user=User.objects.get(email=self.user_data['email'])
         user.verified=False
@@ -164,10 +164,10 @@ class UrlPermissionsTests(APITestCase):
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     
-    """
-    Checks permissions with change password
-    """
     def test_change_password_url(self):
+        """
+        Checks permissions with change password
+        """
         # Try without authentications
         data={
             'old_password': self.user_data['password'],
@@ -182,10 +182,10 @@ class UrlPermissionsTests(APITestCase):
         response=self.post(self.change_password_url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
-    """
-    Checks permissions with reset password
-    """
     def test_reset_password_url(self):
+        """
+        Checks permissions with reset password
+        """
         # Try without authentication
         response=self.get(self.reset_password_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

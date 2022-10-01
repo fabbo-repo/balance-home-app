@@ -120,10 +120,10 @@ class DateBalancePermissionsTests(APITestCase):
         ).id
 
 
-    """
-    Checks permissions with AnnualBalance get and list
-    """
     def test_annual_balance_get_list_url(self):
+        """
+        Checks permissions with AnnualBalance get and list
+        """
         self.authenticate_user(self.credentials1)
         # Add new AnnualBalance as user1
         id = self.add_annual_balance(self.user1)
@@ -141,10 +141,10 @@ class DateBalancePermissionsTests(APITestCase):
         response = self.get(self.annual_balance_list+'/'+str(id))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    """
-    Checks permissions with MonthlyBalance get and list
-    """
     def test_monthly_balance_get_list_url(self):
+        """
+        Checks permissions with MonthlyBalance get and list
+        """
         self.authenticate_user(self.credentials1)
         # Add new MonthlyBalance as user1
         id = self.add_monthly_balance(self.user1)

@@ -67,19 +67,19 @@ class PasswordResetTests(APITestCase):
         )
 
 
-    """
-    Checks that password reset code is sent
-    """
     def test_send_password_reset_code(self):
+        """
+        Checks that password reset code is sent
+        """
         response=self.send_code()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user=User.objects.get(email=self.user_data["email"])
         self.assertIsNotNone(user.pass_reset)
 
-    """
-    Checks that password reset code is verified
-    """
     def test_verify_password_reset_code(self):
+        """
+        Checks that password reset code is verified
+        """
         self.send_code()
         user=User.objects.get(email=self.user_data["email"])
         code = user.pass_reset
@@ -91,20 +91,20 @@ class PasswordResetTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK,
             "Jwt obtain")
     
-    """
-    Checks that password reset code is verified with same old password
-    """
     def test_verify_old_password_reset(self):
+        """
+        Checks that password reset code is verified with same old password
+        """
         self.send_code()
         user=User.objects.get(email=self.user_data["email"])
         code = user.pass_reset
         response=self.verify_code_password(code, self.user_data["username"])
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    """
-    Checks that sending a wrong password reset code should let change password
-    """
     def test_send_wrong_code(self):
+        """
+        Checks that sending a wrong password reset code should let change password
+        """
         # Code generation first:
         self.send_code()
         response=self.verify_code_password('123', self.user_data["username"])
@@ -113,10 +113,10 @@ class PasswordResetTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['code'][0], 'Invalid code')
 
-    """
-    Checks that sending an invalid code should not modify the user as verified
-    """
     def test_send_invalid_code(self):
+        """
+        Checks that sending an invalid code should not modify the user as verified
+        """
         # Code generation first:
         self.send_code()
         # Set code validity to 1 second

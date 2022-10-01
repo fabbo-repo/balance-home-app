@@ -10,10 +10,10 @@ class AnnualBalanceView(viewsets.ModelViewSet):
     permission_classes = (IsCurrentVerifiedUser,)
     filterset_class = AnnualBalanceFilterSet
 
-    """
-    Filter objects by owner
-    """
     def get_queryset(self):
+        """
+        Filter objects by owner
+        """
         if getattr(self, 'swagger_fake_view', False):
             return AnnualBalance.objects.none()  # return empty queryset
         return AnnualBalance.objects.filter(owner=self.request.user)
@@ -25,10 +25,10 @@ class MonthlyBalanceView(viewsets.ModelViewSet):
     permission_classes = (IsCurrentVerifiedUser,)
     filterset_class = MonthlyBalanceFilterSet
 
-    """
-    Filter objects by owner
-    """
     def get_queryset(self):
+        """
+        Filter objects by owner
+        """
         if getattr(self, 'swagger_fake_view', False):
             return MonthlyBalance.objects.none()  # return empty queryset
         return MonthlyBalance.objects.filter(owner=self.request.user)

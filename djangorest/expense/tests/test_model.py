@@ -45,17 +45,17 @@ class ExpenseModelTests(APITestCase):
         return user
 
 
-    """
-    Checks if exp_type is created
-    """
     def test_creates_exp_type(self):
+        """
+        Checks if exp_type is created
+        """
         exp_type = ExpenseType.objects.create(name="test2")
         self.assertEqual(exp_type.name, "test2")
 
-    """
-    Checks if expense is created
-    """
     def test_creates_expense(self):
+        """
+        Checks if expense is created
+        """
         data = self.get_expense_data()
         expense = Expense.objects.create(**data)
         self.assertEqual(expense.name, data["name"])

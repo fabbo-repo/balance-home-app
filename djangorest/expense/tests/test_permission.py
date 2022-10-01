@@ -110,10 +110,10 @@ class ExpensePermissionsTests(APITestCase):
         }
 
 
-    """
-    Checks permissions with Expense Type get and list
-    """
     def test_expense_type_get_list_url(self):
+        """
+        Checks permissions with Expense Type get and list
+        """
         data = self.get_expense_type_data()
         # Get expense type data without authentication
         response = self.get(self.exp_type_list_url)
@@ -129,10 +129,10 @@ class ExpensePermissionsTests(APITestCase):
         response = self.get(self.exp_type_list_url+'/'+str(data['name']))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    """
-    Checks permissions with Expense post
-    """
     def test_expense_post_url(self):
+        """
+        Checks permissions with Expense post
+        """
         data = self.get_expense_data()
         # Try without authentication
         response=self.post(self.expense_url, data)
@@ -145,10 +145,10 @@ class ExpensePermissionsTests(APITestCase):
         expense = Expense.objects.get(name="Test name")
         self.assertEqual(expense.owner.email, self.user_data1['email'])
 
-    """
-    Checks permissions with Expense get and list
-    """
     def test_expense_get_list_url(self):
+        """
+        Checks permissions with Expense get and list
+        """
         data = self.get_expense_data()
         # Add new expense as user1
         self.authenticate_user(self.credentials1)
@@ -168,10 +168,10 @@ class ExpensePermissionsTests(APITestCase):
         response = self.get(self.expense_url+'/'+str(expense.id))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    """
-    Checks permissions with Expense patch (almost same as put)
-    """
     def test_expense_put_url(self):
+        """
+        Checks permissions with Expense patch (almost same as put)
+        """
         data = self.get_expense_data()
         # Add new expense as user1
         self.authenticate_user(self.credentials1)
@@ -188,10 +188,10 @@ class ExpensePermissionsTests(APITestCase):
         response=self.patch(self.expense_url+'/'+str(expense.id), {'quantity': 30.0})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    """
-    Checks permissions with Expense delete
-    """
     def test_expense_delete_url(self):
+        """
+        Checks permissions with Expense delete
+        """
         data = self.get_expense_data()
         # Add new expense as user1
         self.authenticate_user(self.credentials1)

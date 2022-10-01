@@ -32,10 +32,10 @@ class RevenueView(viewsets.ModelViewSet):
     permission_classes = (IsCurrentVerifiedUser,)
     filterset_class = RevenueFilterSet
 
-    """
-    Filter objects by owner
-    """
     def get_queryset(self):
+        """
+        Filter objects by owner
+        """
         if getattr(self, 'swagger_fake_view', False):
             return Revenue.objects.none()  # return empty queryset
         return Revenue.objects.filter(owner=self.request.user)

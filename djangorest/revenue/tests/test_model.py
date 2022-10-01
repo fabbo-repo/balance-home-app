@@ -44,17 +44,17 @@ class RevenueModelTests(APITestCase):
         return user
 
 
-    """
-    Checks if rev_type is created
-    """
     def test_creates_rev_type(self):
+        """
+        Checks if rev_type is created
+        """
         rev_type = RevenueType.objects.create(name="test2")
         self.assertEqual(rev_type.name, "test2")
 
-    """
-    Checks if revenue is created
-    """
     def test_creates_rev_type(self):
+        """
+        Checks if revenue is created
+        """
         data = self.get_revenue_data()
         revenue = Revenue.objects.create(**data)
         self.assertEqual(revenue.name, data["name"])
