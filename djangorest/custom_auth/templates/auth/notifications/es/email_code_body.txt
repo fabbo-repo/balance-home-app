@@ -1,0 +1,1 @@
+Código generado para verificación de correo electrónico: {{ code }}
