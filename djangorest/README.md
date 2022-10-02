@@ -1,6 +1,8 @@
+# DRF Backend
 
 ## Architecture Sample
-~~~
+
+~~~python
 djangorest/
     ├── app_1/
     │   ├── management/
@@ -71,109 +73,149 @@ djangorest/
     └── db.sqlite3
 ~~~
 
-
 ## Useful commands
 
 * Install project requirements:
-~~~
+
+~~~bash
 pip install -r requirements.txt
 ~~~
+
 * For the project creation it was used:
-~~~
+
+~~~bash
 django-admin startproject core
 ~~~
+
 * Create migrations:
-~~~
+
+~~~bash
 python manage.py makemigrations
 ~~~
+
 * Migrate changes (create tables in the specified database):
-~~~
+
+~~~bash
 python manage.py migrate
 ~~~
+
 * Create folder for static files:
-~~~
+
+~~~bash
 python manage.py collectstatic
 ~~~
+
 * Create an app:
-~~~
+
+~~~bash
 python manage.py startapp app_1
 ~~~
+
 * Create superuser:
-~~~
+
+~~~bash
 python manage.py createsuperuser
 ~~~
+
 * Change password:
-~~~
+
+~~~bash
 python manage.py changepassword <username>
 ~~~
+
 * Run server in debug mode:
-~~~
+
+~~~bash
 python manage.py runserver 
 ~~~
+
 * Export db data to a json file:
-~~~
+
+~~~bash
 python manage.py dumpdata > db.json
 ~~~
+
 * Import db data from a json file:
-~~~
+
+~~~bash
 python manage.py loaddata db.json
 ~~~
+
 * Launch testing: (coverage included)
-~~~
+
+~~~bash
 python manage.py test
 ~~~
+
 * Generate html with coverage report:
-~~~
+
+~~~bash
 coverage html
 ~~~
+
 * Launch celery for development:
-~~~
+
+~~~bash
 celery -A core worker -l INFO -P eventlet
 ~~~
+
 > ***redis*** must be launched too
+
 * Schedule balance periodic tasks:
-~~~
+
+~~~bash
 python manage.py balance_schedule_setup
 ~~~
+
 * Create default revenue types and expense types:
-~~~
+
+~~~bash
 python manage.py create_balance_models
 ~~~
+
 * Schedule coin periodic tasks:
-~~~
+
+~~~bash
 python manage.py coin_schedule_setup
 ~~~
+
 * Create defined coin types:
-~~~
+
+~~~bash
 python manage.py create_coin_models
 ~~~
+
 * Generate locale messages files
-~~~
+
+~~~bash
 django-admin makemessages --all --ignore=en
 ~~~
+
 > Before executing it, a locale folder with all languages folders inside must be created
+
 * Generate compiled messages
-~~~
+
+~~~bash
 django-admin compilemessages --ignore=env
 ~~~
 
+## Environment Variables
 
-## Environment Variables:
-
-* APP_DOMAIN
-* APP_PORT
-* APP_DEBUG
-* APP_TIME_ZONE
-* APP_ALLOWED_HOSTS
-* APP_EMAIL_HOST
-* APP_EMAIL_PORT
-* APP_EMAIL_HOST_USER
-* APP_EMAIL_HOST_PASSWORD
-* APP_CELERY_BROKER_URL
-* APP_EMAIL_CODE_THRESHOLD
-* APP_EMAIL_CODE_VALID
-* DJANGO_SUPERUSER_USERNAME
-* DJANGO_SUPERUSER_EMAIL
-* DJANGO_SUPERUSER_PASSWORD
-* DATABASE_URL
-* COIN_TYPE_CODES
+| NAME                      | DESCRIPTION                                                |
+| ------------------------- | ---------------------------------------------------------- |
+| APP_DOMAIN                | Backend host name                                          |
+| APP_PORT                  | Backend port                                               |
+| APP_DEBUG                 | Debug mode enabled (true|false)                            |
+| APP_ALLOWED_HOSTS         | List of strings representing the allowed host/domain names |
+| APP_EMAIL_HOST            | Email service host name                                    |
+| APP_EMAIL_PORT            | Email service port                                         |
+| APP_EMAIL_HOST_USER       | Email service authentication user                          |
+| APP_EMAIL_HOST_PASSWORD   | Email service authentication password                      |
+| APP_CELERY_BROKER_URL     | Celery url                                                 |
+| APP_EMAIL_CODE_THRESHOLD  | Time to wait for a new email verification code generation  |
+| APP_EMAIL_CODE_VALID      | Email verification code validity duration                  |
+| DJANGO_SUPERUSER_USERNAME | Admin backend user name                                    |
+| DJANGO_SUPERUSER_EMAIL    | Admin backend user email                                   |
+| DJANGO_SUPERUSER_PASSWORD | Admin backend user password                                |
+| DATABASE_URL              | Databse url                                                |
+| COIN_TYPE_CODES           | Coin type codes allowed (they have to be valid)            |

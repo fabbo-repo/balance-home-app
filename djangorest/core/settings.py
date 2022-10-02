@@ -158,7 +158,7 @@ class Dev(Configuration):
         ('es', _('Spanish')),
     )
 
-    TIME_ZONE = get_env('APP_TIME_ZONE', "UTC")
+    TIME_ZONE = "UTC"
     # Enables Django’s translation system
     USE_I18N = True
     # Django will display numbers and dates using the format of the current locale

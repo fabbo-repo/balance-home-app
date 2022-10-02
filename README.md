@@ -20,8 +20,8 @@ This app is divided into two components, backend and frontend. On the bckend sid
 
 There is some extra information to those who wants to check the source code or test the system. Just check the next links:
 
-- [Frontend Documentation](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/flutter#readme)
-- [Backend Documentation](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/djangorest#readme)
+* [Frontend Documentation](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/flutter#readme)
+* [Backend Documentation](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/djangorest#readme)
 
 ## Usage
 
