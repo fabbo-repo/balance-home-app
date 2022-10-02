@@ -20,17 +20,22 @@ from core.swagger import urls as swagger_urls
 from core import api_urls
 from django.conf.urls.static import static
 
-urlpatterns = [
-    path('general/admin/', admin.site.urls),
-    path("api/v1/", include(api_urls)),
-]
+urlpatterns = []
 
-# Swagger will only be available in DEBUG mode
+# Swagger and documentation will only be available in DEBUG mode
 if settings.DEBUG:
     urlpatterns += [
+        # Documentation:
+        path('general/admin/doc/', include('django.contrib.admindocs.urls')),
+        # Swagger:
         path("api/v1/swagger/", include(swagger_urls)),
     ]
     urlpatterns += static(
         settings.MEDIA_URL, 
         document_root=settings.MEDIA_ROOT
     )
+
+urlpatterns += [
+    path('general/admin/', admin.site.urls),
+    path("api/v1/", include(api_urls)),
+]
