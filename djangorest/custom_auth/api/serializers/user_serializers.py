@@ -8,7 +8,6 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import check_for_language
 from django.core.exceptions import ValidationError
-from coin.currency_converter_integration import convert_or_fetch
 
 
 @transaction.atomic()
@@ -150,35 +149,6 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
         read_only_fields = [
             'last_login'
         ]
-
-    def update(self, instance, validated_data):
-        if 'email' in validated_data:
-            validated_data['verified'] = False
-        # The user balance should only be converted if
-        # the same balance is provided in the request
-        # and the pref_coin_type is changed, same for
-        # expected_annual_balance and expected_monthly_balance
-        if 'pref_coin_type' in validated_data:
-            if 'balance' in validated_data:
-                validated_data['balance'] = convert_or_fetch(
-                    instance.pref_coin_type, 
-                    validated_data['pref_coin_type'],
-                    validated_data['balance']
-                )
-            if 'expected_annual_balance' in validated_data:
-                validated_data['expected_annual_balance'] = convert_or_fetch(
-                    instance.pref_coin_type, 
-                    validated_data['pref_coin_type'],
-                    validated_data['expected_annual_balance']
-                )
-            if 'expected_monthly_balance' in validated_data:
-                validated_data['expected_monthly_balance'] = convert_or_fetch(
-                    instance.pref_coin_type, 
-                    validated_data['pref_coin_type'],
-                    validated_data['expected_monthly_balance']
-                )
-
-        return super(UserRetrieveUpdateDestroySerializer, self).update(instance, validated_data)
 
 
 class ChangePasswordSerializer(serializers.Serializer):
