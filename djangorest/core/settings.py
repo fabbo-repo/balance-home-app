@@ -67,9 +67,14 @@ class Dev(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
+        # Documentation generator:
+        'django.contrib.admindocs',
+        # Rest framework:
         'rest_framework',
         'django_filters',
+        # Swager:
         'drf_yasg',
+        # Task schedulling:
         'django_celery_results',
         'django_celery_beat',
         # Custom apps:
