@@ -18,8 +18,8 @@ RUN set -ex \
     && apt-get update && apt-get install -y --no-install-recommends $RUN_DEPS \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy in your requirements file
-ADD requirements.txt /requirements.txt
+# Copy Pipfile files
+COPY Pipfile Pipfile.lock /
 
 # Install build deps, then remove unneeded build deps all in a single step.
 # Correct the path to your production requirements file, if needed.
@@ -32,18 +32,17 @@ RUN set -ex \
     && apt-get update && apt-get install -y --no-install-recommends $BUILD_DEPS \
     && rm -rf /var/lib/apt/lists/*
 
-# Run `pip install`
-RUN python3 -m venv /venv \
-    && /venv/bin/pip install -U pip \
-    && LIBRARY_PATH=/lib:/usr/lib /bin/sh -c "/venv/bin/pip install --no-cache-dir -r /requirements.txt"
+# Install pipenv and dependencies
+RUN pip install pipenv
+RUN pipenv install --system --deploy
 
 ENV PYTHONUNBUFFERED 1
 
 # Copy your application code to the container 
 # Note: create a .dockerignore file if any large files or directories should be excluded
-RUN mkdir /code/
-WORKDIR /code/
-ADD . /code/
+RUN mkdir /app/
+WORKDIR /app/
+ADD . /app/
 
 # uWSGI will listen on this port
 EXPOSE 8000
@@ -51,9 +50,6 @@ EXPOSE 8000
 # Add any custom, static environment variables needed by Django or your settings file here:
 #ENV DJANGO_SETTINGS_MODULE=myapp.settings
 ENV DJANGO_CONFIGURATION=Prod
-
-# uWSGI configuration (customize as needed):
-ENV UWSGI_VIRTUALENV=/venv UWSGI_WSGI_FILE=core/wsgi.py UWSGI_HTTP=:8000 UWSGI_MASTER=1 UWSGI_WORKERS=2 UWSGI_THREADS=4 UWSGI_LAZY_APPS=1 UWSGI_WSGI_ENV_BEHAVIOR=holy
 
 # Log directory:
 RUN mkdir -p /var/log/balance_app
@@ -66,8 +62,8 @@ RUN /venv/bin/python manage.py makemigrations
 # Change to a non-root user
 #USER ${APP_USER}:${APP_USER}
 
-RUN chmod +x /code/app_entrypoint.sh
-ENTRYPOINT ["/code/app_entrypoint.sh"]
+RUN chmod +x /app/app_entrypoint.sh
+ENTRYPOINT ["/app/app_entrypoint.sh"]
 
 # Start uWSGI
 #CMD ["/venv/bin/uwsgi", "--http-auto-chunked", "--http-keepalive", "--uid", "${id -u ${APP_USER}}"]
