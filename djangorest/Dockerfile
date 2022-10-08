@@ -45,7 +45,7 @@ WORKDIR /app/
 ADD . /app/
 
 # uWSGI will listen on this port
-#EXPOSE 8000
+EXPOSE 8000
 
 # Add any custom, static environment variables needed by Django or your settings file here:
 #ENV DJANGO_SETTINGS_MODULE=myapp.settings
@@ -62,9 +62,13 @@ RUN python manage.py makemigrations
 # Change to a non-root user
 #USER ${APP_USER}:${APP_USER}
 
+# Entrypoint permissions
 RUN chmod a+x /app/backend_entrypoint.sh
 RUN chmod a+x /app/celery_entrypoint.sh
-ENTRYPOINT ["ls -l /"]
+
+RUN ls -l /app
+
+ENTRYPOINT ["/app/backend_entrypoint.sh"]
 
 # Start uWSGI
 #CMD ["/venv/bin/uwsgi", "--http-auto-chunked", "--http-keepalive", "--uid", "${id -u ${APP_USER}}"]

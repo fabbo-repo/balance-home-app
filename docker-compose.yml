@@ -13,7 +13,8 @@ services:
       - ./djangorest/media:/app/media
       - ./djangorest/static:/app/static
       - ./logs/backend:/var/log/balance_app
-      - uwsgi_sock:/tmp/uwsgi/core.sock
+    expose:
+      - 8000
     depends_on:
       - redis
       - db
@@ -59,13 +60,8 @@ services:
       - ./djangorest/static:/app/static
       - ./djangorest/media:/app/media
       - ./logs/nginx:/var/log/nginx
-      - uwsgi_sock:/tmp/uwsgi/core.sock
     depends_on:
       - backend
     env_file:
       - ./nginx.env
     restart: unless-stopped
-
-
-volumes:
-  uwsgi_sock:

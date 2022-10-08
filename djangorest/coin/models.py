@@ -45,4 +45,4 @@ class CoinExchange(models.Model):
         ordering = ['-created']
     
     def __str__(self) -> str:
-        return self.created
+        return str(self.created)
