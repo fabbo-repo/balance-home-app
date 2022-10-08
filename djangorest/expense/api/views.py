@@ -15,17 +15,37 @@ from rest_framework.permissions import IsAuthenticated
 from expense.api.filters import ExpenseFilterSet
 from rest_framework import generics
 from coin.currency_converter_integration import convert_or_fetch
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
 
 
 class ExpenseTypeRetrieveView(generics.RetrieveAPIView):
     queryset = ExpenseType.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = ExpenseTypeSerializer
+    
+    @method_decorator(cache_page(12 * 60 * 60))
+    @method_decorator(vary_on_headers("Authorization"))
+    def get(self, request, *args, **kwargs):
+        """
+        This view will be cached for 12 hours
+        """
+        return super(ExpenseTypeRetrieveView, self).get(request, *args, **kwargs)
 
 class ExpenseTypeListView(generics.ListAPIView):
     queryset = ExpenseType.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = ExpenseTypeSerializer
+    
+    @method_decorator(cache_page(12 * 60 * 60))
+    @method_decorator(vary_on_headers("Authorization"))
+    def get(self, request, *args, **kwargs):
+        """
+        This view will be cached for 12 hours
+        """
+        return super(ExpenseTypeListView, self).get(request, *args, **kwargs)
+
 
 class ExpenseView(viewsets.ModelViewSet):
     queryset = Expense.objects.all()
