@@ -15,17 +15,37 @@ from rest_framework.permissions import IsAuthenticated
 from revenue.api.filters import RevenueFilterSet
 from rest_framework import generics
 from coin.currency_converter_integration import convert_or_fetch
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
 
 
 class RevenueTypeRetrieveView(generics.RetrieveAPIView):
     queryset = RevenueType.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = RevenueTypeSerializer
+    
+    @method_decorator(cache_page(12 * 60 * 60))
+    @method_decorator(vary_on_headers("Authorization"))
+    def get(self, request, *args, **kwargs):
+        """
+        This view will be cached for 12 hours
+        """
+        return super(RevenueTypeRetrieveView, self).get(request, *args, **kwargs)
 
 class RevenueTypeListView(generics.ListAPIView):
     queryset = RevenueType.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = RevenueTypeSerializer
+    
+    @method_decorator(cache_page(12 * 60 * 60))
+    @method_decorator(vary_on_headers("Authorization"))
+    def get(self, request, *args, **kwargs):
+        """
+        This view will be cached for 12 hours
+        """
+        return super(RevenueTypeListView, self).get(request, *args, **kwargs)
+
 
 class RevenueView(viewsets.ModelViewSet):
     queryset = Revenue.objects.all()

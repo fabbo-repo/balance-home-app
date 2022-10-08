@@ -7,16 +7,37 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
+
 
 class CoinTypeRetrieveView(generics.RetrieveAPIView):
     queryset = CoinType.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = CoinTypeSerializer
 
+    @method_decorator(cache_page(12 * 60 * 60))
+    @method_decorator(vary_on_headers("Authorization"))
+    def get(self, request, *args, **kwargs):
+        """
+        This view will be cached for 12 hours
+        """
+        return super(CoinTypeRetrieveView, self).get(request, *args, **kwargs)
+
 class CoinTypeListView(generics.ListAPIView):
     queryset = CoinType.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = CoinTypeSerializer
+    
+    @method_decorator(cache_page(12 * 60 * 60))
+    @method_decorator(vary_on_headers("Authorization"))
+    def get(self, request, *args, **kwargs):
+        """
+        This view will be cached for 12 hours
+        """
+        return super(CoinTypeListView, self).get(request, *args, **kwargs)
+
 
 class CoinExchangeRetrieveView(APIView):
     permission_classes = (IsAuthenticated,)
