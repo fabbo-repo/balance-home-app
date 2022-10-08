@@ -1,0 +1,71 @@
+version: '2.1'
+
+services:
+
+  backend:
+    build: djangorest
+    env_file:
+      - ./backend_app.env
+    links:
+      - db:db
+      - redis:redis
+    volumes:
+      - ./djangorest/media:/app/media
+      - ./djangorest/static:/app/static
+      - ./logs/backend:/var/log/balance_app
+      - uwsgi_sock:/tmp/uwsgi/core.sock
+    depends_on:
+      - redis
+      - db
+    restart: unless-stopped
+
+  celery:
+    build: djangorest
+    env_file:
+      - ./backend_app.env
+    links:
+      - db:db
+      - redis:redis
+    volumes:
+      - ./djangorest/media:/app/media
+      - ./djangorest/static:/app/static
+      - ./logs/celery:/var/log/balance_app
+    depends_on:
+      - redis
+      - db
+    restart: unless-stopped
+    entrypoint: /app/celery_entrypoint.sh
+
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+
+  db:
+    image: postgres:latest
+    env_file:
+      - ./postgres_db.env
+    expose:
+      - "5432"
+    restart: unless-stopped
+    volumes:
+      - ./database:/var/lib/postgresql/data
+
+  nginx:
+    build: nginx
+    ports: 
+      - "8000:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./djangorest/static:/app/static
+      - ./djangorest/media:/app/media
+      - ./logs/nginx:/var/log/nginx
+      - uwsgi_sock:/tmp/uwsgi/core.sock
+    depends_on:
+      - backend
+    env_file:
+      - ./nginx.env
+    restart: unless-stopped
+
+
+volumes:
+  uwsgi_sock:
