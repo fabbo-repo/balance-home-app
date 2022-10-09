@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-30 17:46+0200\n"
+"POT-Creation-Date: 2022-10-09 12:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,95 +18,95 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\balance\models.py:15 .\expense\models.py:8 .\revenue\models.py:8
+#: .\balance\models.py:16 .\expense\models.py:8 .\revenue\models.py:8
 msgid "name"
 msgstr "name"
 
-#: .\balance\models.py:19
+#: .\balance\models.py:20
 msgid "description"
 msgstr "description"
 
-#: .\balance\models.py:24
+#: .\balance\models.py:25
 msgid "quantity"
 msgstr "quantity"
 
-#: .\balance\models.py:28
+#: .\balance\models.py:29
 msgid "date"
 msgstr "date"
 
-#: .\balance\models.py:32 .\balance\models.py:70
+#: .\balance\models.py:33 .\balance\models.py:73
 msgid "coin type"
 msgstr "coin type"
 
-#: .\balance\models.py:37 .\balance\models.py:75
+#: .\balance\models.py:38 .\balance\models.py:80
 msgid "owner"
 msgstr "owner"
 
-#: .\balance\models.py:44
+#: .\balance\models.py:45
 msgid "Balance"
 msgstr "Balance"
 
-#: .\balance\models.py:45
+#: .\balance\models.py:46
 msgid "Balances"
 msgstr "Balances"
 
-#: .\balance\models.py:62
+#: .\balance\models.py:63
 msgid "gross quantity"
 msgstr "gross quantity"
 
-#: .\balance\models.py:66
+#: .\balance\models.py:68
 msgid "net quantity"
 msgstr "net quantity"
 
-#: .\balance\models.py:82
+#: .\balance\models.py:87
 msgid "Date balance"
 msgstr "Date balance"
 
-#: .\balance\models.py:83
+#: .\balance\models.py:88
 msgid "Date balances"
 msgstr "Date balance"
 
-#: .\balance\models.py:92
+#: .\balance\models.py:97 .\balance\models.py:113
 msgid "year"
 msgstr "year"
 
-#: .\balance\models.py:100
+#: .\balance\models.py:105
 msgid "Annual balance"
 msgstr "Annual balance"
 
-#: .\balance\models.py:101
+#: .\balance\models.py:106
 msgid "Annual balances"
 msgstr "Annual balances"
 
-#: .\balance\models.py:108
+#: .\balance\models.py:120
 msgid "month"
 msgstr "month"
 
-#: .\balance\models.py:116
+#: .\balance\models.py:128
 msgid "Monthly balance"
 msgstr "Monthly balance"
 
-#: .\balance\models.py:117
+#: .\balance\models.py:129
 msgid "Monthly balances"
 msgstr "Monthly balances"
 
-#: .\coin\api\views.py:35
+#: .\coin\api\views.py:52
 msgid "{} code not supported"
 msgstr "{} code not supported"
 
-#: .\coin\api\views.py:42
+#: .\coin\api\views.py:59
 msgid "No exchange data, try later"
 msgstr "No exchange data, try later"
 
-#: .\coin\currency_converter_integration.py:17
+#: .\coin\currency_converter_integration.py:13
 msgid "No coin exchange"
 msgstr "No coin exchange"
 
-#: .\coin\currency_converter_integration.py:22
+#: .\coin\currency_converter_integration.py:18
 msgid "Exchange data not updated in the past 24 hours"
 msgstr "Exchange data not updated in the past 24 hours"
 
-#: .\coin\currency_converter_integration.py:27
+#: .\coin\currency_converter_integration.py:23
 msgid "No exchange data for the given coin type"
 msgstr "No exchange data for the given coin type"
 
@@ -138,11 +138,11 @@ msgstr "Coin exchange"
 msgid "Coin exchanges"
 msgstr "Coin exchanges"
 
-#: .\core\settings.py:152
+#: .\core\settings.py:159
 msgid "English"
 msgstr "English"
 
-#: .\core\settings.py:153
+#: .\core\settings.py:160
 msgid "Spanish"
 msgstr "Spanish"
 
@@ -163,39 +163,39 @@ msgid "No code sent"
 msgstr "No code sent"
 
 #: .\custom_auth\api\serializers\jwt_code_serializers.py:83
-#: .\custom_auth\api\serializers\user_serializers.py:208
+#: .\custom_auth\api\serializers\user_serializers.py:188
 msgid "Code is no longer valid"
 msgstr "Code is no longer valid"
 
 #: .\custom_auth\api\serializers\jwt_code_serializers.py:85
-#: .\custom_auth\api\serializers\user_serializers.py:211
+#: .\custom_auth\api\serializers\user_serializers.py:191
 msgid "Invalid code"
 msgstr "Invalid code"
 
-#: .\custom_auth\api\serializers\user_serializers.py:32
+#: .\custom_auth\api\serializers\user_serializers.py:31
 msgid "Invitation code not found"
 msgstr "Invitation code not found"
 
-#: .\custom_auth\api\serializers\user_serializers.py:34
+#: .\custom_auth\api\serializers\user_serializers.py:33
 msgid "Invalid invitation code"
 msgstr "Invalid invitation code"
 
-#: .\custom_auth\api\serializers\user_serializers.py:43
+#: .\custom_auth\api\serializers\user_serializers.py:42
 msgid "Password fields do not match"
 msgstr "Password fields do not match"
 
-#: .\custom_auth\api\serializers\user_serializers.py:46
-#: .\custom_auth\models.py:183
+#: .\custom_auth\api\serializers\user_serializers.py:45
+#: .\custom_auth\models.py:175
 msgid "Password cannot match other profile data"
 msgstr "Password cannot match other profile data"
 
-#: .\custom_auth\api\serializers\user_serializers.py:95
-#: .\custom_auth\models.py:180
+#: .\custom_auth\api\serializers\user_serializers.py:94
+#: .\custom_auth\models.py:172
 msgid "Language not supported"
 msgstr "Language not supported"
 
-#: .\custom_auth\api\serializers\user_serializers.py:107
-#: .\custom_auth\models.py:186
+#: .\custom_auth\api\serializers\user_serializers.py:106
+#: .\custom_auth\models.py:178
 msgid "Username and email can not be the same"
 msgstr "Username and email can not be the same"
 
@@ -271,39 +271,31 @@ msgstr "receive email about balance"
 msgid "expected annual balance"
 msgstr "expected annual balance"
 
-#: .\custom_auth\models.py:114
-msgid "last annual balance"
-msgstr "last annual balance"
-
-#: .\custom_auth\models.py:121
+#: .\custom_auth\models.py:117
 msgid "expected monthly balance"
 msgstr "expected monthly balance"
 
-#: .\custom_auth\models.py:126
-msgid "last monthly balance"
-msgstr "last monthly balance"
-
-#: .\custom_auth\models.py:131
+#: .\custom_auth\models.py:123
 msgid "verified"
 msgstr "verified"
 
-#: .\custom_auth\models.py:137
+#: .\custom_auth\models.py:129
 msgid "last code sent"
 msgstr "last code sent"
 
-#: .\custom_auth\models.py:145
+#: .\custom_auth\models.py:137
 msgid "date of last code sent"
 msgstr "date of last code sent"
 
-#: .\custom_auth\models.py:152
+#: .\custom_auth\models.py:144
 msgid "last password reset code sent"
 msgstr "last password reset code sent"
 
-#: .\custom_auth\models.py:160
+#: .\custom_auth\models.py:152
 msgid "date of last password reset code sent"
 msgstr "date of last password reset code sent"
 
-#: .\custom_auth\models.py:166
+#: .\custom_auth\models.py:158
 msgid "preferred coin type"
 msgstr "preferred coin type"
 
