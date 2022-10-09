@@ -6,6 +6,13 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+// Custom properties for release version
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
@@ -50,22 +57,28 @@ android {
         // Needed when referenced libraries exceed 65,536 methods
         multiDexEnabled true
     }
-
+    
+    signingConfigs {
+        release {
+            // Signing config for the release build.
+            // A key.properties should be created in android dir
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+            // Sample:
+            // storePassword=android
+            // keyPassword=android
+            // keyAlias=upload
+            // storeFile=/.../keystore.jks
+        }
+    }
+    
     buildTypes {
         release {
             // Change this line to "signingConfig signingConfigs.debug" for signing 
             // with the debug keys (so `flutter run --release` works)
             signingConfig signingConfigs.release
-        }
-    }
-
-    signingConfigs {
-        release {
-            // Signing config for the release build.
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
         }
     }
 }
