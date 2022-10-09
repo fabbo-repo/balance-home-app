@@ -19,6 +19,9 @@ services:
       - redis
       - db
     restart: unless-stopped
+    networks:
+      balance_home_app_net:
+        ipv4_address: 192.168.92.45
 
   celery:
     build: djangorest
@@ -36,10 +39,16 @@ services:
       - db
     restart: unless-stopped
     entrypoint: /app/celery_entrypoint.sh
+    networks:
+      balance_home_app_net:
+        ipv4_address: 192.168.92.40
 
   redis:
     image: redis:latest
     restart: unless-stopped
+    networks:
+      balance_home_app_net:
+        ipv4_address: 192.168.92.30
 
   db:
     image: postgres:latest
@@ -50,6 +59,9 @@ services:
     restart: unless-stopped
     volumes:
       - ./database:/var/lib/postgresql/data
+    networks:
+      balance_home_app_net:
+        ipv4_address: 192.168.92.20
 
   nginx:
     build: nginx
@@ -65,3 +77,13 @@ services:
     env_file:
       - ./nginx.env
     restart: unless-stopped
+    networks:
+      balance_home_app_net:
+        ipv4_address: 192.168.92.10
+
+networks:
+  balance_home_app_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.92.0/24"
