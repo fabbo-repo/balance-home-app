@@ -1,0 +1,5 @@
+{{ year }}:
+* Balance: {{ annual_balance }}
+* Expected balance: {{ expected_annual_balance }}
+
+Result: {{ annual_result }}

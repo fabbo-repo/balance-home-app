@@ -1,4 +1,0 @@
-*.env
-deployment/release/balance_app
-logs/
-database/
