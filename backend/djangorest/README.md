@@ -2,7 +2,7 @@
 
 ## Architecture Sample
 
-~~~python
+~~~bash
 djangorest/
     ├── app_1/
     │   ├── management/
