@@ -1,4 +1,6 @@
-# DRF Backend
+# Flutter Frontend
+
+Multiplatform frontend of Balance Home App, ```riverpod``` is used for state management and ```go_router``` for navigation.
 
 ## Architecture Sample
 

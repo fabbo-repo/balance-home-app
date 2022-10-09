@@ -73,6 +73,28 @@ djangorest/
     └── db.sqlite3
 ~~~
 
+## Environment Variables
+
+| NAME                      | DESCRIPTION                                                |
+| ------------------------- | ---------------------------------------------------------- |
+| APP_DOMAIN                | Backend host name                                          |
+| APP_PORT                  | Backend port                                               |
+| APP_DEBUG                 | Debug mode enabled (true|false)                            |
+| APP_ALLOWED_HOSTS         | List of strings representing the allowed host/domain names |
+| APP_EMAIL_HOST            | Email service host name                                    |
+| APP_EMAIL_PORT            | Email service port                                         |
+| APP_EMAIL_HOST_USER       | Email service authentication user                          |
+| APP_EMAIL_HOST_PASSWORD   | Email service authentication password                      |
+| APP_CELERY_BROKER_URL     | Celery url                                                 |
+| APP_EMAIL_CODE_THRESHOLD  | Time to wait for a new email verification code generation  |
+| APP_EMAIL_CODE_VALID      | Email verification code validity duration                  |
+| DJANGO_SUPERUSER_USERNAME | Admin backend user name                                    |
+| DJANGO_SUPERUSER_EMAIL    | Admin backend user email                                   |
+| DJANGO_SUPERUSER_PASSWORD | Admin backend user password                                |
+| DATABASE_URL              | Databse url                                                |
+| COIN_TYPE_CODES           | Coin type codes allowed (they have to be valid)            |
+| DBBACKUP_GPG_RECIPIENT    | GPG key to encrypt backup (optional)                       |
+
 ## Useful commands
 
 * Install project requirements:
@@ -228,25 +250,3 @@ python manage.py dbbackup --encrypt
 ~~~bash
 python manage.py dbrestore --decrypt
 ~~~
-
-## Environment Variables
-
-| NAME                      | DESCRIPTION                                                |
-| ------------------------- | ---------------------------------------------------------- |
-| APP_DOMAIN                | Backend host name                                          |
-| APP_PORT                  | Backend port                                               |
-| APP_DEBUG                 | Debug mode enabled (true|false)                            |
-| APP_ALLOWED_HOSTS         | List of strings representing the allowed host/domain names |
-| APP_EMAIL_HOST            | Email service host name                                    |
-| APP_EMAIL_PORT            | Email service port                                         |
-| APP_EMAIL_HOST_USER       | Email service authentication user                          |
-| APP_EMAIL_HOST_PASSWORD   | Email service authentication password                      |
-| APP_CELERY_BROKER_URL     | Celery url                                                 |
-| APP_EMAIL_CODE_THRESHOLD  | Time to wait for a new email verification code generation  |
-| APP_EMAIL_CODE_VALID      | Email verification code validity duration                  |
-| DJANGO_SUPERUSER_USERNAME | Admin backend user name                                    |
-| DJANGO_SUPERUSER_EMAIL    | Admin backend user email                                   |
-| DJANGO_SUPERUSER_PASSWORD | Admin backend user password                                |
-| DATABASE_URL              | Databse url                                                |
-| COIN_TYPE_CODES           | Coin type codes allowed (they have to be valid)            |
-| DBBACKUP_GPG_RECIPIENT    | GPG key to encrypt backup (optional)                       |
