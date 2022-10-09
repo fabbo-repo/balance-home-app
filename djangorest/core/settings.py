@@ -67,7 +67,7 @@ class Dev(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
-        # Documentation generator:
+        # Admin documentation:
         'django.contrib.admindocs',
         # Rest framework:
         'rest_framework',
@@ -77,6 +77,8 @@ class Dev(Configuration):
         # Task schedulling:
         'django_celery_results',
         'django_celery_beat',
+        # Backup
+        'dbbackup',
         # Custom apps:
         'custom_auth',
         'balance',
@@ -203,6 +205,10 @@ class Dev(Configuration):
         }
     }
 
+    # Backup
+    DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    DBBACKUP_STORAGE_OPTIONS = {'location': '.'}
+
     # Django Rest Framework setting:
     REST_FRAMEWORK = {
         "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -261,6 +267,12 @@ class Prod(Dev):
         [ "localhost", "0.0.0.0" ])
     CSRF_TRUSTED_ORIGINS = get_list_env('APP_CSRF_TRUSTED_ORIGINS', 
         [ "http://localhost:8000", "http://127.0.0.1:8000" ])
+        
+    # Backup
+    DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    DBBACKUP_STORAGE_OPTIONS = {'location': '/var/backup'}
+    DBBACKUP_GPG_RECIPIENT = get_env('DBBACKUP_GPG_RECIPIENT', None)
+    DBBACKUP_GPG_ALWAYS_TRUST = True
     
     LOGGING = {
         "version": 1,

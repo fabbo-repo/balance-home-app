@@ -53,8 +53,6 @@ ENV DJANGO_CONFIGURATION=Prod
 
 # Log directory:
 RUN mkdir -p /var/log/balance_app
-RUN chmod 700 -R /var/log/balance_app
-RUN chown ${APP_USER}:${APP_USER} -R /var/log/balance_app
 
 # Make migrations
 RUN python manage.py makemigrations

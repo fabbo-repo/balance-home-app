@@ -199,6 +199,36 @@ django-admin makemessages --all --ignore=en
 django-admin compilemessages --ignore=env
 ~~~
 
+### [For simple backup](https://django-dbbackup.readthedocs.io/en/master/installation.html)
+
+* Do backup
+
+~~~bash
+python manage.py dbbackup
+~~~
+
+* Restore backup
+
+~~~bash
+python manage.py dbrestore
+~~~
+
+### For encrypted backup
+
+A GPG key must be generated first (use the command ```gpg --default-new-key-algo rsa4096 --gen-key```) and should be added as an environment variable with the name DBBACKUP_GPG_RECIPIENT.
+
+* Do backup using GPG encryption
+
+~~~bash
+python manage.py dbbackup --encrypt
+~~~
+
+* Restore backup using GPG encryption
+
+~~~bash
+python manage.py dbrestore --decrypt
+~~~
+
 ## Environment Variables
 
 | NAME                      | DESCRIPTION                                                |
@@ -219,3 +249,4 @@ django-admin compilemessages --ignore=env
 | DJANGO_SUPERUSER_PASSWORD | Admin backend user password                                |
 | DATABASE_URL              | Databse url                                                |
 | COIN_TYPE_CODES           | Coin type codes allowed (they have to be valid)            |
+| DBBACKUP_GPG_RECIPIENT    | GPG key to encrypt backup (optional)                       |

@@ -15,6 +15,10 @@ done
 touch /var/log/balance_app/app.log
 chmod 777 /var/log/balance_app/app.log
 
+# Create backup directory
+mkdir -p /var/backup
+chmod 777 /var/backup
+
 # Call collectstatic
 python manage.py collectstatic --noinput
 

@@ -26,6 +26,8 @@ coverage = "==6.4.4"
 beautifulsoup4 = "==4.11.1"
 docutils = "==0.19"
 uwsgi = "==2.0.20"
+django-dbbackup = "==4.0.2"
+python-gnupg = "==0.5.0"
 
 [dev-packages]
 
