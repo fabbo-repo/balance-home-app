@@ -19,7 +19,8 @@ RUN set -ex \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy Pipfile files
-COPY Pipfile Pipfile.lock /
+#COPY Pipfile Pipfile.lock /
+COPY Pipfile /
 
 # Install build deps, then remove unneeded build deps all in a single step.
 # Correct the path to your production requirements file, if needed.
@@ -34,6 +35,7 @@ RUN set -ex \
 
 # Install pipenv and dependencies
 RUN pip install pipenv
+RUN pipenv lock
 RUN pipenv install --system --deploy
 
 ENV PYTHONUNBUFFERED 1

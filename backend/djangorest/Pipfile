@@ -30,6 +30,3 @@ django-dbbackup = "==4.0.2"
 python-gnupg = "==0.5.0"
 
 [dev-packages]
-
-[requires]
-python_version = "3.8"
