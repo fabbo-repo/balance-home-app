@@ -1,0 +1,344 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-09 12:20+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\balance\models.py:16 .\expense\models.py:8 .\revenue\models.py:8
+msgid "name"
+msgstr "nombre"
+
+#: .\balance\models.py:20
+msgid "description"
+msgstr "descripción"
+
+#: .\balance\models.py:25
+msgid "quantity"
+msgstr "cantidad"
+
+#: .\balance\models.py:29
+msgid "date"
+msgstr "fecha"
+
+#: .\balance\models.py:33 .\balance\models.py:73
+msgid "coin type"
+msgstr "tipo de moneda"
+
+#: .\balance\models.py:38 .\balance\models.py:80
+msgid "owner"
+msgstr "propietario"
+
+#: .\balance\models.py:45
+msgid "Balance"
+msgstr "Balance"
+
+#: .\balance\models.py:46
+msgid "Balances"
+msgstr "Balances"
+
+#: .\balance\models.py:63
+msgid "gross quantity"
+msgstr "cantidad bruta"
+
+#: .\balance\models.py:68
+msgid "net quantity"
+msgstr "cantidad neta"
+
+#: .\balance\models.py:87
+msgid "Date balance"
+msgstr "Balance actual"
+
+#: .\balance\models.py:88
+msgid "Date balances"
+msgstr "Balances actuales"
+
+#: .\balance\models.py:97 .\balance\models.py:113
+msgid "year"
+msgstr "año"
+
+#: .\balance\models.py:105
+msgid "Annual balance"
+msgstr "Balance anual"
+
+#: .\balance\models.py:106
+msgid "Annual balances"
+msgstr "Balances anuales"
+
+#: .\balance\models.py:120
+msgid "month"
+msgstr "mes"
+
+#: .\balance\models.py:128
+msgid "Monthly balance"
+msgstr "Balance mensual"
+
+#: .\balance\models.py:129
+msgid "Monthly balances"
+msgstr "Balances mensuales"
+
+#: .\coin\api\views.py:52
+msgid "{} code not supported"
+msgstr "Código {} no soportado"
+
+#: .\coin\api\views.py:59
+msgid "No exchange data, try later"
+msgstr "No hay datos de intercambio, intentalo más tarde"
+
+#: .\coin\currency_converter_integration.py:13
+msgid "No coin exchange"
+msgstr "No hay intercambio de moneda"
+
+#: .\coin\currency_converter_integration.py:18
+msgid "Exchange data not updated in the past 24 hours"
+msgstr "Los datos de intercambio no han sido actualizados en 24 horas"
+
+#: .\coin\currency_converter_integration.py:23
+msgid "No exchange data for the given coin type"
+msgstr "No hay datos de intercambio para el tipo de moneda dado"
+
+#: .\coin\models.py:8
+msgid "code"
+msgstr "código"
+
+#: .\coin\models.py:14
+msgid "Coin type"
+msgstr "Tipo de moneda"
+
+#: .\coin\models.py:15
+msgid "Coin types"
+msgstr "Tipos de monedas"
+
+#: .\coin\models.py:24
+msgid "uuid"
+msgstr "uuid"
+
+#: .\coin\models.py:36
+msgid "data exhange dictionary"
+msgstr "diccionariod de datos de intercambio"
+
+#: .\coin\models.py:42
+msgid "Coin exchange"
+msgstr "Intercambio de moneda"
+
+#: .\coin\models.py:43
+msgid "Coin exchanges"
+msgstr "Intercambio de monedas"
+
+#: .\core\settings.py:159
+msgid "English"
+msgstr "Inglés"
+
+#: .\core\settings.py:160
+msgid "Spanish"
+msgstr "Español"
+
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:19
+msgid "No invitation code stored"
+msgstr "No hay código de invitación almacenado"
+
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:22
+msgid "Unverified email"
+msgstr "Correo no verificado"
+
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:46
+msgid "Code has already been sent, wait {} seconds"
+msgstr "El código se ha enviado, espere {} segundos"
+
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:78
+msgid "No code sent"
+msgstr "Ningún código enviado"
+
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:83
+#: .\custom_auth\api\serializers\user_serializers.py:188
+msgid "Code is no longer valid"
+msgstr "El código ya no es válido"
+
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:85
+#: .\custom_auth\api\serializers\user_serializers.py:191
+msgid "Invalid code"
+msgstr "Código invalido"
+
+#: .\custom_auth\api\serializers\user_serializers.py:31
+msgid "Invitation code not found"
+msgstr "Código de invitación no encontrado"
+
+#: .\custom_auth\api\serializers\user_serializers.py:33
+msgid "Invalid invitation code"
+msgstr "Código de invitación no válido"
+
+#: .\custom_auth\api\serializers\user_serializers.py:42
+msgid "Password fields do not match"
+msgstr "Los campos de contraseña no coinciden"
+
+#: .\custom_auth\api\serializers\user_serializers.py:45
+#: .\custom_auth\models.py:175
+msgid "Password cannot match other profile data"
+msgstr "La contraseña no puede coincidir con otro dato del perfil"
+
+#: .\custom_auth\api\serializers\user_serializers.py:94
+#: .\custom_auth\models.py:172
+msgid "Language not supported"
+msgstr "Lenguaje no soportado"
+
+#: .\custom_auth\api\serializers\user_serializers.py:106
+#: .\custom_auth\models.py:178
+msgid "Username and email can not be the same"
+msgstr "Nombre de usuario y correo electrónico no pueden contener lo mismo"
+
+#: .\custom_auth\api\serializers\utils.py:12
+msgid "User not found"
+msgstr "Usuario no encontrado"
+
+#: .\custom_auth\api\serializers\utils.py:15
+msgid "User already verified"
+msgstr "Usuario ya verificado"
+
+#: .\custom_auth\models.py:12
+msgid "uuid code"
+msgstr "código uuid"
+
+#: .\custom_auth\models.py:18
+msgid "usage left"
+msgstr "uso restante"
+
+#: .\custom_auth\models.py:22
+msgid "is active"
+msgstr "está activo"
+
+#: .\custom_auth\models.py:29
+msgid "Invitation code"
+msgstr "Código de invitación"
+
+#: .\custom_auth\models.py:30
+msgid "Invitation codes"
+msgstr "Códigos de invitación"
+
+#: .\custom_auth\models.py:43 .\custom_auth\models.py:58
+msgid "An email address must be provided"
+msgstr "Se debe proveer un correo electrónico"
+
+#: .\custom_auth\models.py:45 .\custom_auth\models.py:60
+msgid "An username must be provided"
+msgstr "Se debe proveer un nombre de usuario"
+
+#: .\custom_auth\models.py:53
+msgid "Superuser must have is_staff=True"
+msgstr "El superusuario debe tener is_staff=True"
+
+#: .\custom_auth\models.py:55
+msgid "Superuser must have is_superuser=True"
+msgstr "El superusuario debe tener is_superuser=True"
+
+#: .\custom_auth\models.py:77
+msgid "email address"
+msgstr "dirección de correo electrónico"
+
+#: .\custom_auth\models.py:81
+msgid "language"
+msgstr "lenguaje"
+
+#: .\custom_auth\models.py:87
+msgid "profile image"
+msgstr "imagen de perfil"
+
+#: .\custom_auth\models.py:93
+msgid "invitation code"
+msgstr "código de invitación"
+
+#: .\custom_auth\models.py:98
+msgid "current balance"
+msgstr "balance actual"
+
+#: .\custom_auth\models.py:102
+msgid "receive email about balance"
+msgstr "recibir correo electrónico sobre el balance"
+
+#: .\custom_auth\models.py:109
+msgid "expected annual balance"
+msgstr "balance anual esperado"
+
+#: .\custom_auth\models.py:117
+msgid "expected monthly balance"
+msgstr "balance mensual esperado"
+
+#: .\custom_auth\models.py:123
+msgid "verified"
+msgstr "verificado"
+
+#: .\custom_auth\models.py:129
+msgid "last code sent"
+msgstr "último código enviado"
+
+#: .\custom_auth\models.py:137
+msgid "date of last code sent"
+msgstr "fecha del último código enviado"
+
+#: .\custom_auth\models.py:144
+msgid "last password reset code sent"
+msgstr "último código de restablecimiento de contraseña enviado"
+
+#: .\custom_auth\models.py:152
+msgid "date of last password reset code sent"
+msgstr "fecha del último código de restablecimiento de contraseña enviado"
+
+#: .\custom_auth\models.py:158
+msgid "preferred coin type"
+msgstr "tipo de moneda preferida"
+
+#: .\expense\models.py:13 .\revenue\models.py:13
+msgid "image"
+msgstr "imagen"
+
+#: .\expense\models.py:19
+msgid "Expense type"
+msgstr "Tipo de gasto"
+
+#: .\expense\models.py:20
+msgid "Expense types"
+msgstr "Tipos de gastos"
+
+#: .\expense\models.py:29
+msgid "expense type"
+msgstr "tipo de gasto"
+
+#: .\expense\models.py:34
+msgid "Expense"
+msgstr "Gasto"
+
+#: .\expense\models.py:35
+msgid "Expenses"
+msgstr "Gastos"
+
+#: .\revenue\models.py:19
+msgid "Revenue type"
+msgstr "Tipo de ingreso"
+
+#: .\revenue\models.py:20
+msgid "Revenue types"
+msgstr "Tipos de ingresos"
+
+#: .\revenue\models.py:29
+msgid "revenue type"
+msgstr "tipo de ingreso"
+
+#: .\revenue\models.py:34
+msgid "Revenue"
+msgstr "Ingreso"
+
+#: .\revenue\models.py:35
+msgid "Revenues"
+msgstr "Ingresos"
