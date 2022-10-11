@@ -15,11 +15,11 @@ flutter/
     │       └── ...
     ├── features
     │   ├── feature1
-    │   │   ├── page
-    │   │   │   └── create_event_page.dart
+    │   │   ├── screens
+    │   │   │   └── create_event_screen.dart
     │   │   ├── widgets
     │   │   │   └── event_card.dart
-    │   │   └── controller
+    │   │   └── controllers
     │   │       └── create_event_controller.dart
     │   └── ...
     ├── app_state

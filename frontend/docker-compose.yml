@@ -1,8 +1,7 @@
 version: '2.1'
 
 services:
-
-  nginx:
+  balance_home_app_web_nginx:
     image: nginx:latest
     ports:
       - "80:80"
