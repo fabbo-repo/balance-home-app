@@ -1,8 +1,14 @@
+import 'package:balance_home_app/common/app_config/env_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
-void main() {
+Future<void> main() async {
+  usePathUrlStrategy();
 
+  // Env file should be loaded before Firebase initialization
+  await EnvModel.loadEnvFile();
+  
   runApp(const MyApp());
 }
 

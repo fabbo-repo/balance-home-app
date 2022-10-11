@@ -1,16 +1,64 @@
-# balance_home_app
+# Flutter Frontend
 
-A new Flutter project.
+Multiplatform frontend of Balance Home App, ```riverpod``` is used for state management and ```go_router``` for navigation.
 
-## Getting Started
+## Directory tree example
 
-This project is a starting point for a Flutter application.
+~~~bash
+flutter/
+    ├── domain
+    │   ├── domain1
+    │   │   └── object1.dart
+    │   └── ...
+    ├── common
+    │   └── widgets
+    │       └── ...
+    ├── features
+    │   ├── feature1
+    │   │   ├── page
+    │   │   │   └── create_event_page.dart
+    │   │   ├── widgets
+    │   │   │   └── event_card.dart
+    │   │   └── controller
+    │   │       └── create_event_controller.dart
+    │   └── ...
+    ├── app_state
+    │   └── feature1
+    │       └── ...
+    ├── services
+    │   ├── feature1
+    │   │   └── ...
+    │   └── ...
+    ├── lang
+    │   ├── app_es.arb
+    │   ├── app_en.arb
+    │   └── app_fr.arb
+    └── navigation
+        └── ...
+~~~
 
-A few resources to get you started if this is your first Flutter project:
+## Useful commands
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+* Create a project
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+~~~bash
+flutter create --project-name <app_name> --org dev.flutter --android-language java --ios-language objc <dir_name>
+~~~
+
+* Fetch packages
+
+~~~bash
+flutter pub get
+~~~
+
+* Generate translations files:
+
+~~~bash
+flutter gen-l10n
+~~~
+
+* Generate platform icons:
+
+~~~bash
+flutter pub run flutter_launcher_icons:main
+~~~

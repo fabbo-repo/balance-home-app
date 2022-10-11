@@ -1,6 +1,6 @@
 # DRF Backend
 
-## Architecture Sample
+## Directory tree example
 
 ~~~bash
 djangorest/
