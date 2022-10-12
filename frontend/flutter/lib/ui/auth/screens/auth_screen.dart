@@ -11,20 +11,37 @@ class AuthScreen extends StatelessWidget {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/auth_background_image.jpg"),
-            fit: BoxFit.cover),
+            fit: BoxFit.cover
+          ),
         ),
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
             Container(
               alignment: Alignment.center,
-              padding: const EdgeInsets.all(10),
-              child: const Text(
-                'TemiCodes',
-                style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 30),
+              padding: const EdgeInsets.fromLTRB(40, 70, 40, 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    'Bal',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40,
+                      fontStyle: FontStyle.italic
+                    ),
+                  ),
+                  Text(
+                    'Hom',
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40,
+                      fontStyle: FontStyle.italic
+                    ),
+                  ),
+                ],
               )
             ),
             Expanded(

@@ -1,6 +1,6 @@
-# Balance Home App
+# Balance Home App or *BalHom*
 
-**Balance Home App** is an open source multi-platform app that helps people to manage their day-to-day expenses and revenues.
+**Balance Home App** or ***BalHom*** is an open source multi-platform app that helps people to manage their day-to-day expenses and revenues.
 
 Some of its advantages are:
 
