@@ -7,4 +7,4 @@ services:
       - "80:80"
     volumes:
       - ./nginx/:/etc/nginx/conf.d
-      - ./flutter/build/web:/var/www/html
+      - ./flutter/build/web:/usr/share/nginx/html
