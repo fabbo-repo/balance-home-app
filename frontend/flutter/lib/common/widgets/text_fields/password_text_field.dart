@@ -18,21 +18,45 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      child: TextField(
-        obscureText: !showPassword,
-        controller: widget.textFieldController,
-        decoration: InputDecoration(
-          border: const OutlineInputBorder(),
-          labelText: widget.title,
-          suffixIcon: InkWell(
-            onTap: () {
-              setState(() { showPassword = !showPassword; });
-            },
-            child: (showPassword)
-              ? const Icon(Icons.visibility)
-              : const Icon(Icons.visibility_off),
+    return Center(
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 700),
+        padding: const EdgeInsets.all(10),
+        child: TextField(
+          obscureText: !showPassword,
+          controller: widget.textFieldController,
+          decoration: InputDecoration(
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black),
+            ),
+            disabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blue),
+            ),
+            errorBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red)
+            ),
+            focusedErrorBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red)
+            ),
+            border: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)
+            ),
+            suffixIconColor: Colors.black,
+            labelStyle: const TextStyle(color: Colors.black),
+            filled: true,
+            fillColor: Colors.white,
+            labelText: widget.title,
+            suffixIcon: InkWell(
+              onTap: () {
+                setState(() { showPassword = !showPassword; });
+              },
+              child: (showPassword)
+                ? const Icon(Icons.visibility)
+                : const Icon(Icons.visibility_off),
+            ),
           ),
         ),
       ),
