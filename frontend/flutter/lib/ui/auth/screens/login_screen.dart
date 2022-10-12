@@ -1,3 +1,5 @@
+import 'package:balance_home_app/common/widgets/text_fields/password_text_field.dart';
+import 'package:balance_home_app/common/widgets/text_fields/simple_text_field.dart';
 import 'package:balance_home_app/ui/auth/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,26 +40,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     'Sign in',
                     style: TextStyle(fontSize: 20),
                   )),
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: TextField(
-                  controller: emailController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Email Address',
-                  ),
-                ),
+              SimpleTextField(
+                title: 'Email Address',
+                textFieldController: emailController
               ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                child: TextField(
-                  obscureText: true,
-                  controller: passwordController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Password',
-                  ),
-                ),
+              PasswordTextField(
+                title: 'Password',
+                textFieldController: passwordController
               ),
               TextButton(
                 onPressed: () {

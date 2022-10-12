@@ -1,4 +1,7 @@
 {
     "@_TITLE":{},
-    "appTitle": "Balance Home App"
+    "appTitle": "Balance Home App",
+    
+    "@_AUTH":{},
+    "signIn": "Sign in"
 }
