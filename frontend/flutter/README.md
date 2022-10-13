@@ -11,10 +11,13 @@ flutter/
     │   │   └── object1.dart
     │   └── ...
     ├── common
+    │   ├── app_config
+    │   |   ├── ...
+    │   |   └── env_model.dart
     │   └── widgets
     │       └── ...
-    ├── features
-    │   ├── feature1
+    ├── ui
+    │   ├── ui1
     │   │   ├── screens
     │   │   │   └── create_event_screen.dart
     │   │   ├── widgets
@@ -22,11 +25,11 @@ flutter/
     │   │   └── controllers
     │   │       └── create_event_controller.dart
     │   └── ...
-    ├── app_state
-    │   └── feature1
+    ├── providers
+    │   └── providers1
     │       └── ...
     ├── services
-    │   ├── feature1
+    │   ├── services1
     │   │   └── ...
     │   └── ...
     ├── lang
