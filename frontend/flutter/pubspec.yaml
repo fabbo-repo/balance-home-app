@@ -41,6 +41,8 @@ dependencies:
   url_strategy: ^0.2.0
   # Launcher icons
   flutter_launcher_icons: ^0.10.0
+  # Secure shared preferences
+  flutter_secure_storage: ^6.0.0
 
 dev_dependencies:
   flutter_test:
