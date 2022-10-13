@@ -1,7 +1,14 @@
 {
     "@_TITLE":{},
     "appTitle": "BalHom",
+    "appTitle1": "Bal",
+    "appTitle2": "Hom",
     
     "@_AUTH":{},
-    "signIn": "Iniciar sesión"
+    "login": "Login",
+    "register": "Register",
+    "signIn": "Sign In",
+    "emailAddress": "Email address",
+    "password": "Password",
+    "forgotPassword": "Forgot password?"
 }

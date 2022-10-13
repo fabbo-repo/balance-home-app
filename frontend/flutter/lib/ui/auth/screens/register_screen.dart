@@ -5,14 +5,14 @@ import 'package:balance_home_app/ui/auth/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class RegisterScreen extends ConsumerStatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -33,14 +33,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               textFieldController: passwordController
             ),
             Container(
-              height: 100,
+              height: 50,
               width: 300,
-              padding: const EdgeInsets.fromLTRB(10, 35, 10, 15),
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: ElevatedButton(
-                child: Text(ref.read(appLocalizationsProvider).signIn),
+                child: Text(ref.read(appLocalizationsProvider).login),
                 onPressed: () {
-                  ref
-                    .read(loginControllerProvider.notifier)
+                  ref.read(loginControllerProvider.notifier)
                     .login(emailController.text, passwordController.text);
                 },
               )

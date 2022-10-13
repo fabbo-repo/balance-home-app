@@ -1,5 +1,6 @@
 import 'package:balance_home_app/common/app_config/env_model.dart';
 import 'package:balance_home_app/navigation/router_provider.dart';
+import 'package:balance_home_app/providers/localization_providers/localization_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,7 +35,7 @@ class MyApp extends ConsumerWidget {
         // In the app build, the context does not contain an AppLocalizations instance.
         // However, at the moment the title is ggoing to be generated 
         // the AppLocalizations instance is not null
-        return AppLocalizations.of(context)!.appTitle;
+        return ref.read(appLocalizationsProvider).appTitle;
       },
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
