@@ -62,4 +62,8 @@ RUN flutter channel $channel
 # Perform a flutter upgrade
 RUN flutter upgrade
 
+# App directory (optional)
+RUN mkdir /app
+WORKDIR /app
+
 ENTRYPOINT [ "flutter" ]
