@@ -34,7 +34,7 @@ dependencies:
   # Routing
   go_router: ^5.0.5
   # State management
-  flutter_riverpod: ^2.0.2
+  hooks_riverpod: ^2.0.2
   # Equals and hashCode override
   equatable: ^2.0.5
   # Fix url in web
@@ -43,12 +43,18 @@ dependencies:
   flutter_launcher_icons: ^0.10.0
   # Secure shared preferences
   flutter_secure_storage: ^6.0.0
+  # Data class generator
+  freezed_annotation: ^2.0.3
+  json_annotation: ^4.4.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   # Contains a set of recommended lints to encourage good coding practices.
   flutter_lints: ^2.0.0
+  # Data class generator
+  build_runner: ^2.1.10
+  freezed: ^2.0.3
 
 # The following section is specific to Flutter packages.
 flutter:
