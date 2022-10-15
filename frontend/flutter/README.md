@@ -18,6 +18,8 @@ flutter/
     │       └── ...
     ├── ui
     │   ├── ui1
+    │   │   ├── entities
+    │   │   │   └── create_event_entitie.dart
     │   │   ├── screens
     │   │   │   └── create_event_screen.dart
     │   │   ├── widgets
@@ -64,4 +66,10 @@ flutter gen-l10n
 
 ~~~bash
 flutter pub run flutter_launcher_icons:main
+~~~
+
+* Code generation:
+
+~~~bash
+flutter pub run build_runner build
 ~~~
