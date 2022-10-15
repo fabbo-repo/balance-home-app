@@ -2,6 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EnvModel {
   /// Backend service url
+  // ignore: non_constant_identifier_names
   static final String BASE_URL = dotenv.get('BASE_URL').replaceAll("\"", "");
 
   /// Loads all the environment variables from a file.
