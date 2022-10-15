@@ -44,3 +44,6 @@ app.*.map.json
 /android/app/release
 
 untranslated_messages.txt
+
+# Generated files:
+*.freezed.dart
