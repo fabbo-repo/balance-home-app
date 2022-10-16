@@ -27,6 +27,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.17.0
+  # Get version info
+  package_info: ^2.0.2
   # Environment variables
   flutter_dotenv: ^5.0.2
   # Http request for backend
@@ -46,6 +48,8 @@ dependencies:
   # Data class generator
   freezed_annotation: ^2.0.3
   json_annotation: ^4.4.0
+  # Form representation and validation
+  formz: ^0.4.1
 
 dev_dependencies:
   flutter_test:

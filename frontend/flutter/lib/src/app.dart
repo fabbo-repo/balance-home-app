@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/common/providers/localization_providers/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers/localization_provider.dart';
 import 'package:balance_home_app/src/navigation/router_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

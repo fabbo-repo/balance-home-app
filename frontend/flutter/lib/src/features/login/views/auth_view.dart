@@ -1,6 +1,6 @@
-import 'package:balance_home_app/features/auth/screens/register_screen.dart';
-import 'package:balance_home_app/src/common/providers/localization_providers/localization_provider.dart';
-import 'package:balance_home_app/src/features/auth/screens/login_screen.dart';
+import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/features/auth/views/login_view.dart';
+import 'package:balance_home_app/src/features/auth/views/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

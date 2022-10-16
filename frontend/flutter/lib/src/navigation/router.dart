@@ -1,6 +1,6 @@
 import 'package:balance_home_app/src/features/auth/controllers/login_controller.dart';
-import 'package:balance_home_app/src/features/auth/screens/auth_screen.dart';
-import 'package:balance_home_app/src/features/auth/utils/login_states.dart';
+import 'package:balance_home_app/src/features/auth/views/auth_view.dart';
+import 'package:balance_home_app/src/features/auth/logic/login_state.dart';
 import 'package:balance_home_app/src/features/home/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
