@@ -34,7 +34,7 @@ dependencies:
   # Routing
   go_router: ^5.0.5
   # State management
-  hooks_riverpod: ^2.0.2
+  flutter_riverpod: ^2.0.2
   # Equals and hashCode override
   equatable: ^2.0.5
   # Fix url in web

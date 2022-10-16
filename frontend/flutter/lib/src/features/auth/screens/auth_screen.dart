@@ -1,5 +1,6 @@
-import 'package:balance_home_app/providers/localization_providers/localization_provider.dart';
-import 'package:balance_home_app/ui/auth/screens/login_screen.dart';
+import 'package:balance_home_app/features/auth/screens/register_screen.dart';
+import 'package:balance_home_app/src/common/providers/localization_providers/localization_provider.dart';
+import 'package:balance_home_app/src/features/auth/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -55,15 +56,31 @@ class AuthScreen extends ConsumerWidget {
                     TabBar(
                       isScrollable: true,
                       tabs: [
-                        Tab(text: ref.read(appLocalizationsProvider).signIn),
-                        Tab(text: ref.read(appLocalizationsProvider).register)
+                        Tab(
+                          child: Text(
+                            ref.read(appLocalizationsProvider).signIn,
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 27, 27, 27),
+                              fontSize: 20
+                            ),
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            ref.read(appLocalizationsProvider).register,
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 27, 27, 27),
+                              fontSize: 20
+                            ),
+                          ),
+                        )
                       ]
                     ),
                     const Expanded(
                       child: TabBarView(
                         children: [
                           LoginScreen(),
-                          LoginScreen()
+                          RegisterScreen()
                         ]
                       )
                     ),

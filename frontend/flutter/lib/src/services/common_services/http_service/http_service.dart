@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:balance_home_app/common/app_config/env_model.dart';
-import 'package:flutter/material.dart';
+import 'package:balance_home_app/src/common/app_config/env_model.dart';
 import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages, implementation_imports
 import 'package:http_parser/src/media_type.dart';
@@ -10,14 +9,14 @@ import 'package:http_parser/src/media_type.dart';
 ///
 /// This allows for mocking all HTTP requests in service testing and also,
 /// reduces code duplication by abstracting this proccess.
-class HttpProvider {
+class HttpService {
   /// Client that will make all requests
   final http.Client client;
 
-  /// Creates an [HttpProvider].
+  /// Creates an [HttpService].
   ///
   /// The optional [http.CLient] argument is added for testing purposes.
-  HttpProvider({http.Client? client}) : client = client ?? http.Client();
+  HttpService({http.Client? client}) : client = client ?? http.Client();
 
   /// Gets the base url of the server using environment variables.
   String baseUrl = EnvModel.BASE_URL;

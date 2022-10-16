@@ -1,4 +1,4 @@
-import 'package:balance_home_app/navigation/router.dart';
+import 'package:balance_home_app/src/navigation/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 

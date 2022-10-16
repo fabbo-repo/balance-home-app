@@ -1,11 +1,10 @@
-import 'package:balance_home_app/providers/auth_providers/states/login_state.dart';
-import 'package:balance_home_app/ui/auth/controllers/login_controller.dart';
-import 'package:balance_home_app/ui/home/screens/home_screen.dart';
+import 'package:balance_home_app/src/features/auth/controllers/login_controller.dart';
+import 'package:balance_home_app/src/features/auth/screens/auth_screen.dart';
+import 'package:balance_home_app/src/features/auth/utils/login_states.dart';
+import 'package:balance_home_app/src/features/home/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../ui/auth/screens/auth_screen.dart';
 
 class RouterNotifier extends ChangeNotifier {
   final Ref _ref;

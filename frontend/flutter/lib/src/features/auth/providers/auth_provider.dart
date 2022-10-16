@@ -1,5 +1,4 @@
-
-import 'package:balance_home_app/services/auth_services/auth_service.dart';
+import 'package:balance_home_app/src/services/auth_services/auth_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthRepository {
@@ -12,7 +11,7 @@ class AuthRepository {
   }
 }
 
-final authRepositoryProvider = Provider<AuthRepository> (
+final authProvider = Provider<AuthRepository> (
   (ref) {
     return AuthRepository(ref.read(authServiceProvider));
   }
