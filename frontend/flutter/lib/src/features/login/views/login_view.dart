@@ -1,18 +1,18 @@
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
-import 'package:balance_home_app/src/common/widgets/text_fields/password_text_field.dart';
-import 'package:balance_home_app/src/common/widgets/text_fields/simple_text_field.dart';
-import 'package:balance_home_app/src/features/auth/controllers/login_controller.dart';
+import 'package:balance_home_app/src/core/widgets/password_text_field.dart';
+import 'package:balance_home_app/src/core/widgets/simple_text_field.dart';
+import 'package:balance_home_app/src/features/login/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginView extends ConsumerStatefulWidget {
+  const LoginView({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _LoginViewState extends ConsumerState<LoginView> {
   
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();

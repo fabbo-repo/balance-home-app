@@ -1,18 +1,18 @@
 import 'package:balance_home_app/src/services/auth_services/auth_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AuthRepository {
+class LoginRepository {
   final AuthService _authService;
 
-  AuthRepository(this._authService);
+  LoginRepository(this._authService);
 
   Future<String> login(String email, String password) async {
     return _authService.login(email, password);
   }
 }
 
-final authProvider = Provider<AuthRepository> (
+final loginProvider = Provider<LoginRepository> (
   (ref) {
-    return AuthRepository(ref.read(authServiceProvider));
+    return LoginRepository(ref.read(authServiceProvider));
   }
 );

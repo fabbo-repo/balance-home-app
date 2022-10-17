@@ -1,11 +1,11 @@
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
-import 'package:balance_home_app/src/features/auth/views/login_view.dart';
-import 'package:balance_home_app/src/features/auth/views/register_view.dart';
+import 'package:balance_home_app/src/features/login/views/login_view.dart';
+import 'package:balance_home_app/src/features/register/views/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AuthScreen extends ConsumerWidget {
-  const AuthScreen({super.key});
+class AuthView extends ConsumerWidget {
+  const AuthView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -79,8 +79,8 @@ class AuthScreen extends ConsumerWidget {
                     const Expanded(
                       child: TabBarView(
                         children: [
-                          LoginScreen(),
-                          RegisterScreen()
+                          LoginView(),
+                          RegisterView()
                         ]
                       )
                     ),

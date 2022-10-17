@@ -1,18 +1,18 @@
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
-import 'package:balance_home_app/src/common/widgets/text_fields/password_text_field.dart';
-import 'package:balance_home_app/src/common/widgets/text_fields/simple_text_field.dart';
-import 'package:balance_home_app/src/features/auth/controllers/login_controller.dart';
+import 'package:balance_home_app/src/core/widgets/password_text_field.dart';
+import 'package:balance_home_app/src/core/widgets/simple_text_field.dart';
+import 'package:balance_home_app/src/features/login/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RegisterScreen extends ConsumerStatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+class RegisterView extends ConsumerStatefulWidget {
+  const RegisterView({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
+  ConsumerState<RegisterView> createState() => _RegisterViewState();
 }
 
-class _RegisterScreenState extends ConsumerState<RegisterScreen> {
+class _RegisterViewState extends ConsumerState<RegisterView> {
   
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();

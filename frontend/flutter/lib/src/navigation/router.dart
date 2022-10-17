@@ -1,7 +1,5 @@
-import 'package:balance_home_app/src/features/auth/controllers/login_controller.dart';
 import 'package:balance_home_app/src/features/auth/views/auth_view.dart';
-import 'package:balance_home_app/src/features/auth/logic/login_state.dart';
-import 'package:balance_home_app/src/features/home/screens/home_screen.dart';
+import 'package:balance_home_app/src/features/home/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -20,20 +18,20 @@ class RouterNotifier extends ChangeNotifier {
     GoRoute(
       name: 'home',
       path: '/',
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) => const HomeView(),
     ),
     GoRoute(
-      name: 'login',
-      path: '/login',
-      builder: (context, state) => const AuthScreen(),
+      name: 'auth',
+      path: '/auth',
+      builder: (context, state) => const AuthView(),
     ),
   ];
 
   String? redirectLogic(BuildContext context, GoRouterState state) {
     final loginState = _ref.read(loginControllerProvider);
-    final isLoggedIn = state.location == '/login';
+    final isLoggedIn = state.location == '/auth';
     if (loginState is LoginStateInitial) {
-      return isLoggedIn ? null : '/login';
+      return isLoggedIn ? null : '/auth';
     }
     if (isLoggedIn) return '/';
     return null;
