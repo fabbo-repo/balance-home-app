@@ -1,9 +1,10 @@
+import 'package:balance_home_app/src/features/login/data/models/account_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'login_state.freezed.dart';
 
 @freezed
-abstract class LoginState extends _$LoginState {
+abstract class LoginState with _$LoginState {
   // Initial
   const factory LoginState.initial() = _LoginStateInitial;
   

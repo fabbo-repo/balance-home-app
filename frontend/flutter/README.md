@@ -71,5 +71,5 @@ flutter pub run flutter_launcher_icons:main
 * Code generation:
 
 ~~~bash
-flutter pub run build_runner build
+flutter pub run build_runner build --delete-conflicting-outputs
 ~~~

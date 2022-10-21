@@ -1,8 +1,6 @@
-import 'package:balance_home_app/src/features/auth/providers/auth_provider.dart';
-import 'package:balance_home_app/src/features/auth/logic/login_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
+/*
 final loginControllerProvider = StateNotifierProvider<LoginNotifier, LoginState>(
   (ref) {
     return LoginNotifier(ref);
@@ -26,3 +24,4 @@ class LoginNotifier extends StateNotifier<LoginState> {
     }
   }
 }
+*/

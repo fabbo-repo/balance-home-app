@@ -32,20 +32,17 @@ class SimpleTextField extends StatelessWidget {
               onChanged: onChanged,
               controller: controller,
               decoration: InputDecoration(
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: 
+                    (error != null && error != "") ?
+                      BorderSide(color: Colors.red):
+                      BorderSide(color: Colors.black),
                 ),
-                disabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
-                ),
-                errorBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)
-                ),
-                focusedErrorBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)
+                focusedBorder: OutlineInputBorder(
+                  borderSide: 
+                    (error != null && error != "") ?
+                      BorderSide(color: Colors.red):
+                      BorderSide(color: Colors.blue),
                 ),
                 border: const OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.black)

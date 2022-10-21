@@ -8,10 +8,10 @@ class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
 
   RouterNotifier(this._ref) {
-    _ref.listen<LoginState>(
-      loginControllerProvider, 
-      (_, __) { notifyListeners(); }
-    );
+    //_ref.listen<LoginState>(
+    //  loginControllerProvider, 
+    //  (_, __) { notifyListeners(); }
+    //);
   }
 
   List<GoRoute> get routes => [
@@ -28,12 +28,13 @@ class RouterNotifier extends ChangeNotifier {
   ];
 
   String? redirectLogic(BuildContext context, GoRouterState state) {
-    final loginState = _ref.read(loginControllerProvider);
-    final isLoggedIn = state.location == '/auth';
-    if (loginState is LoginStateInitial) {
-      return isLoggedIn ? null : '/auth';
-    }
-    if (isLoggedIn) return '/';
+    //final loginState = _ref.read(loginControllerProvider);
+    final isLoggedIn = state.location == '/';
+    //if (loginState is LoginStateInitial) {
+    //  return isLoggedIn ? null : '/auth';
+    //}
+    if (isLoggedIn) return '/auth';
+
     return null;
   }
 }

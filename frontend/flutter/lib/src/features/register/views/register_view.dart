@@ -39,8 +39,6 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
               child: ElevatedButton(
                 child: Text(ref.read(appLocalizationsProvider).login),
                 onPressed: () {
-                  ref.read(loginControllerProvider.notifier)
-                    .login(emailController.text, passwordController.text);
                 },
               )
             ),

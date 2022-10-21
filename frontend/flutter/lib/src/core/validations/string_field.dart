@@ -1,14 +1,14 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'field.freezed.dart';
+part 'string_field.freezed.dart';
 
 @freezed
-class Field with _$Field {
-  const factory Field(
+class StringField with _$StringField {
+  const factory StringField(
     {
       required String value,
       @Default('') String errorMessage,
       @Default(false) bool isValid
     }
-  ) = _Field;
+  ) = _StringField;
 }

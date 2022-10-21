@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:balance_home_app/src/common/app_config/env_model.dart';
+import 'package:balance_home_app/src/core/env/environment_config.dart';
 import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages, implementation_imports
 import 'package:http_parser/src/media_type.dart';
@@ -19,7 +19,7 @@ class HttpService {
   HttpService({http.Client? client}) : client = client ?? http.Client();
 
   /// Gets the base url of the server using environment variables.
-  String baseUrl = EnvModel.BASE_URL;
+  String baseUrl = EnvironmentConfig.apiUrl;
 
   /// Returns the necessary content and authentication headers for all server requests.
   /* @visibleForTesting

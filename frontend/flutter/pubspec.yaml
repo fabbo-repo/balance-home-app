@@ -48,14 +48,16 @@ dependencies:
   # Data class generator
   freezed_annotation: ^2.0.3
   json_annotation: ^4.4.0
-  # Form representation and validation
-  formz: ^0.4.1
+  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  # Environment generator (dev, stage, prod ...)
+  flutter_flavorizr: ^2.1.4
   # Contains a set of recommended lints to encourage good coding practices.
-  flutter_lints: ^2.0.0
+  #flutter_lints: ^2.0.0
+  very_good_analysis: ^3.1.0
   # Data class generator
   build_runner: ^2.1.10
   freezed: ^2.0.3
