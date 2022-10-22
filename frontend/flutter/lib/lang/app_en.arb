@@ -10,5 +10,8 @@
     "signIn": "Sign In",
     "emailAddress": "Email address",
     "password": "Password",
-    "forgotPassword": "Forgot password?"
+    "forgotPassword": "Forgot password?",
+    "needEmail": "Email needed",
+    "emailNotValid": "Email is not valid",
+    "needPassword": "Password needed"
 }

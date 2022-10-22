@@ -1,7 +1,6 @@
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
 import 'package:balance_home_app/src/core/widgets/password_text_field.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_field.dart';
-import 'package:balance_home_app/src/features/login/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

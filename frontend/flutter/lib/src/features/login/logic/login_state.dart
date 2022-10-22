@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/features/login/data/models/account_model.dart';
+import 'package:balance_home_app/src/features/login/data/models/jwt_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'login_state.freezed.dart';
@@ -12,11 +12,12 @@ abstract class LoginState with _$LoginState {
   const factory LoginState.loading() = _LoginStateLoading;
 
   // Data
-  const factory LoginState.data(
-    {
-      required AccountModel account
-    }) = _LoginStateData;
+  const factory LoginState.data({
+    required JwtModel jwtModel
+  }) = _LoginStateData;
 
   // Error
-  const factory LoginState.error([String? error]) = _LoginStateError;
+  const factory LoginState.error([
+    String? error
+  ]) = _LoginStateError;
 }

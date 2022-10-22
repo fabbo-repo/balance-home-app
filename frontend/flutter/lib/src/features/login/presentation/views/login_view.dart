@@ -1,7 +1,7 @@
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
 import 'package:balance_home_app/src/core/widgets/password_text_field.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_field.dart';
-import 'package:balance_home_app/src/features/login/controllers/login_controller.dart';
+import 'package:balance_home_app/src/features/login/presentation/widgets/login_button.dart';
 import 'package:balance_home_app/src/features/login/providers/login_form_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,16 +45,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
               height: 100,
               width: 300,
               padding: const EdgeInsets.fromLTRB(10, 35, 10, 15),
-              child: ElevatedButton(
-                child: Text(ref.read(appLocalizationsProvider).signIn),
-              onPressed: (ref.watch(loginFormProvider).form.isValid) ? 
-                null : 
-                () {
-                  //ref
-                  //  .read(loginControllerProvider.notifier)
-                  //  .login(emailController.text, passwordController.text);
-                },
-              )
+              child: LoginButton()
             ),
             TextButton(
               onPressed: () {  },

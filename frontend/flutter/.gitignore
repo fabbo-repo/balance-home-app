@@ -47,3 +47,4 @@ untranslated_messages.txt
 
 # Generated files:
 *.freezed.dart
+*.g.dart

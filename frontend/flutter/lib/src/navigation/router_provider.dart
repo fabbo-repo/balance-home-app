@@ -8,7 +8,7 @@ final routerProvider = Provider<GoRouter>(
     return GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: router,
-      redirect: router.redirectLogic,
+      redirect: router.authenticationGuard,
       routes: router.routes,
     );
   }

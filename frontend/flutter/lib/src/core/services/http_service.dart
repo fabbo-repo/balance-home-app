@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:balance_home_app/src/core/env/environment_config.dart';
+import 'package:balance_home_app/src/features/login/data/models/jwt_model.dart';
 import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages, implementation_imports
 import 'package:http_parser/src/media_type.dart';
@@ -11,31 +12,34 @@ import 'package:http_parser/src/media_type.dart';
 /// reduces code duplication by abstracting this proccess.
 class HttpService {
   /// Client that will make all requests
-  final http.Client client;
+  final http.Client _client;
+
+  JwtModel? _jwtModel;
 
   /// Creates an [HttpService].
   ///
   /// The optional [http.CLient] argument is added for testing purposes.
-  HttpService({http.Client? client}) : client = client ?? http.Client();
+  HttpService({http.Client? client}) : _client = client ?? http.Client();
 
   /// Gets the base url of the server using environment variables.
   String baseUrl = EnvironmentConfig.apiUrl;
 
   /// Returns the necessary content and authentication headers for all server requests.
-  /* @visibleForTesting
-  Future<Map<String, String>> getHeaders() async {
-    AuthService authService = GetIt.I.get<UserState>().authService;
-    return {
-      "Content-Type": ContentType.json.toString(),
-      "Authorization": "Bearer ${await authService.getIdToken()}"
+  Map<String, String> getHeaders() {
+    Map<String, String> headers = {
+      "Content-Type": ContentType.json.toString()
     };
-  } */
+    if (_jwtModel != null) {
+      headers["Authorization"] = "Bearer ${_jwtModel!.accessToken}";
+    }
+    return headers;
+  }
 
   /// Sends a [GET] request to [baseUrl]/[subPath].
   Future<HttpResponse> sendGetRequest(String subPath) async {
     //final headers = await getHeaders();
     http.Response response =
-        await client.get(
+        await _client.get(
           Uri.parse("$baseUrl/$subPath"), 
         //  headers: headers
         );
@@ -47,7 +51,7 @@ class HttpService {
     String subPath,
     Map<String, dynamic> body,
   ) async {
-    http.Response response = await client.post(
+    http.Response response = await _client.post(
       Uri.parse("$baseUrl/$subPath"),
       //headers: await getHeaders(), 
       body: jsonEncode(body)
@@ -71,12 +75,12 @@ class HttpService {
     //request.headers["Authorization"] =
     //    "Bearer ${await GetIt.I.get<UserState>().authService.getIdToken()}";
     request.files.add(httpImage);
-    return await client.send(request);
+    return await _client.send(request);
   }
 
   /// Sends a `PUT` request to `baseUrl`/`subPath` and with `body` as content.
   Future<HttpResponse> sendPutRequest(String subPath, Map<String, dynamic> body) async {
-    http.Response response = await client.put(
+    http.Response response = await _client.put(
       Uri.parse("$baseUrl/$subPath"),
       //headers: await getHeaders(), 
       body: jsonEncode(body));
@@ -85,7 +89,7 @@ class HttpService {
 
   /// Sends a `DEL` request to `baseUrl`/`subPath`.
   Future<HttpResponse> sendDelRequest(String subPath) async {
-    http.Response response = await client
+    http.Response response = await _client
       .delete(
         Uri.parse("$baseUrl/$subPath"), 
         //headers: await getHeaders()
@@ -98,6 +102,14 @@ class HttpService {
         json.decode(const Utf8Decoder().convert(response.bodyBytes))
             as Map<String, dynamic>;
     return HttpResponse(response.statusCode, jsonResponse);
+  }
+
+  void setJwtModel(JwtModel jwtModel) {
+    _jwtModel = jwtModel;
+  }
+
+  void refreshAccessToken() {
+    
   }
 }
 
