@@ -51,7 +51,7 @@ services:
         ipv4_address: 192.168.92.30
 
   db:
-    image: postgres:latest
+    image: postgres:15.0
     env_file:
       - ./postgres_db.env
     expose:

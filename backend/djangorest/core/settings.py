@@ -84,7 +84,8 @@ class Dev(Configuration):
         'balance',
         'revenue',
         'expense',
-        'coin'
+        'coin',
+        'frontend_version'
     ]
 
     MIDDLEWARE = [
