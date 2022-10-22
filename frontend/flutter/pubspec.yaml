@@ -28,7 +28,7 @@ dependencies:
     sdk: flutter
   intl: ^0.17.0
   # Get version info
-  package_info: ^2.0.2
+  package_info_plus: ^3.0.1
   # Environment variables
   flutter_dotenv: ^5.0.2
   # Http request for backend
