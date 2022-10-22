@@ -36,7 +36,6 @@ class RouterNotifier extends ChangeNotifier {
       return '/auth';
     }
     if (isRoot) return '/';
-
     return null;
   }
 }

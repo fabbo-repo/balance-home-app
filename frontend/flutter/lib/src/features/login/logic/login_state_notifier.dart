@@ -1,4 +1,5 @@
 import 'package:balance_home_app/src/features/login/data/models/credentials_model.dart';
+import 'package:balance_home_app/src/features/login/data/models/jwt_model.dart';
 import 'package:balance_home_app/src/features/login/data/repositories/login_repository.dart';
 import 'package:balance_home_app/src/features/login/logic/login_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,8 +21,8 @@ class LoginStateNotifier extends StateNotifier<LoginState> {
   Future<void> getJwt(CredentialsModel credentials) async {
     state = const LoginState.loading();
     try {
-      final result = await _loginRepository.getJwt(credentials);
-      state = LoginState.data(jwtModel: result);
+      final jwt = await _loginRepository.getJwt(credentials);
+      state = LoginState.data(jwtModel: jwt);
     } catch (_) {
       state = LoginState.error("Error!");
     }
@@ -30,16 +31,27 @@ class LoginStateNotifier extends StateNotifier<LoginState> {
   Future<void> tryLogin() async {
     state = const LoginState.loading();
     try {
-      // Read jwt credentials
-      String? access_token = await _secureStorage.read(key: "access_token");
+      // Read jwt refresh token
       String? refresh_token = await _secureStorage.read(key: "refresh_token");
-      if (access_token != null && refresh_token != null) {
-        
+      if (refresh_token != null) {
+        JwtModel refresh_jwt = JwtModel(
+          accessToken: '', 
+          refreshToken: refresh_token
+        );
+        final jwt = await _loginRepository.refreshJwt(refresh_jwt);
+        state = LoginState.data(jwtModel: jwt);
       }
-      String? email = await _secureStorage.read(key: "email");
-      String? password = await _secureStorage.read(key: "password");
-      //final result = await _loginRepository.getJwt(credentials);
-      state = LoginState.data(jwtModel: result);
+      else {
+        String? email = await _secureStorage.read(key: "email");
+        String? password = await _secureStorage.read(key: "password");
+        if (email != null && password != null) {
+          CredentialsModel credentials = CredentialsModel(
+            email: email,
+            password: password
+          );
+          final jwt = await _loginRepository.getJwt(credentials);
+        }
+      }
     } catch (_) {
       state = LoginState.error("Error!");
     }
