@@ -32,11 +32,11 @@ class LoginStateNotifier extends StateNotifier<LoginState> {
     state = const LoginState.loading();
     try {
       // Read jwt refresh token
-      String? refresh_token = await _secureStorage.read(key: "refresh_token");
-      if (refresh_token != null) {
+      String? refresh = await _secureStorage.read(key: "refresh_token");
+      if (refresh != null) {
         JwtModel refresh_jwt = JwtModel(
-          accessToken: '', 
-          refreshToken: refresh_token
+          access: '', 
+          refresh: refresh
         );
         final jwt = await _loginRepository.refreshJwt(refresh_jwt);
         state = LoginState.data(jwtModel: jwt);

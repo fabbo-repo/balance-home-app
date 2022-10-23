@@ -18,7 +18,7 @@ class _LocaleObserver extends WidgetsBindingObserver {
 
 /// Provider used to access the AppLocalizations object for the current locale
 final appLocalizationsProvider = Provider<AppLocalizations>(
-  (ref) {
+  (ProviderRef<AppLocalizations> ref) {
     // Initialize from the initial locale
     ref.state = lookupAppLocalizations(ui.window.locale);
     // Create an observer to update the state

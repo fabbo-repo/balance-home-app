@@ -17,18 +17,18 @@ import os
 import dj_database_url
 from django.utils.translation import gettext_lazy as _
 
-def get_env(environ_name, default_value):
+def get_env(environ_name, default_value=None):
     return os.environ.get(environ_name) or default_value
 
-def get_int_env(environ_name, default_value):
+def get_int_env(environ_name, default_value=None):
     return int(os.environ.get(environ_name) or default_value)
 
-def get_bool_env(environ_name, default_value):
+def get_bool_env(environ_name, default_value=None):
     if not os.environ.get(environ_name): return default_value
     if os.environ.get(environ_name).lower() in ['true', '1', 't', 'y', 'yes']: return True
     return False
 
-def get_list_env(environ_name, default_value):
+def get_list_env(environ_name, default_value=None):
     if not os.environ.get(environ_name): return default_value
     return os.environ.get(environ_name).split(',')
 
@@ -50,6 +50,7 @@ class Dev(Configuration):
     DEBUG = get_bool_env('APP_DEBUG', True)
 
     ALLOWED_HOSTS = [ '*' ]
+    CORS_ALLOW_ALL_ORIGINS = True
     # X_FRAME_OPTIONS = 'ALLOW-FROM ' + os.environ.get('HOSTNAME')
     # CSRF_COOKIE_SAMESITE = None
     # CSRF_TRUSTED_ORIGINS = [os.environ.get('HOSTNAME')]
@@ -67,6 +68,8 @@ class Dev(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
+        # Cors:
+        "corsheaders",
         # Admin documentation:
         'django.contrib.admindocs',
         # Rest framework:
@@ -89,6 +92,7 @@ class Dev(Configuration):
     ]
 
     MIDDLEWARE = [
+        "corsheaders.middleware.CorsMiddleware",
         'django.middleware.security.SecurityMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.locale.LocaleMiddleware',
@@ -266,8 +270,12 @@ class Prod(Dev):
     SECRET_KEY = os.urandom(20).hex()
     ALLOWED_HOSTS = get_list_env('APP_ALLOWED_HOSTS', 
         [ "localhost", "0.0.0.0" ])
-    CSRF_TRUSTED_ORIGINS = get_list_env('APP_CSRF_TRUSTED_ORIGINS', 
-        [ "http://localhost:8000", "http://127.0.0.1:8000" ])
+    if get_list_env("APP_CORS_ALLOWED_HOSTS"):
+        CORS_ALLOW_ALL_ORIGINS = False
+        CORS_ALLOWED_ORIGINS = get_list_env("APP_CORS_ALLOWED_HOSTS")
+    CSRF_TRUSTED_ORIGINS = get_list_env("APP_CORS_ALLOWED_HOSTS", 
+        [ "http://localhost:8000", "http://127.0.0.1:8000" ]
+    )
         
     # Backup
     DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'

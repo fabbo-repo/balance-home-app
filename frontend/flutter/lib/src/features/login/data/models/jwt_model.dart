@@ -6,12 +6,12 @@ part 'jwt_model.g.dart';
 @JsonSerializable()
 class JwtModel extends Equatable {
   
-  final String accessToken;
-  final String refreshToken;
+  final String access;
+  final String refresh;
 
   JwtModel({
-    required this.accessToken,
-    required this.refreshToken
+    required this.access,
+    required this.refresh
   });
 
   // Json Serializable
@@ -22,7 +22,7 @@ class JwtModel extends Equatable {
 
   @override
   List<Object?> get props => [
-    accessToken, 
-    refreshToken
+    access, 
+    refresh
   ];
 }

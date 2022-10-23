@@ -81,6 +81,7 @@ djangorest/
 | APP_PORT                  | Backend port                                               |
 | APP_DEBUG                 | Debug mode enabled (true|false)                            |
 | APP_ALLOWED_HOSTS         | List of strings representing the allowed host/domain names |
+| APP_CORS_ALLOWED_HOSTS    | CORS allowed host/domain names                             |
 | APP_EMAIL_HOST            | Email service host name                                    |
 | APP_EMAIL_PORT            | Email service port                                         |
 | APP_EMAIL_HOST_USER       | Email service authentication user                          |

@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:developer';
-
-import 'package:balance_home_app/src/core/providers/package_info_provider.dart';
-import 'package:balance_home_app/src/core/views/loading_view.dart';
+import 'package:balance_home_app/src/core/views/app_info_loading_view.dart';
+import 'package:balance_home_app/src/core/views/error_view.dart';
 import 'package:balance_home_app/src/features/auth/views/auth_view.dart';
 import 'package:balance_home_app/src/features/home/views/home_view.dart';
 import 'package:balance_home_app/src/features/login/logic/login_state.dart';
@@ -29,14 +27,17 @@ class RouterNotifier extends ChangeNotifier {
       builder: (context, state) => const HomeView(),
     ),
     GoRoute(
-      name: 'loading',
-      path: '/load-app-info',
-      builder: (context, state) => LoadingView(
-        func: (context) async {
-          await Future.delayed(Duration(seconds: 5));
-          context.go("/auth");
-        }
+      name: 'error',
+      path: '/error',
+      redirect: errorGuard,
+      builder: (context, state) => ErrorView(
+        message: state.extra! as String
       ),
+    ),
+    GoRoute(
+      name: 'loadingAppInfo',
+      path: '/load-app-info',
+      builder: (context, state) => AppInfoLoadingView(),
     ),
     GoRoute(
       name: 'authentication',
@@ -49,17 +50,16 @@ class RouterNotifier extends ChangeNotifier {
   String? appGuard(BuildContext context, GoRouterState state) {
     return null;
   }
+  
+  String? errorGuard(BuildContext context, GoRouterState state) {
+    if (state.extra == null) return '/';
+    return null;
+  }
 
   FutureOr<String?> rootGuard(BuildContext context, GoRouterState state) async {
-    try {
-      _ref.read(packageInfoProvider.future).then((value) {
-        log(value.version);
-      });
-    } catch (e) {
-      log(e.toString());
-      notifyListeners();
+    if (state.params.containsKey("version")) {
+      return '/auth';
     }
-    log(state.location);
     if (state.location == '/') return '/load-app-info';
     return null;
   }

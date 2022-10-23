@@ -9,8 +9,6 @@ class SimpleTextButton extends StatelessWidget {
 
   final Widget child;
 
-  final Color? textColor;
-
   final Color? backgroundColor;
 
   final Color? foregroundColor;
@@ -18,7 +16,6 @@ class SimpleTextButton extends StatelessWidget {
   const SimpleTextButton({
     required this.child,
     required this.onPressed,
-    this.textColor,
     this.backgroundColor,
     this.foregroundColor,
     bool? enabled,
@@ -28,9 +25,6 @@ class SimpleTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ButtonStyle? style = ButtonStyle(
-      textStyle: MaterialStateProperty.all<TextStyle>(
-        TextStyle(color: textColor)
-      ),
       backgroundColor: (backgroundColor == null) ? 
         null : 
         MaterialStateProperty.all<Color>(backgroundColor!),

@@ -30,18 +30,17 @@ class HttpService {
       "Content-Type": ContentType.json.toString()
     };
     if (_jwtModel != null) {
-      headers["Authorization"] = "Bearer ${_jwtModel!.accessToken}";
+      headers["Authorization"] = "Bearer ${_jwtModel!.access}";
     }
     return headers;
   }
 
   /// Sends a [GET] request to [baseUrl]/[subPath].
   Future<HttpResponse> sendGetRequest(String subPath) async {
-    //final headers = await getHeaders();
     http.Response response =
         await _client.get(
           Uri.parse("$baseUrl/$subPath"), 
-        //  headers: headers
+          headers: await getHeaders()
         );
     return createHttpResponse(response);
   }
@@ -53,7 +52,7 @@ class HttpService {
   ) async {
     http.Response response = await _client.post(
       Uri.parse("$baseUrl/$subPath"),
-      //headers: await getHeaders(), 
+      headers: await getHeaders(), 
       body: jsonEncode(body)
     );
     return createHttpResponse(response);
@@ -82,7 +81,7 @@ class HttpService {
   Future<HttpResponse> sendPutRequest(String subPath, Map<String, dynamic> body) async {
     http.Response response = await _client.put(
       Uri.parse("$baseUrl/$subPath"),
-      //headers: await getHeaders(), 
+      headers: await getHeaders(), 
       body: jsonEncode(body));
     return createHttpResponse(response);
   }
@@ -92,7 +91,7 @@ class HttpService {
     http.Response response = await _client
       .delete(
         Uri.parse("$baseUrl/$subPath"), 
-        //headers: await getHeaders()
+        headers: await getHeaders()
       );
     return createHttpResponse(response);
   }
@@ -106,10 +105,6 @@ class HttpService {
 
   void setJwtModel(JwtModel jwtModel) {
     _jwtModel = jwtModel;
-  }
-
-  void refreshAccessToken() {
-    
   }
 }
 

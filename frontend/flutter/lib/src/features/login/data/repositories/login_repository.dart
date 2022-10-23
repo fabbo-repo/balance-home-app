@@ -11,9 +11,14 @@ abstract class ILoginRepository {
 }
 
 class LoginRepository implements ILoginRepository {
+
+  final HttpService httpService;
+
+  LoginRepository({required this.httpService});
+
   @override
   Future<JwtModel> getJwt(CredentialsModel credentials) async {
-    HttpResponse response = await HttpService().sendPostRequest(
+    HttpResponse response = await httpService.sendPostRequest(
       APIContract.jwtLogin,
       credentials.toJson()
     );
@@ -23,10 +28,10 @@ class LoginRepository implements ILoginRepository {
 
   @override
   Future<JwtModel> refreshJwt(JwtModel jwt) async {
-    HttpResponse response = await HttpService().sendPostRequest(
+    HttpResponse response = await httpService.sendPostRequest(
       APIContract.jwtRefresh,
       {
-        "refresh": jwt.refreshToken
+        "refresh": jwt.refresh
       }
     );
     _checkStatusCode(response);

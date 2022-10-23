@@ -63,7 +63,7 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
 }
 
 final loginFormProvider = StateNotifierProvider<LoginFormNotifier, LoginFormState>(
-  (ref) {
+  (StateNotifierProviderRef<LoginFormNotifier, LoginFormState> ref) {
     return LoginFormNotifier();
   }
 );
