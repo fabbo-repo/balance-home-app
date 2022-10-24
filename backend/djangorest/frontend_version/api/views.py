@@ -12,10 +12,10 @@ class FrontendVersionView(APIView):
     serializer_class = FrontendVersionSerializer
     permission_classes = (AllowAny,)
 
-    @method_decorator(cache_page(60))
+    @method_decorator(cache_page(10))
     def get(self, request, format=None):
         """
-        This view will be cached for 1 minute
+        This view will be cached for 10 seconds
         """
         try:
             return Response(
@@ -26,6 +26,6 @@ class FrontendVersionView(APIView):
         except:
             return Response(
                 data= {
-                    'version': "0.0.0"
+                    'version': "0.0.1"
                 }
             )

@@ -3,11 +3,11 @@ import 'package:balance_home_app/src/core/widgets/password_text_field.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_field.dart';
 import 'package:balance_home_app/src/features/login/data/models/credentials_model.dart';
-import 'package:balance_home_app/src/features/login/logic/login_state.dart';
-import 'package:balance_home_app/src/features/login/providers/login_form_provider.dart';
-import 'package:balance_home_app/src/features/login/providers/login_provider.dart';
+import 'package:balance_home_app/src/features/login/logic/providers/login_provider.dart';
+import 'package:balance_home_app/src/features/login/logic/providers/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginView extends ConsumerStatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -23,6 +23,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    final _loginFormStateNotifierProvider = ref.watch(loginFormStateProvider).form;
+    final _loginFormStateProvider = ref.read(loginFormStateProvider.notifier);
+    final _loginStateNotifierProvider = ref.watch(loginStateNotifierProvider);
     return Padding(
       padding: const EdgeInsets.all(10),
       child: SingleChildScrollView(
@@ -32,30 +35,41 @@ class _LoginViewState extends ConsumerState<LoginView> {
               title: ref.read(appLocalizationsProvider).emailAddress,
               controller: emailController,
               onChanged: (email) {
-                ref.read(loginFormProvider.notifier).setEmail(email);
+                _loginFormStateProvider.setEmail(email);
               },
-              error: ref.watch(loginFormProvider).form.email.errorMessage,
+              error: _loginFormStateNotifierProvider.email.errorMessage,
             ),
             PasswordTextField(
               title: ref.read(appLocalizationsProvider).password,
               controller: passwordController,
               onChanged: (password) {
-                ref.read(loginFormProvider.notifier).setPassword(password);
+                _loginFormStateProvider.setPassword(password);
               },
-              error: ref.watch(loginFormProvider).form.password.errorMessage,
+              error: _loginFormStateNotifierProvider.password.errorMessage,
+            ),
+            Text(
+              (_loginStateNotifierProvider is LoginStateError) ?
+              (_loginStateNotifierProvider).error : "",
+              style: const TextStyle(
+                color: Colors.red, 
+                fontSize: 14
+              ),
             ),
             Container(
               height: 100,
               width: 300,
               padding: const EdgeInsets.fromLTRB(10, 35, 10, 15),
               child:  SimpleTextButton(
-                enabled: ref.watch(loginFormProvider).form.isValid
-                  && ref.watch(loginStateNotifierProvider) != LoginState.loading(),
+                enabled: _loginFormStateNotifierProvider.isValid
+                  && !(_loginStateNotifierProvider is LoginStateLoading),
                 onPressed: () async {
-                  CredentialsModel credentials = ref.read(loginFormProvider).form.toModel();
-                  ref.read(loginStateNotifierProvider.notifier).getJwt(credentials);
+                  CredentialsModel credentials = _loginFormStateNotifierProvider.toModel();
+                  await ref.read(loginStateNotifierProvider.notifier).updateJwtAndAccount(credentials);
+                  if (_loginStateNotifierProvider is LoginStateSuccess) {
+                    context.go("/");
+                  }
                 }, 
-                child: (ref.watch(loginStateNotifierProvider) == LoginState.loading()) ?
+                child: _loginStateNotifierProvider is LoginStateLoading ?
                   CircularProgressIndicator() : 
                   Text(ref.read(appLocalizationsProvider).signIn)
               )

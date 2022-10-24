@@ -7,6 +7,9 @@ class FrontendVersionAdmin(admin.ModelAdmin):
         'version',
         'created'
     ]
+    readonly_fields = [
+        'created'
+    ]
     
     # This will disable delete functionality
     def has_delete_permission(self, request, obj=None):

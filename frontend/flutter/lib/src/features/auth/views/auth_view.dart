@@ -9,7 +9,7 @@ class AuthView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-     return Scaffold(
+    return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(

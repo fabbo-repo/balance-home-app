@@ -5,8 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:ui' as ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginFormNotifier extends StateNotifier<LoginFormState> {
-  LoginFormNotifier() : super(LoginFormState(LoginForm.empty()));
+class LoginFormStateProvider extends StateNotifier<LoginFormState> {
+  LoginFormStateProvider() : super(LoginFormState(LoginForm.empty()));
 
   void setEmail(String email) {
     final appLocalizations = lookupAppLocalizations(ui.window.locale);
@@ -46,12 +46,12 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
     );
     late StringField passwordField;
     if (isPassword) {
-      passwordField = _form.email.copyWith(
+      passwordField = _form.password.copyWith(
         isValid: true, 
         errorMessage: ""
       );
     } else {
-      passwordField = _form.email.copyWith(
+      passwordField = _form.password.copyWith(
         isValid: false, 
         errorMessage: appLocalizations.needPassword
       );
@@ -61,9 +61,3 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
     ));
   }
 }
-
-final loginFormProvider = StateNotifierProvider<LoginFormNotifier, LoginFormState>(
-  (StateNotifierProviderRef<LoginFormNotifier, LoginFormState> ref) {
-    return LoginFormNotifier();
-  }
-);

@@ -25,9 +25,7 @@ class AppInfoLoadingView extends ConsumerWidget {
         if (response.statusCode == 200) {
           if (response.content.containsKey("version") 
             && response.content["version"] == value.version) {
-            context.goNamed("home", params: {
-              "version": value.version
-            });
+            context.go("/", extra: value.version);
           } else {
             _goError(context, ref.read(appLocalizationsProvider).wronVersion);
           }

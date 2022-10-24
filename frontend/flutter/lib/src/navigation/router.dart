@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:balance_home_app/src/core/views/app_info_loading_view.dart';
 import 'package:balance_home_app/src/core/views/error_view.dart';
+import 'package:balance_home_app/src/core/views/loading_view.dart';
 import 'package:balance_home_app/src/features/auth/views/auth_view.dart';
 import 'package:balance_home_app/src/features/home/views/home_view.dart';
-import 'package:balance_home_app/src/features/login/logic/login_state.dart';
-import 'package:balance_home_app/src/features/login/providers/login_provider.dart';
+import 'package:balance_home_app/src/features/login/logic/providers/login_provider.dart';
+import 'package:balance_home_app/src/features/login/logic/providers/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -13,10 +15,10 @@ class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
 
   RouterNotifier(this._ref) {
-    _ref.listen<LoginState>(
+    /*_ref.listen<LoginState>(
       loginStateNotifierProvider, 
       (_, __) { notifyListeners(); }
-    );
+    );*/
   }
 
   List<GoRoute> get routes => [
@@ -40,6 +42,11 @@ class RouterNotifier extends ChangeNotifier {
       builder: (context, state) => AppInfoLoadingView(),
     ),
     GoRoute(
+      name: 'loading',
+      path: '/load',
+      builder: (context, state) => LoadingView(),
+    ),
+    GoRoute(
       name: 'authentication',
       path: '/auth',
       redirect: authGuard,
@@ -57,22 +64,19 @@ class RouterNotifier extends ChangeNotifier {
   }
 
   FutureOr<String?> rootGuard(BuildContext context, GoRouterState state) async {
-    if (state.params.containsKey("version")) {
-      return '/auth';
-    }
+    final loginState = _ref.read(loginStateNotifierProvider);
+    if (loginState is LoginStateSuccess) return null;
+    if (state.extra != null) return '/auth';
     if (state.location == '/') return '/load-app-info';
     return null;
   }
 
-  FutureOr<String?> authGuard(BuildContext context, GoRouterState state) async {
-    //if(_ref.read(packageInfoProvider).value != null)
-    //  log("aaaaaa"+_ref.read(packageInfoProvider).value!.appName);
+  Future<String?> authGuard(BuildContext context, GoRouterState state) async {
     final loginState = _ref.read(loginStateNotifierProvider);
-    final isRoot = state.location == '/';
-    if (loginState == LoginState.initial() && isRoot) {
-      return '/auth';
-    }
-    if (isRoot) return '/';
+    final loginStateNotifier = _ref.read(loginStateNotifierProvider.notifier);
+    // if trySilentLogin is succesfully executed it will set LoginState to LoginStateSuccess
+    if (loginState is LoginStateInitial) await loginStateNotifier.trySilentLogin();
+    if (_ref.read(loginStateNotifierProvider) is LoginStateSuccess) return '/';
     return null;
   }
 }
