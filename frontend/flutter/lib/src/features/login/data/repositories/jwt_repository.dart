@@ -40,8 +40,8 @@ class JwtRepository implements IJwtRepository {
       }
     );
     response.content['refresh'] = jwt.refresh;
-    JwtModel new_jwt = JwtModel.fromJson(response.content);
-    httpService.setJwtModel(new_jwt);
-    return new_jwt;
+    JwtModel newJwt = JwtModel.fromJson(response.content);
+    httpService.setJwtModel(newJwt);
+    return newJwt;
   }
 }

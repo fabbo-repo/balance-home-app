@@ -33,13 +33,12 @@ class AppInfoLoadingView extends ConsumerWidget {
           _goError(context, ref.read(appLocalizationsProvider).badRequest);
         }
       } catch (e) {
-        log(e.toString());
         _goError(context, ref.read(appLocalizationsProvider).noInternet);
       }
     });
-    return Scaffold(
+    return const Scaffold(
       body: Center(
-        child: Container(
+        child: SizedBox(
           width: 50,
           height: 50,
           child: CircularProgressIndicator.adaptive(

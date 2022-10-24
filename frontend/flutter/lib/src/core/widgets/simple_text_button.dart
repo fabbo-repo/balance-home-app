@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 class SimpleTextButton extends StatelessWidget {
@@ -33,9 +31,9 @@ class SimpleTextButton extends StatelessWidget {
         MaterialStateProperty.all<Color>(foregroundColor!)
     );
     return ElevatedButton(
-      onPressed: (!_enabled) ? null : onPressed, 
-      child: child,
-      style: style
+      onPressed: (!_enabled) ? null : onPressed,
+      style: style, 
+      child: child
     );
   }
 }

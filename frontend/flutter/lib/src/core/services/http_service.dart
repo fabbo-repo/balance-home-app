@@ -43,7 +43,7 @@ class HttpService {
     HttpResponse response = _createHttpResponse(
       await _client.get(
         Uri.parse("$baseUrl/$subPath"), 
-        headers: await getHeaders()
+        headers: getHeaders()
       )
     );
     return response;
@@ -57,7 +57,7 @@ class HttpService {
     HttpResponse response = _createHttpResponse(
       await _client.post(
         Uri.parse("$baseUrl/$subPath"),
-        headers: await getHeaders(), 
+        headers: getHeaders(), 
         body: jsonEncode(body)
       )
     );
@@ -88,7 +88,7 @@ class HttpService {
     HttpResponse response = _createHttpResponse(
       await _client.put(
         Uri.parse("$baseUrl/$subPath"),
-        headers: await getHeaders(), 
+        headers: getHeaders(), 
         body: jsonEncode(body)
       )
     );
@@ -100,7 +100,7 @@ class HttpService {
     HttpResponse response = _createHttpResponse(
       await _client.patch(
         Uri.parse("$baseUrl/$subPath"),
-        headers: await getHeaders(), 
+        headers: getHeaders(), 
         body: jsonEncode(body)
       )
     );
@@ -112,7 +112,7 @@ class HttpService {
     HttpResponse response = _createHttpResponse(
       await _client.delete(
         Uri.parse("$baseUrl/$subPath"), 
-        headers: await getHeaders()
+        headers: getHeaders()
       )
     );
     return response;
@@ -122,9 +122,9 @@ class HttpService {
     Map<String, dynamic> jsonResponse =
         json.decode(const Utf8Decoder().convert(response.bodyBytes))
             as Map<String, dynamic>;
-    HttpResponse http_response = HttpResponse(response.statusCode, jsonResponse);
-    _checkStatusCode(http_response);
-    return http_response;
+    HttpResponse httpResponse = HttpResponse(response.statusCode, jsonResponse);
+    _checkStatusCode(httpResponse);
+    return httpResponse;
   }
 
   void _checkStatusCode(HttpResponse response) {

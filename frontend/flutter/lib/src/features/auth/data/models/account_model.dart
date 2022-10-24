@@ -22,7 +22,7 @@ class AccountModel extends Equatable {
   @JsonKey(name: 'last_login')
   final DateTime lastLogin;
 
-  AccountModel({
+  const AccountModel({
         required this.username,
         required this.email,
         required this.receiveEmailBalance,

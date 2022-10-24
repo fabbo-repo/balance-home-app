@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
 import 'package:balance_home_app/src/core/widgets/password_text_field.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_button.dart';
@@ -10,22 +12,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginView extends ConsumerStatefulWidget {
-  const LoginView({Key? key}) : super(key: key);
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  LoginView({Key? key}) : super(key: key);
 
   @override
   ConsumerState<LoginView> createState() => _LoginViewState();
 }
 
 class _LoginViewState extends ConsumerState<LoginView> {
-  
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final _loginFormStateNotifierProvider = ref.watch(loginFormStateProvider).form;
-    final _loginFormStateProvider = ref.read(loginFormStateProvider.notifier);
-    final _loginStateNotifierProvider = ref.watch(loginStateNotifierProvider);
+    final loginForm  = ref.watch(loginFormStateProvider).form;
+    final loginFormState = ref.read(loginFormStateProvider.notifier);
+    final loginState = ref.watch(loginStateNotifierProvider);
     return Padding(
       padding: const EdgeInsets.all(10),
       child: SingleChildScrollView(
@@ -33,23 +40,23 @@ class _LoginViewState extends ConsumerState<LoginView> {
           children: [
             SimpleTextField(
               title: ref.read(appLocalizationsProvider).emailAddress,
-              controller: emailController,
+              controller: widget.emailController,
               onChanged: (email) {
-                _loginFormStateProvider.setEmail(email);
+                loginFormState.setEmail(email);
               },
-              error: _loginFormStateNotifierProvider.email.errorMessage,
+              error: loginForm.email.errorMessage,
             ),
             PasswordTextField(
               title: ref.read(appLocalizationsProvider).password,
-              controller: passwordController,
+              controller: widget.passwordController,
               onChanged: (password) {
-                _loginFormStateProvider.setPassword(password);
+                loginFormState.setPassword(password);
               },
-              error: _loginFormStateNotifierProvider.password.errorMessage,
+              error: loginForm.password.errorMessage,
             ),
             Text(
-              (_loginStateNotifierProvider is LoginStateError) ?
-              (_loginStateNotifierProvider).error : "",
+              (loginState is LoginStateError) ?
+              (loginState).error : "",
               style: const TextStyle(
                 color: Colors.red, 
                 fontSize: 14
@@ -60,17 +67,19 @@ class _LoginViewState extends ConsumerState<LoginView> {
               width: 300,
               padding: const EdgeInsets.fromLTRB(10, 35, 10, 15),
               child:  SimpleTextButton(
-                enabled: _loginFormStateNotifierProvider.isValid
-                  && !(_loginStateNotifierProvider is LoginStateLoading),
+                enabled: loginForm.isValid
+                  && loginState is! LoginStateLoading,
                 onPressed: () async {
-                  CredentialsModel credentials = _loginFormStateNotifierProvider.toModel();
+                  CredentialsModel credentials = loginForm.toModel();
                   await ref.read(loginStateNotifierProvider.notifier).updateJwtAndAccount(credentials);
-                  if (_loginStateNotifierProvider is LoginStateSuccess) {
+                  if (loginState is LoginStateSuccess) {
+                    // Context is not used if widget is not in the tree
+                    if (!mounted) return;
                     context.go("/");
                   }
                 }, 
-                child: _loginStateNotifierProvider is LoginStateLoading ?
-                  CircularProgressIndicator() : 
+                child: loginState is LoginStateLoading ?
+                  const CircularProgressIndicator() : 
                   Text(ref.read(appLocalizationsProvider).signIn)
               )
             ),

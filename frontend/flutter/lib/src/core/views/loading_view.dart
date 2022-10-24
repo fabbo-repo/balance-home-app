@@ -10,9 +10,9 @@ class LoadingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (func != null) func!(context);
-    return Scaffold(
+    return const Scaffold(
       body: Center(
-        child: Container(
+        child: SizedBox(
           width: 50,
           height: 50,
           child: CircularProgressIndicator.adaptive(

@@ -35,14 +35,14 @@ class SimpleTextField extends StatelessWidget {
                 enabledBorder: OutlineInputBorder(
                   borderSide: 
                     (error != null && error != "") ?
-                      BorderSide(color: Colors.red):
-                      BorderSide(color: Colors.black),
+                      const BorderSide(color: Colors.red):
+                      const BorderSide(color: Colors.black),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: 
                     (error != null && error != "") ?
-                      BorderSide(color: Colors.red):
-                      BorderSide(color: Colors.blue),
+                      const BorderSide(color: Colors.red):
+                      const BorderSide(color: Colors.blue),
                 ),
                 border: const OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.black)

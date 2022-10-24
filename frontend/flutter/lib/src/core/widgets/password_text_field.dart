@@ -41,14 +41,14 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
                 enabledBorder: OutlineInputBorder(
                   borderSide: 
                     (widget.error != null && widget.error != "") ?
-                      BorderSide(color: Colors.red):
-                      BorderSide(color: Colors.black),
+                      const BorderSide(color: Colors.red):
+                      const BorderSide(color: Colors.black),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: 
                     (widget.error != null && widget.error != "") ?
-                      BorderSide(color: Colors.red):
-                      BorderSide(color: Colors.blue),
+                      const BorderSide(color: Colors.red):
+                      const BorderSide(color: Colors.blue),
                 ),
                 border: const OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.black)

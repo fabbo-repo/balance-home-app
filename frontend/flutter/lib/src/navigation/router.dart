@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:balance_home_app/src/core/views/app_info_loading_view.dart';
 import 'package:balance_home_app/src/core/views/error_view.dart';
 import 'package:balance_home_app/src/core/views/loading_view.dart';
@@ -39,12 +38,12 @@ class RouterNotifier extends ChangeNotifier {
     GoRoute(
       name: 'loadingAppInfo',
       path: '/load-app-info',
-      builder: (context, state) => AppInfoLoadingView(),
+      builder: (context, state) => const AppInfoLoadingView(),
     ),
     GoRoute(
       name: 'loading',
       path: '/load',
-      builder: (context, state) => LoadingView(),
+      builder: (context, state) => const LoadingView(),
     ),
     GoRoute(
       name: 'authentication',
@@ -66,7 +65,6 @@ class RouterNotifier extends ChangeNotifier {
   FutureOr<String?> rootGuard(BuildContext context, GoRouterState state) async {
     final loginState = _ref.read(loginStateNotifierProvider);
     if (loginState is LoginStateSuccess) return null;
-    if (state.extra != null) return '/auth';
     if (state.location == '/') return '/load-app-info';
     return null;
   }
@@ -75,7 +73,7 @@ class RouterNotifier extends ChangeNotifier {
     final loginState = _ref.read(loginStateNotifierProvider);
     final loginStateNotifier = _ref.read(loginStateNotifierProvider.notifier);
     // if trySilentLogin is succesfully executed it will set LoginState to LoginStateSuccess
-    if (loginState is LoginStateInitial) await loginStateNotifier.trySilentLogin();
+    //if (loginState is LoginStateInitial) await loginStateNotifier.trySilentLogin();
     if (_ref.read(loginStateNotifierProvider) is LoginStateSuccess) return '/';
     return null;
   }

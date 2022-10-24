@@ -9,7 +9,7 @@ class JwtModel extends Equatable {
   final String access;
   final String refresh;
 
-  JwtModel({
+  const JwtModel({
     required this.access,
     required this.refresh
   });

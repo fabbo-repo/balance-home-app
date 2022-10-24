@@ -1,6 +1,6 @@
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
 import 'package:balance_home_app/src/features/login/presentation/views/login_view.dart';
-import 'package:balance_home_app/src/features/register/views/register_view.dart';
+import 'package:balance_home_app/src/features/register/presentation/views/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -76,7 +76,7 @@ class AuthView extends ConsumerWidget {
                         )
                       ]
                     ),
-                    const Expanded(
+                    Expanded(
                       child: TabBarView(
                         children: [
                           LoginView(),

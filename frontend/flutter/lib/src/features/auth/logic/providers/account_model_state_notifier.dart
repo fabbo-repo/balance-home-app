@@ -3,7 +3,7 @@ import 'package:balance_home_app/src/features/auth/logic/providers/account_model
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AccountModelStateNotifier extends StateNotifier<AccountModelState> {
-  AccountModelStateNotifier() : super(AccountModelState(null));
+  AccountModelStateNotifier() : super(const AccountModelState(null));
   
   void setAccountModel(AccountModel account) {
     state = state.copyWith(model: account);

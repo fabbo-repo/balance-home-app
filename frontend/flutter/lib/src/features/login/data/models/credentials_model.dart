@@ -9,7 +9,7 @@ class CredentialsModel extends Equatable {
   final String email;
   final String password;
 
-  CredentialsModel({
+  const CredentialsModel({
     required this.email,
     required this.password
   });

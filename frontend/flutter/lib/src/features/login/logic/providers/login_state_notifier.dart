@@ -6,6 +6,7 @@ import 'package:balance_home_app/src/features/login/data/models/credentials_mode
 import 'package:balance_home_app/src/features/login/data/models/jwt_model.dart';
 import 'package:balance_home_app/src/features/login/data/repositories/jwt_repository.dart';
 import 'package:balance_home_app/src/features/login/logic/providers/login_state.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:ui' as ui;
@@ -26,7 +27,7 @@ class LoginStateNotifier extends StateNotifier<LoginState> {
   }) : _jwtRepository = jwtRepository,
     _authRepository = authRepository,
     _accountModelStateNotifier = accountModelStateNotifier,
-    _secureStorage = secureStorage ?? FlutterSecureStorage(),
+    _secureStorage = secureStorage ?? const FlutterSecureStorage(),
     super(const LoginStateInitial());
   
   Future<void> updateJwtAndAccount(CredentialsModel credentials) async {
@@ -34,7 +35,7 @@ class LoginStateNotifier extends StateNotifier<LoginState> {
     try {
       await _updateJwt(credentials);
       await _updateAccount();
-      state = LoginStateSuccess();
+      state = const LoginStateSuccess();
     } catch (e) {
       if(e is UnauthorizedHttpException) {
         state = LoginStateError(lookupAppLocalizations(ui.window.locale).wrongCredentials);
@@ -49,13 +50,13 @@ class LoginStateNotifier extends StateNotifier<LoginState> {
       // Read jwt refresh token
       String? refresh = await _secureStorage.read(key: "refresh_token");
       if (refresh != null) {
-        JwtModel refresh_jwt = JwtModel(
+        JwtModel refreshJwt = JwtModel(
           access: '', 
           refresh: refresh
         );
-        await _refreshJwt(refresh_jwt);
+        await _refreshJwt(refreshJwt);
         await _updateAccount();
-        state = LoginStateSuccess();
+        state = const LoginStateSuccess();
       } else {
         String? email = await _secureStorage.read(key: "email");
         String? password = await _secureStorage.read(key: "password");
@@ -66,10 +67,12 @@ class LoginStateNotifier extends StateNotifier<LoginState> {
           );
           await _updateJwt(credentials);
           await _updateAccount();
-          state = LoginStateSuccess();
+          state = const LoginStateSuccess();
         }
       }
-    } catch (e) { }
+    } catch (e) {
+      debugPrint("[SILENT_LOGIN_ERROR] ${e.toString()}");
+    }
   }
 
   Future<void> _updateJwt(CredentialsModel credentials) async {
@@ -79,8 +82,8 @@ class LoginStateNotifier extends StateNotifier<LoginState> {
     await _secureStorage.write(key: "refresh_token", value: jwt.refresh);
   }
 
-  Future<void> _refreshJwt(JwtModel refresh_jwt) async {
-    final jwt = await _jwtRepository.refreshJwt(refresh_jwt);
+  Future<void> _refreshJwt(JwtModel refreshJwt) async {
+    final jwt = await _jwtRepository.refreshJwt(refreshJwt);
     await _secureStorage.write(key: "refresh_token", value: jwt.refresh);
   }
 
