@@ -7,9 +7,12 @@
     "@_APP_ERRORS":{},
     "noInternet": "Could not connect to the internet, check your connection and try again later",
     "badRequest": "There was a connection error on our services, please try again later",
-    "wronVersion": "You are using a deprecated version, please upgrade to a more updated one",
+    "wrongVersion": "You are using a deprecated version, please upgrade to a more updated one",
     "wrongCredentials": "Wrong email or password",
     "genericError": "Something went wrong, please try again later",
+
+    "@_GENERIC":{},
+    "version": "Version",
 
     "@_AUTH":{},
     "login": "Login",

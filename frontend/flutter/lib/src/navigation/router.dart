@@ -38,7 +38,7 @@ class RouterNotifier extends ChangeNotifier {
     GoRoute(
       name: 'loadingAppInfo',
       path: '/load-app-info',
-      builder: (context, state) => const AppInfoLoadingView(),
+      builder: (context, state) => AppInfoLoadingView(),
     ),
     GoRoute(
       name: 'loading',
@@ -73,7 +73,7 @@ class RouterNotifier extends ChangeNotifier {
     final loginState = _ref.read(loginStateNotifierProvider);
     final loginStateNotifier = _ref.read(loginStateNotifierProvider.notifier);
     // if trySilentLogin is succesfully executed it will set LoginState to LoginStateSuccess
-    //if (loginState is LoginStateInitial) await loginStateNotifier.trySilentLogin();
+    if (loginState is LoginStateInitial) await loginStateNotifier.trySilentLogin();
     if (_ref.read(loginStateNotifierProvider) is LoginStateSuccess) return '/';
     return null;
   }

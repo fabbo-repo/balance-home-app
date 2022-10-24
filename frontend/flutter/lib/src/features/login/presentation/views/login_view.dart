@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
 import 'package:balance_home_app/src/core/widgets/password_text_field.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_button.dart';
