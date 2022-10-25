@@ -21,7 +21,6 @@ class AppInfoLoadingView extends ConsumerWidget {
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           List<Widget> children;
           if (snapshot.hasData && snapshot.data!) {
-            //context.go("/auth");
             children = [
               FutureBuilder<bool>(
                 future: oneSecond(),

@@ -5,14 +5,14 @@ import 'package:balance_home_app/src/features/auth/logic/providers/account_model
 import 'package:balance_home_app/src/features/login/data/models/credentials_model.dart';
 import 'package:balance_home_app/src/features/login/data/models/jwt_model.dart';
 import 'package:balance_home_app/src/features/login/data/repositories/jwt_repository.dart';
-import 'package:balance_home_app/src/features/login/logic/providers/login_state.dart';
+import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:ui' as ui;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class LoginStateNotifier extends StateNotifier<LoginState> {
+class LoginStateNotifier extends StateNotifier<AuthState> {
 
   final IJwtRepository _jwtRepository;
   final IAuthRepository _authRepository;
@@ -28,19 +28,19 @@ class LoginStateNotifier extends StateNotifier<LoginState> {
     _authRepository = authRepository,
     _accountModelStateNotifier = accountModelStateNotifier,
     _secureStorage = secureStorage ?? const FlutterSecureStorage(),
-    super(const LoginStateInitial());
+    super(const AuthStateInitial());
   
   Future<void> updateJwtAndAccount(CredentialsModel credentials) async {
-    state = const LoginStateLoading();
+    state = const AuthStateLoading();
     try {
       await _updateJwt(credentials);
       await _updateAccount();
-      state = const LoginStateSuccess();
+      state = const AuthStateSuccess();
     } catch (e) {
       if(e is UnauthorizedHttpException) {
-        state = LoginStateError(lookupAppLocalizations(ui.window.locale).wrongCredentials);
+        state = AuthStateError(lookupAppLocalizations(ui.window.locale).wrongCredentials);
       } else {
-        state = LoginStateError(lookupAppLocalizations(ui.window.locale).genericError);
+        state = AuthStateError(lookupAppLocalizations(ui.window.locale).genericError);
       }
     }
   }
@@ -56,7 +56,7 @@ class LoginStateNotifier extends StateNotifier<LoginState> {
         );
         await _refreshJwt(refreshJwt);
         await _updateAccount();
-        state = const LoginStateSuccess();
+        state = const AuthStateSuccess();
       } else {
         String? email = await _secureStorage.read(key: "email");
         String? password = await _secureStorage.read(key: "password");
@@ -67,7 +67,7 @@ class LoginStateNotifier extends StateNotifier<LoginState> {
           );
           await _updateJwt(credentials);
           await _updateAccount();
-          state = const LoginStateSuccess();
+          state = const AuthStateSuccess();
         }
       }
     } catch (e) {

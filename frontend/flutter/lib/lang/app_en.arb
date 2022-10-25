@@ -10,6 +10,7 @@
     "wrongVersion": "You are using a deprecated version, please upgrade to a more updated one",
     "wrongCredentials": "Wrong email or password",
     "genericError": "Something went wrong, please try again later",
+    "pageNotFound": "Page not found",
 
     "@_GENERIC":{},
     "version": "Version",

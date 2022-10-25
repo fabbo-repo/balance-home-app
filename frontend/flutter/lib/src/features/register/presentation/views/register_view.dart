@@ -6,63 +6,67 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegisterView extends ConsumerStatefulWidget {
-  const RegisterView({Key? key}) : super(key: key);
+
+  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final passwordController2 = TextEditingController();
+
+  RegisterView({Key? key}) : super(key: key);
 
   @override
   ConsumerState<RegisterView> createState() => _RegisterViewState();
 }
 
 class _RegisterViewState extends ConsumerState<RegisterView> {
-    
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController passwordController2 = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    //final _loginFormStateNotifierProvider = ref.watch(loginFormStateProvider).form;
-    //final _loginFormStateProvider = ref.read(loginFormStateProvider.notifier);
-    //final _loginStateNotifierProvider = ref.watch(loginStateNotifierProvider);
+    //final registerFormStateNotifierProvider = ref.watch(registerFormStateProvider).form;
+    //final registerFormStateProvider = ref.read(registerFormStateProvider.notifier);
+    //final registerStateNotifierProvider = ref.watch(registerStateNotifierProvider);
+    //final registerStateNotifier = ref.watch(loginStateNotifierProvider.notifier);
+    final appLocalizations = ref.read(appLocalizationsProvider);
     return Padding(
       padding: const EdgeInsets.all(10),
       child: SingleChildScrollView(
         child: Column(
           children: [
             SimpleTextField(
-              title: ref.read(appLocalizationsProvider).username,
-              controller: emailController,
-              onChanged: (email) {
-                //_loginFormStateProvider.setEmail(email);
+              title: appLocalizations.username,
+              controller: widget.usernameController,
+              onChanged: (username) {
+                //registerFormStateProvider.setUsername(username);
               },
-              //error: _loginFormStateNotifierProvider.email.errorMessage,
+              //error: registerFormStateNotifierProvider.username.errorMessage,
             ),
             SimpleTextField(
-              title: ref.read(appLocalizationsProvider).emailAddress,
-              controller: emailController,
+              title: appLocalizations.emailAddress,
+              controller: widget.emailController,
               onChanged: (email) {
-                //_loginFormStateProvider.setEmail(email);
+                //registerFormStateProvider.setEmail(email);
               },
-              //error: _loginFormStateNotifierProvider.email.errorMessage,
+              //error: registerFormStateNotifierProvider.email.errorMessage,
             ),
             PasswordTextField(
-              title: ref.read(appLocalizationsProvider).password,
-              controller: passwordController,
+              title: appLocalizations.password,
+              controller: widget.passwordController,
               onChanged: (password) {
-                //_loginFormStateProvider.setPassword(password);
+                //registerFormStateProvider.setPassword(password);
               },
-              //error: _loginFormStateNotifierProvider.password.errorMessage,
+              //error: registerFormStateNotifierProvider.password.errorMessage,
             ),
             PasswordTextField(
-              title: ref.read(appLocalizationsProvider).repeatPassword,
-              controller: passwordController,
-              onChanged: (password) {
-                //_loginFormStateProvider.setPassword(password);
+              title: appLocalizations.repeatPassword,
+              controller: widget.passwordController2,
+              onChanged: (password2) {
+                //registerFormStateProvider.setPassword2(password2);
               },
-              //error: _loginFormStateNotifierProvider.password.errorMessage,
+              //error: registerFormStateNotifierProvider.password2.errorMessage,
             ),
             Text(
-              //(_loginStateNotifierProvider is LoginStateError) ?
-              //(_loginStateNotifierProvider).error : 
+              //(registerStateNotifierProvider is RegisterStateError) ?
+              //(registerStateNotifierProvider).error : 
               "",
               style: const TextStyle(
                 color: Colors.red, 
@@ -74,18 +78,19 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
               width: 300,
               padding: const EdgeInsets.fromLTRB(10, 35, 10, 15),
               child:  SimpleTextButton(
-                enabled: true, //_loginFormStateNotifierProvider.isValid
-                  //&& !(_loginStateNotifierProvider is LoginStateLoading),
+                enabled: true, //registerFormStateNotifierProvider.isValid
+                  //&& !(registerStateNotifierProvider is RegisterStateLoading),
                 onPressed: () async {
-                  //CredentialsModel credentials = _loginFormStateNotifierProvider.toModel();
-                  //await ref.read(loginStateNotifierProvider.notifier).updateJwtAndAccount(credentials);
-                  //if (_loginStateNotifierProvider is LoginStateSuccess) {
-                  //  context.go("/");
+                  //RegisterModel registration = registerFormStateNotifierProvider.toModel();
+                  //await registerStateNotifier.registerUser(registration);
+                  //if (registerStateNotifierProvider is RegisterStateSuccess) {
+                  //  // Retry login
+                  //  context.go("/auth");
                   //}
                 }, 
-                child: //_loginStateNotifierProvider is LoginStateLoading ?
+                child: //registerStateNotifierProvider is RegisterStateLoading ?
                   //CircularProgressIndicator() : 
-                  Text(ref.read(appLocalizationsProvider).register)
+                  Text(appLocalizations.register)
               )
             ),
           ],

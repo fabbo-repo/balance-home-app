@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:balance_home_app/src/core/env/environment_config.dart';
-import 'package:balance_home_app/src/core/exceptions/http_exceptions.dart';
+import 'package:balance_home_app/src/core/services/api_contract.dart';
+import 'package:balance_home_app/src/core/services/request_error_handler_libw.dart';
+import 'package:balance_home_app/src/features/login/data/models/credentials_model.dart';
 import 'package:balance_home_app/src/features/login/data/models/jwt_model.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages, implementation_imports
 import 'package:http_parser/src/media_type.dart';
@@ -16,13 +19,21 @@ class HttpService {
   final http.Client _client;
 
   JwtModel? _jwtModel;
+  
+  final FlutterSecureStorage _secureStorage;
+
+  final RequestErrorHandlerLibW _requestErrorHandler;
 
   /// Creates an [HttpService].
   ///
   /// The optional [http.CLient] argument is added for testing purposes.
   HttpService({
-    http.Client? client
-  }) : _client = client ?? http.Client();
+    http.Client? client,
+    FlutterSecureStorage? secureStorage,
+    RequestErrorHandlerLibW? requestErrorHandler
+  }) : _client = client ?? http.Client(),
+    _secureStorage = secureStorage ?? const FlutterSecureStorage(),
+    _requestErrorHandler = requestErrorHandler ?? RequestErrorHandlerLibW();
 
   /// Gets the base url of the server using environment variables.
   String baseUrl = EnvironmentConfig.apiUrl;
@@ -32,90 +43,134 @@ class HttpService {
     Map<String, String> headers = {
       "Content-Type": ContentType.json.toString()
     };
-    if (_jwtModel != null) {
-      headers["Authorization"] = "Bearer ${_jwtModel!.access}";
-    }
+    if (_jwtModel != null) headers["Authorization"] = "Bearer ${_jwtModel!.access}";
     return headers;
   }
 
   /// Sends a [GET] request to [baseUrl]/[subPath].
   Future<HttpResponse> sendGetRequest(String subPath) async {
-    HttpResponse response = _createHttpResponse(
-      await _client.get(
-        Uri.parse("$baseUrl/$subPath"), 
-        headers: getHeaders()
-      )
-    );
-    return response;
+    try {
+      HttpResponse response = _createHttpResponse(
+        await _client.get(
+          Uri.parse("$baseUrl/$subPath"), 
+          headers: getHeaders()
+        )
+      );
+      if (await _shouldRepeatResponse(response)) {
+        // Recursive call
+        return await sendGetRequest(subPath);
+      }
+      return response;
+    } catch (_) {
+      _requestErrorHandler.goToErrorPage();
+      return HttpResponse(500, {});
+    }
   }
 
   /// Sends a `POST` request to `baseUrl`/`subPath` with `body` as the content.
-  Future<HttpResponse> sendPostRequest(
-    String subPath,
-    Map<String, dynamic> body,
-  ) async {
-    HttpResponse response = _createHttpResponse(
-      await _client.post(
-        Uri.parse("$baseUrl/$subPath"),
-        headers: getHeaders(), 
-        body: jsonEncode(body)
-      )
-    );
-    return response;
+  Future<HttpResponse> sendPostRequest(String subPath, Map<String, dynamic> body) async {
+    try {
+      HttpResponse response = _createHttpResponse(
+        await _client.post(
+          Uri.parse("$baseUrl/$subPath"),
+          headers: getHeaders(), 
+          body: jsonEncode(body)
+        )
+      );
+      if (await _shouldRepeatResponse(response)) {
+        // Recursive call
+        return await sendGetRequest(subPath);
+      }
+      return response;
+    } catch (e) {
+      _requestErrorHandler.goToErrorPage();
+      return HttpResponse(500, {});
+    }
   }
 
   /// Sends a `POST` multipart request to upload the image located at `filePath` to `baseUrl`/`subPath`.
-  Future<http.StreamedResponse> sendPostImageRequest(
-    String subPath,
-    String filePath,
-    String type,
-  ) async {
-    http.MultipartRequest request =
-        http.MultipartRequest('POST', Uri.parse("$baseUrl/$subPath"));
-    List<int> bytes = await File(filePath).readAsBytes();
-    http.MultipartFile httpImage = http.MultipartFile.fromBytes(
-        'upload_file', bytes,
-        contentType: MediaType.parse(type),
-        filename: 'upload_file_${filePath.hashCode}.$type');
-    //request.headers["Authorization"] =
-    //    "Bearer ${await GetIt.I.get<UserState>().authService.getIdToken()}";
-    request.files.add(httpImage);
-    return await _client.send(request);
+  Future<HttpResponse> sendPostImageRequest(String subPath, String filePath, String type) async {
+    try {
+      http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse("$baseUrl/$subPath"));
+      List<int> bytes = await File(filePath).readAsBytes();
+      http.MultipartFile httpImage = http.MultipartFile.fromBytes(
+          'upload_file', bytes,
+          contentType: MediaType.parse(type),
+          filename: 'upload_file_${filePath.hashCode}.$type');
+      if (_jwtModel != null) request.headers["Authorization"] = "Bearer ${_jwtModel!.access}";
+      request.files.add(httpImage);
+      HttpResponse response = HttpResponse((await _client.send(request)).statusCode, {});
+      if (await _shouldRepeatResponse(response)) {
+        // Recursive call
+        return await sendPostImageRequest(subPath, filePath, type);
+      }
+      return response;
+    } catch (e) {
+      _requestErrorHandler.goToErrorPage();
+      return HttpResponse(500, {});
+    }
   }
 
   /// Sends a `PUT` request to `baseUrl`/`subPath` and with `body` as content.
   Future<HttpResponse> sendPutRequest(String subPath, Map<String, dynamic> body) async {
-    HttpResponse response = _createHttpResponse(
-      await _client.put(
-        Uri.parse("$baseUrl/$subPath"),
-        headers: getHeaders(), 
-        body: jsonEncode(body)
-      )
-    );
-    return response;
+    try {
+      HttpResponse response = _createHttpResponse(
+        await _client.put(
+          Uri.parse("$baseUrl/$subPath"),
+          headers: getHeaders(), 
+          body: jsonEncode(body)
+        )
+      );
+      if (await _shouldRepeatResponse(response)) {
+        // Recursive call
+        return await sendPutRequest(subPath, body);
+      }
+      return response;
+    } catch (_) {
+      _requestErrorHandler.goToErrorPage();
+      return HttpResponse(500, {});
+    }
   }
 
   /// Sends a `PATCH` request to `baseUrl`/`subPath` and with `body` as content.
   Future<HttpResponse> sendPatchRequest(String subPath, Map<String, dynamic> body) async {
-    HttpResponse response = _createHttpResponse(
-      await _client.patch(
-        Uri.parse("$baseUrl/$subPath"),
-        headers: getHeaders(), 
-        body: jsonEncode(body)
-      )
-    );
-    return response;
+    try {
+      HttpResponse response = _createHttpResponse(
+        await _client.patch(
+          Uri.parse("$baseUrl/$subPath"),
+          headers: getHeaders(), 
+          body: jsonEncode(body)
+        )
+      );
+      if (await _shouldRepeatResponse(response)) {
+        // Recursive call
+        return await sendPatchRequest(subPath, body);
+      }
+      return response;
+    } catch (_) {
+      _requestErrorHandler.goToErrorPage();
+      return HttpResponse(500, {});
+    }
   }
 
   /// Sends a `DEL` request to `baseUrl`/`subPath`.
   Future<HttpResponse> sendDelRequest(String subPath) async {
-    HttpResponse response = _createHttpResponse(
-      await _client.delete(
-        Uri.parse("$baseUrl/$subPath"), 
-        headers: getHeaders()
-      )
-    );
-    return response;
+    try {
+      HttpResponse response = _createHttpResponse(
+        await _client.delete(
+          Uri.parse("$baseUrl/$subPath"), 
+          headers: getHeaders()
+        )
+      );
+      if (await _shouldRepeatResponse(response)) {
+        // Recursive call
+        return await sendDelRequest(subPath);
+      }
+      return response;
+    } catch (_) {
+      _requestErrorHandler.goToErrorPage();
+      return HttpResponse(500, {});
+    }
   }
 
   HttpResponse _createHttpResponse(http.Response response) {
@@ -123,16 +178,50 @@ class HttpService {
         json.decode(const Utf8Decoder().convert(response.bodyBytes))
             as Map<String, dynamic>;
     HttpResponse httpResponse = HttpResponse(response.statusCode, jsonResponse);
-    _checkStatusCode(httpResponse);
     return httpResponse;
   }
 
-  void _checkStatusCode(HttpResponse response) {
+  Future<bool> _shouldRepeatResponse(HttpResponse response) async {
     if (response.statusCode == 401) {
-      throw UnauthorizedHttpException(response.content);
-    } else if (response.statusCode == 500) {
-      throw BadRequestHttpException(response.content);
-    }
+      if (_jwtModel != null) {
+        // Try to refresh token in case 401 response
+        HttpResponse newResponse = _createHttpResponse(
+          await _client.post(
+            Uri.parse("$baseUrl/${APIContract.jwtRefresh}"),
+            headers: getHeaders(), 
+            body: jsonEncode({"refresh": _jwtModel!.refresh})));
+        // If 401 is recived it should be tried with stored credentials
+        if (newResponse.statusCode == 401) {
+          String? email = await _secureStorage.read(key: "email");
+          String? password = await _secureStorage.read(key: "password");
+          if (email != null && password != null) {
+            newResponse = _createHttpResponse(
+              await _client.post(
+                Uri.parse("$baseUrl/${APIContract.jwtRefresh}"),
+                headers: getHeaders(), 
+                body: jsonEncode(CredentialsModel(
+                    email: email,
+                    password: password
+                  ).toJson())));
+            if (newResponse.statusCode != 401) {
+              // Update current JWT
+              _jwtModel = JwtModel.fromJson(newResponse.content);
+              return true;
+            }
+          }
+        } else {
+          // Update current JWT
+          _jwtModel = JwtModel(
+            access: newResponse.content["access"], 
+            refresh: _jwtModel!.refresh
+          );
+          return true;
+        }
+      }
+    } 
+    if (response.statusCode / 10 == 20) return false;
+    _requestErrorHandler.goToErrorPage();
+    return false;
   }
 
   void setJwtModel(JwtModel jwt) {
