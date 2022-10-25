@@ -40,11 +40,7 @@ class Dev(Configuration):
     PORT = get_env('APP_PORT', '8000')
     BASE_URL = DOMAIN + ':' + PORT
 
-    # Quick-start development settings - unsuitable for production
-    # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-    # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = 'django-insecure-5bmqrmx9io3#onh8t9am()96q82!npe9&-m57c+3&6=4b2u-u-'
+    SECRET_KEY = os.urandom(34).hex()
 
     # True by default but have the option to set it false with an environment variable
     DEBUG = get_bool_env('APP_DEBUG', True)
@@ -266,7 +262,7 @@ class Prod(Dev):
     
     DOMAIN = get_env('APP_DOMAIN', '127.0.0.1')
     PORT = get_env('APP_PORT', '80')
-    #SECRET_KEY = get_env('DJANGO_SECRET_KEY', os.urandom(20).hex())
+    SECRET_KEY = get_env('APP_SECRET_KEY', os.urandom(34).hex())
     SECRET_KEY = os.urandom(20).hex()
     ALLOWED_HOSTS = get_list_env('APP_ALLOWED_HOSTS', 
         [ "localhost", "0.0.0.0" ])
