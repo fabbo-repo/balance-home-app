@@ -26,5 +26,10 @@
     "forgotPassword": "Forgot password?",
     "needEmail": "Email needed",
     "emailNotValid": "Email is not valid",
-    "needPassword": "Password needed"
+    "needUsername": "Username needed",
+    "usernameNotValid": "Only alphanumeric characters are allowed for username",
+    "usernameMaxSize": "Maximum 15 characters for username",
+    "needPassword": "Password needed",
+    "needRepeatedPassword": "It is necessary to repeat the password",
+    "passwordNotMatch": "Passwords do not match"
 }

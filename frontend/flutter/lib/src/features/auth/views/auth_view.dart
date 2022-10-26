@@ -1,14 +1,19 @@
+import 'package:balance_home_app/src/app.dart';
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
 import 'package:balance_home_app/src/features/login/presentation/views/login_view.dart';
 import 'package:balance_home_app/src/features/register/presentation/views/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:language_picker/language_picker_dropdown.dart';
+import 'package:language_picker/languages.dart';
+import 'dart:ui' as ui;
 
 class AuthView extends ConsumerWidget {
   const AuthView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final appLocalizations = ref.watch(appLocalizationsProvider);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -20,6 +25,20 @@ class AuthView extends ConsumerWidget {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                color: Colors.grey[300],
+                padding: const EdgeInsets.all(10.0),
+                constraints: const BoxConstraints(maxWidth: 180),
+                child: LanguagePickerDropdown(
+                  onValuePicked: (Language language) {
+                    Locale locale = Locale(language.isoCode);
+                    ref.read(localeStateNotifierProvider.notifier).setLocale(locale);
+                  }
+                ),
+              )
+            ),
             Container(
               alignment: Alignment.center,
               padding: const EdgeInsets.fromLTRB(40, 70, 40, 40),
@@ -58,7 +77,7 @@ class AuthView extends ConsumerWidget {
                       tabs: [
                         Tab(
                           child: Text(
-                            ref.read(appLocalizationsProvider).signIn,
+                            appLocalizations.signIn,
                             style: const TextStyle(
                               color: Color.fromARGB(255, 27, 27, 27),
                               fontSize: 20
@@ -67,7 +86,7 @@ class AuthView extends ConsumerWidget {
                         ),
                         Tab(
                           child: Text(
-                            ref.read(appLocalizationsProvider).register,
+                            appLocalizations.register,
                             style: const TextStyle(
                               color: Color.fromARGB(255, 27, 27, 27),
                               fontSize: 20

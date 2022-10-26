@@ -10,52 +10,32 @@ class LoginFormStateProvider extends StateNotifier<LoginFormState> {
 
   void setEmail(String email) {
     final appLocalizations = lookupAppLocalizations(ui.window.locale);
-    LoginForm form = state.form.copyWith(
-      email: StringField(value: email) 
-    );
+    LoginForm form = state.form.copyWith(email: StringField(value: email));
     late StringField emailField;
-    if (email.isNotEmpty) {
-      final isEmailValid = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+"
-      ).hasMatch(email);
-      if (isEmailValid) {
-        emailField = form.email.copyWith(
-          isValid: true, 
-          errorMessage: ""
-        );
-      } else {
-        emailField = form.email.copyWith(
-          isValid: false, 
-          errorMessage: appLocalizations.emailNotValid);
-      }
-    } else {
-      emailField = form.email.copyWith(
-        isValid: false, 
+    if (email.isEmpty) {
+      emailField = form.email.copyWith(isValid: false, 
         errorMessage: appLocalizations.needEmail
       );
+    } else if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email)) {
+      emailField = form.email.copyWith(isValid: false, 
+        errorMessage: appLocalizations.emailNotValid
+      );
+    } else {
+      emailField = form.email.copyWith(isValid: true, errorMessage: "");
     }
     state = state.copyWith(form: form.copyWith(email: emailField));
   }
 
   void setPassword(String password) {
     final appLocalizations = lookupAppLocalizations(ui.window.locale);
-    LoginForm form = state.form.copyWith(
-      password: StringField(value: password) 
-    );
+    LoginForm form = state.form.copyWith(password: StringField(value: password));
     late StringField passwordField;
-    if (password.isNotEmpty) {
-      passwordField = form.password.copyWith(
-        isValid: true, 
-        errorMessage: ""
-      );
+    if (password.isEmpty) {
+      passwordField = form.password.copyWith(isValid: false, 
+        errorMessage: appLocalizations.needPassword);
     } else {
-      passwordField = form.password.copyWith(
-        isValid: false, 
-        errorMessage: appLocalizations.needPassword
-      );
+      passwordField = form.password.copyWith(isValid: true, errorMessage: "");
     }
-    state = state.copyWith(form: form.copyWith(
-      password: passwordField
-    ));
+    state = state.copyWith(form: form.copyWith(password: passwordField));
   }
 }

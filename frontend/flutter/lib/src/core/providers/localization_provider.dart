@@ -1,3 +1,5 @@
+import 'package:balance_home_app/src/core/providers/locale_state.dart';
+import 'package:balance_home_app/src/core/providers/locale_state_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,4 +34,10 @@ final appLocalizationsProvider = Provider<AppLocalizations>(
     // Return the state
     return ref.state;
   }
+);
+
+/// StateNotifier
+final localeStateNotifierProvider = StateNotifierProvider<LocaleStateNotifier, LocaleState>(
+  (StateNotifierProviderRef<LocaleStateNotifier, LocaleState> ref) => 
+    LocaleStateNotifier()
 );
