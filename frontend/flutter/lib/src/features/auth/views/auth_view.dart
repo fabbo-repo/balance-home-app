@@ -1,19 +1,33 @@
-import 'package:balance_home_app/src/app.dart';
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/core/views/language_picker_dropdown.dart';
 import 'package:balance_home_app/src/features/login/presentation/views/login_view.dart';
 import 'package:balance_home_app/src/features/register/presentation/views/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:language_picker/language_picker_dropdown.dart';
 import 'package:language_picker/languages.dart';
-import 'dart:ui' as ui;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AuthView extends ConsumerWidget {
   const AuthView({super.key});
 
+  String _getLangName(String code, AppLocalizations appLocalizations) {
+    switch (code) {
+      case "es":
+        return appLocalizations.spanish;
+      case "en":
+        return appLocalizations.english;
+      case "fr":
+        return appLocalizations.french;
+      default:
+        return appLocalizations.unknown;
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appLocalizations = ref.watch(appLocalizationsProvider);
+    final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
+    final localizationStateNotifier = ref.read(localizationStateNotifierProvider.notifier);
+    
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -27,17 +41,13 @@ class AuthView extends ConsumerWidget {
           children: [
             Align(
               alignment: Alignment.topRight,
-              child: Container(
-                color: Colors.grey[300],
-                padding: const EdgeInsets.all(10.0),
-                constraints: const BoxConstraints(maxWidth: 180),
-                child: LanguagePickerDropdown(
-                  onValuePicked: (Language language) {
-                    Locale locale = Locale(language.isoCode);
-                    ref.read(localeStateNotifierProvider.notifier).setLocale(locale);
-                  }
-                ),
-              )
+              child: CustomLanguagePickerDropdown(
+                appLocalizations: appLocalizations,
+                onValuePicked: (Language language) {
+                  Locale locale = Locale(language.isoCode);
+                  localizationStateNotifier.setLocalization(locale);
+                }
+              ),
             ),
             Container(
               alignment: Alignment.center,
@@ -46,7 +56,7 @@ class AuthView extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    ref.read(appLocalizationsProvider).appTitle1,
+                    appLocalizations.appTitle1,
                     style: const TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
@@ -55,7 +65,7 @@ class AuthView extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    ref.read(appLocalizationsProvider).appTitle2,
+                    appLocalizations.appTitle2,
                     style: const TextStyle(
                       color: Colors.green,
                       fontWeight: FontWeight.bold,

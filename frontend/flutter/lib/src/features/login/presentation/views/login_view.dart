@@ -27,7 +27,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
     final loginFormState = ref.read(loginFormStateProvider.notifier);
     final loginState = ref.watch(loginStateNotifierProvider);
     final loginStateNotifier = ref.watch(loginStateNotifierProvider.notifier);
-    final appLocalizations = ref.read(appLocalizationsProvider);
+    final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
     return Padding(
       padding: const EdgeInsets.all(10),
       child: SingleChildScrollView(
@@ -51,7 +51,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
             ),
             Text(
               (loginState is AuthStateError) ?
-              (loginState).error : "",
+              loginState.error : "",
               style: const TextStyle(
                 color: Colors.red, 
                 fontSize: 14

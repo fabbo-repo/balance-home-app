@@ -12,11 +12,12 @@ class ErrorView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
     return Scaffold(
       body: Center(
         child: (location == '/server-error') ? 
-        Text(ref.read(appLocalizationsProvider).genericError)
-        : Text(ref.read(appLocalizationsProvider).pageNotFound),
+        Text(appLocalizations.genericError)
+        : Text(appLocalizations.pageNotFound),
       ),
     );
   }

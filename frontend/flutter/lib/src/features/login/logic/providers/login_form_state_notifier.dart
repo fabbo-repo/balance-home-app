@@ -2,14 +2,16 @@ import 'package:balance_home_app/src/core/forms/string_field.dart';
 import 'package:balance_home_app/src/features/login/presentation/forms/login_form.dart';
 import 'package:balance_home_app/src/features/login/presentation/forms/login_form_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'dart:ui' as ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoginFormStateProvider extends StateNotifier<LoginFormState> {
-  LoginFormStateProvider() : super(LoginFormState(LoginForm.empty()));
+
+  final AppLocalizations localizations;
+
+  LoginFormStateProvider(this.localizations) : super(LoginFormState(LoginForm.empty()));
 
   void setEmail(String email) {
-    final appLocalizations = lookupAppLocalizations(ui.window.locale);
+    final appLocalizations = localizations;
     LoginForm form = state.form.copyWith(email: StringField(value: email));
     late StringField emailField;
     if (email.isEmpty) {
@@ -27,7 +29,7 @@ class LoginFormStateProvider extends StateNotifier<LoginFormState> {
   }
 
   void setPassword(String password) {
-    final appLocalizations = lookupAppLocalizations(ui.window.locale);
+    final appLocalizations = localizations;
     LoginForm form = state.form.copyWith(password: StringField(value: password));
     late StringField passwordField;
     if (password.isEmpty) {

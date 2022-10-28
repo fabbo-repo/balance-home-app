@@ -1,4 +1,10 @@
 {
+    "@_LANGUAGE_NAMES":{},
+    "english": "English",
+    "french": "French",
+    "spanish": "Spanish",
+    "unknown": "Unknown",
+
     "@_TITLE":{},
     "appTitle": "BalHom",
     "appTitle1": "Bal",

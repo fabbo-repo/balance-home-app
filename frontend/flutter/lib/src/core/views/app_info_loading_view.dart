@@ -19,6 +19,7 @@ class AppInfoLoadingView extends ConsumerWidget {
       body: FutureBuilder<bool>(
         future: isLastVersion(ref),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
           List<Widget> children;
           if (snapshot.hasData && snapshot.data!) {
             children = [
@@ -37,7 +38,7 @@ class AppInfoLoadingView extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 16),
                         child: Text(
-                          "${ref.read(appLocalizationsProvider).version} "
+                          "${appLocalizations.version} "
                           "${ref.read(packageInfoStateNotifierProvider.notifier).getPackageInfo()!.version}"
                         ),
                       ),
@@ -55,7 +56,7 @@ class AppInfoLoadingView extends ConsumerWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text(errorMessage ?? ref.read(appLocalizationsProvider).genericError),
+                child: Text(errorMessage ?? appLocalizations.genericError),
               ),
             ];
           } else {
@@ -82,17 +83,18 @@ class AppInfoLoadingView extends ConsumerWidget {
   }
 
   Future<bool> isLastVersion(WidgetRef ref) async {
+    final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
     try {
       final packageInfo = await PackageInfo.fromPlatform();
       final response = await ref.read(httpServiceProvider).sendGetRequest(APIContract.frontendVersion);
       if (response.content["version"] != packageInfo.version) {
-        errorMessage = ref.read(appLocalizationsProvider).wrongVersion;
+        errorMessage = appLocalizations.wrongVersion;
         return false;
       }
       // Update Package Info State provider
       ref.read(packageInfoStateNotifierProvider.notifier).setPackageInfo(packageInfo);
     } catch (e) {
-      errorMessage = ref.read(appLocalizationsProvider).badRequest;
+      errorMessage = appLocalizations.badRequest;
     }
     return true;
   }

@@ -1,27 +1,29 @@
 import 'package:balance_home_app/src/core/forms/string_field.dart';
-import 'package:balance_home_app/src/features/login/presentation/forms/login_form.dart';
 import 'package:balance_home_app/src/features/register/presentation/forms/register_form.dart';
 import 'package:balance_home_app/src/features/register/presentation/forms/register_form_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:ui' as ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ReisterFormStateProvider extends StateNotifier<RegisterFormState> {
-  ReisterFormStateProvider() : super(RegisterFormState(RegisterForm.empty()));
+class RegisterFormStateProvider extends StateNotifier<RegisterFormState> {
+
+  final AppLocalizations localizations;
+
+  RegisterFormStateProvider(this.localizations) : super(RegisterFormState(RegisterForm.empty()));
 
   void setUsername(String username) {
-    final appLocalizations = lookupAppLocalizations(ui.window.locale);
+    final appLocalizations = localizations;
     RegisterForm form = state.form.copyWith(username: StringField(value: username));
     late StringField usernameField;
     if (username.isEmpty) {
       usernameField = form.username.copyWith(isValid: false, 
         errorMessage: appLocalizations.needUsername
       );
-    } else if (username.length >= 15) {
+    } else if (username.length > 15) {
       usernameField = form.username.copyWith(isValid: false, 
         errorMessage: appLocalizations.usernameMaxSize
       );
-    } else if (!RegExp(r"^[a-zA-Z0-9]+").hasMatch(username)) {
+    } else if (!RegExp(r"^[A-Za-z0-9]+$").hasMatch(username)) {
       usernameField = form.username.copyWith(isValid: false, 
         errorMessage: appLocalizations.usernameNotValid
       );
@@ -32,7 +34,7 @@ class ReisterFormStateProvider extends StateNotifier<RegisterFormState> {
   }
 
   void setEmail(String email) {
-    final appLocalizations = lookupAppLocalizations(ui.window.locale);
+    final appLocalizations = localizations;
     RegisterForm form = state.form.copyWith(email: StringField(value: email));
     late StringField emailField;
     if (email.isEmpty) {
@@ -50,7 +52,7 @@ class ReisterFormStateProvider extends StateNotifier<RegisterFormState> {
   }
 
   void setPassword(String password) {
-    final appLocalizations = lookupAppLocalizations(ui.window.locale);
+    final appLocalizations = localizations;
     RegisterForm form = state.form.copyWith(password: StringField(value: password));
     late StringField passwordField;
     if (password.isEmpty) {
@@ -62,8 +64,8 @@ class ReisterFormStateProvider extends StateNotifier<RegisterFormState> {
     state = state.copyWith(form: form.copyWith(password: passwordField));
   }
   
-  void setRepeatPassword(String password2) {
-    final appLocalizations = lookupAppLocalizations(ui.window.locale);
+  void setPassword2(String password2) {
+    final appLocalizations = localizations;
     RegisterForm form = state.form.copyWith(password2: StringField(value: password2));
     late StringField password2Field;
     if (password2.isEmpty) {

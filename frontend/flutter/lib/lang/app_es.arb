@@ -1,7 +1,41 @@
 {
+    "@_LANGUAGE_NAMES":{},
+    "english": "Ingles",
+    "french": "Frances",
+    "spanish": "Español",
+    "unknown": "Desconocido",
+
     "@_TITLE":{},
     "appTitle": "BalHom",
-    
+    "appTitle1": "Bal",
+    "appTitle2": "Hom",
+
+    "@_APP_ERRORS":{},
+    "noInternet": "No se ha podido establece conexión a internet, revisa tu conexión e intentalo más tarde",
+    "badRequest": "Hubo un error de conexión con nuestros servicios, por favor intentalo más tarde",
+    "wrongVersion": "Estas usando una versión obsoleta, por favor actualiza a una más moderna",
+    "wrongCredentials": "Correo o contraseña incorrecta",
+    "genericError": "Algo fue mal, por favor intentalo más tarde",
+    "pageNotFound": "Página no encontrada",
+
+    "@_GENERIC":{},
+    "version": "Version",
+
     "@_AUTH":{},
-    "signIn": "Iniciar sesión"
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "signIn": "Iniciar sesión",
+    "username": "Nombre de usuario",
+    "emailAddress": "Dirección de correo",
+    "password": "Contraseña",
+    "repeatPassword": "Repetir contraseña",
+    "forgotPassword": "¿Olvidaste la contraseña?",
+    "needEmail": "Se necesita el correo electrónico",
+    "emailNotValid": "Correo electrónico no valido",
+    "needUsername": "Se necesita nombre de usuario",
+    "usernameNotValid": "Solo se aceptan letras o números para el nombre de usuario",
+    "usernameMaxSize": "Máximo 15 letras para el nombre de usuario",
+    "needPassword": "Se necesita contraseña",
+    "needRepeatedPassword": "Repite la contraseña",
+    "passwordNotMatch": "Las contraseñas no coinciden"
 }
