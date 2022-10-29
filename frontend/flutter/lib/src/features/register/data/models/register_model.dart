@@ -9,7 +9,9 @@ class RegisterModel extends Equatable {
   final String username;
   final String email;
   final String language;
+  @JsonKey(name: 'inv_code')
   final String invCode;
+  @JsonKey(name: 'pref_coin_type')
   final String prefCoinType;
   final String password;
   final String password2;

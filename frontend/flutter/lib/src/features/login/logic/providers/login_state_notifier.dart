@@ -9,25 +9,23 @@ import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.da
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'dart:ui' as ui;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginStateNotifier extends StateNotifier<AuthState> {
 
-  final IJwtRepository _jwtRepository;
-  final IAuthRepository _authRepository;
-  final AccountModelStateNotifier _accountModelStateNotifier;
-  final FlutterSecureStorage _secureStorage;
+  final IJwtRepository jwtRepository;
+  final IAuthRepository authRepository;
+  final AccountModelStateNotifier accountModelStateNotifier;
+  final FlutterSecureStorage secureStorage;
+  final AppLocalizations localizations;
 
   LoginStateNotifier({
-    required IJwtRepository jwtRepository,
-    required IAuthRepository authRepository,
-    required AccountModelStateNotifier accountModelStateNotifier,
+    required this.jwtRepository,
+    required this.authRepository,
+    required this.accountModelStateNotifier,
+    required this.localizations,
     FlutterSecureStorage? secureStorage
-  }) : _jwtRepository = jwtRepository,
-    _authRepository = authRepository,
-    _accountModelStateNotifier = accountModelStateNotifier,
-    _secureStorage = secureStorage ?? const FlutterSecureStorage(),
+  }) : secureStorage = secureStorage ?? const FlutterSecureStorage(),
     super(const AuthStateInitial());
   
   Future<void> updateJwtAndAccount(CredentialsModel credentials) async {
@@ -38,9 +36,9 @@ class LoginStateNotifier extends StateNotifier<AuthState> {
       state = const AuthStateSuccess();
     } catch (e) {
       if(e is UnauthorizedHttpException) {
-        state = AuthStateError(lookupAppLocalizations(ui.window.locale).wrongCredentials);
+        state = AuthStateError(localizations.wrongCredentials);
       } else {
-        state = AuthStateError(lookupAppLocalizations(ui.window.locale).genericError);
+        state = AuthStateError(localizations.genericError);
       }
     }
   }
@@ -48,7 +46,7 @@ class LoginStateNotifier extends StateNotifier<AuthState> {
   Future<void> trySilentLogin() async {
     try {
       // Read jwt refresh token
-      String? refresh = await _secureStorage.read(key: "refresh_token");
+      String? refresh = await secureStorage.read(key: "refresh_token");
       if (refresh != null) {
         JwtModel refreshJwt = JwtModel(
           access: '', 
@@ -58,8 +56,8 @@ class LoginStateNotifier extends StateNotifier<AuthState> {
         await _updateAccount();
         state = const AuthStateSuccess();
       } else {
-        String? email = await _secureStorage.read(key: "email");
-        String? password = await _secureStorage.read(key: "password");
+        String? email = await secureStorage.read(key: "email");
+        String? password = await secureStorage.read(key: "password");
         if (email != null && password != null) {
           CredentialsModel credentials = CredentialsModel(
             email: email,
@@ -76,19 +74,19 @@ class LoginStateNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> _updateJwt(CredentialsModel credentials) async {
-    final jwt = await _jwtRepository.getJwt(credentials);
-    await _secureStorage.write(key: "email", value: credentials.email);
-    await _secureStorage.write(key: "password", value: credentials.password);
-    await _secureStorage.write(key: "refresh_token", value: jwt.refresh);
+    final jwt = await jwtRepository.getJwt(credentials);
+    await secureStorage.write(key: "email", value: credentials.email);
+    await secureStorage.write(key: "password", value: credentials.password);
+    await secureStorage.write(key: "refresh_token", value: jwt.refresh);
   }
 
   Future<void> _refreshJwt(JwtModel refreshJwt) async {
-    final jwt = await _jwtRepository.refreshJwt(refreshJwt);
-    await _secureStorage.write(key: "refresh_token", value: jwt.refresh);
+    final jwt = await jwtRepository.refreshJwt(refreshJwt);
+    await secureStorage.write(key: "refresh_token", value: jwt.refresh);
   }
 
   Future<void> _updateAccount() async {
-    AccountModel account = await _authRepository.getAccount();
-    _accountModelStateNotifier.setAccountModel(account);
+    AccountModel account = await authRepository.getAccount();
+    accountModelStateNotifier.setAccountModel(account);
   }
 }

@@ -19,12 +19,15 @@ final loginFormStateProvider = StateNotifierProvider<LoginFormStateProvider, Log
 
 /// StateNotifier
 final loginStateNotifierProvider = StateNotifierProvider<LoginStateNotifier, AuthState>(
-  (StateNotifierProviderRef<LoginStateNotifier, AuthState> ref) => 
-  LoginStateNotifier(
-    jwtRepository: ref.watch(jwtRepositoryProvider),
-    authRepository: ref.watch(authRepositoryProvider),
-    accountModelStateNotifier: ref.watch(accountStateNotifierProvider.notifier)
-  )
+  (StateNotifierProviderRef<LoginStateNotifier, AuthState> ref) {
+    AppLocalizations localizations = ref.watch(localizationStateNotifierProvider).localization;
+    return LoginStateNotifier(
+      localizations: localizations,
+      jwtRepository: ref.watch(jwtRepositoryProvider),
+      authRepository: ref.watch(authRepositoryProvider),
+      accountModelStateNotifier: ref.watch(accountStateNotifierProvider.notifier)
+    );
+  }
 );
 
 /// JWT Repository

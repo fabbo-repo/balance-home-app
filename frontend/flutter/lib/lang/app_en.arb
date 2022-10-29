@@ -29,6 +29,8 @@
     "emailAddress": "Email address",
     "password": "Password",
     "repeatPassword": "Repeat password",
+    "invitationCode": "Invitation code",
+    "coinType": "Coin type",
     "forgotPassword": "Forgot password?",
     "needEmail": "Email needed",
     "emailNotValid": "Email is not valid",
@@ -37,5 +39,11 @@
     "usernameMaxSize": "Maximum 15 characters for username",
     "needPassword": "Password needed",
     "needRepeatedPassword": "It is necessary to repeat the password",
-    "passwordNotMatch": "Passwords do not match"
+    "passwordNotMatch": "Passwords do not match",
+    "shortPassword": "Short password, at least 8 characters required",
+    "numericPassword": "Password cannot contain only numbers",
+    "tooCommonPassword": "Too common password",
+    "needInvitationCode": "Invitation code needed",
+    "invitationCodeNotValid": "Invitation code not valid",
+    "needCoinType": "Coin type needed"
 }

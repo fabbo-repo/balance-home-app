@@ -5,23 +5,9 @@ import 'package:balance_home_app/src/features/register/presentation/views/regist
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:language_picker/languages.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AuthView extends ConsumerWidget {
   const AuthView({super.key});
-
-  String _getLangName(String code, AppLocalizations appLocalizations) {
-    switch (code) {
-      case "es":
-        return appLocalizations.spanish;
-      case "en":
-        return appLocalizations.english;
-      case "fr":
-        return appLocalizations.french;
-      default:
-        return appLocalizations.unknown;
-    }
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

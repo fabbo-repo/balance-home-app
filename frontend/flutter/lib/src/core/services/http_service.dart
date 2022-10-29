@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:balance_home_app/src/core/env/environment_config.dart';
+import 'package:balance_home_app/src/core/exceptions/http_exceptions.dart';
 import 'package:balance_home_app/src/core/services/api_contract.dart';
 import 'package:balance_home_app/src/core/services/request_error_handler_libw.dart';
 import 'package:balance_home_app/src/features/login/data/models/credentials_model.dart';
@@ -41,7 +42,8 @@ class HttpService {
   /// Returns the necessary content and authentication headers for all server requests.
   Map<String, String> getHeaders() {
     Map<String, String> headers = {
-      "Content-Type": ContentType.json.toString()
+      "Content-Type": ContentType.json.toString(),
+      "Accept-Language": "en"
     };
     if (_jwtModel != null) headers["Authorization"] = "Bearer ${_jwtModel!.access}";
     return headers;
@@ -61,7 +63,8 @@ class HttpService {
         return await sendGetRequest(subPath);
       }
       return response;
-    } catch (_) {
+    } catch (e) {
+      if (e is BadRequestHttpException) rethrow;
       _requestErrorHandler.goToErrorPage();
       return HttpResponse(500, {});
     }
@@ -83,6 +86,7 @@ class HttpService {
       }
       return response;
     } catch (e) {
+      if (e is BadRequestHttpException) rethrow;
       _requestErrorHandler.goToErrorPage();
       return HttpResponse(500, {});
     }
@@ -106,6 +110,7 @@ class HttpService {
       }
       return response;
     } catch (e) {
+      if (e is BadRequestHttpException) rethrow;
       _requestErrorHandler.goToErrorPage();
       return HttpResponse(500, {});
     }
@@ -126,7 +131,8 @@ class HttpService {
         return await sendPutRequest(subPath, body);
       }
       return response;
-    } catch (_) {
+    } catch (e) {
+      if (e is BadRequestHttpException) rethrow;
       _requestErrorHandler.goToErrorPage();
       return HttpResponse(500, {});
     }
@@ -147,7 +153,8 @@ class HttpService {
         return await sendPatchRequest(subPath, body);
       }
       return response;
-    } catch (_) {
+    } catch (e) {
+      if (e is BadRequestHttpException) rethrow;
       _requestErrorHandler.goToErrorPage();
       return HttpResponse(500, {});
     }
@@ -167,7 +174,8 @@ class HttpService {
         return await sendDelRequest(subPath);
       }
       return response;
-    } catch (_) {
+    } catch (e) {
+      if (e is BadRequestHttpException) rethrow;
       _requestErrorHandler.goToErrorPage();
       return HttpResponse(500, {});
     }
@@ -220,6 +228,7 @@ class HttpService {
       }
     } 
     if (response.statusCode / 10 == 20) return false;
+    if (response.statusCode == 400) throw BadRequestHttpException(response.content);
     _requestErrorHandler.goToErrorPage();
     return false;
   }

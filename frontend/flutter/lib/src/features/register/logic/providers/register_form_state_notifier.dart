@@ -2,7 +2,6 @@ import 'package:balance_home_app/src/core/forms/string_field.dart';
 import 'package:balance_home_app/src/features/register/presentation/forms/register_form.dart';
 import 'package:balance_home_app/src/features/register/presentation/forms/register_form_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'dart:ui' as ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegisterFormStateProvider extends StateNotifier<RegisterFormState> {
@@ -58,6 +57,12 @@ class RegisterFormStateProvider extends StateNotifier<RegisterFormState> {
     if (password.isEmpty) {
       passwordField = form.password.copyWith(isValid: false, 
         errorMessage: appLocalizations.needPassword);
+    } else if (password.length < 8) {
+      passwordField = form.password.copyWith(isValid: false, 
+        errorMessage: appLocalizations.shortPassword);
+    } else if (RegExp(r"^[1-9]*$").hasMatch(password)) {
+      passwordField = form.password.copyWith(isValid: false, 
+        errorMessage: appLocalizations.numericPassword);
     } else {
       passwordField = form.password.copyWith(isValid: true, errorMessage: "");
     }
@@ -77,6 +82,36 @@ class RegisterFormStateProvider extends StateNotifier<RegisterFormState> {
     } else {
       password2Field = form.password2.copyWith(isValid: true, errorMessage: "");
     }
-    state = state.copyWith(form: form.copyWith(password: password2Field));
+    state = state.copyWith(form: form.copyWith(password2: password2Field));
+  }
+  
+  void setInvitationCode(String invitationCode) {
+    final appLocalizations = localizations;
+    RegisterForm form = state.form.copyWith(invCode: StringField(value: invitationCode));
+    late StringField invitationCodeField;
+    if (invitationCode.isEmpty) {
+      invitationCodeField = form.invCode.copyWith(isValid: false, 
+        errorMessage: appLocalizations.needInvitationCode
+      );
+    } else if (!RegExp(r"^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}").hasMatch(invitationCode)) {
+      invitationCodeField = form.invCode.copyWith(isValid: false, 
+        errorMessage: appLocalizations.invitationCodeNotValid
+      );
+    } else {
+      invitationCodeField = form.invCode.copyWith(isValid: true, errorMessage: "");
+    }
+    state = state.copyWith(form: form.copyWith(invCode: invitationCodeField));
+  }
+
+   void setLanguage(String language) {
+    RegisterForm form = state.form.copyWith(language: StringField(value: language));
+    late StringField languageField = form.language.copyWith(isValid: true, errorMessage: "");
+    state = state.copyWith(form: form.copyWith(language: languageField));
+  }
+
+  void setPrefCoinType(String prefCoinType) {
+    RegisterForm form = state.form.copyWith(prefCoinType: StringField(value: prefCoinType));
+    late StringField prefCoinTypeField = form.prefCoinType.copyWith(isValid: true, errorMessage: "");
+    state = state.copyWith(form: form.copyWith(prefCoinType: prefCoinTypeField));
   }
 }

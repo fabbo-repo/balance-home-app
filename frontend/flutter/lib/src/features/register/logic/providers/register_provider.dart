@@ -17,9 +17,12 @@ final registerFormStateProvider = StateNotifierProvider<RegisterFormStateProvide
 
 /// StateNotifier
 final registerStateNotifierProvider = StateNotifierProvider<RegisterStateNotifier, AuthState>(
-  (StateNotifierProviderRef<RegisterStateNotifier, AuthState> ref) => 
-  RegisterStateNotifier(
-    authRepository: ref.watch(authRepositoryProvider),
-    accountModelStateNotifier: ref.watch(accountStateNotifierProvider.notifier)
-  )
+  (StateNotifierProviderRef<RegisterStateNotifier, AuthState> ref) {
+    AppLocalizations localizations = ref.watch(localizationStateNotifierProvider).localization;
+    return RegisterStateNotifier(
+      localizations: localizations,
+      authRepository: ref.watch(authRepositoryProvider),
+      accountModelStateNotifier: ref.watch(accountStateNotifierProvider.notifier)
+    );
+  }
 );
