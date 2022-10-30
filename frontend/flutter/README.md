@@ -6,40 +6,37 @@ Multiplatform frontend of Balance Home App, ```riverpod``` is used for state man
 
 ~~~bash
 flutter/
-    ├── domain
-    │   ├── domain1
-    │   │   └── object1.dart
-    │   └── ...
-    ├── common
-    │   ├── app_config
-    │   |   ├── ...
-    │   |   └── env_model.dart
-    │   └── widgets
-    │       └── ...
-    ├── ui
-    │   ├── ui1
-    │   │   ├── entities
-    │   │   │   └── create_event_entitie.dart
-    │   │   ├── screens
-    │   │   │   └── create_event_screen.dart
-    │   │   ├── widgets
-    │   │   │   └── event_card.dart
-    │   │   └── controllers
-    │   │       └── create_event_controller.dart
-    │   └── ...
-    ├── providers
-    │   └── providers1
-    │       └── ...
-    ├── services
-    │   ├── services1
-    │   │   └── ...
-    │   └── ...
     ├── lang
-    │   ├── app_es.arb
     │   ├── app_en.arb
-    │   └── app_fr.arb
-    └── navigation
-        └── ...
+    │   └── ...
+    ├── src
+    │   ├── core
+    │   |   ├── data
+    |   │   |   ├── repositories
+    |   │   |   └── models
+    │   |   ├── env
+    │   |   ├── exceptions
+    │   |   ├── forms
+    │   |   ├── providers
+    │   |   ├── services
+    │   |   ├── views
+    │   |   └── widgets
+    │   ├── features
+    │   |   ├── feature1
+    │   |   |   ├── data
+    |   │   |   |   ├── repositories
+    |   │   |   |   └── models
+    │   |   |   ├── logic
+    |   │   |   |   └── providers
+    │   |   |   └── presentation
+    |   │   |       ├── forms
+    |   │   |       └── views
+    │   |   └── ...
+    │   ├── navigation
+    │   |   ├── router_provider.dart
+    │   |   └── router.dart
+    │   └── app.dart
+    └── main.dart
 ~~~
 
 ## Useful commands
