@@ -1,4 +1,7 @@
 {
     "@_TITLE":{},
-    "appTitle": "Balance Home App"
+    "appTitle": "BalHom",
+
+    "@_AUTH":{},
+    "signIn": "S'identifier"
 }

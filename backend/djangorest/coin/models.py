@@ -41,7 +41,7 @@ class CoinExchange(models.Model):
     class Meta:
         verbose_name = _('Coin exchange')
         verbose_name_plural = _('Coin exchanges')
-        # Lower to greater exchange
+        # Greater to lower date
         ordering = ['-created']
     
     def __str__(self) -> str:

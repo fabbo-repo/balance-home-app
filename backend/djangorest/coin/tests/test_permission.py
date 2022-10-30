@@ -107,7 +107,7 @@ class CoinPermissionsTests(APITestCase):
         """
         # List coin type data without authentication
         response = self.get(self.coin_type_list_url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         # List coin type data with authentication
         self.authenticate_user(self.credentials1)
         response = self.get(self.coin_type_list_url)

@@ -6,35 +6,38 @@ Multiplatform frontend of Balance Home App, ```riverpod``` is used for state man
 
 ~~~bash
 flutter/
-    ├── domain
-    │   ├── domain1
-    │   │   └── object1.dart
-    │   └── ...
-    ├── common
-    │   └── widgets
-    │       └── ...
-    ├── features
-    │   ├── feature1
-    │   │   ├── page
-    │   │   │   └── create_event_page.dart
-    │   │   ├── widgets
-    │   │   │   └── event_card.dart
-    │   │   └── controller
-    │   │       └── create_event_controller.dart
-    │   └── ...
-    ├── app_state
-    │   └── feature1
-    │       └── ...
-    ├── services
-    │   ├── feature1
-    │   │   └── ...
-    │   └── ...
     ├── lang
-    │   ├── app_es.arb
     │   ├── app_en.arb
-    │   └── app_fr.arb
-    └── navigation
-        └── ...
+    │   └── ...
+    ├── src
+    │   ├── core
+    │   |   ├── data
+    |   │   |   ├── repositories
+    |   │   |   └── models
+    │   |   ├── env
+    │   |   ├── exceptions
+    │   |   ├── forms
+    │   |   ├── providers
+    │   |   ├── services
+    │   |   ├── views
+    │   |   └── widgets
+    │   ├── features
+    │   |   ├── feature1
+    │   |   |   ├── data
+    |   │   |   |   ├── repositories
+    |   │   |   |   └── models
+    │   |   |   ├── logic
+    |   │   |   |   └── providers
+    │   |   |   └── presentation
+    |   │   |       ├── forms
+    |   │   |       ├── widgets
+    |   │   |       └── views
+    │   |   └── ...
+    │   ├── navigation
+    │   |   ├── router_provider.dart
+    │   |   └── router.dart
+    │   └── app.dart
+    └── main.dart
 ~~~
 
 ## Useful commands
@@ -61,4 +64,10 @@ flutter gen-l10n
 
 ~~~bash
 flutter pub run flutter_launcher_icons:main
+~~~
+
+* Code generation:
+
+~~~bash
+flutter pub run build_runner build --delete-conflicting-outputs
 ~~~

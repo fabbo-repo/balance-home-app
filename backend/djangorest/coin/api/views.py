@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
+from rest_framework.permissions import AllowAny
 
 
 class CoinTypeRetrieveView(generics.RetrieveAPIView):
@@ -27,7 +28,7 @@ class CoinTypeRetrieveView(generics.RetrieveAPIView):
 
 class CoinTypeListView(generics.ListAPIView):
     queryset = CoinType.objects.all()
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
     serializer_class = CoinTypeSerializer
     
     @method_decorator(cache_page(12 * 60 * 60))

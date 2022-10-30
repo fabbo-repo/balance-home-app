@@ -2,12 +2,17 @@ import os
 from coin.currency_converter_integration import convert_or_fetch
 from core.permissions import IsCurrentVerifiedUser
 from custom_auth.models import User
-from custom_auth.api.serializers.jwt_code_serializers import CodeSerializer, CodeVerificationSerializer, CustomTokenObtainPairSerializer
+from custom_auth.api.serializers.jwt_code_serializers import (
+    CodeSerializer, 
+    CodeVerificationSerializer, 
+    CustomTokenObtainPairSerializer, 
+    CustomTokenRefreshSerializer
+)
 from rest_framework import generics, status, mixins
 from rest_framework.parsers import FormParser, MultiPartParser, JSONParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from custom_auth.api.serializers.user_serializers import (
     ChangePasswordSerializer,
     ResetPasswordSerializer,
@@ -76,6 +81,12 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)
     serializer_class = CustomTokenObtainPairSerializer
     parser_classes = (JSONParser,)
+
+class CustomTokenRefreshView(TokenRefreshView):
+    """
+    Refresh token generator view.
+    """
+    serializer_class = CustomTokenRefreshSerializer
 
 class ChangePasswordView(generics.CreateAPIView): 
     """
