@@ -56,7 +56,7 @@
     "emailVerifiactionCode": "Email verification code",
     "emailVerifiactionAdvice": "In order to verify your email address an email code will be sent",
     "emailVerifiactionSent": "Email verification code has been sent",
-    "errorSendingEmailCode": "Email could not be sent, please try again later",
+    "errorSendingEmailCode": "Email verification code could not be sent, please try again later",
     "errorVerifyingEmailCode": "Email could not be verified, please try again later",
     "codeSixLength": "Email code must have six characters",
     "invalidEmailCode": "Invalid email code"
