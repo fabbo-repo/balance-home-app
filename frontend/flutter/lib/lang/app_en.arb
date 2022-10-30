@@ -20,6 +20,8 @@
 
     "@_GENERIC":{},
     "version": "Version",
+    "confirmation": "Confirm",
+    "cancel": "Cancel",
 
     "@_AUTH":{},
     "login": "Login",
@@ -34,6 +36,9 @@
     "forgotPassword": "Forgot password?",
     "needEmail": "Email needed",
     "emailNotValid": "Email is not valid",
+    "emailNotVerified": "Email not verified",
+    "emailUsed": "Email already used",
+    "usernameUsed": "Username already used",
     "needUsername": "Username needed",
     "usernameNotValid": "Only alphanumeric characters are allowed for username",
     "usernameMaxSize": "Maximum 15 characters for username",
@@ -45,5 +50,14 @@
     "tooCommonPassword": "Too common password",
     "needInvitationCode": "Invitation code needed",
     "invitationCodeNotValid": "Invitation code not valid",
-    "needCoinType": "Coin type needed"
+    "needCoinType": "Coin type needed",
+    "sendCode": "Send code",
+    "verifyCode": "Verify code",
+    "emailVerifiactionCode": "Email verification code",
+    "emailVerifiactionAdvice": "In order to verify your email address an email code will be sent",
+    "emailVerifiactionSent": "Email verification code has been sent",
+    "errorSendingEmailCode": "Email could not be sent, please try again later",
+    "errorVerifyingEmailCode": "Email could not be verified, please try again later",
+    "codeSixLength": "Email code must have six characters",
+    "invalidEmailCode": "Invalid email code"
 }

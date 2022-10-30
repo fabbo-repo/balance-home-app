@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class SimpleTextField extends StatelessWidget {
   
   final String title;
-
   final TextEditingController controller;
-
   final String? error;
-
+  final double? maxWidth;
+  final int? maxCharacters;
+  final TextAlign? textAlign;
   final Function(String)? onChanged;
 
 
@@ -15,7 +15,10 @@ class SimpleTextField extends StatelessWidget {
     required this.title,
     required this.controller,
     this.error,
+    this.maxWidth,
     this.onChanged,
+    this.maxCharacters,
+    this.textAlign,
     Key? key
   }) : super(key: key);
 
@@ -26,9 +29,11 @@ class SimpleTextField extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            constraints: const BoxConstraints(maxWidth: 700),
+            constraints: BoxConstraints(maxWidth: maxWidth ?? 700),
             padding: const EdgeInsets.all(10),
             child: TextField(
+              textAlign: textAlign ?? TextAlign.start,
+              maxLength: maxCharacters,
               onChanged: onChanged,
               controller: controller,
               decoration: InputDecoration(

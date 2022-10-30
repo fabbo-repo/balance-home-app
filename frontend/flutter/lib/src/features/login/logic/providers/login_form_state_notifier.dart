@@ -11,16 +11,15 @@ class LoginFormStateProvider extends StateNotifier<LoginFormState> {
   LoginFormStateProvider(this.localizations) : super(LoginFormState(LoginForm.empty()));
 
   void setEmail(String email) {
-    final appLocalizations = localizations;
     LoginForm form = state.form.copyWith(email: StringField(value: email));
     late StringField emailField;
     if (email.isEmpty) {
       emailField = form.email.copyWith(isValid: false, 
-        errorMessage: appLocalizations.needEmail
+        errorMessage: localizations.needEmail
       );
     } else if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email)) {
       emailField = form.email.copyWith(isValid: false, 
-        errorMessage: appLocalizations.emailNotValid
+        errorMessage: localizations.emailNotValid
       );
     } else {
       emailField = form.email.copyWith(isValid: true, errorMessage: "");
@@ -29,12 +28,11 @@ class LoginFormStateProvider extends StateNotifier<LoginFormState> {
   }
 
   void setPassword(String password) {
-    final appLocalizations = localizations;
     LoginForm form = state.form.copyWith(password: StringField(value: password));
     late StringField passwordField;
     if (password.isEmpty) {
       passwordField = form.password.copyWith(isValid: false, 
-        errorMessage: appLocalizations.needPassword);
+        errorMessage: localizations.needPassword);
     } else {
       passwordField = form.password.copyWith(isValid: true, errorMessage: "");
     }

@@ -1,4 +1,6 @@
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/features/auth/views/utils.dart';
+import 'package:balance_home_app/src/features/login/logic/providers/email_code_provider.dart';
 import 'package:balance_home_app/src/core/widgets/password_text_field.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_field.dart';
@@ -27,6 +29,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
     final loginFormState = ref.read(loginFormStateProvider.notifier);
     final loginState = ref.watch(loginStateNotifierProvider);
     final loginStateNotifier = ref.watch(loginStateNotifierProvider.notifier);
+    final emailCodeStateNotifier = ref.read(emailCodeStateNotifierProvider.notifier);
     final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
     return Padding(
       padding: const EdgeInsets.all(10),
@@ -67,10 +70,26 @@ class _LoginViewState extends ConsumerState<LoginView> {
                 onPressed: () async {
                   CredentialsModel credentials = loginForm.toModel();
                   await loginStateNotifier.updateJwtAndAccount(credentials);
-                  if (loginState is AuthStateSuccess) {
+                  AuthState newLoginState = ref.read(loginStateNotifierProvider);
+                  if (newLoginState is AuthStateSuccess) {
                     // Context is not used if widget is not in the tree
                     if (!mounted) return;
                     context.go("/");
+                  } else if (newLoginState is AuthStateError
+                    && newLoginState.error == appLocalizations.emailNotVerified) {
+                    if (!mounted) return;
+                    bool sendCode = await showCodeAdviceDialog(context, appLocalizations);
+                    if (sendCode) {
+                      await emailCodeStateNotifier.sendCode(credentials.email);
+                      AuthState newEmailCodeState = ref.read(emailCodeStateNotifierProvider);
+                      if (newEmailCodeState is! AuthStateError) {
+                        if (!mounted) return;
+                        showCodeSendDialog(context, appLocalizations, credentials.email);
+                      } else {
+                        if (!mounted) return;
+                        showErrorCodeDialog(context, appLocalizations, newEmailCodeState.error);
+                      }
+                    }
                   }
                 }, 
                 child: loginState is AuthStateLoading ?

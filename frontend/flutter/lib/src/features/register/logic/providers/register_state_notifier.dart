@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:balance_home_app/src/core/exceptions/http_exceptions.dart';
 import 'package:balance_home_app/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/account_model_state_notifier.dart';
@@ -31,9 +29,23 @@ class RegisterStateNotifier extends StateNotifier<AuthState> {
     } catch (e) {
       if(e is BadRequestHttpException) {
         if (e.content.keys.contains("password")) {
-          String firstError = e.content.keys.first;
-          if (e.content[firstError].first.contains("too common")) {
+          if (e.content["password"].first.contains("too common")) {
             state = AuthStateError(localizations.tooCommonPassword);
+            return;
+          } 
+        } else if (e.content.keys.contains("inv_code")) {
+          if (e.content["inv_code"].first.contains("Invalid")) {
+            state = AuthStateError(localizations.invitationCodeNotValid);
+            return;
+          } 
+        } else if (e.content.keys.contains("email")) {
+          if (e.content["email"].first.contains("unique")) {
+            state = AuthStateError(localizations.emailUsed);
+            return;
+          } 
+        } else if (e.content.keys.contains("username")) {
+          if (e.content["username"].first.contains("unique")) {
+            state = AuthStateError(localizations.usernameUsed);
             return;
           } 
         }

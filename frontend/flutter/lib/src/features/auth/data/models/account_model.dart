@@ -20,7 +20,7 @@ class AccountModel extends Equatable {
   final String prefCoinType;
   final String image;
   @JsonKey(name: 'last_login')
-  final DateTime lastLogin;
+  final DateTime? lastLogin;
 
   const AccountModel({
         required this.username,

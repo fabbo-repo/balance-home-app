@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-22 23:11+0200\n"
+"POT-Creation-Date: 2022-10-30 17:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,11 +90,11 @@ msgstr "Monthly balance"
 msgid "Monthly balances"
 msgstr "Monthly balances"
 
-#: .\coin\api\views.py:52
+#: .\coin\api\views.py:53
 msgid "{} code not supported"
 msgstr "{} code not supported"
 
-#: .\coin\api\views.py:59
+#: .\coin\api\views.py:60
 msgid "No exchange data, try later"
 msgstr "No exchange data, try later"
 
@@ -146,29 +146,33 @@ msgstr "English"
 msgid "Spanish"
 msgstr "Spanish"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:19
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:23
 msgid "No invitation code stored"
 msgstr "No invitation code stored"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:22
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:26
 msgid "Unverified email"
 msgstr "Unverified email"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:46
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:40
+msgid "No active account found with the given credentials"
+msgstr "No active account found with the given credentials"
+
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:72
 msgid "Code has already been sent, wait {} seconds"
 msgstr "Code has already been sent, wait {} seconds"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:78
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:104
 msgid "No code sent"
 msgstr "No code sent"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:83
-#: .\custom_auth\api\serializers\user_serializers.py:188
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:109
+#: .\custom_auth\api\serializers\user_serializers.py:192
 msgid "Code is no longer valid"
 msgstr "Code is no longer valid"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:85
-#: .\custom_auth\api\serializers\user_serializers.py:191
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:111
+#: .\custom_auth\api\serializers\user_serializers.py:195
 msgid "Invalid code"
 msgstr "Invalid code"
 

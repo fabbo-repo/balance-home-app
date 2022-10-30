@@ -64,7 +64,7 @@ class RouterNotifier extends ChangeNotifier {
     final loginState = _ref.read(loginStateNotifierProvider);
     final loginStateNotifier = _ref.read(loginStateNotifierProvider.notifier);
     // if trySilentLogin is succesfully executed it will set LoginState to LoginStateSuccess
-    //if (loginState is LoginStateInitial) await loginStateNotifier.trySilentLogin();
+    if (loginState is AuthStateInitial) await loginStateNotifier.trySilentLogin();
     if (_ref.read(loginStateNotifierProvider) is AuthStateSuccess) return '/';
     return null;
   }

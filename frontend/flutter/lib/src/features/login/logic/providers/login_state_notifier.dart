@@ -37,6 +37,8 @@ class LoginStateNotifier extends StateNotifier<AuthState> {
     } catch (e) {
       if(e is UnauthorizedHttpException) {
         state = AuthStateError(localizations.wrongCredentials);
+      } else if(e is BadRequestHttpException) {
+        state = AuthStateError(localizations.emailNotVerified);
       } else {
         state = AuthStateError(localizations.genericError);
       }
@@ -48,29 +50,41 @@ class LoginStateNotifier extends StateNotifier<AuthState> {
       // Read jwt refresh token
       String? refresh = await secureStorage.read(key: "refresh_token");
       if (refresh != null) {
-        JwtModel refreshJwt = JwtModel(
-          access: '', 
-          refresh: refresh
-        );
-        await _refreshJwt(refreshJwt);
-        await _updateAccount();
-        state = const AuthStateSuccess();
-      } else {
-        String? email = await secureStorage.read(key: "email");
-        String? password = await secureStorage.read(key: "password");
-        if (email != null && password != null) {
-          CredentialsModel credentials = CredentialsModel(
-            email: email,
-            password: password
-          );
-          await _updateJwt(credentials);
-          await _updateAccount();
+        try {
+          await _trySilentLoginWithJwt(refresh);
           state = const AuthStateSuccess();
+          return;
+        } catch (_) {
+          await secureStorage.delete(key: "refresh_token");
         }
+      }
+      String? email = await secureStorage.read(key: "email");
+      String? password = await secureStorage.read(key: "password");
+      if (email != null && password != null) {
+        await _trySilentLoginWithCredentials(email, password);
+        state = const AuthStateSuccess();
       }
     } catch (e) {
       debugPrint("[SILENT_LOGIN_ERROR] ${e.toString()}");
     }
+  }
+
+  Future<void> _trySilentLoginWithJwt(String refresh) async {
+    JwtModel refreshJwt = JwtModel(
+      access: '', 
+      refresh: refresh
+    );
+    await _refreshJwt(refreshJwt);
+    await _updateAccount();
+  }
+
+  Future<void> _trySilentLoginWithCredentials(String email, String password) async {
+    CredentialsModel credentials = CredentialsModel(
+      email: email,
+      password: password
+    );
+    await _updateJwt(credentials);
+    await _updateAccount();
   }
 
   Future<void> _updateJwt(CredentialsModel credentials) async {

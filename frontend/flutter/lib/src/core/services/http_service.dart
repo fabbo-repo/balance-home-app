@@ -64,7 +64,7 @@ class HttpService {
       }
       return response;
     } catch (e) {
-      if (e is BadRequestHttpException) rethrow;
+      if (e is BadRequestHttpException || e is UnauthorizedHttpException) rethrow;
       _requestErrorHandler.goToErrorPage();
       return HttpResponse(500, {});
     }
@@ -82,11 +82,11 @@ class HttpService {
       );
       if (await _shouldRepeatResponse(response)) {
         // Recursive call
-        return await sendGetRequest(subPath);
+        return await sendPostRequest(subPath, body);
       }
       return response;
     } catch (e) {
-      if (e is BadRequestHttpException) rethrow;
+      if (e is BadRequestHttpException || e is UnauthorizedHttpException) rethrow;
       _requestErrorHandler.goToErrorPage();
       return HttpResponse(500, {});
     }
@@ -110,7 +110,7 @@ class HttpService {
       }
       return response;
     } catch (e) {
-      if (e is BadRequestHttpException) rethrow;
+      if (e is BadRequestHttpException || e is UnauthorizedHttpException) rethrow;
       _requestErrorHandler.goToErrorPage();
       return HttpResponse(500, {});
     }
@@ -132,7 +132,7 @@ class HttpService {
       }
       return response;
     } catch (e) {
-      if (e is BadRequestHttpException) rethrow;
+      if (e is BadRequestHttpException || e is UnauthorizedHttpException) rethrow;
       _requestErrorHandler.goToErrorPage();
       return HttpResponse(500, {});
     }
@@ -154,7 +154,7 @@ class HttpService {
       }
       return response;
     } catch (e) {
-      if (e is BadRequestHttpException) rethrow;
+      if (e is BadRequestHttpException || e is UnauthorizedHttpException) rethrow;
       _requestErrorHandler.goToErrorPage();
       return HttpResponse(500, {});
     }
@@ -175,7 +175,7 @@ class HttpService {
       }
       return response;
     } catch (e) {
-      if (e is BadRequestHttpException) rethrow;
+      if (e is BadRequestHttpException || e is UnauthorizedHttpException) rethrow;
       _requestErrorHandler.goToErrorPage();
       return HttpResponse(500, {});
     }
@@ -226,8 +226,10 @@ class HttpService {
           return true;
         }
       }
-    } 
-    if (response.statusCode / 10 == 20) return false;
+    }
+    if ((response.statusCode / 10).round() == 20) return false;
+    // This condition is for Jwt refresh case
+    if (response.statusCode == 401) throw UnauthorizedHttpException(response.content);
     if (response.statusCode == 400) throw BadRequestHttpException(response.content);
     _requestErrorHandler.goToErrorPage();
     return false;

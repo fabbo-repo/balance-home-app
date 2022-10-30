@@ -108,10 +108,14 @@ class UserCreationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         inv_code = validated_data['inv_code']
+        pref_coin_type = validated_data['pref_coin_type']
+        language = validated_data['language']
         user = User.objects.create(
             username=validated_data['username'],
             email=validated_data['email'],
-            inv_code=inv_code
+            inv_code=inv_code,
+            pref_coin_type=pref_coin_type,
+            language=language
         )
         user.set_password(validated_data['password'])
         decrease_inv_code_usage(inv_code)
