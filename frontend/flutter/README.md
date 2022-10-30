@@ -30,6 +30,7 @@ flutter/
     |   │   |   |   └── providers
     │   |   |   └── presentation
     |   │   |       ├── forms
+    |   │   |       ├── widgets
     |   │   |       └── views
     │   |   └── ...
     │   ├── navigation
