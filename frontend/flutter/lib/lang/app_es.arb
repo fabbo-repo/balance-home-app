@@ -23,6 +23,12 @@
     "confirmation": "Confirmar",
     "cancel": "Cancelar",
 
+    "@_HOME":{},
+    "statistics": "Estadísticas",
+    "revenues": "Ingresos",
+    "expenses": "Gastos",
+    "balance": "Balance",
+
     "@_AUTH":{},
     "login": "Iniciar sesión",
     "register": "Registrarse",

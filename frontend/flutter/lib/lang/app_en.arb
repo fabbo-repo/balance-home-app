@@ -23,6 +23,12 @@
     "confirmation": "Confirm",
     "cancel": "Cancel",
 
+    "@_HOME":{},
+    "statistics": "Statistics",
+    "revenues": "Revenues",
+    "expenses": "Expenses",
+    "balance": "Balance",
+
     "@_AUTH":{},
     "login": "Login",
     "register": "Register",

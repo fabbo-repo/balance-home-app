@@ -13,9 +13,9 @@ final routerProvider = Provider<GoRouter>(
       errorBuilder: (context, state) => ErrorView(location: state.location),
       navigatorKey: navigatorKey,
       debugLogDiagnostics: true,
-      redirect: router.appGuard,
       refreshListenable: router,
       routes: router.routes,
+      redirect: router.appGuard,
     );
   }
 );

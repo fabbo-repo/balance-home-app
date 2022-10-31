@@ -1,4 +1,5 @@
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/core/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/views/language_picker_dropdown.dart';
 import 'package:balance_home_app/src/features/coin/data/models/coin_type_model.dart';
 import 'package:balance_home_app/src/features/coin/logic/providers/coin_provider.dart';
@@ -50,29 +51,7 @@ class AuthView extends ConsumerWidget {
                   Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.fromLTRB(40, 70, 40, 40),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          appLocalizations.appTitle1,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 40,
-                            fontStyle: FontStyle.italic
-                          ),
-                        ),
-                        Text(
-                          appLocalizations.appTitle2,
-                          style: const TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 40,
-                            fontStyle: FontStyle.italic
-                          ),
-                        ),
-                      ],
-                    )
+                    child: const AppTittle()
                   ),
                   Expanded(
                     child: DefaultTabController(

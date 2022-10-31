@@ -45,6 +45,23 @@ class LoginStateNotifier extends StateNotifier<AuthState> {
     }
   }
 
+  Future<void> logout() async {
+    state = const AuthStateLoading();
+    try {
+      await _deleteCredentials();
+      await _delteLocalAccount();
+      state = const AuthStateInitial();
+    } catch (e) {
+      if(e is UnauthorizedHttpException) {
+        state = AuthStateError(localizations.wrongCredentials);
+      } else if(e is BadRequestHttpException) {
+        state = AuthStateError(localizations.emailNotVerified);
+      } else {
+        state = AuthStateError(localizations.genericError);
+      }
+    }
+  }
+
   Future<void> trySilentLogin() async {
     try {
       // Read jwt refresh token
@@ -98,8 +115,17 @@ class LoginStateNotifier extends StateNotifier<AuthState> {
     final jwt = await jwtRepository.refreshJwt(refreshJwt);
     await secureStorage.write(key: "refresh_token", value: jwt.refresh);
   }
+  
+  Future<void> _deleteCredentials() async {
+    await secureStorage.deleteAll();
+  }
 
   Future<void> _updateAccount() async {
+    AccountModel account = await authRepository.getAccount();
+    accountModelStateNotifier.setAccountModel(account);
+  }
+  
+  Future<void> _delteLocalAccount() async {
     AccountModel account = await authRepository.getAccount();
     accountModelStateNotifier.setAccountModel(account);
   }
