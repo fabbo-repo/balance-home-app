@@ -8,6 +8,10 @@ class AccountModelStateNotifier extends StateNotifier<AccountModelState> {
   void setAccountModel(AccountModel account) {
     state = state.copyWith(model: account);
   }
+  
+  void deletAccountModel() {
+    state = state.copyWith(model: null);
+  }
 
   AccountModel? getAccountModel() {
     return state.model;

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-30 17:28+0100\n"
+"POT-Creation-Date: 2022-10-31 11:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -146,32 +146,36 @@ msgstr "English"
 msgid "Spanish"
 msgstr "Spanish"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:23
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:22
 msgid "No invitation code stored"
 msgstr "No invitation code stored"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:26
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:25
 msgid "Unverified email"
 msgstr "Unverified email"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:40
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:39
 msgid "No active account found with the given credentials"
 msgstr "No active account found with the given credentials"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:72
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:46
+msgid "Invalid refresh token"
+msgstr "Invalid refresh token"
+
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:73
 msgid "Code has already been sent, wait {} seconds"
 msgstr "Code has already been sent, wait {} seconds"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:104
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:105
 msgid "No code sent"
 msgstr "No code sent"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:109
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:110
 #: .\custom_auth\api\serializers\user_serializers.py:192
 msgid "Code is no longer valid"
 msgstr "Code is no longer valid"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:111
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:112
 #: .\custom_auth\api\serializers\user_serializers.py:195
 msgid "Invalid code"
 msgstr "Invalid code"

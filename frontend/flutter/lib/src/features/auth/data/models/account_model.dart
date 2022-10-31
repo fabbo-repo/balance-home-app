@@ -10,11 +10,11 @@ class AccountModel extends Equatable {
   final String email;
   @JsonKey(name: 'receive_email_balance')
   final bool receiveEmailBalance;
-  final int balance;
+  final double balance;
   @JsonKey(name: 'expected_annual_balance')
-  final int expectedAnnualBalance;
+  final double expectedAnnualBalance;
   @JsonKey(name: 'expected_monthly_balance')
-  final int expectedMonthlyBalance;
+  final double expectedMonthlyBalance;
   final String language;
   @JsonKey(name: 'pref_coin_type')
   final String prefCoinType;

@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
+// ignore: depend_on_referenced_packages
+import 'package:adaptive_breakpoints/adaptive_breakpoints.dart';
 
 /// Service for platform detection
 class PlatformService {
@@ -35,4 +37,10 @@ class PlatformService {
           .size
           .shortestSide >=
       550;
+  
+  bool isLargeScreen(BuildContext context) =>
+    getWindowType(context) >= AdaptiveWindowType.large;
+  
+  bool isMediumScreen(BuildContext context) =>
+    getWindowType(context) == AdaptiveWindowType.medium;
 }

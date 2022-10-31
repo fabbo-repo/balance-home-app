@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-30 17:28+0100\n"
+"POT-Creation-Date: 2022-10-31 11:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -146,32 +146,36 @@ msgstr "Inglés"
 msgid "Spanish"
 msgstr "Español"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:23
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:22
 msgid "No invitation code stored"
 msgstr "No hay código de invitación almacenado"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:26
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:25
 msgid "Unverified email"
 msgstr "Correo no verificado"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:40
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:39
 msgid "No active account found with the given credentials"
 msgstr "No se encontró ninguna cuenta activa con las credenciales dadas"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:72
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:46
+msgid "Invalid refresh token"
+msgstr "Token de actualización no válido"
+
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:73
 msgid "Code has already been sent, wait {} seconds"
 msgstr "El código se ha enviado, espere {} segundos"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:104
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:105
 msgid "No code sent"
 msgstr "Ningún código enviado"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:109
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:110
 #: .\custom_auth\api\serializers\user_serializers.py:192
 msgid "Code is no longer valid"
 msgstr "El código ya no es válido"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:111
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:112
 #: .\custom_auth\api\serializers\user_serializers.py:195
 msgid "Invalid code"
 msgstr "Código invalido"

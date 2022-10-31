@@ -20,6 +20,16 @@ class BalanceHomeAppState extends ConsumerState<BalanceHomeApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.grey,
+        navigationRailTheme: const NavigationRailThemeData(
+          selectedIconTheme: IconThemeData(color: Colors.white),
+          unselectedIconTheme: IconThemeData(color: Colors.white54),
+          backgroundColor: Color.fromARGB(255, 70, 70, 70)
+        ),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white54,
+          backgroundColor: Color.fromARGB(255, 70, 70, 70)
+        )
       ),
       onGenerateTitle: (context) {
         // In the app build, the context does not contain an AppLocalizations instance.
