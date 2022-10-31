@@ -44,15 +44,15 @@ class HomeView extends ConsumerWidget {
       },
       destinations: [
         AdaptiveScaffoldDestination(
-          icon: Icons.map,
+          icon: Icons.insert_chart_outlined_sharp,
           title: appLocalizations.statistics,
         ),
         AdaptiveScaffoldDestination(
-          icon: Icons.contacts_outlined,
+          icon: Icons.trending_up,
           title: appLocalizations.revenues,
         ),
         AdaptiveScaffoldDestination(
-          icon: Icons.person_outline,
+          icon: Icons.trending_down,
           title: appLocalizations.expenses,
         ),
       ],

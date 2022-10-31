@@ -32,7 +32,7 @@ class RouterNotifier extends ChangeNotifier {
           key: _scaffoldKey,
           child: HomeView(
             selectedSection: HomeTab.statistics,
-            child: Center(child: Text("Hello World"))
+            child: const Center(child: Text("Hello World"))
           )
         ),
     ),
@@ -45,7 +45,7 @@ class RouterNotifier extends ChangeNotifier {
           key: _scaffoldKey,
           child: HomeView(
             selectedSection: HomeTab.revenues,
-            child: Center(child: Text("Hello World"))
+            child: const Center(child: Text("Hello World"))
           )
         ),
     ),
@@ -58,7 +58,7 @@ class RouterNotifier extends ChangeNotifier {
           key: _scaffoldKey,
           child: HomeView(
             selectedSection: HomeTab.expenses,
-            child: Center(child: Text("Hello World"))
+            child: const Center(child: Text("Hello World"))
           )
         ),
     ),
