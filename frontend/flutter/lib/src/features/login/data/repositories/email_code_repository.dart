@@ -3,7 +3,7 @@ import 'package:balance_home_app/src/core/services/http_service.dart';
 import 'package:balance_home_app/src/features/login/data/models/email_code_model.dart';
 
 abstract class ICodeRepository {
-  Future<void> sendCode(String email);
+  Future<void> requestCode(String email);
   
   Future<void> verifyCode(EmailCodeModel code);
 }
@@ -17,7 +17,7 @@ class EmailCodeRepository implements ICodeRepository {
   /// Sends a [POST] request to backend service to notify that 
   /// an email code should be sent.
   @override
-  Future<void> sendCode(String email) async {
+  Future<void> requestCode(String email) async {
     await httpService.sendPostRequest(
       APIContract.emailCodeSend,
       {

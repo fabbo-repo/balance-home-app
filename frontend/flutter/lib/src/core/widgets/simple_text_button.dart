@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SimpleTextButton extends StatelessWidget {
-  final bool _enabled;
+  final bool enabled;
   
   final void Function() onPressed;
 
@@ -18,7 +18,7 @@ class SimpleTextButton extends StatelessWidget {
     this.foregroundColor,
     bool? enabled,
     super.key
-  }) : _enabled = enabled ?? true;
+  }) : enabled = enabled ?? true;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class SimpleTextButton extends StatelessWidget {
         MaterialStateProperty.all<Color>(foregroundColor!)
     );
     return ElevatedButton(
-      onPressed: (!_enabled) ? null : onPressed,
+      onPressed: (!enabled) ? null : onPressed,
       style: style, 
       child: child
     );

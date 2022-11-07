@@ -12,7 +12,8 @@ class PasswordResetTests(APITestCase):
         # Avoid WARNING logs while testing wrong requests 
         logging.disable(logging.WARNING)
 
-        self.reset_password_url=reverse('reset_password')
+        self.reset_password_start_url=reverse('reset_password_start')
+        self.reset_password_verify_url=reverse('reset_password_verify')
         self.jwt_obtain_url=reverse('jwt_obtain_pair')
         self.user_get_del_url=reverse('user_put_get_del')
 
@@ -39,9 +40,6 @@ class PasswordResetTests(APITestCase):
         )
         user.set_password(self.user_data['password'])
         user.save()
-        # Jwt obtain
-        self.jwt = self.jwt_obtain().data["access"]
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(self.jwt))
         return super().setUp()
     
     def jwt_obtain(self, credentials=None) :
@@ -52,14 +50,21 @@ class PasswordResetTests(APITestCase):
             content_type="application/json"
         )
     
-    def send_code(self) :
-        return self.client.get(self.reset_password_url)
-    
-    def verify_code_password(self, code, password) :
-        return self.client.post(
-            self.reset_password_url,
+    def send_code(self, email) :
+        return self.client.post(self.reset_password_start_url,
             data=json.dumps(
                 {
+                    "email": email
+                }),
+            content_type="application/json"
+        )
+    
+    def verify_code_password(self, email, code, password) :
+        return self.client.post(
+            self.reset_password_verify_url,
+            data=json.dumps(
+                {
+                    "email": email,
                     "new_password":password,
                     "code":code
                 }),
@@ -71,7 +76,7 @@ class PasswordResetTests(APITestCase):
         """
         Checks that password reset code is sent
         """
-        response=self.send_code()
+        response=self.send_code(self.user_data["email"])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user=User.objects.get(email=self.user_data["email"])
         self.assertIsNotNone(user.pass_reset)
@@ -80,10 +85,10 @@ class PasswordResetTests(APITestCase):
         """
         Checks that password reset code is verified
         """
-        self.send_code()
+        self.send_code(self.user_data["email"])
         user=User.objects.get(email=self.user_data["email"])
         code = user.pass_reset
-        response=self.verify_code_password(code, "password1@214")
+        response=self.verify_code_password(self.user_data["email"], code, "password1@214")
         self.assertEqual(response.status_code, status.HTTP_200_OK,
             "Code verfication")
         self.credentials["password"] = "password1@214"
@@ -95,10 +100,10 @@ class PasswordResetTests(APITestCase):
         """
         Checks that password reset code is verified with same old password
         """
-        self.send_code()
+        self.send_code(self.user_data["email"])
         user=User.objects.get(email=self.user_data["email"])
         code = user.pass_reset
-        response=self.verify_code_password(code, self.user_data["username"])
+        response=self.verify_code_password(self.user_data["email"], code, self.user_data["username"])
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_send_wrong_code(self):
@@ -106,10 +111,10 @@ class PasswordResetTests(APITestCase):
         Checks that sending a wrong password reset code should let change password
         """
         # Code generation first:
-        self.send_code()
-        response=self.verify_code_password('123', self.user_data["username"])
+        self.send_code(self.user_data["email"])
+        response=self.verify_code_password(self.user_data["email"], '123', "user123name456&")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        response=self.verify_code_password('123456', self.user_data["username"])
+        response=self.verify_code_password(self.user_data["email"], '123456', "user123name456&")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['code'][0], 'Invalid code')
 
@@ -118,7 +123,7 @@ class PasswordResetTests(APITestCase):
         Checks that sending an invalid code should not modify the user as verified
         """
         # Code generation first:
-        self.send_code()
+        self.send_code(self.user_data["email"])
         # Set code validity to 1 second
         settings.EMAIL_CODE_VALID = 0
         # Get generated code
@@ -126,7 +131,7 @@ class PasswordResetTests(APITestCase):
         # Sleep for 2 seconds
         time.sleep(2)
         # Verify invalid code
-        response=self.verify_code_password(str(code), self.user_data["username"])
+        response=self.verify_code_password(self.user_data["email"], str(code), "user123name456&")
         # Undo changes
         settings.EMAIL_CODE_VALID = 120
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

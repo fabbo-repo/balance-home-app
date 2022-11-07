@@ -15,6 +15,20 @@ class EmailCodeStateNotifier extends StateNotifier<AuthState> {
     required this.localizations,
   }) : super(const AuthStateInitial());
   
+  Future<void> requestCode(String email) async {
+    state = const AuthStateLoading();
+    try {
+      await emailCodeRepository.requestCode(email);
+      state = const AuthStateSuccess();
+    } catch (e) {
+      if(e is BadRequestHttpException) {
+        state = AuthStateError(localizations.errorSendingEmailCode);
+      } else {
+        state = AuthStateError(localizations.genericError);
+      }
+    }
+  }
+  
   Future<void> verifyCode(EmailCodeModel code) async {
     state = const AuthStateLoading();
     try {
@@ -26,22 +40,12 @@ class EmailCodeStateNotifier extends StateNotifier<AuthState> {
           && e.content["code"].contains("Invalid code")) {
           state = AuthStateError(localizations.invalidEmailCode);
           return;
+        } else if (e.content.keys.contains("code") 
+          && e.content["code"].contains("Code is no longer valid")) {
+          state = AuthStateError(localizations.noLongerValidEmailCode);
+          return;
         }
         state = AuthStateError(localizations.errorVerifyingEmailCode);
-      } else {
-        state = AuthStateError(localizations.genericError);
-      }
-    }
-  }
-
-  Future<void> sendCode(String email) async {
-    state = const AuthStateLoading();
-    try {
-      await emailCodeRepository.sendCode(email);
-      state = const AuthStateSuccess();
-    } catch (e) {
-      if(e is BadRequestHttpException) {
-        state = AuthStateError(localizations.errorSendingEmailCode);
       } else {
         state = AuthStateError(localizations.genericError);
       }

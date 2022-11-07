@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-31 11:37+0100\n"
+"POT-Creation-Date: 2022-11-07 16:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -163,20 +163,22 @@ msgid "Invalid refresh token"
 msgstr "Token de actualización no válido"
 
 #: .\custom_auth\api\serializers\jwt_code_serializers.py:73
+#: .\custom_auth\api\serializers\user_serializers.py:190
 msgid "Code has already been sent, wait {} seconds"
 msgstr "El código se ha enviado, espere {} segundos"
 
 #: .\custom_auth\api\serializers\jwt_code_serializers.py:105
+#: .\custom_auth\api\serializers\user_serializers.py:219
 msgid "No code sent"
 msgstr "Ningún código enviado"
 
 #: .\custom_auth\api\serializers\jwt_code_serializers.py:110
-#: .\custom_auth\api\serializers\user_serializers.py:192
+#: .\custom_auth\api\serializers\user_serializers.py:224
 msgid "Code is no longer valid"
 msgstr "El código ya no es válido"
 
 #: .\custom_auth\api\serializers\jwt_code_serializers.py:112
-#: .\custom_auth\api\serializers\user_serializers.py:195
+#: .\custom_auth\api\serializers\user_serializers.py:227
 msgid "Invalid code"
 msgstr "Código invalido"
 
@@ -207,6 +209,8 @@ msgstr "Lenguaje no soportado"
 msgid "Username and email can not be the same"
 msgstr "Nombre de usuario y correo electrónico no pueden contener lo mismo"
 
+#: .\custom_auth\api\serializers\user_serializers.py:181
+#: .\custom_auth\api\serializers\user_serializers.py:212
 #: .\custom_auth\api\serializers\utils.py:12
 msgid "User not found"
 msgstr "Usuario no encontrado"

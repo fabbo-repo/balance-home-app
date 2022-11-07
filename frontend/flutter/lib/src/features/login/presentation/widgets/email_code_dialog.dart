@@ -1,8 +1,8 @@
 import 'package:balance_home_app/src/core/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_field.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
+import 'package:balance_home_app/src/features/auth/logic/providers/email_code/email_code_provider.dart';
 import 'package:balance_home_app/src/features/login/data/models/email_code_model.dart';
-import 'package:balance_home_app/src/features/login/logic/providers/email_code_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -35,21 +35,23 @@ class EmailCodeDialogState extends ConsumerState<EmailCodeDialog> {
       title: Text(widget.appLocalizations.emailVerifiactionCode),
       content: Container(
         constraints: const BoxConstraints(maxHeight: 130),
-        child: Column(
-          children: [
-            Text(widget.appLocalizations.emailVerifiactionSent),
-            SimpleTextField(
-              textAlign: TextAlign.center,
-              maxCharacters: 6,
-              maxWidth: 150,
-              title: "", 
-              controller: widget.inputController,
-              onChanged: (code) {
-                emailCodeFormState.setCode(code);
-              },
-              error: emailCodeForm.code.errorMessage,
-            )
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Text(widget.appLocalizations.emailVerifiactionSent),
+              SimpleTextField(
+                textAlign: TextAlign.center,
+                maxCharacters: 6,
+                maxWidth: 150,
+                title: "", 
+                controller: widget.inputController,
+                onChanged: (code) {
+                  emailCodeFormState.setCode(code);
+                },
+                error: emailCodeForm.code.errorMessage,
+              )
+            ],
+          ),
         ),
       ),
       actions: <Widget>[

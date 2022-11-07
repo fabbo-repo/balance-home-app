@@ -5,7 +5,8 @@ from custom_auth.api.views import (
     CodeView, 
     CustomTokenObtainPairView,
     CustomTokenRefreshView,
-    ResetPasswordView, 
+    ResetPasswordStartView,
+    ResetPasswordVerifyView, 
     UserCreationView, 
     UserRetrieveUpdateDestroyView
 )
@@ -18,5 +19,6 @@ urlpatterns = [
     path("email_code/verify", CodeVerificationView.as_view(), name="email_code_verify"),
     path("user/profile", UserRetrieveUpdateDestroyView.as_view(), name='user_put_get_del'),
     path('user/password/change', ChangePasswordView.as_view(), name='change_password'),
-    path('user/password/reset', ResetPasswordView.as_view(), name='reset_password'),
+    path('user/password/reset/start', ResetPasswordStartView.as_view(), name='reset_password_start'),
+    path('user/password/reset/verify', ResetPasswordVerifyView.as_view(), name='reset_password_verify'),
 ]

@@ -1,3 +1,4 @@
+import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:language_picker/language_picker.dart';
@@ -22,7 +23,14 @@ class CustomLanguagePickerDropdown extends StatelessWidget {
       constraints: const BoxConstraints(maxWidth: 180),
       child: LanguagePickerDropdown(
         itemBuilder: (language) {
-          return Text(_getLangName(language.isoCode, appLocalizations));
+          return Row(children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                child: _getFlag(language.isoCode)
+              ),
+              Text(_getLangName(language.isoCode, appLocalizations))
+            ]
+          );
         },
         initialValue: Language(appLocalizations.localeName, 
           _getLangName(appLocalizations.localeName, appLocalizations)),
@@ -38,13 +46,26 @@ class CustomLanguagePickerDropdown extends StatelessWidget {
   String _getLangName(String code, AppLocalizations appLocalizations) {
     switch (code) {
       case "es":
-        return '🇪🇸 ${appLocalizations.spanish}';
+        return appLocalizations.spanish;
       case "en":
-        return '🇬🇧 ${appLocalizations.english}';
+        return appLocalizations.english;
       case "fr":
-        return '🇫🇷 ${appLocalizations.french}';
+        return appLocalizations.french;
       default:
         return appLocalizations.unknown;
+    }
+  }
+
+  Widget _getFlag(String code) {
+    switch (code) {
+      case "es":
+        return const Flag.fromString("es", height: 15, width: 15);
+      case "en":
+        return const Flag.fromString("gb", height: 15, width: 15);
+      case "fr":
+        return const Flag.fromString("fr", height: 15, width: 15);
+      default:
+        return Container();
     }
   }
 }

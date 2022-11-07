@@ -19,7 +19,8 @@ class UrlPermissionsTests(APITestCase):
         self.user_post_url=reverse('user_post')
         self.user_put_get_del_url=reverse('user_put_get_del')
         self.change_password_url=reverse('change_password')
-        self.reset_password_url=reverse('reset_password')
+        self.reset_password_start_url=reverse('reset_password_start')
+        self.reset_password_verify_url=reverse('reset_password_verify')
         self.email_code_send_url=reverse('email_code_send')
         self.email_code_verify_url=reverse('email_code_verify')
 
@@ -187,18 +188,22 @@ class UrlPermissionsTests(APITestCase):
         Checks permissions with reset password
         """
         # Try without authentication
-        response=self.get(self.reset_password_url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        # Get jwt token
-        jwt=self.post(self.jwt_obtain_url, self.credentials).data['access']
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
-        # Try with authentication
-        response=self.get(self.reset_password_url)
+        response=self.post(self.reset_password_start_url)
+        self.assertNotEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        response=self.post(self.reset_password_verify_url)
+        self.assertNotEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        # Begin process
+        response=self.post(self.reset_password_start_url,
+            {
+                "email": self.user_data['email']
+            }
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user=User.objects.get(email=self.user_data['email'])
         data={
+            "email": self.user_data['email'],
             'code': user.pass_reset,
             'new_password': 'pass@123ua3ss'
         }
-        response=self.post(self.reset_password_url, data)
+        response=self.post(self.reset_password_verify_url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

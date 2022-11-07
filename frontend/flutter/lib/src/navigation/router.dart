@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:balance_home_app/src/core/views/app_info_loading_view.dart';
 import 'package:balance_home_app/src/core/views/loading_view.dart';
-import 'package:balance_home_app/src/features/auth/views/auth_view.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
 import 'package:balance_home_app/src/features/home/presentation/views/home_tabs.dart';
 import 'package:balance_home_app/src/features/home/presentation/views/home_view.dart';
 import 'package:balance_home_app/src/features/login/logic/providers/login_provider.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
+import 'package:balance_home_app/src/features/login/presentation/views/forgot_password_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -73,10 +74,15 @@ class RouterNotifier extends ChangeNotifier {
       builder: (context, state) => const LoadingView(),
     ),
     GoRoute(
+      name: 'forgotPasswordReset',
+      path: '/password/reset',
+      builder: (context, state) => ForgotPasswordView(),
+    ),
+    GoRoute(
       name: 'authentication',
       path: '/auth',
       redirect: authGuard,
-      builder: (context, state) => const AuthView(),
+      builder: (context, state) => AuthView(),
     ),
   ];
 

@@ -1,6 +1,6 @@
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
-import 'package:balance_home_app/src/features/auth/views/utils.dart';
-import 'package:balance_home_app/src/features/login/logic/providers/email_code_provider.dart';
+import 'package:balance_home_app/src/features/auth/logic/providers/email_code/email_code_provider.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/utils.dart';
 import 'package:balance_home_app/src/core/widgets/password_text_field.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_field.dart';
@@ -12,10 +12,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginView extends ConsumerStatefulWidget {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
 
-  LoginView({Key? key}) : super(key: key);
+  const LoginView({
+    required this.emailController, 
+    required this.passwordController, 
+    Key? key
+  }) : super(key: key);
 
   @override
   ConsumerState<LoginView> createState() => _LoginViewState();
@@ -37,6 +41,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
         child: Column(
           children: [
             SimpleTextField(
+              maxWidth: 400,
               title: appLocalizations.emailAddress,
               controller: widget.emailController,
               onChanged: (email) {
@@ -45,6 +50,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
               error: loginForm.email.errorMessage,
             ),
             PasswordTextField(
+              maxWidth: 400,
               title: appLocalizations.password,
               controller: widget.passwordController,
               onChanged: (password) {
@@ -80,7 +86,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     if (!mounted) return;
                     bool sendCode = await showCodeAdviceDialog(context, appLocalizations);
                     if (sendCode) {
-                      await emailCodeStateNotifier.sendCode(credentials.email);
+                      await emailCodeStateNotifier.requestCode(credentials.email);
                       AuthState newEmailCodeState = ref.read(emailCodeStateNotifierProvider);
                       if (newEmailCodeState is! AuthStateError) {
                         if (!mounted) return;
@@ -98,8 +104,13 @@ class _LoginViewState extends ConsumerState<LoginView> {
               )
             ),
             TextButton(
-              onPressed: () {  },
-              child: Text(appLocalizations.forgotPassword),
+              onPressed: () {
+                showResetPasswordAdviceDialog(context, appLocalizations);
+              },
+              child: Text(
+                appLocalizations.forgotPassword,
+                style: TextStyle(color: Colors.grey[800]),
+              ),
             ),
           ],
         ),

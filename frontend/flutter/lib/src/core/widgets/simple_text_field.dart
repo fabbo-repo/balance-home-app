@@ -7,6 +7,7 @@ class SimpleTextField extends StatelessWidget {
   final String? error;
   final double? maxWidth;
   final int? maxCharacters;
+  final bool? enabled;
   final TextAlign? textAlign;
   final Function(String)? onChanged;
 
@@ -18,6 +19,7 @@ class SimpleTextField extends StatelessWidget {
     this.maxWidth,
     this.onChanged,
     this.maxCharacters,
+    this.enabled,
     this.textAlign,
     Key? key
   }) : super(key: key);
@@ -32,11 +34,13 @@ class SimpleTextField extends StatelessWidget {
             constraints: BoxConstraints(maxWidth: maxWidth ?? 700),
             padding: const EdgeInsets.all(10),
             child: TextField(
+              enabled: enabled,
               textAlign: textAlign ?? TextAlign.start,
               maxLength: maxCharacters,
               onChanged: onChanged,
               controller: controller,
               decoration: InputDecoration(
+                counterText: '',
                 enabledBorder: OutlineInputBorder(
                   borderSide: 
                     (error != null && error != "") ?

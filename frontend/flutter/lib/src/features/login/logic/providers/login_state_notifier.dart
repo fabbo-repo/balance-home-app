@@ -1,7 +1,7 @@
 import 'package:balance_home_app/src/core/exceptions/http_exceptions.dart';
 import 'package:balance_home_app/src/features/auth/data/models/account_model.dart';
 import 'package:balance_home_app/src/features/auth/data/repositories/auth_repository.dart';
-import 'package:balance_home_app/src/features/auth/logic/providers/account_model_state_notifier.dart';
+import 'package:balance_home_app/src/features/auth/logic/providers/account/account_model_state_notifier.dart';
 import 'package:balance_home_app/src/features/login/data/models/credentials_model.dart';
 import 'package:balance_home_app/src/features/login/data/models/jwt_model.dart';
 import 'package:balance_home_app/src/features/login/data/repositories/jwt_repository.dart';

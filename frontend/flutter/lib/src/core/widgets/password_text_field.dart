@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 
 class PasswordTextField extends StatefulWidget {
   final String title;
-
   final TextEditingController controller;
-
   final String? error;
-
+  final double? maxWidth;
+  final bool? enabled;
   final Function(String)? onChanged;
 
 
@@ -14,6 +13,8 @@ class PasswordTextField extends StatefulWidget {
     required this.title, 
     required this.controller,
     this.error,
+    this.maxWidth,
+    this.enabled,
     this.onChanged,
     Key? key
   }) : super(key: key);
@@ -31,13 +32,16 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
       child: Column(
         children: [
           Container(
-            constraints: const BoxConstraints(maxWidth: 700),
+            constraints: BoxConstraints(maxWidth: widget.maxWidth ?? 700),
             padding: const EdgeInsets.all(10),
             child: TextField(
+              maxLength: 40,
+              enabled: widget.enabled,
               obscureText: !showPassword,
               onChanged: widget.onChanged,
               controller: widget.controller,
               decoration: InputDecoration(
+                counterText: '',
                 enabledBorder: OutlineInputBorder(
                   borderSide: 
                     (widget.error != null && widget.error != "") ?
