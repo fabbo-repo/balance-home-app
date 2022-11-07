@@ -72,17 +72,17 @@ class CustomAppBar extends ConsumerWidget {
             margin: const EdgeInsets.all(4),
             child: Image.network(account.image),
           ),
-          (!platformService.isMobile) ?
-          Container(
-            margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: Text(
-              account.username,
-              style: const TextStyle(
-                fontSize: 17,
-                color: Color.fromARGB(255, 202, 202, 202)
+          if (!platformService.isMobile)
+            Container(
+              margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: Text(
+                account.username,
+                style: const TextStyle(
+                  fontSize: 17,
+                  color: Color.fromARGB(255, 202, 202, 202)
+                ),
               ),
-            ),
-          ) : Container()
+            )
         ],
       ),
     );

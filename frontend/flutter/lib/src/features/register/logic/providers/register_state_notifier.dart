@@ -1,6 +1,6 @@
 import 'package:balance_home_app/src/core/exceptions/http_exceptions.dart';
 import 'package:balance_home_app/src/features/auth/data/repositories/auth_repository.dart';
-import 'package:balance_home_app/src/features/auth/logic/providers/account_model_state_notifier.dart';
+import 'package:balance_home_app/src/features/auth/logic/providers/account/account_model_state_notifier.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
 import 'package:balance_home_app/src/features/register/data/models/register_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

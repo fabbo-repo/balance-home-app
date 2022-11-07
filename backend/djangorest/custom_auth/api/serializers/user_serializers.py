@@ -168,10 +168,34 @@ class ChangePasswordSerializer(serializers.Serializer):
         validators=[validate_password]
     )
 
-class ResetPasswordSerializer(serializers.Serializer):
+class ResetPasswordStartSerializer(serializers.Serializer):
+    """
+    Serializer for password reset (code creation)
+    """
+    email = serializers.EmailField(required=True)
+    
+    def validate_email(self, email):
+        try:
+            User.objects.get(email=email)
+        except:
+            raise serializers.ValidationError(_("User not found"))
+        return email
+
+    def validate(self, data):
+        user = User.objects.get(email=data['email'])
+        if user.date_pass_reset:
+            duration_s = (now() - user.date_pass_reset).total_seconds()
+            if duration_s < settings.EMAIL_CODE_THRESHOLD :
+                raise serializers.ValidationError(
+                    {"code": _("Code has already been sent, wait {} seconds")
+                        .format(str(settings.EMAIL_CODE_THRESHOLD-duration_s))})
+        return data
+
+class ResetPasswordVerifySerializer(serializers.Serializer):
     """
     Serializer for password reset (code verification)
     """
+    email = serializers.EmailField(required=True)
     code = serializers.CharField(
         required=True, 
         min_length=6, max_length=6
@@ -180,17 +204,25 @@ class ResetPasswordSerializer(serializers.Serializer):
         required=True,
         validators=[validate_password]
     )
+    
+    def validate_email(self, email):
+        try:
+            User.objects.get(email=email)
+        except:
+            raise serializers.ValidationError(_("User not found"))
+        return email
 
-    def validate_code(self, code):
-        user = self.user
+    def validate(self, data):
+        user = User.objects.get(email=data["email"])
+        code = data["code"]
         if not user.date_pass_reset:
-            raise serializers.ValidationError("None code sent")
+            raise serializers.ValidationError({"code", _("No code sent")})
         if user.date_pass_reset:
             duration_s = (now() - user.date_pass_reset).total_seconds()
             if duration_s > settings.EMAIL_CODE_VALID :
                 raise serializers.ValidationError(
-                    _("Code is no longer valid"))
+                    {"code": _("Code is no longer valid")})
         if user.pass_reset != code :
             raise serializers.ValidationError(
-                _("Invalid code"))
-        return code
+                {"code": _("Invalid code")})
+        return data

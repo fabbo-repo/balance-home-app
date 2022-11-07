@@ -54,6 +54,8 @@ dependencies:
   language_picker: ^0.4.1
   # Multiplatform IO package
   universal_io: ^2.0.4
+  # Flags images
+  flag: ^6.0.0
   
 
 dev_dependencies:

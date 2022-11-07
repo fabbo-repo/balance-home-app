@@ -11,20 +11,19 @@ class RegisterFormStateProvider extends StateNotifier<RegisterFormState> {
   RegisterFormStateProvider(this.localizations) : super(RegisterFormState(RegisterForm.empty()));
 
   void setUsername(String username) {
-    final appLocalizations = localizations;
     RegisterForm form = state.form.copyWith(username: StringField(value: username));
     late StringField usernameField;
     if (username.isEmpty) {
       usernameField = form.username.copyWith(isValid: false, 
-        errorMessage: appLocalizations.needUsername
+        errorMessage: localizations.needUsername
       );
     } else if (username.length > 15) {
       usernameField = form.username.copyWith(isValid: false, 
-        errorMessage: appLocalizations.usernameMaxSize
+        errorMessage: localizations.usernameMaxSize
       );
     } else if (!RegExp(r"^[A-Za-z0-9]+$").hasMatch(username)) {
       usernameField = form.username.copyWith(isValid: false, 
-        errorMessage: appLocalizations.usernameNotValid
+        errorMessage: localizations.usernameNotValid
       );
     } else {
       usernameField = form.username.copyWith(isValid: true, errorMessage: "");
@@ -33,16 +32,15 @@ class RegisterFormStateProvider extends StateNotifier<RegisterFormState> {
   }
 
   void setEmail(String email) {
-    final appLocalizations = localizations;
     RegisterForm form = state.form.copyWith(email: StringField(value: email));
     late StringField emailField;
     if (email.isEmpty) {
       emailField = form.email.copyWith(isValid: false, 
-        errorMessage: appLocalizations.needEmail
+        errorMessage: localizations.needEmail
       );
     } else if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email)) {
       emailField = form.email.copyWith(isValid: false, 
-        errorMessage: appLocalizations.emailNotValid
+        errorMessage: localizations.emailNotValid
       );
     } else {
       emailField = form.email.copyWith(isValid: true, errorMessage: "");
@@ -51,18 +49,17 @@ class RegisterFormStateProvider extends StateNotifier<RegisterFormState> {
   }
 
   void setPassword(String password) {
-    final appLocalizations = localizations;
     RegisterForm form = state.form.copyWith(password: StringField(value: password));
     late StringField passwordField;
     if (password.isEmpty) {
       passwordField = form.password.copyWith(isValid: false, 
-        errorMessage: appLocalizations.needPassword);
+        errorMessage: localizations.needPassword);
     } else if (password.length < 8) {
       passwordField = form.password.copyWith(isValid: false, 
-        errorMessage: appLocalizations.shortPassword);
+        errorMessage: localizations.shortPassword);
     } else if (RegExp(r"^[1-9]*$").hasMatch(password)) {
       passwordField = form.password.copyWith(isValid: false, 
-        errorMessage: appLocalizations.numericPassword);
+        errorMessage: localizations.numericPassword);
     } else {
       passwordField = form.password.copyWith(isValid: true, errorMessage: "");
     }
@@ -70,15 +67,14 @@ class RegisterFormStateProvider extends StateNotifier<RegisterFormState> {
   }
   
   void setPassword2(String password2) {
-    final appLocalizations = localizations;
     RegisterForm form = state.form.copyWith(password2: StringField(value: password2));
     late StringField password2Field;
     if (password2.isEmpty) {
       password2Field = form.password2.copyWith(isValid: false, 
-        errorMessage: appLocalizations.needRepeatedPassword);
+        errorMessage: localizations.needRepeatedPassword);
     } else if (password2 != state.form.password.value) {
       password2Field = form.password2.copyWith(isValid: false, 
-        errorMessage: appLocalizations.passwordNotMatch);
+        errorMessage: localizations.passwordNotMatch);
     } else {
       password2Field = form.password2.copyWith(isValid: true, errorMessage: "");
     }
@@ -86,16 +82,15 @@ class RegisterFormStateProvider extends StateNotifier<RegisterFormState> {
   }
   
   void setInvitationCode(String invitationCode) {
-    final appLocalizations = localizations;
     RegisterForm form = state.form.copyWith(invCode: StringField(value: invitationCode));
     late StringField invitationCodeField;
     if (invitationCode.isEmpty) {
       invitationCodeField = form.invCode.copyWith(isValid: false, 
-        errorMessage: appLocalizations.needInvitationCode
+        errorMessage: localizations.needInvitationCode
       );
     } else if (!RegExp(r"^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}").hasMatch(invitationCode)) {
       invitationCodeField = form.invCode.copyWith(isValid: false, 
-        errorMessage: appLocalizations.invitationCodeNotValid
+        errorMessage: localizations.invitationCodeNotValid
       );
     } else {
       invitationCodeField = form.invCode.copyWith(isValid: true, errorMessage: "");

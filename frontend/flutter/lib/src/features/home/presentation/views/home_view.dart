@@ -27,7 +27,7 @@ class HomeView extends ConsumerWidget {
           preferredSize: const Size.fromHeight(40), 
           child: CustomAppBar()),
       resizeToAvoidBottomInset: false,
-      body: child,
+      body: SafeArea(child: child),
       selectedIndex: selectedSection.index,
       onDestinationSelected: (int index) {
         switch (HomeTab.values[index]) {

@@ -1,6 +1,6 @@
 import 'package:balance_home_app/src/core/forms/string_field.dart';
-import 'package:balance_home_app/src/features/login/presentation/forms/email_code_form.dart';
-import 'package:balance_home_app/src/features/login/presentation/forms/email_code_form_state.dart';
+import 'package:balance_home_app/src/features/auth/presentation/forms/email_code_form.dart';
+import 'package:balance_home_app/src/features/auth/presentation/forms/email_code_form_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

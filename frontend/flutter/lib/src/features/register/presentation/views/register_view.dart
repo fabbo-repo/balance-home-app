@@ -3,25 +3,29 @@ import 'package:balance_home_app/src/core/widgets/password_text_field.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_field.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
-import 'package:balance_home_app/src/features/auth/views/utils.dart';
+import 'package:balance_home_app/src/features/auth/logic/providers/email_code/email_code_provider.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/utils.dart';
 import 'package:balance_home_app/src/features/coin/data/models/coin_type_model.dart';
 import 'package:balance_home_app/src/features/coin/presentation/widgets/dropdown_picker_field.dart';
-import 'package:balance_home_app/src/features/login/logic/providers/email_code_provider.dart';
 import 'package:balance_home_app/src/features/register/data/models/register_model.dart';
 import 'package:balance_home_app/src/features/register/logic/providers/register_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegisterView extends ConsumerStatefulWidget {
-
-  final usernameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final passwordController2 = TextEditingController();
-  final invitationCodeController = TextEditingController();
+  final TextEditingController usernameController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final TextEditingController password2Controller;
+  final TextEditingController invitationCodeController;
   final List<CoinTypeModel> coinTypes;
 
-  RegisterView({
+  const RegisterView({
+    required this.usernameController,
+    required this.emailController,
+    required this.passwordController,
+    required this.password2Controller,
+    required this.invitationCodeController,
     required this.coinTypes, 
     Key? key}) : super(key: key);
 
@@ -46,6 +50,8 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
         child: Column(
           children: [
             SimpleTextField(
+              maxCharacters: 15,
+              maxWidth: 400,
               title: appLocalizations.username,
               controller: widget.usernameController,
               onChanged: (username) {
@@ -55,6 +61,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
             ),
             SimpleTextField(
               title: appLocalizations.emailAddress,
+              maxWidth: 400,
               controller: widget.emailController,
               onChanged: (email) {
                 registerFormState.setEmail(email);
@@ -63,6 +70,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
             ),
             PasswordTextField(
               title: appLocalizations.password,
+              maxWidth: 400,
               controller: widget.passwordController,
               onChanged: (password) {
                 registerFormState.setPassword(password);
@@ -72,7 +80,8 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
             ),
             PasswordTextField(
               title: appLocalizations.repeatPassword,
-              controller: widget.passwordController2,
+              maxWidth: 400,
+              controller: widget.password2Controller,
               onChanged: (password2) {
                 registerFormState.setPassword2(password2);
               },
@@ -80,6 +89,8 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
             ),
             SimpleTextField(
               title: appLocalizations.invitationCode,
+              maxWidth: 450,
+              maxCharacters: 36,
               controller: widget.invitationCodeController,
               onChanged: (invitationCode) {
                 registerFormState.setInvitationCode(invitationCode);
@@ -122,7 +133,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                     if (!mounted) return;
                     bool sendCode = await showCodeAdviceDialog(context, appLocalizations);
                     if (sendCode) {
-                      await emailCodeStateNotifier.sendCode(registration.email);
+                      await emailCodeStateNotifier.requestCode(registration.email);
                       AuthState newEmailCodeState = ref.read(emailCodeStateNotifierProvider);
                       if (newEmailCodeState is! AuthStateError) {
                         if (!mounted) return;

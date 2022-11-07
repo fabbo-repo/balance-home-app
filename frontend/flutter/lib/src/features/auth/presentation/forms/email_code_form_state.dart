@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/features/login/presentation/forms/email_code_form.dart';
+import 'package:balance_home_app/src/features/auth/presentation/forms/email_code_form.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'email_code_form_state.freezed.dart';

@@ -200,6 +200,7 @@ class HttpService {
             body: jsonEncode({"refresh": _jwtModel!.refresh})));
         // If 401 is recived it should be tried with stored credentials
         if (newResponse.statusCode == 401) {
+          _jwtModel = null; // Current token is not valid
           String? email = await _secureStorage.read(key: "email");
           String? password = await _secureStorage.read(key: "password");
           if (email != null && password != null) {
