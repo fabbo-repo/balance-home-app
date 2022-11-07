@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-09 12:20+0200\n"
+"POT-Creation-Date: 2022-11-07 16:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,11 +90,11 @@ msgstr "Monthly balance"
 msgid "Monthly balances"
 msgstr "Monthly balances"
 
-#: .\coin\api\views.py:52
+#: .\coin\api\views.py:53
 msgid "{} code not supported"
 msgstr "{} code not supported"
 
-#: .\coin\api\views.py:59
+#: .\coin\api\views.py:60
 msgid "No exchange data, try later"
 msgstr "No exchange data, try later"
 
@@ -138,37 +138,47 @@ msgstr "Coin exchange"
 msgid "Coin exchanges"
 msgstr "Coin exchanges"
 
-#: .\core\settings.py:159
+#: .\core\settings.py:160
 msgid "English"
 msgstr "English"
 
-#: .\core\settings.py:160
+#: .\core\settings.py:161
 msgid "Spanish"
 msgstr "Spanish"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:19
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:22
 msgid "No invitation code stored"
 msgstr "No invitation code stored"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:22
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:25
 msgid "Unverified email"
 msgstr "Unverified email"
 
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:39
+msgid "No active account found with the given credentials"
+msgstr "No active account found with the given credentials"
+
 #: .\custom_auth\api\serializers\jwt_code_serializers.py:46
+msgid "Invalid refresh token"
+msgstr "Invalid refresh token"
+
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:73
+#: .\custom_auth\api\serializers\user_serializers.py:190
 msgid "Code has already been sent, wait {} seconds"
 msgstr "Code has already been sent, wait {} seconds"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:78
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:105
+#: .\custom_auth\api\serializers\user_serializers.py:219
 msgid "No code sent"
 msgstr "No code sent"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:83
-#: .\custom_auth\api\serializers\user_serializers.py:188
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:110
+#: .\custom_auth\api\serializers\user_serializers.py:224
 msgid "Code is no longer valid"
 msgstr "Code is no longer valid"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:85
-#: .\custom_auth\api\serializers\user_serializers.py:191
+#: .\custom_auth\api\serializers\jwt_code_serializers.py:112
+#: .\custom_auth\api\serializers\user_serializers.py:227
 msgid "Invalid code"
 msgstr "Invalid code"
 
@@ -199,6 +209,8 @@ msgstr "Language not supported"
 msgid "Username and email can not be the same"
 msgstr "Username and email can not be the same"
 
+#: .\custom_auth\api\serializers\user_serializers.py:181
+#: .\custom_auth\api\serializers\user_serializers.py:212
 #: .\custom_auth\api\serializers\utils.py:12
 msgid "User not found"
 msgstr "User not found"
@@ -322,6 +334,18 @@ msgstr "Expense"
 #: .\expense\models.py:35
 msgid "Expenses"
 msgstr "Expenses"
+
+#: .\frontend_version\models.py:7
+msgid "version"
+msgstr "version"
+
+#: .\frontend_version\models.py:14
+msgid "Frontend version"
+msgstr "Frontend version"
+
+#: .\frontend_version\models.py:15
+msgid "Frontend versions"
+msgstr "Frontend versions"
 
 #: .\revenue\models.py:19
 msgid "Revenue type"

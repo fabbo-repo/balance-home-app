@@ -1,0 +1,10 @@
+version: '2.1'
+
+services:
+  balance_home_app_web_nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d
+      - ./flutter/build/web:/usr/share/nginx/html

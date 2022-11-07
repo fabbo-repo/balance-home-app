@@ -1,0 +1,93 @@
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+// Custom properties for release version
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+android {
+    compileSdkVersion 33
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
+        
+        applicationId "com.fabbo.balance_home_app"
+        
+        // Fetch custom ENV variables to use them in the AndroidManifest as: "${ENV_NAME}"
+        //manifestPlaceholders += [ENV_NAME:  System.getenv("ENV_NAME")]
+        
+        minSdkVersion 18 // flutter_secure_storage needs version 18
+        targetSdkVersion flutter.targetSdkVersion
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+
+        // Needed when referenced libraries exceed 65,536 methods
+        multiDexEnabled true
+    }
+    
+    signingConfigs {
+        release {
+            // Signing config for the release build.
+            // A key.properties should be created in android dir
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+            // Sample:
+            // storePassword=android
+            // keyPassword=android
+            // keyAlias=upload
+            // storeFile=/.../keystore.jks
+        }
+    }
+    
+    buildTypes {
+        release {
+            // Change this line to "signingConfig signingConfigs.debug" for signing 
+            // with the debug keys (so `flutter run --release` works)
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    // Needed when referenced libraries exceed 65,536 methods
+    implementation 'com.android.support:multidex'
+}

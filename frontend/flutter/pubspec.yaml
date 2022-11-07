@@ -1,0 +1,97 @@
+name: balance_home_app
+description: Revenues and expenses management.
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 0.0.2+2
+
+environment:
+  sdk: '>=2.18.2 <3.0.0'
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  # The following adds the Cupertino Icons font to your application.
+  cupertino_icons: ^1.0.2
+  # Dependencies for internationalization with flutter:
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.17.0
+  # Get version info
+  package_info_plus: ^3.0.1
+  # Environment variables
+  flutter_dotenv: ^5.0.2
+  # Http request for backend
+  http: ^0.13.5
+  # Routing
+  go_router: ^5.0.5
+  # State management
+  flutter_riverpod: ^2.0.2
+  # Equals and hashCode override
+  equatable: ^2.0.5
+  # Fix url in web
+  url_strategy: ^0.2.0
+  # Launcher icons
+  flutter_launcher_icons: ^0.10.0
+  # Secure shared preferences
+  flutter_secure_storage: ^6.0.0
+  # Data class generator
+  freezed_annotation: ^2.0.3
+  json_annotation: ^4.4.0
+  # Adaptative navigation
+  adaptive_navigation: ^0.0.7
+  # UI widgets
+  language_picker: ^0.4.1
+  # Multiplatform IO package
+  universal_io: ^2.0.4
+  # Flags images
+  flag: ^6.0.0
+  
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  # Environment generator (dev, stage, prod ...)
+  flutter_flavorizr: ^2.1.4
+  # Contains a set of recommended lints to encourage good coding practices.
+  flutter_lints: ^2.0.0
+  #very_good_analysis: ^3.1.0
+  # Data class generator
+  build_runner: ^2.1.10
+  freezed: ^2.0.3
+  json_serializable: ^6.5.3
+
+# The following section is specific to Flutter packages.
+flutter:
+  # Material Icons font is included with your application.
+  uses-material-design: true  
+  # Flag to generate internationalization files
+  generate: true
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - .env
+    - assets/images/
+  
+flutter_icons:
+  android: true
+  image_path_android: 'assets/images/balance_home_app_icon.png'
+  ios: true
+  image_path_ios: 'assets/images/balance_home_app_icon.png'
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets/images/balance_home_app_icon.png"
+  windows:
+    generate: true
+    image_path: "assets/images/balance_home_app_icon.png"
+    icon_size: 48 # min:48, max:256, default: 48
