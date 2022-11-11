@@ -7,6 +7,7 @@ import 'package:balance_home_app/src/features/home/presentation/views/home_view.
 import 'package:balance_home_app/src/features/login/logic/providers/login_provider.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
 import 'package:balance_home_app/src/features/login/presentation/views/forgot_password_view.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/views/statistics_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -33,7 +34,7 @@ class RouterNotifier extends ChangeNotifier {
           key: _scaffoldKey,
           child: HomeView(
             selectedSection: HomeTab.statistics,
-            child: const Center(child: Text("Hello World"))
+            child: const Center(child: StatisticsView())
           )
         ),
     ),

@@ -3,24 +3,10 @@ from custom_auth.models import InvitationCode, User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
-from django.utils.timezone import now
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import check_for_language
 from django.core.exceptions import ValidationError
 
-
-@transaction.atomic()
-def decrease_inv_code_usage(code):
-    """
-    Race condition at usage left update in an InvitationCode
-    """
-    sid = transaction.savepoint()
-    inv_code = code
-    inv_code.usage_left -= 1
-    if inv_code.usage_left <= 0: inv_code.is_active = False
-    inv_code.save()
-    transaction.savepoint_commit(sid)
 
 def check_inv_code(code):
     """
@@ -50,7 +36,8 @@ class UserCreationSerializer(serializers.ModelSerializer):
     Serializer for User creation (register)
     """
     username = serializers.CharField(
-        required=True, max_length=15,
+        required=True,
+        max_length=15,
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
     email = serializers.EmailField(
@@ -59,12 +46,14 @@ class UserCreationSerializer(serializers.ModelSerializer):
     )
     inv_code = serializers.SlugRelatedField(
         required=True, 
-        slug_field="code", many=False,
+        slug_field="code",
+        many=False,
         queryset=InvitationCode.objects.all()
     )
     password = serializers.CharField(
         required=True, 
         write_only=True,
+        max_length=30,
         validators=[validate_password]
     )
     password2 = serializers.CharField(
@@ -118,7 +107,15 @@ class UserCreationSerializer(serializers.ModelSerializer):
             language=language
         )
         user.set_password(validated_data['password'])
-        decrease_inv_code_usage(inv_code)
+        # Invitation code decrease, race condition
+        inv_codes = InvitationCode.objects.select_for_update().filter(code=inv_code.code)
+        with transaction.atomic():
+            for inv_code in inv_codes:
+                inv_code.usage_left = inv_code.usage_left - 1
+                if inv_code.usage_left <= 0: inv_code.is_active = False
+                inv_code.save()
+        # Alternative:
+        # inv_code.usage_left = F('usage_left') - 1
         user.save()
         return user
 
@@ -153,76 +150,3 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
         read_only_fields = [
             'last_login'
         ]
-
-
-class ChangePasswordSerializer(serializers.Serializer):
-    """
-    Serializer for password change (needs old password)
-    """
-    old_password = serializers.CharField(
-        required=True,
-        #validators=[validate_password]
-    )
-    new_password = serializers.CharField(
-        required=True,
-        validators=[validate_password]
-    )
-
-class ResetPasswordStartSerializer(serializers.Serializer):
-    """
-    Serializer for password reset (code creation)
-    """
-    email = serializers.EmailField(required=True)
-    
-    def validate_email(self, email):
-        try:
-            User.objects.get(email=email)
-        except:
-            raise serializers.ValidationError(_("User not found"))
-        return email
-
-    def validate(self, data):
-        user = User.objects.get(email=data['email'])
-        if user.date_pass_reset:
-            duration_s = (now() - user.date_pass_reset).total_seconds()
-            if duration_s < settings.EMAIL_CODE_THRESHOLD :
-                raise serializers.ValidationError(
-                    {"code": _("Code has already been sent, wait {} seconds")
-                        .format(str(settings.EMAIL_CODE_THRESHOLD-duration_s))})
-        return data
-
-class ResetPasswordVerifySerializer(serializers.Serializer):
-    """
-    Serializer for password reset (code verification)
-    """
-    email = serializers.EmailField(required=True)
-    code = serializers.CharField(
-        required=True, 
-        min_length=6, max_length=6
-    )
-    new_password = serializers.CharField(
-        required=True,
-        validators=[validate_password]
-    )
-    
-    def validate_email(self, email):
-        try:
-            User.objects.get(email=email)
-        except:
-            raise serializers.ValidationError(_("User not found"))
-        return email
-
-    def validate(self, data):
-        user = User.objects.get(email=data["email"])
-        code = data["code"]
-        if not user.date_pass_reset:
-            raise serializers.ValidationError({"code", _("No code sent")})
-        if user.date_pass_reset:
-            duration_s = (now() - user.date_pass_reset).total_seconds()
-            if duration_s > settings.EMAIL_CODE_VALID :
-                raise serializers.ValidationError(
-                    {"code": _("Code is no longer valid")})
-        if user.pass_reset != code :
-            raise serializers.ValidationError(
-                {"code": _("Invalid code")})
-        return data

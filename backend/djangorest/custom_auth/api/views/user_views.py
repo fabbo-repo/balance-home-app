@@ -2,23 +2,22 @@ import os
 from coin.currency_converter_integration import convert_or_fetch
 from core.permissions import IsCurrentVerifiedUser
 from custom_auth.models import User
-from custom_auth.api.serializers.jwt_code_serializers import (
+from custom_auth.api.serializers.code_serializers import (
     CodeSerializer, 
     CodeVerificationSerializer, 
-    CustomTokenObtainPairSerializer, 
-    CustomTokenRefreshSerializer
 )
 from rest_framework import generics, status, mixins
 from rest_framework.parsers import FormParser, MultiPartParser, JSONParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from custom_auth.api.serializers.user_serializers import (
+    UserCreationSerializer,
+    UserRetrieveUpdateDestroySerializer
+)
+from custom_auth.api.serializers.code_serializers import (
     ChangePasswordSerializer,
     ResetPasswordStartSerializer,
     ResetPasswordVerifySerializer,
-    UserCreationSerializer,
-    UserRetrieveUpdateDestroySerializer
 )
 from custom_auth.tasks import send_password_code
 from django.utils.timezone import now
@@ -77,17 +76,6 @@ class CodeVerificationView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = CodeVerificationSerializer
     parser_classes = (JSONParser,)
-
-class CustomTokenObtainPairView(TokenObtainPairView):
-    permission_classes = (AllowAny,)
-    serializer_class = CustomTokenObtainPairSerializer
-    parser_classes = (JSONParser,)
-
-class CustomTokenRefreshView(TokenRefreshView):
-    """
-    Refresh token generator view.
-    """
-    serializer_class = CustomTokenRefreshSerializer
 
 class ChangePasswordView(generics.CreateAPIView): 
     """
