@@ -57,7 +57,7 @@ dependencies:
   # Flags images
   flag: ^6.0.0
   # Graphics
-  charts_flutter: ^0.12.0
+  fl_chart: ^0.55.2
   
 
 dev_dependencies:

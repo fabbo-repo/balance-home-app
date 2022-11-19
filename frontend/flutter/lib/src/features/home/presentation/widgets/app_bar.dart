@@ -31,7 +31,10 @@ class CustomAppBar extends ConsumerWidget {
       elevation: 0,
       centerTitle: true,
       backgroundColor: const Color.fromARGB(255, 43, 43, 43),
-      title: (platformService.isLargeScreen(context) || platformService.isMediumScreen(context)) ? 
+      // If platform window is considered as large or medium, then the [AppTittle]
+      // should be shown, otherwise if mobile is the current platform nothing will be shown, 
+      // else cases a balance counter should be rendered
+      title: (platformService.isLargeWindow(context) || platformService.isMediumWindow(context)) ? 
         const AppTittle(fontSize: 30) : 
         (platformService.isMobile) ? _balanceBox(appLocalizations, account!) : null,
       leading: (platformService.isMobile) ? null : _balanceBox(appLocalizations, account!),
@@ -42,6 +45,8 @@ class CustomAppBar extends ConsumerWidget {
     );
   }
 
+  /// Returns a [Widget] that includes an account balance counter and
+  /// the coint type setup in the account. 
   Widget _balanceBox(AppLocalizations appLocalizations, AccountModel account) {
     return Container(
       width: 400,
@@ -56,6 +61,8 @@ class CustomAppBar extends ConsumerWidget {
     );
   }
 
+  /// Returns a [Widget] that includes a button with the image 
+  /// profile and name of the user account.
   Widget _profileButton(AccountModel account) {
     return ElevatedButton(
       style: ButtonStyle(

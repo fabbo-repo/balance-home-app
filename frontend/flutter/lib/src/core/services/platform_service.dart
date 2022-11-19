@@ -14,6 +14,7 @@ class PlatformService {
           defaultTargetPlatform == TargetPlatform.iOS) &&
       !isWeb;
 
+  // Whether is desktop or web environment
   bool get isDesktopOrWeb =>
       defaultTargetPlatform == TargetPlatform.windows ||
       defaultTargetPlatform == TargetPlatform.macOS ||
@@ -24,23 +25,16 @@ class PlatformService {
   ///
   /// Web is not included.
   TargetPlatform get targetPlatform => defaultTargetPlatform;
-
-  /// Gets the side of the screen with the shortest distance
-  /// from the device, and compares it with a magic number
-  /// used to classify wide screens.
-  ///
-  /// For convenience, 600 is usually used for 7 inches tablets,
-  /// but there are exceptions such as the *Nexus 7 2012* whose
-  /// value is 552, therefore it is preferred to use 550.
-  bool get wideUi =>
-      MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-          .size
-          .shortestSide >=
-      550;
   
-  bool isLargeScreen(BuildContext context) =>
+  // Whether the platform window is considered as large
+  bool isLargeWindow(BuildContext context) =>
     getWindowType(context) >= AdaptiveWindowType.large;
   
-  bool isMediumScreen(BuildContext context) =>
+  // Whether the platform window is considered as medium
+  bool isMediumWindow(BuildContext context) =>
     getWindowType(context) == AdaptiveWindowType.medium;
+  
+  // Whether the platform window is considered as small
+  bool isSmallWindow(BuildContext context) =>
+    getWindowType(context) == AdaptiveWindowType.small;
 }

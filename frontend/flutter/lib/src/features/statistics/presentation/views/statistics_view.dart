@@ -1,4 +1,7 @@
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance_chart_container.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance_line_chart.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/currency_line_chart.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings_line_chart.dart';
 import 'package:flutter/material.dart';
 
 class StatisticsView extends StatelessWidget {
@@ -6,29 +9,6 @@ class StatisticsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, int>> data = [
-      {
-        "atrr1" : 1,
-        "atrr2" : 100
-      },
-      {
-        "atrr1" : 2,
-        "atrr2" : 200
-      },
-      {
-        "atrr1" : 3,
-        "atrr2" : 300
-      }
-    ];
-    List<charts.Series<Map<String, int>, int>> series = [
-      charts.Series(
-        id: "developers",
-        data: data,
-        domainFn: (Map<String, int> series, _) => series["atrr1"]!,
-        measureFn: (Map<String, int> series, _) => series["atrr2"],
-        colorFn: (Map<String, int> series, _) => charts.ColorUtil.fromDartColor(Colors.green)
-      )
-    ];
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -38,16 +18,8 @@ class StatisticsView extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 400,
-                  width: MediaQuery.of(context).size.width * 0.45,
-                  child: charts.LineChart(series, animate: true)
-                ),
-                SizedBox(
-                  height: 400,
-                  width: MediaQuery.of(context).size.width * 0.45,
-                  child: charts.LineChart(series, animate: true)
-                ),
+                BalanceChartContainer(),
+                BalanceChartContainer(),
               ],
             ),
           ),
@@ -60,12 +32,12 @@ class StatisticsView extends StatelessWidget {
                 SizedBox(
                   height: 400,
                   width: MediaQuery.of(context).size.width * 0.45,
-                  child: charts.LineChart(series, animate: true)
+                  child: SavingsLineChart()
                 ),
                 SizedBox(
                   height: 400,
                   width: MediaQuery.of(context).size.width * 0.45,
-                  child: charts.LineChart(series, animate: true)
+                  child: SavingsLineChart()
                 ),
               ],
             ),
@@ -77,7 +49,7 @@ class StatisticsView extends StatelessWidget {
               child: SizedBox(
                 height: 600,
                 width: MediaQuery.of(context).size.width * 0.95,
-                child: charts.LineChart(series, animate: true)
+                child: CurrencyLineChart()
               ),
             ),
           ),
