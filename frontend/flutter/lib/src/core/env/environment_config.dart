@@ -1,5 +1,11 @@
+import 'package:envied/envied.dart';
+
+part 'environment_config.g.dart';
+
 // This class contains all the environment variables
-class EnvironmentConfig {
+@Envied(path: '.env', obfuscate: true)
+abstract class EnvironmentConfig {
   /// URL for API
-  static const apiUrl = String.fromEnvironment('API_URL');
+  @EnviedField(varName: "API_URL")
+  static final apiUrl = _EnvironmentConfig.apiUrl;
 }

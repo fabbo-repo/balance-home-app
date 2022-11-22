@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'revenue_type_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class RevenueTypeModel extends Equatable {
 
   final String name;

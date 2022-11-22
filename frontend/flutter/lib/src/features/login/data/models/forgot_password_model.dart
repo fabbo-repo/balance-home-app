@@ -3,12 +3,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'forgot_password_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class ForgotPasswordModel extends Equatable {
   
   final String email;
   final String code;
-  @JsonKey(name: 'new_password')
   final String newPassword;
 
   const ForgotPasswordModel({

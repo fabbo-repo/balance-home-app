@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'expense_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class ExpenseModel extends Equatable {
 
   final int id;
@@ -12,9 +12,7 @@ class ExpenseModel extends Equatable {
   final String description;
   final int quantity;
   final DateTime date;
-  @JsonKey(name: 'coin_type')
   final String coinType;
-  @JsonKey(name: 'exp_type')
   final ExpenseTypeModel expType;
 
   const ExpenseModel({

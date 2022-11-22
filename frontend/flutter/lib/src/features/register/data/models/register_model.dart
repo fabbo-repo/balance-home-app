@@ -3,15 +3,13 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'register_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class RegisterModel extends Equatable {
 
   final String username;
   final String email;
   final String language;
-  @JsonKey(name: 'inv_code')
   final String invCode;
-  @JsonKey(name: 'pref_coin_type')
   final String prefCoinType;
   final String password;
   final String password2;

@@ -67,6 +67,8 @@ class APIContract {
   static const String revenue = "api/v1/revenue";
   /// [GET] Returns revenue type
   static const String revenueType = "api/v1/revenue/type";
+  /// [GET] Returns revenue years
+  static const String revenueYears = "api/v1/revenue/years";
   
   /*
    * ============ Expense ============ *
@@ -75,4 +77,6 @@ class APIContract {
   static const String expense = "api/v1/expense";
   /// [GET] Returns expense type
   static const String expenseType = "api/v1/expense/type";
+  /// [GET] Returns expense years
+  static const String expenseYears = "api/v1/expense/years";
 }

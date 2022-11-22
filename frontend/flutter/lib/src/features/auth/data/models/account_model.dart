@@ -3,23 +3,18 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'account_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class AccountModel extends Equatable {
 
   final String username;
   final String email;
-  @JsonKey(name: 'receive_email_balance')
   final bool receiveEmailBalance;
   final double balance;
-  @JsonKey(name: 'expected_annual_balance')
   final double expectedAnnualBalance;
-  @JsonKey(name: 'expected_monthly_balance')
   final double expectedMonthlyBalance;
   final String language;
-  @JsonKey(name: 'pref_coin_type')
   final String prefCoinType;
   final String image;
-  @JsonKey(name: 'last_login')
   final DateTime? lastLogin;
 
   const AccountModel({

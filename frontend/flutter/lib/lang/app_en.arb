@@ -9,6 +9,20 @@
     "appTitle": "BalHom",
     "appTitle1": "Bal",
     "appTitle2": "Hom",
+    
+    "@_MONTHS":{},
+    "january": "Jan",
+    "february": "Feb",
+    "march": "Mar",
+    "april": "Apr",
+    "may": "May",
+    "june": "Jun",
+    "july": "Jul",
+    "august": "Aug",
+    "september": "Sep",
+    "october": "Oct",
+    "november": "Nov",
+    "december": "Dec",
 
     "@_APP_ERRORS":{},
     "noInternet": "Could not connect to the internet, check your connection and try again later",
@@ -77,5 +91,8 @@
     "resetPasswordAdvice": "If you forgot your password then you must enter a new one and verify the code sent to your email",
     "needInvitationCode": "Invitation code needed",
     "invitationCodeNotValid": "Invitation code not valid",
-    "needCoinType": "Coin type needed"
+    "needCoinType": "Coin type needed",
+
+    "@_STATISTICS":{},
+    "balanceChartTitle": "Revenues and expenses for"
 }

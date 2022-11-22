@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/utils/date_util.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -22,10 +23,11 @@ class BalanceLineChart extends StatelessWidget {
         color: Colors.black,
         fontSize: 12,
       );
+      String month = monthList[value.toInt()-1];
       return SideTitleWidget(
         axisSide: meta.axisSide,
         space: 5,
-        child: Text('$value', style: style),
+        child: Text(month, style: style),
       );
     },
   );
@@ -67,7 +69,11 @@ class BalanceLineChart extends StatelessWidget {
     expenseChartBarData,
   ];
   
-  const BalanceLineChart({super.key});
+  final List<String> monthList;
+
+  const BalanceLineChart({
+    required this.monthList,
+    super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +86,7 @@ class BalanceLineChart extends StatelessWidget {
           borderData: borderData,
           lineBarsData: lineBarsData,
           minX: 1,
-          maxX: 31,
+          maxX: 12,
           maxY: 4,
           minY: 0,
         ),
@@ -102,12 +108,15 @@ class BalanceLineChart extends StatelessWidget {
     ),
     spots: const [
       FlSpot(1, 1),
+      FlSpot(2, 3.5),
       FlSpot(3, 1.5),
+      FlSpot(4, 0.5),
       FlSpot(5, 1.4),
+      FlSpot(6, 1.4),
       FlSpot(7, 3.4),
+      FlSpot(8, 1),
       FlSpot(10, 2),
-      FlSpot(12, 2.2),
-      FlSpot(13, 1.8),
+      FlSpot(12, 2.2)
     ],
   );
 
@@ -127,7 +136,6 @@ class BalanceLineChart extends StatelessWidget {
       FlSpot(7, 1.2),
       FlSpot(10, 2.8),
       FlSpot(12, 2.6),
-      FlSpot(13, 3.9),
     ],
   );
 }

@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'jwt_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class JwtModel extends Equatable {
   
   final String access;

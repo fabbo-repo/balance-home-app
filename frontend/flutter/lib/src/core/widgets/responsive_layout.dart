@@ -27,12 +27,12 @@ class ResponsiveLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        double shortestSize = MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+        double width = MediaQueryData.fromWindow(WidgetsBinding.instance.window)
           .size
-          .shortestSide;
-        if (shortestSize < 550) {
+          .width;
+        if (width < 550) {
           return mobileChild;
-        } else if (shortestSize < 1100) {
+        } else if (width < 1024) {
           return tabletChild;
         } else {
           return desktopChild;
