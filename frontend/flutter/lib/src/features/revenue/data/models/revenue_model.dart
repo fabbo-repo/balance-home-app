@@ -10,7 +10,7 @@ class RevenueModel extends Equatable {
   final int id;
   final String name;
   final String description;
-  final int quantity;
+  final double quantity;
   final DateTime date;
   final String coinType;
   final RevenueTypeModel revType;

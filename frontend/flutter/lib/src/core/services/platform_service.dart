@@ -36,5 +36,6 @@ class PlatformService {
   
   // Whether the platform window is considered as small
   bool isSmallWindow(BuildContext context) =>
-    getWindowType(context) == AdaptiveWindowType.small;
+    getWindowType(context) == AdaptiveWindowType.small 
+    || getWindowType(context) == AdaptiveWindowType.xsmall;
 }

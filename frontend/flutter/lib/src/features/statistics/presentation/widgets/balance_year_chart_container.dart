@@ -1,7 +1,9 @@
 
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/core/services/platform_service.dart';
 import 'package:balance_home_app/src/core/utils/date_util.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/selected_date_model.dart';
+import 'package:balance_home_app/src/features/statistics/data/models/statistics_data_model.dart';
 import 'package:balance_home_app/src/features/statistics/logic/providers/selected_date/selected_date_model_provider.dart';
 import 'package:balance_home_app/src/features/statistics/logic/providers/selected_date/selected_date_model_state_notifier.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance_year_line_chart.dart';
@@ -9,8 +11,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BalanceYearChartContainer extends ConsumerWidget {
+  final StatisticsDataModel statisticsData;
 
-  const BalanceYearChartContainer({super.key});
+  const BalanceYearChartContainer({
+    required this.statisticsData,
+    super.key
+  });
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,12 +39,14 @@ class BalanceYearChartContainer extends ConsumerWidget {
     return Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               margin: const EdgeInsets.only(top: 20, bottom: 10),
               color: const Color.fromARGB(255, 114, 187, 83),
               height: 45,
-              width: MediaQuery.of(context).size.width * 0.35,
+              width: (PlatformService().isSmallWindow(context)) ? 
+                screenWidth * 0.80 : screenWidth * 0.35,
               child: Center(
                 child: Text(
                   style: const TextStyle(
@@ -74,9 +82,12 @@ class BalanceYearChartContainer extends ConsumerWidget {
         ),
         SizedBox(
           height: chartLineHeight,
-          width: screenWidth * 0.45,
+          width: (PlatformService().isSmallWindow(context)) ? 
+            screenWidth * 0.95 : screenWidth * 0.45,
           child: BalanceLineChart(
             monthList: months,
+            revenues: statisticsData.revenues,
+            expenses: statisticsData.expenses,
           )
         ),
       ],

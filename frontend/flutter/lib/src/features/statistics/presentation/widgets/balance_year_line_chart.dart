@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:balance_home_app/src/core/utils/date_util.dart';
+import 'package:balance_home_app/src/features/expense/data/models/expense_model.dart';
+import 'package:balance_home_app/src/features/revenue/data/models/revenue_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -70,9 +74,13 @@ class BalanceLineChart extends StatelessWidget {
   ];
   
   final List<String> monthList;
+  final List<RevenueModel> revenues;
+  final List<ExpenseModel> expenses;
 
   const BalanceLineChart({
     required this.monthList,
+    required this.revenues,
+    required this.expenses,
     super.key});
 
   @override
@@ -87,7 +95,7 @@ class BalanceLineChart extends StatelessWidget {
           lineBarsData: lineBarsData,
           minX: 1,
           maxX: 12,
-          maxY: 4,
+          maxY: getMaxQuantity(),
           minY: 0,
         ),
         swapAnimationDuration: const Duration(milliseconds: 250),
@@ -98,6 +106,7 @@ class BalanceLineChart extends StatelessWidget {
 
   LineChartBarData get revenueChartBarData => LineChartBarData(
     isCurved: true,
+    preventCurveOverShooting: true,
     color: const Color.fromARGB(184, 0, 175, 15),
     barWidth: 2,
     isStrokeCapRound: true,
@@ -122,6 +131,7 @@ class BalanceLineChart extends StatelessWidget {
 
   LineChartBarData get expenseChartBarData => LineChartBarData(
     isCurved: true,
+    preventCurveOverShooting: true,
     color: const Color.fromARGB(188, 255, 17, 0),
     barWidth: 2,
     isStrokeCapRound: true,
@@ -138,4 +148,34 @@ class BalanceLineChart extends StatelessWidget {
       FlSpot(12, 2.6),
     ],
   );
+
+  @visibleForTesting
+  double getMaxQuantity() {
+    double quantity = 4.0;
+    Map<String, double> quantityMap = {};
+    for (RevenueModel revenue in revenues) {
+      String key = "${revenue.date.day}${revenue.date.month}";
+      if (quantityMap.containsKey(key)) {
+        quantityMap[key] = quantityMap[key]! + revenue.quantity;
+      } else {
+        quantityMap[key] = revenue.quantity;
+      }
+    }
+    if (revenues.isNotEmpty) {
+      quantity = quantityMap.values.reduce(max);
+    }
+    quantityMap = {};
+    for (ExpenseModel expense in expenses) {
+      String key = "${expense.date.day}${expense.date.month}";
+      if (quantityMap.containsKey(key)) {
+        quantityMap[key] = quantityMap[key]! + expense.quantity;
+      } else {
+        quantityMap[key] = expense.quantity;
+      }
+    }
+    if (expenses.isNotEmpty && quantity < quantityMap.values.reduce(max)) {
+      quantity = quantityMap.values.reduce(max);
+    }
+    return quantity.ceil().toDouble();
+  }
 }

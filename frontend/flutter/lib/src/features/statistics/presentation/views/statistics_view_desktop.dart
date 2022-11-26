@@ -1,12 +1,17 @@
+import 'package:balance_home_app/src/features/statistics/data/models/statistics_data_model.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance_month_chart_container.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance_year_chart_container.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance_line_chart.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/currency_line_chart.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings_line_chart.dart';
 import 'package:flutter/material.dart';
 
 class StatisticsViewDesktop extends StatelessWidget {
-  const StatisticsViewDesktop({super.key});
+  final StatisticsDataModel statisticsData;
+  
+  const StatisticsViewDesktop({
+    required this.statisticsData,
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +24,8 @@ class StatisticsViewDesktop extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                BalanceMonthChartContainer(),
-                BalanceYearChartContainer(),
+                BalanceMonthChartContainer(statisticsData: statisticsData),
+                BalanceYearChartContainer(statisticsData: statisticsData),
               ],
             ),
           ),
@@ -59,6 +64,7 @@ class StatisticsViewDesktop extends StatelessWidget {
     );
   }
 
+  @visibleForTesting
   BoxDecoration borderDecoration() {
     return BoxDecoration(
       border: Border.all(),
