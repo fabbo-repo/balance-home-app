@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class FutureWidget<T> extends StatelessWidget {
   final Future<T> future;
   final Widget Function(T data) childCreation;
+  final String? errorMessage;
 
   const FutureWidget({
     required this.future,
-    required this.childCreation, 
+    required this.childCreation,
+    this.errorMessage,
     super.key
   });
 
@@ -30,12 +32,17 @@ class FutureWidget<T> extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const <Widget>[
-          Icon(
+        children: <Widget>[
+          const Icon(
             Icons.error_outline,
             color: Colors.red,
             size: 60,
           ),
+          if (errorMessage != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Text(errorMessage!),
+            ),
         ],
       ),
     );

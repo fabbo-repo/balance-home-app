@@ -114,17 +114,17 @@ flutter_native_splash:
   color: "#fdffcd"
 
   # Background image:
-  # background_image: "assets/balance_home_app_icon.png"
+  # background_image: "assets/balance_home_app_splash.png"
   
   # Image used in the splash screen. It must be a png file and 
   # should be sized for 4x pixel density
-  image: assets/images/balance_home_app_icon.png
+  image: assets/images/balance_home_app_splash.png
   
   # Image used as branding in the splash screen, must be a png file
   # branding: assets/dart.png
 
   android_12:
-    image: assets/images/balance_home_app_icon.png
+    image: assets/images/balance_home_app_splash.png
     # Splash screen background color
     color: "#fdffcd"
     # App icon background color.
