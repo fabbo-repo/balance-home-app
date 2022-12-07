@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/data/models/balance_years_model.dart';
 import 'package:balance_home_app/src/core/data/models/pagination_model.dart';
 import 'package:balance_home_app/src/core/services/api_contract.dart';
 import 'package:balance_home_app/src/core/services/http_service.dart';
@@ -10,6 +11,8 @@ abstract class IExpenseRepository {
     DateTime? dateFrom,
     DateTime? dateTo
   });
+  
+  Future<List<int>> getExpenseYears();
   
   Future<void> createExpense(ExpenseModel expense);
   
@@ -59,6 +62,15 @@ class ExpenseRepository implements IExpenseRepository {
       pageNumber ++;
     }
     return expenses;
+  }
+
+  /// Sends a [GET] request to backend service to fetch all years with expenses.
+  @override
+  Future<List<int>> getExpenseYears() async {
+    HttpResponse response = await httpService.sendGetRequest(
+      APIContract.expenseYears
+    );
+    return BalanceYearsModel.fromJson(response.content).years;
   }
 
   /// Sends a [POST] request to backend service to create an expense.

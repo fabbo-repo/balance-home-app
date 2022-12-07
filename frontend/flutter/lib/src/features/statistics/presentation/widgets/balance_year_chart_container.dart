@@ -23,7 +23,9 @@ class BalanceYearChartContainer extends ConsumerWidget {
     final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
     SelectedDateModel selectedBalanceDate = ref.watch(selectedBalanceDateStateNotifierProvider).model;
     SelectedDateModelStateNotifier selectedBalanceDateNotifier = ref.read(selectedBalanceDateStateNotifierProvider.notifier);
-    List<int> years = []; // TODO add provider with watch
+    List<int> years = <int>{
+      ...statisticsData.revenueYears, ...statisticsData.expenseYears
+    }.toList();
     int selectedYear = selectedBalanceDate.year;
     // Month names list
     List<String> months = DateUtil.getMonthList(appLocalizations);
@@ -84,7 +86,7 @@ class BalanceYearChartContainer extends ConsumerWidget {
           height: chartLineHeight,
           width: (PlatformService().isSmallWindow(context)) ? 
             screenWidth * 0.95 : screenWidth * 0.45,
-          child: BalanceLineChart(
+          child: BalanceYearLineChart(
             monthList: months,
             revenues: statisticsData.revenues,
             expenses: statisticsData.expenses,

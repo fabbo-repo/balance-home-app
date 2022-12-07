@@ -65,7 +65,9 @@ class StatisticsView extends ConsumerWidget {
       revenues: await revenueRepository.getRevenues(
         dateFrom: dateFrom,
         dateTo: dateTo
-      )
+      ),
+      expenseYears: await expenseRepository.getExpenseYears(),
+      revenueYears: await revenueRepository.getRevenueYears()
     );
   }
 }

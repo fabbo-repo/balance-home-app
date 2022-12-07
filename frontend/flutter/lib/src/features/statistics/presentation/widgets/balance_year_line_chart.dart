@@ -1,12 +1,10 @@
 import 'dart:math';
-
-import 'package:balance_home_app/src/core/utils/date_util.dart';
 import 'package:balance_home_app/src/features/expense/data/models/expense_model.dart';
 import 'package:balance_home_app/src/features/revenue/data/models/revenue_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class BalanceLineChart extends StatelessWidget {
+class BalanceYearLineChart extends StatelessWidget {
   /// Border chart lines decoration 
   FlBorderData get borderData => FlBorderData(
     show: true,
@@ -69,15 +67,15 @@ class BalanceLineChart extends StatelessWidget {
   );
 
   List<LineChartBarData> get lineBarsData => [
-    revenueChartBarData,
-    expenseChartBarData,
+    revenueChartBarData(),
+    expenseChartBarData(),
   ];
   
   final List<String> monthList;
   final List<RevenueModel> revenues;
   final List<ExpenseModel> expenses;
 
-  const BalanceLineChart({
+  const BalanceYearLineChart({
     required this.monthList,
     required this.revenues,
     required this.expenses,
@@ -103,51 +101,79 @@ class BalanceLineChart extends StatelessWidget {
     );
   }
 
+  @visibleForTesting
+  LineChartBarData revenueChartBarData() {
+    // Dictionary with months and revenue quantities per month
+    Map<int, double> spotsMap = {};
+    for (RevenueModel revenue in revenues) {
+      if (spotsMap.containsKey(revenue.date.month)) {
+        spotsMap[revenue.date.month] = spotsMap[revenue.date.month]! + revenue.quantity;
+      } else {
+        spotsMap[revenue.date.month] = revenue.quantity;
+      }
+    }
+    // Check unexistant months
+    for (int month = 1; month <= 12; month++) {
+      if (!spotsMap.containsKey(month)) {
+        spotsMap[month] = 0.0;
+      }
+    }
+    // Data conversion
+    List<FlSpot> spots = [];
+    for (int month in spotsMap.keys.toList()..sort()) {
+      spots.add(FlSpot(month.toDouble(), spotsMap[month]!.toDouble()));
+    }
+    return LineChartBarData(
+      isCurved: true,
+      preventCurveOverShooting: true,
+      color: const Color.fromARGB(184, 0, 175, 15),
+      barWidth: 2,
+      isStrokeCapRound: true,
+      dotData: FlDotData(show: false),
+      belowBarData: BarAreaData(
+        show: true,
+        color: const Color.fromARGB(55, 0, 175, 15),
+      ),
+      spots: spots
+    );
+  }
 
-  LineChartBarData get revenueChartBarData => LineChartBarData(
-    isCurved: true,
-    preventCurveOverShooting: true,
-    color: const Color.fromARGB(184, 0, 175, 15),
-    barWidth: 2,
-    isStrokeCapRound: true,
-    dotData: FlDotData(show: false),
-    belowBarData: BarAreaData(
-      show: true,
-      color: const Color.fromARGB(55, 0, 175, 15),
-    ),
-    spots: const [
-      FlSpot(1, 1),
-      FlSpot(2, 3.5),
-      FlSpot(3, 1.5),
-      FlSpot(4, 0.5),
-      FlSpot(5, 1.4),
-      FlSpot(6, 1.4),
-      FlSpot(7, 3.4),
-      FlSpot(8, 1),
-      FlSpot(10, 2),
-      FlSpot(12, 2.2)
-    ],
-  );
-
-  LineChartBarData get expenseChartBarData => LineChartBarData(
-    isCurved: true,
-    preventCurveOverShooting: true,
-    color: const Color.fromARGB(188, 255, 17, 0),
-    barWidth: 2,
-    isStrokeCapRound: true,
-    dotData: FlDotData(show: false),
-    belowBarData: BarAreaData(
-      show: true,
-      color: const Color.fromARGB(55, 212, 117, 117),
-    ),
-    spots: const [
-      FlSpot(1, 1),
-      FlSpot(3, 2.8),
-      FlSpot(7, 1.2),
-      FlSpot(10, 2.8),
-      FlSpot(12, 2.6),
-    ],
-  );
+  @visibleForTesting
+  LineChartBarData expenseChartBarData() { 
+    // Dictionary with months and expense quantities per month
+    Map<int, double> spotsMap = {};
+    for (ExpenseModel expense in expenses) {
+      if (spotsMap.containsKey(expense.date.month)) {
+        spotsMap[expense.date.month] = spotsMap[expense.date.month]! + expense.quantity;
+      } else {
+        spotsMap[expense.date.month] = expense.quantity;
+      }
+    }
+    // Check unexistant months
+    for (int month = 1; month <= 12; month++) {
+      if (!spotsMap.containsKey(month)) {
+        spotsMap[month] = 0.0;
+      }
+    }
+    // Data conversion
+    List<FlSpot> spots = [];
+    for (int month in spotsMap.keys.toList()..sort()) {
+      spots.add(FlSpot(month.toDouble(), spotsMap[month]!.toDouble()));
+    }
+    return LineChartBarData(
+      isCurved: true,
+      preventCurveOverShooting: true,
+      color: const Color.fromARGB(188, 255, 17, 0),
+      barWidth: 2,
+      isStrokeCapRound: true,
+      dotData: FlDotData(show: false),
+      belowBarData: BarAreaData(
+        show: true,
+        color: const Color.fromARGB(55, 212, 117, 117),
+      ),
+      spots: spots
+    );
+  }
 
   @visibleForTesting
   double getMaxQuantity() {

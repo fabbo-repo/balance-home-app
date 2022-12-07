@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/data/models/balance_years_model.dart';
 import 'package:balance_home_app/src/core/data/models/pagination_model.dart';
 import 'package:balance_home_app/src/core/services/api_contract.dart';
 import 'package:balance_home_app/src/core/services/http_service.dart';
@@ -10,6 +11,8 @@ abstract class IRevenueRepository {
     DateTime? dateFrom,
     DateTime? dateTo
   });
+
+  Future<List<int>> getRevenueYears();
   
   Future<void> createRevenue(RevenueModel revenue);
   
@@ -59,6 +62,15 @@ class RevenueRepository implements IRevenueRepository {
       pageNumber ++;
     }
     return revenues;
+  }
+
+  /// Sends a [GET] request to backend service to fetch all years with revenues.
+  @override
+  Future<List<int>> getRevenueYears() async {
+    HttpResponse response = await httpService.sendGetRequest(
+      APIContract.expenseYears
+    );
+    return BalanceYearsModel.fromJson(response.content).years;
   }
 
   /// Sends a [POST] request to backend service to create an revenue.
