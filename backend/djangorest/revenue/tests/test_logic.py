@@ -60,7 +60,7 @@ class RevenueLogicTests(APITestCase):
     def get_revenue_data(self):
         return {
             'name': 'Test name',
-            'description': 'Test description',
+            'description': '',
             'quantity': 2.0,
             'coin_type': self.coin_type.code,
             'rev_type': self.rev_type.name,

@@ -18,6 +18,7 @@ class Balance(models.Model):
     )
     description = models.CharField(
         verbose_name = _('description'),
+        blank=True,
         max_length = 2000, 
         default = ""
     )
