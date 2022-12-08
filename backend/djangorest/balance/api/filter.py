@@ -13,15 +13,15 @@ class AnnualBalanceFilterSet(filters.FilterSet):
         lookup_expr = "lte",
         label = "Max gross quantity"
     )
-    net_quantity_min = filters.NumberFilter(
-        field_name = "net_quantity",
+    expected_quantity_min = filters.NumberFilter(
+        field_name = "expected_quantity",
         lookup_expr = "gte",
-        label = "Min net quantity"
+        label = "Min expected quantity"
     )
-    net_quantity_max = filters.NumberFilter(
-        field_name = "net_quantity",
+    expected_quantity_max = filters.NumberFilter(
+        field_name = "expected_quantity",
         lookup_expr = "lte",
-        label = "Max net quantity"
+        label = "Max expected quantity"
     )
     
     class Meta:

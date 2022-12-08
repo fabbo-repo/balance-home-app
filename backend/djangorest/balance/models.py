@@ -63,9 +63,9 @@ class DateBalance(models.Model):
         verbose_name = _('gross quantity'),
         default = 0
     )
-    # expected_quantity - gross_quantity
-    net_quantity = models.FloatField(
-        verbose_name = _('net quantity'),
+    # expected_quantity
+    expected_quantity = models.FloatField(
+        verbose_name = _('expected quantity'),
         default = 0
     )
     coin_type = models.ForeignKey(

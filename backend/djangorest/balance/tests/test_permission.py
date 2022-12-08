@@ -82,7 +82,7 @@ class DateBalancePermissionsTests(APITestCase):
     def get_annual_balance_data(self, user):
         return {
             'gross_quantity': 1.1,
-            'net_quantity': 2.2,
+            'expected_quantity': 2.2,
             'coin_type': self.coin_type,
             'owner': user,
             'year': now().date().year
@@ -91,7 +91,7 @@ class DateBalancePermissionsTests(APITestCase):
     def get_monthly_balance_data(self, user):
         return {
             'gross_quantity': 1.1,
-            'net_quantity': 2.2,
+            'expected_quantity': 2.2,
             'coin_type': self.coin_type,
             'owner': user,
             'year': now().date().year,
@@ -102,7 +102,7 @@ class DateBalancePermissionsTests(APITestCase):
         data = self.get_annual_balance_data(user)
         return AnnualBalance.objects.create(
             gross_quantity=data['gross_quantity'],
-            net_quantity=data['net_quantity'],
+            expected_quantity=data['expected_quantity'],
             coin_type=data['coin_type'],
             owner=data['owner'],
             year=data['year'],
@@ -112,7 +112,7 @@ class DateBalancePermissionsTests(APITestCase):
         data = self.get_monthly_balance_data(user)
         return MonthlyBalance.objects.create(
             gross_quantity=data['gross_quantity'],
-            net_quantity=data['net_quantity'],
+            expected_quantity=data['expected_quantity'],
             coin_type=data['coin_type'],
             owner=data['owner'],
             year=data['year'],

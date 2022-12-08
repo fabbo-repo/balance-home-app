@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-07 16:07+0100\n"
+"POT-Creation-Date: 2022-12-08 11:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,8 +55,8 @@ msgid "gross quantity"
 msgstr "gross quantity"
 
 #: .\balance\models.py:68
-msgid "net quantity"
-msgstr "net quantity"
+msgid "expected quantity"
+msgstr "expected quantity"
 
 #: .\balance\models.py:87
 msgid "Date balance"
@@ -146,74 +146,74 @@ msgstr "English"
 msgid "Spanish"
 msgstr "Spanish"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:22
-msgid "No invitation code stored"
-msgstr "No invitation code stored"
-
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:25
-msgid "Unverified email"
-msgstr "Unverified email"
-
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:39
-msgid "No active account found with the given credentials"
-msgstr "No active account found with the given credentials"
-
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:46
-msgid "Invalid refresh token"
-msgstr "Invalid refresh token"
-
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:73
-#: .\custom_auth\api\serializers\user_serializers.py:190
+#: .\custom_auth\api\serializers\code_serializers.py:28
+#: .\custom_auth\api\serializers\code_serializers.py:96
 msgid "Code has already been sent, wait {} seconds"
 msgstr "Code has already been sent, wait {} seconds"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:105
-#: .\custom_auth\api\serializers\user_serializers.py:219
+#: .\custom_auth\api\serializers\code_serializers.py:60
+#: .\custom_auth\api\serializers\code_serializers.py:125
 msgid "No code sent"
 msgstr "No code sent"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:110
-#: .\custom_auth\api\serializers\user_serializers.py:224
+#: .\custom_auth\api\serializers\code_serializers.py:65
+#: .\custom_auth\api\serializers\code_serializers.py:130
 msgid "Code is no longer valid"
 msgstr "Code is no longer valid"
 
-#: .\custom_auth\api\serializers\jwt_code_serializers.py:112
-#: .\custom_auth\api\serializers\user_serializers.py:227
+#: .\custom_auth\api\serializers\code_serializers.py:67
+#: .\custom_auth\api\serializers\code_serializers.py:133
 msgid "Invalid code"
 msgstr "Invalid code"
 
-#: .\custom_auth\api\serializers\user_serializers.py:31
+#: .\custom_auth\api\serializers\code_serializers.py:87
+#: .\custom_auth\api\serializers\code_serializers.py:118
+#: .\custom_auth\api\serializers\utils.py:12
+msgid "User not found"
+msgstr "User not found"
+
+#: .\custom_auth\api\serializers\jwt_serializers.py:15
+msgid "No invitation code stored"
+msgstr "No invitation code stored"
+
+#: .\custom_auth\api\serializers\jwt_serializers.py:18
+msgid "Unverified email"
+msgstr "Unverified email"
+
+#: .\custom_auth\api\serializers\jwt_serializers.py:32
+msgid "No active account found with the given credentials"
+msgstr "No active account found with the given credentials"
+
+#: .\custom_auth\api\serializers\jwt_serializers.py:39
+msgid "Invalid refresh token"
+msgstr "Invalid refresh token"
+
+#: .\custom_auth\api\serializers\user_serializers.py:17
 msgid "Invitation code not found"
 msgstr "Invitation code not found"
 
-#: .\custom_auth\api\serializers\user_serializers.py:33
+#: .\custom_auth\api\serializers\user_serializers.py:19
 msgid "Invalid invitation code"
 msgstr "Invalid invitation code"
 
-#: .\custom_auth\api\serializers\user_serializers.py:42
+#: .\custom_auth\api\serializers\user_serializers.py:28
 msgid "Password fields do not match"
 msgstr "Password fields do not match"
 
-#: .\custom_auth\api\serializers\user_serializers.py:45
+#: .\custom_auth\api\serializers\user_serializers.py:31
 #: .\custom_auth\models.py:175
 msgid "Password cannot match other profile data"
 msgstr "Password cannot match other profile data"
 
-#: .\custom_auth\api\serializers\user_serializers.py:94
+#: .\custom_auth\api\serializers\user_serializers.py:85
 #: .\custom_auth\models.py:172
 msgid "Language not supported"
 msgstr "Language not supported"
 
-#: .\custom_auth\api\serializers\user_serializers.py:106
+#: .\custom_auth\api\serializers\user_serializers.py:97
 #: .\custom_auth\models.py:178
 msgid "Username and email can not be the same"
 msgstr "Username and email can not be the same"
-
-#: .\custom_auth\api\serializers\user_serializers.py:181
-#: .\custom_auth\api\serializers\user_serializers.py:212
-#: .\custom_auth\api\serializers\utils.py:12
-msgid "User not found"
-msgstr "User not found"
 
 #: .\custom_auth\api\serializers\utils.py:15
 msgid "User already verified"

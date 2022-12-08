@@ -30,7 +30,9 @@ class DateBalanceLoicTests(APITestCase):
             "password": "password1@212",
             "password2": "password1@212",
             'inv_code': str(self.inv_code.code),
-            'pref_coin_type': str(self.coin_type.code)
+            'pref_coin_type': str(self.coin_type.code),
+            "expected_annual_balance": 10.0,
+            "expected_monthly_balance": 10.0
         }
         self.credentials = {
             'email':"email1@test.com",
@@ -42,7 +44,9 @@ class DateBalanceLoicTests(APITestCase):
             email=self.user_data["email"],
             inv_code=self.inv_code,
             verified=True,
-            pref_coin_type=self.coin_type
+            pref_coin_type=self.coin_type,
+            expected_annual_balance=self.user_data["expected_annual_balance"],
+            expected_monthly_balance=self.user_data["expected_monthly_balance"]
         )
         user.set_password(self.user_data['password'])
         user.save()
@@ -109,9 +113,11 @@ class DateBalanceLoicTests(APITestCase):
         self.assertEqual(now().date().year, last_monthly_balance.year)
         self.assertEqual(now().date().month, last_monthly_balance.month)
         self.assertEqual(data['quantity'], last_monthly_balance.gross_quantity)
+        self.assertEqual(10.0, last_monthly_balance.expected_quantity)
         last_annual_balance = AnnualBalance.objects.last()
         self.assertEqual(now().date().year, last_annual_balance.year)
         self.assertEqual(data['quantity'], last_annual_balance.gross_quantity)
+        self.assertEqual(10.0, last_annual_balance.expected_quantity)
 
     def test_expense_post_date_balances(self):
         """
@@ -128,9 +134,11 @@ class DateBalanceLoicTests(APITestCase):
         self.assertEqual(now().date().year, last_monthly_balance.year)
         self.assertEqual(now().date().month, last_monthly_balance.month)
         self.assertEqual(-data['quantity'], last_monthly_balance.gross_quantity)
+        self.assertEqual(10.0, last_monthly_balance.expected_quantity)
         last_annual_balance = AnnualBalance.objects.last()
         self.assertEqual(now().date().year, last_annual_balance.year)
         self.assertEqual(-data['quantity'], last_annual_balance.gross_quantity)
+        self.assertEqual(10.0, last_annual_balance.expected_quantity)
     
     def test_revenue_delete_date_balances(self):
         """

@@ -6,6 +6,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class BalanceMonthLineChart extends StatelessWidget {
+
   /// Border chart lines decoration 
   FlBorderData get borderData => FlBorderData(
     show: true,
@@ -44,7 +45,7 @@ class BalanceMonthLineChart extends StatelessWidget {
       return Text("$value", style: style, textAlign: TextAlign.center);
     },
     showTitles: true,
-    interval: 1,
+    interval: (getMaxQuantity() / 5).ceil().toDouble(),
     reservedSize: 40,
   );
 
@@ -104,7 +105,6 @@ class BalanceMonthLineChart extends StatelessWidget {
       ),
     );
   }
-
 
   @visibleForTesting
   LineChartBarData revenueChartBarData() {

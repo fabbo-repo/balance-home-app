@@ -73,8 +73,7 @@ def update_or_create_annual_balance(converted_quantity, owner,
     # Update extra fields
     if (is_revenue): annual_balance.gross_quantity += converted_quantity
     else: annual_balance.gross_quantity -= converted_quantity
-    annual_balance.net_quantity = owner.expected_annual_balance \
-        - annual_balance.gross_quantity
+    if created: annual_balance.expected_quantity = owner.expected_annual_balance
     annual_balance.save()
 
 
@@ -102,6 +101,5 @@ def update_or_create_monthly_balance(converted_quantity, owner,
     # Update extra fields
     if (is_revenue): monthly_balance.gross_quantity += converted_quantity
     else: monthly_balance.gross_quantity -= converted_quantity
-    monthly_balance.net_quantity = owner.expected_monthly_balance \
-        - monthly_balance.gross_quantity
+    if created: monthly_balance.expected_quantity = owner.expected_monthly_balance
     monthly_balance.save()

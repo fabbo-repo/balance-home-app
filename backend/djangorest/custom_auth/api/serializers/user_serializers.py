@@ -66,6 +66,8 @@ class UserCreationSerializer(serializers.ModelSerializer):
         fields = [
             'username',
             'email',
+            'expected_annual_balance', # not required
+            'expected_monthly_balance', # not required
             'language',
             'inv_code',
             'pref_coin_type',

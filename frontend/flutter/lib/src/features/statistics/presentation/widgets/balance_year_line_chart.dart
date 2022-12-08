@@ -44,7 +44,7 @@ class BalanceYearLineChart extends StatelessWidget {
       return Text("$value", style: style, textAlign: TextAlign.center);
     },
     showTitles: true,
-    interval: 1,
+    interval: (getMaxQuantity() / 5).ceil().toDouble(),
     reservedSize: 40,
   );
 

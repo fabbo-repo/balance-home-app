@@ -8,7 +8,7 @@ class AnnualBalanceAdmin(admin.ModelAdmin):
     fields = (
         'id',
         'year',
-        ('gross_quantity', 'net_quantity',),
+        ('gross_quantity', 'expected_quantity',),
         'coin_type',
         'owner',
         'created',
@@ -26,7 +26,7 @@ class MonthlyBalanceAdmin(admin.ModelAdmin):
     fields = (
         'id',
         ('month', 'year',),
-        ('gross_quantity', 'net_quantity',),
+        ('gross_quantity', 'expected_quantity',),
         'coin_type',
         'owner',
         'created',
