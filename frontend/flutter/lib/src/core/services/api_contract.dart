@@ -44,13 +44,13 @@ class APIContract {
    * ============ Annual balance ============ *
    */
   /// [GET] Returns annual balance
-  static const String annualBalanceList = "api/v1/annual_balance";
+  static const String annualBalance = "api/v1/annual_balance";
   
   /*
    * ============ Monthly balance ============ *
    */
   /// [GET] Returns monthly balance
-  static const String monthlyBalanceList = "api/v1/monthly_balance";
+  static const String monthlyBalance = "api/v1/monthly_balance";
   
   /*
    * ============ Coin ============ *

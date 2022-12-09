@@ -2,6 +2,7 @@ import 'package:balance_home_app/src/features/statistics/data/models/statistics_
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance_month_chart_container.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance_year_chart_container.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/currency_line_chart.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings_eight_years_chart_container.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings_line_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -40,11 +41,7 @@ class StatisticsViewDesktop extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.45,
                   child: SavingsLineChart()
                 ),
-                SizedBox(
-                  height: 400,
-                  width: MediaQuery.of(context).size.width * 0.45,
-                  child: SavingsLineChart()
-                ),
+                SavingsEightYearsChartContainer(statisticsData: statisticsData)
               ],
             ),
           ),

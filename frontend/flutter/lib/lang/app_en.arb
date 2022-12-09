@@ -94,5 +94,8 @@
     "needCoinType": "Coin type needed",
 
     "@_STATISTICS":{},
-    "balanceChartTitle": "Revenues and expenses for"
+    "balanceChartTitle": "Revenues and expenses for",
+    "savingsChartTitle": "Savings for",
+    "savingsEightChartTitle": "Last 8 years savings",
+    "currencyChartTitle": "Currency exchange"
 }

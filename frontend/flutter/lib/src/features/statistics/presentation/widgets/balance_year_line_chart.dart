@@ -202,6 +202,7 @@ class BalanceYearLineChart extends StatelessWidget {
     if (expenses.isNotEmpty && quantity < quantityMap.values.reduce(max)) {
       quantity = quantityMap.values.reduce(max);
     }
+    if (quantity < 4) quantity = 4;
     return quantity.ceil().toDouble();
   }
 }

@@ -34,7 +34,7 @@ class RouterNotifier extends ChangeNotifier {
           key: _scaffoldKey,
           child: HomeView(
             selectedSection: HomeTab.statistics,
-            child: const Center(child: StatisticsView())
+            child: Center(child: StatisticsView())
           )
         ),
     ),
