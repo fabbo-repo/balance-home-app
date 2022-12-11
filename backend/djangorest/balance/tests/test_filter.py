@@ -51,7 +51,7 @@ class DateBalanceFilterTests(APITestCase):
     def get_annual_balance_data(self):
         return {
             'gross_quantity': 1.1,
-            'net_quantity': 2.2,
+            'expected_quantity': 2.2,
             'coin_type': self.coin_type,
             'owner': self.user,
             'year': now().date().year
@@ -60,7 +60,7 @@ class DateBalanceFilterTests(APITestCase):
     def get_monthly_balance_data(self):
         return {
             'gross_quantity': 1.1,
-            'net_quantity': 2.2,
+            'expected_quantity': 2.2,
             'coin_type': self.coin_type,
             'owner': self.user,
             'year': now().date().year,
@@ -83,7 +83,7 @@ class DateBalanceFilterTests(APITestCase):
         data = self.get_annual_balance_data()
         AnnualBalance.objects.create(
             gross_quantity=data['gross_quantity'],
-            net_quantity=data['net_quantity'],
+            expected_quantity=data['expected_quantity'],
             coin_type=data['coin_type'],
             owner=data['owner'],
             year=data['year'],
@@ -94,7 +94,7 @@ class DateBalanceFilterTests(APITestCase):
         data = self.get_monthly_balance_data()
         MonthlyBalance.objects.create(
             gross_quantity=data['gross_quantity'],
-            net_quantity=data['net_quantity'],
+            expected_quantity=data['expected_quantity'],
             coin_type=data['coin_type'],
             owner=data['owner'],
             year=data['year'],
@@ -156,33 +156,33 @@ class DateBalanceFilterTests(APITestCase):
         data = dict(response.data)
         self.assertEqual(data['count'], 0)
     
-    def test_annual_balance_filter_net_quantity_min_and_max(self):
+    def test_annual_balance_filter_expected_quantity_min_and_max(self):
         """
-        Checks AnnualBalance filter by net_quantity min and max
+        Checks AnnualBalance filter by expected_quantity min and max
         """
         self.authenticate_add_annual_balance()
-        url = self.annual_balance_list+'?net_quantity_min=1.0&net_quantity_max=3.0'
+        url = self.annual_balance_list+'?expected_quantity_min=1.0&expected_quantity_max=3.0'
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
-        url = self.annual_balance_list+'?net_quantity_min=6.0&net_quantity_max=8.0'
+        url = self.annual_balance_list+'?expected_quantity_min=6.0&expected_quantity_max=8.0'
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
         self.assertEqual(data['count'], 0)
 
-    def test_monthly_balance_filter_net_quantity_min_and_max(self):
+    def test_monthly_balance_filter_expected_quantity_min_and_max(self):
         """ 
-        Checks MonthlyBalance filter by net_quantity min and max
+        Checks MonthlyBalance filter by expected_quantity min and max
         """
         self.authenticate_add_monthly_balance()
-        url = self.monthly_balance_list+'?net_quantity_min=1.0&net_quantity_max=3.0'
+        url = self.monthly_balance_list+'?expected_quantity_min=1.0&expected_quantity_max=3.0'
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
-        url = self.monthly_balance_list+'?net_quantity_min=6.0&net_quantity_max=8.0'
+        url = self.monthly_balance_list+'?expected_quantity_min=6.0&expected_quantity_max=8.0'
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)

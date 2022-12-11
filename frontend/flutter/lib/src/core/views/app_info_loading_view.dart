@@ -87,7 +87,7 @@ class AppInfoLoadingView extends ConsumerWidget {
     try {
       final packageInfo = await PackageInfo.fromPlatform();
       final response = await ref.read(httpServiceProvider).sendGetRequest(APIContract.frontendVersion);
-      if (response.content["version"] != packageInfo.version) {
+      if (isLowerVersion(packageInfo.version, response.content["version"])) {
         errorMessage = appLocalizations.wrongVersion;
         return false;
       }
@@ -97,6 +97,31 @@ class AppInfoLoadingView extends ConsumerWidget {
       errorMessage = appLocalizations.badRequest;
     }
     return true;
+  }
+
+  /// Checks if [version1] is lower than [version2]
+  bool isLowerVersion(String version1, String version2) {
+    List<int> versionIntList1 = version1.split(".").map((e) => int.parse(e)).toList();
+    List<int> versionIntList2 = version2.split(".").map((e) => int.parse(e)).toList();
+    if (versionIntList1[0] > versionIntList2[0]) {
+      return false;
+    } else if (versionIntList1[0] < versionIntList2[0]) {
+      return true;
+    } else { // versionIntList1[0] == versionIntList2[0]
+      if (versionIntList1[1] > versionIntList2[1]) {
+        return false;
+      } else if (versionIntList1[1] < versionIntList2[1]) {
+        return true;
+      }else { // versionIntList1[1] == versionIntList2[1]
+        if (versionIntList1[2] > versionIntList2[2]) {
+          return false;
+        } else if (versionIntList1[2] < versionIntList2[2]) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
   }
 
   Future<bool> oneSecond() async {

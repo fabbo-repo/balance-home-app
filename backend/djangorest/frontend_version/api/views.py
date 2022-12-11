@@ -20,12 +20,12 @@ class FrontendVersionView(APIView):
         try:
             return Response(
                 data= {
-                    'version': FrontendVersion.objects.last().version
+                    'version': FrontendVersion.objects.first().version
                 }
             )
         except:
             return Response(
                 data= {
-                    'version': "0.0.1"
+                    'version': "0.0.3"
                 }
             )

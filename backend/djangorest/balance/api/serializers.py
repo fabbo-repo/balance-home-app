@@ -8,7 +8,7 @@ class AnnualBalanceSerializer(serializers.ModelSerializer):
         model = AnnualBalance
         fields = [
             'gross_quantity',
-            'net_quantity',
+            'expected_quantity',
             'coin_type',
             'year',
             'created'
@@ -20,7 +20,7 @@ class MonthlyBalanceSerializer(serializers.ModelSerializer):
         model = MonthlyBalance
         fields = [
             'gross_quantity',
-            'net_quantity',
+            'expected_quantity',
             'coin_type',
             'year',
             'month',

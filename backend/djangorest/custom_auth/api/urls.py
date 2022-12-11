@@ -1,12 +1,16 @@
 from django.urls import path
-from custom_auth.api.views import (
-    ChangePasswordView,
-    CodeVerificationView, 
-    CodeView, 
+from custom_auth.api.views.jwt_views import (
     CustomTokenObtainPairView,
     CustomTokenRefreshView,
+)
+from custom_auth.api.views.code_views import (
+    ChangePasswordView,
+    CodeVerificationView, 
+    CodeView,
     ResetPasswordStartView,
-    ResetPasswordVerifyView, 
+    ResetPasswordVerifyView,
+)
+from custom_auth.api.views.user_views import (
     UserCreationView, 
     UserRetrieveUpdateDestroyView
 )

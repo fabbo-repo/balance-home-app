@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'pagination_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class PaginationModel extends Equatable {
 
   final int count;

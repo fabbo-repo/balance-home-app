@@ -61,7 +61,7 @@ class HomeView extends ConsumerWidget {
   }
 
   NavigationType navigationTypeResolver(BuildContext context) {
-    if (platformService.isLargeScreen(context) || platformService.isMediumScreen(context)) {
+    if (platformService.isLargeWindow(context) || platformService.isMediumWindow(context)) {
       return NavigationType.rail;
     } else {
       return NavigationType.bottom;

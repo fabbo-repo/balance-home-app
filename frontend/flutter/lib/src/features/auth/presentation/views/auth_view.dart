@@ -1,4 +1,5 @@
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/core/services/request_error_handler_libw.dart';
 import 'package:balance_home_app/src/core/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/widgets/language_picker_dropdown.dart';
 import 'package:balance_home_app/src/features/coin/data/models/coin_type_model.dart';
@@ -7,7 +8,6 @@ import 'package:balance_home_app/src/features/login/presentation/views/login_vie
 import 'package:balance_home_app/src/features/register/presentation/views/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:language_picker/languages.dart';
 
 class AuthView extends ConsumerWidget {
@@ -18,6 +18,7 @@ class AuthView extends ConsumerWidget {
   final registerPasswordController = TextEditingController();
   final registerPassword2Controller = TextEditingController();
   final registerInvitationCodeController = TextEditingController();
+  final RequestErrorHandlerLibW requestErrorHandler = RequestErrorHandlerLibW();
 
   AuthView({super.key});
 
@@ -43,7 +44,7 @@ class AuthView extends ConsumerWidget {
                 if (snapshot.data != null && snapshot.data!.isNotEmpty) {
                   coinTypes = snapshot.data!;
                 } else {
-                  context.go("/server-error");
+                  requestErrorHandler.goToErrorPage();
                 }
                 return Column(
                   children: [

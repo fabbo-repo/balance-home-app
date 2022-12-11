@@ -49,7 +49,7 @@ class DateBalancePaginationTests(APITestCase):
     def get_annual_balance_data(self):
         return {
             'gross_quantity': 1.1,
-            'net_quantity': 2.2,
+            'expected_quantity': 2.2,
             'coin_type': self.coin_type,
             'owner': self.user,
             'year': now().date().year
@@ -58,7 +58,7 @@ class DateBalancePaginationTests(APITestCase):
     def get_monthly_balance_data(self):
         return {
             'gross_quantity': 1.1,
-            'net_quantity': 2.2,
+            'expected_quantity': 2.2,
             'coin_type': self.coin_type,
             'owner': self.user,
             'year': now().date().year,
@@ -84,7 +84,7 @@ class DateBalancePaginationTests(APITestCase):
         data = self.get_annual_balance_data()
         AnnualBalance.objects.create(
             gross_quantity=data['gross_quantity'],
-            net_quantity=data['net_quantity'],
+            expected_quantity=data['expected_quantity'],
             coin_type=data['coin_type'],
             owner=data['owner'],
             year=data['year'],
@@ -98,7 +98,7 @@ class DateBalancePaginationTests(APITestCase):
         data = self.get_monthly_balance_data()
         MonthlyBalance.objects.create(
             gross_quantity=data['gross_quantity'],
-            net_quantity=data['net_quantity'],
+            expected_quantity=data['expected_quantity'],
             coin_type=data['coin_type'],
             owner=data['owner'],
             year=data['year'],
@@ -126,7 +126,7 @@ class DateBalancePaginationTests(APITestCase):
             'results': [
                 {
                     'gross_quantity': 1.1, 
-                    'net_quantity': 2.2,
+                    'expected_quantity': 2.2,
                     'coin_type': 'EUR',
                     'year': now().date().year
                 }
@@ -174,7 +174,7 @@ class DateBalancePaginationTests(APITestCase):
             'results': [
                 {
                     'gross_quantity': 1.1, 
-                    'net_quantity': 2.2,
+                    'expected_quantity': 2.2,
                     'coin_type': 'EUR',
                     'year': now().date().year,
                     'month': now().date().month
