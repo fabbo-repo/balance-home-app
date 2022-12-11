@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'coin_type_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class CoinTypeModel extends Equatable {
 
   final String code;

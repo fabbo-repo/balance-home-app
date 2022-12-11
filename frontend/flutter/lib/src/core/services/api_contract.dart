@@ -44,13 +44,13 @@ class APIContract {
    * ============ Annual balance ============ *
    */
   /// [GET] Returns annual balance
-  static const String annualBalanceList = "api/v1/annual_balance";
+  static const String annualBalance = "api/v1/annual_balance";
   
   /*
    * ============ Monthly balance ============ *
    */
   /// [GET] Returns monthly balance
-  static const String monthlyBalanceList = "api/v1/monthly_balance";
+  static const String monthlyBalance = "api/v1/monthly_balance";
   
   /*
    * ============ Coin ============ *
@@ -67,6 +67,8 @@ class APIContract {
   static const String revenue = "api/v1/revenue";
   /// [GET] Returns revenue type
   static const String revenueType = "api/v1/revenue/type";
+  /// [GET] Returns revenue years
+  static const String revenueYears = "api/v1/revenue/years";
   
   /*
    * ============ Expense ============ *
@@ -75,4 +77,6 @@ class APIContract {
   static const String expense = "api/v1/expense";
   /// [GET] Returns expense type
   static const String expenseType = "api/v1/expense/type";
+  /// [GET] Returns expense years
+  static const String expenseYears = "api/v1/expense/years";
 }

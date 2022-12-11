@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'credentials_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class CredentialsModel extends Equatable {
   
   final String email;

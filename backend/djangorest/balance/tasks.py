@@ -24,8 +24,7 @@ def send_monthly_balance(user, month, year):
             user.pref_coin_type,
             monthly_balance.gross_quantity
         )
-    monthly_balance.net_quantity = round(user.expected_monthly_balance \
-        - monthly_balance.gross_quantity, 2)
+    monthly_balance.expected_quantity = round(user.expected_monthly_balance, 2)
     monthly_balance.save()
     # Email sent
     notifications.send_monthly_balance(
@@ -34,7 +33,7 @@ def send_monthly_balance(user, month, year):
         year,
         monthly_balance.gross_quantity,
         user.expected_monthly_balance,
-        monthly_balance.net_quantity,
+        monthly_balance.expected_quantity,
         user.language
     )
 
@@ -53,8 +52,7 @@ def send_annual_balance(user, year):
             user.pref_coin_type,
             annual_balance.gross_quantity
         )
-    annual_balance.net_quantity = round(user.expected_annual_balance \
-        - annual_balance.gross_quantity, 2)
+    annual_balance.expected_quantity = round(user.expected_annual_balance, 2)
     annual_balance.save()
     # Email sent
     notifications.send_annual_balance(
@@ -62,7 +60,7 @@ def send_annual_balance(user, year):
         year,
         annual_balance.gross_quantity,
         user.expected_annual_balance,
-        annual_balance.net_quantity,
+        annual_balance.expected_quantity,
         user.language
     )
 

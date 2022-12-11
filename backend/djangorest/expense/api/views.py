@@ -18,6 +18,10 @@ from coin.currency_converter_integration import convert_or_fetch
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
+from rest_framework.views import APIView
+from rest_framework import generics
+from rest_framework.response import Response
+from datetime import date
 
 
 class ExpenseTypeRetrieveView(generics.RetrieveAPIView):
@@ -160,3 +164,23 @@ class ExpenseView(viewsets.ModelViewSet):
             instance.date.year, instance.date.month, False
         )
         instance.delete()
+
+class EspenseYearsRetrieveView(APIView):
+    permission_classes = (IsCurrentVerifiedUser,)
+    
+    @method_decorator(cache_page(60))
+    @method_decorator(vary_on_headers("Authorization"))
+    def get(self, request, format=None):
+        """
+        This view will be cached for 1 minute
+        """
+        expenses = list(Expense.objects.all())
+        if expenses:
+            return Response(
+                data={"years": list(set([
+                    exp.date.year for exp in expenses
+                ]))},
+            )
+        return Response(
+            data={"years": [date.today().year]},
+        )

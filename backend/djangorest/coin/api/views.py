@@ -54,7 +54,15 @@ class CoinExchangeRetrieveView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             return Response(
-                data={"coin_exchange": json_data[code]},
+                data={
+                    "code": code,
+                    "exchanges": [
+                        { 
+                            "code": exchange,
+                            "value": json_data[code][exchange]
+                        } for exchange in json_data[code].keys()
+                    ]
+                },
             )
         return Response(
             data={"detail": _("No exchange data, try later")},
@@ -65,17 +73,29 @@ class CoinExchangeListView(APIView):
     permission_classes = (IsAuthenticated,)
     
     def get(self, request, days, format=None):
-        if days < 1: return Response(data={})
+        if days < 1: return Response(data=[])
         if days > 30: days = 30
         data = CoinExchange.objects.filter(
             created__lte=timezone.now(), 
             created__gt=timezone.now() - timezone.timedelta(days=days)
         )
         return Response(
-            data=[
-                {
-                    'echange': json.loads(x.exchange_data), 
-                    'date': x.created.date()
-                } for x in data
-            ]
+            data={
+                "date_exchanges": [
+                    {
+                        'exchanges': [
+                            {
+                                "code": code,
+                                "exchanges": [
+                                    { 
+                                        "code": exchange,
+                                        "value": json.loads(x.exchange_data)[code][exchange]
+                                    } for exchange in json.loads(x.exchange_data)[code].keys()
+                                ]
+                            } for code in json.loads(x.exchange_data).keys()
+                        ], 
+                        'date': x.created.date()
+                    } for x in data
+                ]
+            }
         )

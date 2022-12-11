@@ -60,7 +60,7 @@ class ExpenseLogicTests(APITestCase):
     def get_expense_data(self):
         return {
             'name': 'Test name',
-            'description': 'Test description',
+            'description': '',
             'quantity': 2.0,
             'coin_type': self.coin_type.code,
             'exp_type': self.exp_type.name,

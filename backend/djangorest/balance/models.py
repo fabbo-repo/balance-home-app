@@ -18,6 +18,7 @@ class Balance(models.Model):
     )
     description = models.CharField(
         verbose_name = _('description'),
+        blank=True,
         max_length = 2000, 
         default = ""
     )
@@ -63,9 +64,9 @@ class DateBalance(models.Model):
         verbose_name = _('gross quantity'),
         default = 0
     )
-    # expected_quantity - gross_quantity
-    net_quantity = models.FloatField(
-        verbose_name = _('net quantity'),
+    # expected_quantity
+    expected_quantity = models.FloatField(
+        verbose_name = _('expected quantity'),
         default = 0
     )
     coin_type = models.ForeignKey(
