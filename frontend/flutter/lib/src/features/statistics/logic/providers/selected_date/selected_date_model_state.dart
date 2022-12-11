@@ -1,4 +1,3 @@
-import 'package:balance_home_app/src/features/auth/data/models/account_model.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/selected_date_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

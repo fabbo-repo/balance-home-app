@@ -1,9 +1,9 @@
 import 'package:balance_home_app/src/features/statistics/data/models/statistics_data_model.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance_month_chart_container.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance_year_chart_container.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/currency_line_chart.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings_eight_years_chart_container.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings_line_chart.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance/balance_month_chart_container.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance/balance_year_chart_container.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/currency/currency_chart_container.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings/savings_eight_years_chart_container.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings/savings_year_chart_container.dart';
 import 'package:flutter/material.dart';
 
 class StatisticsViewDesktop extends StatelessWidget {
@@ -36,11 +36,7 @@ class StatisticsViewDesktop extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 400,
-                  width: MediaQuery.of(context).size.width * 0.45,
-                  child: SavingsLineChart()
-                ),
+                SavingsYearChartContainer(statisticsData: statisticsData),
                 SavingsEightYearsChartContainer(statisticsData: statisticsData)
               ],
             ),
@@ -48,13 +44,7 @@ class StatisticsViewDesktop extends StatelessWidget {
           Container(
             color: const Color.fromARGB(254, 201, 241, 253),
             foregroundDecoration: borderDecoration(),
-            child: Center(
-              child: SizedBox(
-                height: 600,
-                width: MediaQuery.of(context).size.width * 0.95,
-                child: CurrencyLineChart()
-              ),
-            ),
+            child: CurrencyChartContainer(statisticsData: statisticsData)
           ),
         ],
       ),

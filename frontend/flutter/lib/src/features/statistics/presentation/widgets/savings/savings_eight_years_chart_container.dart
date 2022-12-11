@@ -2,7 +2,7 @@
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
 import 'package:balance_home_app/src/core/services/platform_service.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/statistics_data_model.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings_eight_years_line_chart.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings/savings_eight_years_line_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

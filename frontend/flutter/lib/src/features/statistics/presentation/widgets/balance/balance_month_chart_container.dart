@@ -2,37 +2,33 @@
 import 'package:balance_home_app/src/core/providers/localization_provider.dart';
 import 'package:balance_home_app/src/core/services/platform_service.dart';
 import 'package:balance_home_app/src/core/utils/date_util.dart';
+import 'package:balance_home_app/src/features/expense/data/models/expense_model.dart';
+import 'package:balance_home_app/src/features/revenue/data/models/revenue_model.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/selected_date_model.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/statistics_data_model.dart';
 import 'package:balance_home_app/src/features/statistics/logic/providers/selected_date/selected_date_model_provider.dart';
 import 'package:balance_home_app/src/features/statistics/logic/providers/selected_date/selected_date_model_state_notifier.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance_year_line_chart.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance/balance_month_line_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BalanceYearChartContainer extends ConsumerWidget {
+class BalanceMonthChartContainer extends ConsumerWidget {
   final StatisticsDataModel statisticsData;
 
-  const BalanceYearChartContainer({
+  const BalanceMonthChartContainer({
     required this.statisticsData,
     super.key
   });
-  
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
     SelectedDateModel selectedBalanceDate = ref.watch(selectedBalanceDateStateNotifierProvider).model;
     SelectedDateModelStateNotifier selectedBalanceDateNotifier = ref.read(selectedBalanceDateStateNotifierProvider.notifier);
-    List<int> years = <int>{
-      ...statisticsData.revenueYears, ...statisticsData.expenseYears
-    }.toList();
-    int selectedYear = selectedBalanceDate.year;
     // Month names list
     List<String> months = DateUtil.getMonthList(appLocalizations);
-    // Adding selected year to years list
-    if (!years.contains(selectedYear)) years.add(selectedYear);
-    // Adding current year to years list
-    if (!years.contains(DateTime.now().year)) years.add(DateTime.now().year);
+    String selectedMonth = DateUtil.monthNumToString(
+      selectedBalanceDate.month, appLocalizations);
     // Screen sizes:
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
@@ -56,7 +52,7 @@ class BalanceYearChartContainer extends ConsumerWidget {
                     fontSize: 18,
                     fontWeight: FontWeight.bold
                   ),
-                  "${appLocalizations.balanceChartTitle} $selectedYear"
+                  "${appLocalizations.balanceChartTitle} $selectedMonth"
                 )
               ),
             ),
@@ -65,18 +61,20 @@ class BalanceYearChartContainer extends ConsumerWidget {
               color: const Color.fromARGB(255, 195, 187, 56),
               padding: const EdgeInsets.only(left: 10, right: 10),
               height: 45,
-              child: DropdownButton<int>(
-                value: selectedYear,
-                items: years.map(
-                  (year) {
-                    return DropdownMenuItem<int>(
-                      value: year,
-                      child: Text(year.toString()),
+              child: DropdownButton<String>(
+                value: selectedMonth,
+                items: months.map(
+                  (month) {
+                    return DropdownMenuItem<String>(
+                      value: month,
+                      child: Text(month),
                     );
                   }
                 ).toList(),
-                onChanged: (year) {
-                  selectedBalanceDateNotifier.setYear(year!);
+                onChanged: (month) {
+                  selectedBalanceDateNotifier.setMonth(
+                    DateUtil.monthStringToNum(month!, appLocalizations)
+                  );
                 }
               ),
             )
@@ -86,13 +84,30 @@ class BalanceYearChartContainer extends ConsumerWidget {
           height: chartLineHeight,
           width: (PlatformService().isSmallWindow(context)) ? 
             screenWidth * 0.95 : screenWidth * 0.45,
-          child: BalanceYearLineChart(
-            monthList: months,
-            revenues: statisticsData.revenues,
-            expenses: statisticsData.expenses,
+          child: BalanceMonthLineChart(
+            selectedMonth: DateUtil.monthStringToNum(selectedMonth, appLocalizations),
+            selectedYear: selectedBalanceDate.year,
+            expenses: getExpenses(selectedBalanceDate.month),
+            revenues: getRevenues(selectedBalanceDate.month)
           )
         ),
       ],
     );
+  }
+
+  List<ExpenseModel> getExpenses(int month) {
+    List<ExpenseModel> expenses = [];
+    for (ExpenseModel expense in statisticsData.expenses) {
+      if (expense.date.month == month) expenses.add(expense);
+    }
+    return expenses;
+  }
+  
+  List<RevenueModel> getRevenues(int month) {
+    List<RevenueModel> revenues = [];
+    for (RevenueModel revenue in statisticsData.revenues) {
+      if (revenue.date.month == month) revenues.add(revenue);
+    }
+    return revenues;
   }
 }

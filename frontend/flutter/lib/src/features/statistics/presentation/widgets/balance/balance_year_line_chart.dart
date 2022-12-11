@@ -1,12 +1,10 @@
 import 'dart:math';
-
 import 'package:balance_home_app/src/features/expense/data/models/expense_model.dart';
 import 'package:balance_home_app/src/features/revenue/data/models/revenue_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class BalanceMonthLineChart extends StatelessWidget {
-
+class BalanceYearLineChart extends StatelessWidget {
   /// Border chart lines decoration 
   FlBorderData get borderData => FlBorderData(
     show: true,
@@ -27,10 +25,11 @@ class BalanceMonthLineChart extends StatelessWidget {
         color: Colors.black,
         fontSize: 12,
       );
+      String month = monthList[value.toInt()-1];
       return SideTitleWidget(
         axisSide: meta.axisSide,
         space: 5,
-        child: Text('$value', style: style),
+        child: Text(month, style: style),
       );
     },
   );
@@ -45,7 +44,7 @@ class BalanceMonthLineChart extends StatelessWidget {
       return Text("$value", style: style, textAlign: TextAlign.center);
     },
     showTitles: true,
-    interval: (getMaxQuantity() / 5).ceil().toDouble(),
+    interval: (getMaxQuantity() / 5).ceilToDouble(),
     reservedSize: 40,
   );
 
@@ -71,23 +70,19 @@ class BalanceMonthLineChart extends StatelessWidget {
     revenueChartBarData(),
     expenseChartBarData(),
   ];
-
-  final int selectedMonth;
-  final int selectedYear;
+  
+  final List<String> monthList;
   final List<RevenueModel> revenues;
   final List<ExpenseModel> expenses;
-  
-  const BalanceMonthLineChart({
-    required this.selectedMonth,
-    required this.selectedYear,
+
+  const BalanceYearLineChart({
+    required this.monthList,
     required this.revenues,
     required this.expenses,
-    super.key
-  });
+    super.key});
 
   @override
   Widget build(BuildContext context) {
-    int days = DateUtils.getDaysInMonth(selectedYear, selectedMonth);
     return Padding(
       padding: const EdgeInsets.all(15),
       child: LineChart(
@@ -97,7 +92,7 @@ class BalanceMonthLineChart extends StatelessWidget {
           borderData: borderData,
           lineBarsData: lineBarsData,
           minX: 1,
-          maxX: days.toDouble(),
+          maxX: 12,
           maxY: getMaxQuantity(),
           minY: 0,
         ),
@@ -108,26 +103,25 @@ class BalanceMonthLineChart extends StatelessWidget {
 
   @visibleForTesting
   LineChartBarData revenueChartBarData() {
-    int days = DateUtils.getDaysInMonth(selectedYear, selectedMonth);
-    // Dictionary with days and revenue quantities per day
+    // Dictionary with months and revenue quantities per month
     Map<int, double> spotsMap = {};
     for (RevenueModel revenue in revenues) {
-      if (spotsMap.containsKey(revenue.date.day)) {
-        spotsMap[revenue.date.day] = spotsMap[revenue.date.day]! + revenue.quantity;
+      if (spotsMap.containsKey(revenue.date.month)) {
+        spotsMap[revenue.date.month] = spotsMap[revenue.date.month]! + revenue.quantity;
       } else {
-        spotsMap[revenue.date.day] = revenue.quantity;
+        spotsMap[revenue.date.month] = revenue.quantity;
       }
     }
-    // Check unexistant days
-    for (int day = 1; day <= days; day++) {
-      if (!spotsMap.containsKey(day)) {
-        spotsMap[day] = 0.0;
+    // Check unexistant months
+    for (int month = 1; month <= 12; month++) {
+      if (!spotsMap.containsKey(month)) {
+        spotsMap[month] = 0.0;
       }
     }
     // Data conversion
     List<FlSpot> spots = [];
-    for (int day in spotsMap.keys.toList()..sort()) {
-      spots.add(FlSpot(day.toDouble(), spotsMap[day]!.toDouble()));
+    for (int month in spotsMap.keys.toList()..sort()) {
+      spots.add(FlSpot(month.toDouble(), spotsMap[month]!.toDouble()));
     }
     return LineChartBarData(
       isCurved: true,
@@ -146,26 +140,25 @@ class BalanceMonthLineChart extends StatelessWidget {
 
   @visibleForTesting
   LineChartBarData expenseChartBarData() { 
-    int days = DateUtils.getDaysInMonth(selectedYear, selectedMonth);
-    // Dictionary with days and expense quantities per day
+    // Dictionary with months and expense quantities per month
     Map<int, double> spotsMap = {};
     for (ExpenseModel expense in expenses) {
-      if (spotsMap.containsKey(expense.date.day)) {
-        spotsMap[expense.date.day] = spotsMap[expense.date.day]! + expense.quantity;
+      if (spotsMap.containsKey(expense.date.month)) {
+        spotsMap[expense.date.month] = spotsMap[expense.date.month]! + expense.quantity;
       } else {
-        spotsMap[expense.date.day] = expense.quantity;
+        spotsMap[expense.date.month] = expense.quantity;
       }
     }
-    // Check unexistant days
-    for (int day = 1; day <= days; day++) {
-      if (!spotsMap.containsKey(day)) {
-        spotsMap[day] = 0.0;
+    // Check unexistant months
+    for (int month = 1; month <= 12; month++) {
+      if (!spotsMap.containsKey(month)) {
+        spotsMap[month] = 0.0;
       }
     }
     // Data conversion
     List<FlSpot> spots = [];
-    for (int day in spotsMap.keys.toList()..sort()) {
-      spots.add(FlSpot(day.toDouble(), spotsMap[day]!.toDouble()));
+    for (int month in spotsMap.keys.toList()..sort()) {
+      spots.add(FlSpot(month.toDouble(), spotsMap[month]!.toDouble()));
     }
     return LineChartBarData(
       isCurved: true,
@@ -185,12 +178,13 @@ class BalanceMonthLineChart extends StatelessWidget {
   @visibleForTesting
   double getMaxQuantity() {
     double quantity = 4.0;
-    Map<int, double> quantityMap = {};
+    Map<String, double> quantityMap = {};
     for (RevenueModel revenue in revenues) {
-      if (quantityMap.containsKey(revenue.date.day)) {
-        quantityMap[revenue.date.day] = quantityMap[revenue.date.day]! + revenue.quantity;
+      String key = "${revenue.date.month}";
+      if (quantityMap.containsKey(key)) {
+        quantityMap[key] = quantityMap[key]! + revenue.quantity;
       } else {
-        quantityMap[revenue.date.day] = revenue.quantity;
+        quantityMap[key] = revenue.quantity;
       }
     }
     if (revenues.isNotEmpty) {
@@ -198,16 +192,17 @@ class BalanceMonthLineChart extends StatelessWidget {
     }
     quantityMap = {};
     for (ExpenseModel expense in expenses) {
-      if (quantityMap.containsKey(expense.date.day)) {
-        quantityMap[expense.date.day] = quantityMap[expense.date.day]! + expense.quantity;
+      String key = "${expense.date.month}";
+      if (quantityMap.containsKey(key)) {
+        quantityMap[key] = quantityMap[key]! + expense.quantity;
       } else {
-        quantityMap[expense.date.day] = expense.quantity;
+        quantityMap[key] = expense.quantity;
       }
     }
     if (expenses.isNotEmpty && quantity < quantityMap.values.reduce(max)) {
       quantity = quantityMap.values.reduce(max);
     }
     if (quantity < 4) quantity = 4;
-    return quantity.ceil().toDouble();
+    return quantity.ceilToDouble();
   }
 }

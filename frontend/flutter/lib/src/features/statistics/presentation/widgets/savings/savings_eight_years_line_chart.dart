@@ -45,7 +45,8 @@ class SavingsEightYearsLineChart extends StatelessWidget {
     },
     showTitles: true,
     interval: (
-      (getMinMaxQuantity().max - getMinMaxQuantity().min)
+      ([getMinMaxQuantity().max.ceilToDouble(), 
+      getMinMaxQuantity().min.floorToDouble().abs()].reduce(max))
       / 5)
       .abs().ceilToDouble(),
     reservedSize: 40,
@@ -178,6 +179,7 @@ class SavingsEightYearsLineChart extends StatelessWidget {
     double maxQuantity = 4.0;
     double minQuantity = 0.0;
     Map<String, double> quantityMap = {};
+    Map<String, double> expectedMap = {};
     for (AnnualBalanceModel annualBalance in annualBalances) {
       String key = "${annualBalance.year}";
       if (quantityMap.containsKey(key)) {
@@ -185,10 +187,19 @@ class SavingsEightYearsLineChart extends StatelessWidget {
       } else {
         quantityMap[key] = annualBalance.grossQuantity;
       }
+      if (expectedMap.containsKey(key)) {
+        expectedMap[key] = expectedMap[key]! + annualBalance.expectedQuantity;
+      } else {
+        expectedMap[key] = annualBalance.expectedQuantity;
+      }
     }
     if (annualBalances.isNotEmpty) {
       maxQuantity = quantityMap.values.reduce(max);
+      double maxExpected = expectedMap.values.reduce(max);
+      if (maxQuantity < maxExpected) maxQuantity = maxExpected;
       minQuantity = quantityMap.values.reduce(min);
+      double minExpected = expectedMap.values.reduce(min);
+      if (minQuantity > minExpected) minQuantity = minExpected;
     }
     if (maxQuantity < 4) maxQuantity = 4;
     if (minQuantity > 0) minQuantity = 0;
