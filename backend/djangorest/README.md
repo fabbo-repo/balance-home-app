@@ -89,6 +89,7 @@ djangorest/
 | APP_CELERY_BROKER_URL     | Celery url                                                 |
 | APP_EMAIL_CODE_THRESHOLD  | Time to wait for a new email verification code generation  |
 | APP_EMAIL_CODE_VALID      | Email verification code validity duration                  |
+| APP_UNVERIFIED_USER_DAYS  | Days for a periodic deletion of unverified users           |
 | DJANGO_SUPERUSER_USERNAME | Admin backend user name                                    |
 | DJANGO_SUPERUSER_EMAIL    | Admin backend user email                                   |
 | DJANGO_SUPERUSER_PASSWORD | Admin backend user password                                |
@@ -179,7 +180,7 @@ coverage html
 * Launch celery for development:
 
 ~~~bash
-celery -A core worker -l INFO -P eventlet
+celery -A core worker -l INFO -P eventlet --scheduler django_celery_beat.schedulers:DatabaseScheduler
 ~~~
 
 > ***redis*** must be launched too
@@ -206,6 +207,12 @@ python manage.py coin_schedule_setup
 
 ~~~bash
 python manage.py create_coin_models
+~~~
+
+* Schedule a task to delete all unverified users:
+
+~~~bash
+python manage.py users_schedule_setup
 ~~~
 
 * Generate locale messages files
