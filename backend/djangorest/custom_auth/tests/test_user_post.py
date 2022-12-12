@@ -50,6 +50,7 @@ class UserPostTests(APITestCase):
         self.assertEqual(str(new_user.inv_code), self.user_data['inv_code'])
         self.assertEqual(str(new_user.pref_coin_type), self.user_data['pref_coin_type'])
         self.assertEqual(new_user.language, self.user_data['language'])
+        self.assertEqual(new_user.verified, False)
     
     def test_two_user_with_username(self):
         """
