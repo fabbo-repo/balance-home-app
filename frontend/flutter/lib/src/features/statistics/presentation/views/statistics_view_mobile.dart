@@ -13,15 +13,13 @@ class StatisticsViewMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        color: const Color.fromARGB(254, 254, 252, 224),
-        child: Column(
-          children: [
-            BalanceMonthChartContainer(statisticsData: statisticsData),
-            BalanceYearChartContainer(statisticsData: statisticsData),
-          ],
-        ),
+    return Container(
+      color: const Color.fromARGB(254, 254, 252, 224),
+      child: Column(
+        children: [
+          BalanceMonthChartContainer(statisticsData: statisticsData),
+          BalanceYearChartContainer(statisticsData: statisticsData),
+        ],
       ),
     );
   }

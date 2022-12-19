@@ -1,13 +1,12 @@
 
-import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
+import 'package:balance_home_app/src/features/statistics/logic/providers/selected_date_model_provider.dart';
+import 'package:balance_home_app/src/core/providers/selected_date/selected_date_state_notifier.dart';
 import 'package:balance_home_app/src/core/services/platform_service.dart';
 import 'package:balance_home_app/src/core/utils/date_util.dart';
-import 'package:balance_home_app/src/features/expense/data/models/expense_model.dart';
-import 'package:balance_home_app/src/features/revenue/data/models/revenue_model.dart';
-import 'package:balance_home_app/src/features/statistics/data/models/selected_date_model.dart';
+import 'package:balance_home_app/src/features/balance/data/models/balance_model.dart';
+import 'package:balance_home_app/src/core/data/models/selected_date_model.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/statistics_data_model.dart';
-import 'package:balance_home_app/src/features/statistics/logic/providers/selected_date/selected_date_model_provider.dart';
-import 'package:balance_home_app/src/features/statistics/logic/providers/selected_date/selected_date_model_state_notifier.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance/balance_month_line_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,8 +22,8 @@ class BalanceMonthChartContainer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
-    SelectedDateModel selectedBalanceDate = ref.watch(selectedBalanceDateStateNotifierProvider).model;
-    SelectedDateModelStateNotifier selectedBalanceDateNotifier = ref.read(selectedBalanceDateStateNotifierProvider.notifier);
+    SelectedDateModel selectedBalanceDate = ref.watch(selectedBalanceDateStateNotifierProvider).date;
+    SelectedDateStateNotifier selectedBalanceDateNotifier = ref.read(selectedBalanceDateStateNotifierProvider.notifier);
     // Month names list
     List<String> months = DateUtil.getMonthList(appLocalizations);
     String selectedMonth = DateUtil.monthNumToString(
@@ -95,17 +94,17 @@ class BalanceMonthChartContainer extends ConsumerWidget {
     );
   }
 
-  List<ExpenseModel> getExpenses(int month) {
-    List<ExpenseModel> expenses = [];
-    for (ExpenseModel expense in statisticsData.expenses) {
+  List<BalanceModel> getExpenses(int month) {
+    List<BalanceModel> expenses = [];
+    for (BalanceModel expense in statisticsData.expenses) {
       if (expense.date.month == month) expenses.add(expense);
     }
     return expenses;
   }
   
-  List<RevenueModel> getRevenues(int month) {
-    List<RevenueModel> revenues = [];
-    for (RevenueModel revenue in statisticsData.revenues) {
+  List<BalanceModel> getRevenues(int month) {
+    List<BalanceModel> revenues = [];
+    for (BalanceModel revenue in statisticsData.revenues) {
       if (revenue.date.month == month) revenues.add(revenue);
     }
     return revenues;

@@ -1,6 +1,5 @@
 import 'dart:math';
-import 'package:balance_home_app/src/features/expense/data/models/expense_model.dart';
-import 'package:balance_home_app/src/features/revenue/data/models/revenue_model.dart';
+import 'package:balance_home_app/src/features/balance/data/models/balance_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -72,8 +71,8 @@ class BalanceYearLineChart extends StatelessWidget {
   ];
   
   final List<String> monthList;
-  final List<RevenueModel> revenues;
-  final List<ExpenseModel> expenses;
+  final List<BalanceModel> revenues;
+  final List<BalanceModel> expenses;
 
   const BalanceYearLineChart({
     required this.monthList,
@@ -105,7 +104,7 @@ class BalanceYearLineChart extends StatelessWidget {
   LineChartBarData revenueChartBarData() {
     // Dictionary with months and revenue quantities per month
     Map<int, double> spotsMap = {};
-    for (RevenueModel revenue in revenues) {
+    for (BalanceModel revenue in revenues) {
       if (spotsMap.containsKey(revenue.date.month)) {
         spotsMap[revenue.date.month] = spotsMap[revenue.date.month]! + revenue.quantity;
       } else {
@@ -142,7 +141,7 @@ class BalanceYearLineChart extends StatelessWidget {
   LineChartBarData expenseChartBarData() { 
     // Dictionary with months and expense quantities per month
     Map<int, double> spotsMap = {};
-    for (ExpenseModel expense in expenses) {
+    for (BalanceModel expense in expenses) {
       if (spotsMap.containsKey(expense.date.month)) {
         spotsMap[expense.date.month] = spotsMap[expense.date.month]! + expense.quantity;
       } else {
@@ -179,7 +178,7 @@ class BalanceYearLineChart extends StatelessWidget {
   double getMaxQuantity() {
     double quantity = 4.0;
     Map<String, double> quantityMap = {};
-    for (RevenueModel revenue in revenues) {
+    for (BalanceModel revenue in revenues) {
       String key = "${revenue.date.month}";
       if (quantityMap.containsKey(key)) {
         quantityMap[key] = quantityMap[key]! + revenue.quantity;
@@ -191,7 +190,7 @@ class BalanceYearLineChart extends StatelessWidget {
       quantity = quantityMap.values.reduce(max);
     }
     quantityMap = {};
-    for (ExpenseModel expense in expenses) {
+    for (BalanceModel expense in expenses) {
       String key = "${expense.date.month}";
       if (quantityMap.containsKey(key)) {
         quantityMap[key] = quantityMap[key]! + expense.quantity;

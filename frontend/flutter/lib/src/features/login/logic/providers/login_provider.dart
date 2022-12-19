@@ -1,5 +1,5 @@
 import 'package:balance_home_app/src/core/providers/http_service_provider.dart';
-import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_provider.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
 import 'package:balance_home_app/src/features/login/data/repositories/jwt_repository.dart';
@@ -25,7 +25,7 @@ final loginStateNotifierProvider = StateNotifierProvider<LoginStateNotifier, Aut
       localizations: localizations,
       jwtRepository: ref.watch(jwtRepositoryProvider),
       authRepository: ref.watch(authRepositoryProvider),
-      accountModelStateNotifier: ref.watch(accountStateNotifierProvider.notifier)
+      accountModelStateNotifier: ref.read(accountStateNotifierProvider.notifier)
     );
   }
 );

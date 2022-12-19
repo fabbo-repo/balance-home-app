@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
 import 'package:balance_home_app/src/core/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/widgets/language_picker_dropdown.dart';
 import 'package:balance_home_app/src/core/widgets/password_text_field.dart';
@@ -25,7 +25,7 @@ class ForgotPasswordView extends ConsumerWidget {
     final forgotPasswordForm = ref.watch(forgotPasswordFormStateProvider).form;
     final forgotPasswordFormState = ref.read(forgotPasswordFormStateProvider.notifier);
     final forgotPasswordState = ref.watch(forgotPasswordStateNotifierProvider);
-    final forgotPasswordStateNotifier = ref.watch(forgotPasswordStateNotifierProvider.notifier);
+    final forgotPasswordStateNotifier = ref.read(forgotPasswordStateNotifierProvider.notifier);
     final localizationStateNotifier = ref.read(localizationStateNotifierProvider.notifier);
     return Scaffold(
       body: SafeArea(

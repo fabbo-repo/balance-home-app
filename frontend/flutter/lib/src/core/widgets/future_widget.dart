@@ -20,6 +20,7 @@ class FutureWidget<T> extends StatelessWidget {
         if (snapshot.hasData) {
           return childCreation(snapshot.data as T);
         } else if (snapshot.hasError) {
+          debugPrint(snapshot.error.toString());
           return errorWidget();
         } 
         return loadingWidget();

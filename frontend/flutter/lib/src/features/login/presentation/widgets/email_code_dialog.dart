@@ -30,7 +30,7 @@ class EmailCodeDialogState extends ConsumerState<EmailCodeDialog> {
     final emailCodeForm  = ref.watch(emailCodeFormStateProvider).form;
     final emailCodeFormState = ref.read(emailCodeFormStateProvider.notifier);
     final emailCodeState = ref.watch(emailCodeStateNotifierProvider);
-    final emailCodeStateNotifier = ref.watch(emailCodeStateNotifierProvider.notifier);
+    final emailCodeStateNotifier = ref.read(emailCodeStateNotifierProvider.notifier);
     return AlertDialog(
       title: Text(widget.appLocalizations.emailVerifiactionCode),
       content: Container(

@@ -1,5 +1,5 @@
 import 'package:adaptive_navigation/adaptive_navigation.dart';
-import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
 import 'package:balance_home_app/src/core/services/platform_service.dart';
 import 'package:balance_home_app/src/features/home/presentation/views/home_tabs.dart';
 import 'package:balance_home_app/src/features/home/presentation/widgets/app_bar.dart';

@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
 import 'package:balance_home_app/src/core/widgets/password_text_field.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/core/widgets/simple_text_field.dart';
@@ -41,7 +41,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
     final registerForm  = ref.watch(registerFormStateProvider).form;
     final registerFormState = ref.read(registerFormStateProvider.notifier);
     final registerState = ref.watch(registerStateNotifierProvider);
-    final registerStateNotifier = ref.watch(registerStateNotifierProvider.notifier);
+    final registerStateNotifier = ref.read(registerStateNotifierProvider.notifier);
     final emailCodeStateNotifier = ref.read(emailCodeStateNotifierProvider.notifier);
     final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
     return Padding(

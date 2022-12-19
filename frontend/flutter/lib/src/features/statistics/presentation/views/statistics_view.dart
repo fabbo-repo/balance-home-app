@@ -1,20 +1,19 @@
+import 'package:balance_home_app/src/features/statistics/logic/providers/selected_date_model_provider.dart';
 import 'package:balance_home_app/src/core/widgets/future_widget.dart';
 import 'package:balance_home_app/src/core/widgets/responsive_layout.dart';
+import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
+import 'package:balance_home_app/src/features/balance/data/repositories/balance_repository.dart';
+import 'package:balance_home_app/src/features/balance/logic/providers/balance_provider.dart';
 import 'package:balance_home_app/src/features/coin/data/repositories/coin_type_repository.dart';
 import 'package:balance_home_app/src/features/coin/data/repositories/exchange_repository.dart';
 import 'package:balance_home_app/src/features/coin/logic/providers/coin_provider.dart';
 import 'package:balance_home_app/src/features/coin/logic/providers/exchange_provider.dart';
-import 'package:balance_home_app/src/features/expense/data/repositories/expense_repository.dart';
-import 'package:balance_home_app/src/features/expense/logic/providers/expense_provider.dart';
-import 'package:balance_home_app/src/features/revenue/data/repositories/revenue_repository.dart';
-import 'package:balance_home_app/src/features/revenue/logic/providers/revenue_provider.dart';
-import 'package:balance_home_app/src/features/statistics/data/models/selected_date_model.dart';
+import 'package:balance_home_app/src/core/data/models/selected_date_model.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/statistics_data_model.dart';
 import 'package:balance_home_app/src/features/statistics/data/repositories/annual_balance_repository.dart';
 import 'package:balance_home_app/src/features/statistics/data/repositories/monthly_balance_repository.dart';
 import 'package:balance_home_app/src/features/statistics/logic/providers/annual_balance_provider.dart';
 import 'package:balance_home_app/src/features/statistics/logic/providers/monthly_balance_provider.dart';
-import 'package:balance_home_app/src/features/statistics/logic/providers/selected_date/selected_date_model_provider.dart';
 import 'package:balance_home_app/src/features/statistics/logic/providers/selected_exchange/selected_exchange_model_provider.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/views/statistics_view_desktop.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/views/statistics_view_mobile.dart';
@@ -29,10 +28,9 @@ class StatisticsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedBalanceDate = ref.watch(selectedBalanceDateStateNotifierProvider).model;
-    final selectedSavingsDate = ref.watch(selectedSavingsDateStateNotifierProvider).model;
-    final expenseRepository = ref.read(expenseRepositoryProvider);
-    final revenueRepository = ref.read(revenueRepositoryProvider);
+    final selectedBalanceDate = ref.watch(selectedBalanceDateStateNotifierProvider).date;
+    final selectedSavingsDate = ref.watch(selectedSavingsDateStateNotifierProvider).date;
+    final balanceRepository = ref.read(balanceRepositoryProvider);
     final monthlyBalanceRepository = ref.read(monthlyBalanceRepositoryProvider);
     final annualBalanceRepository = ref.read(annualBalanceRepositoryProvider);
     final coinTypeRepository = ref.read(coinTypeRepositoryProvider);
@@ -49,8 +47,7 @@ class StatisticsView extends ConsumerWidget {
         );
       },
       future: getStatisticData(
-        revenueRepository,
-        expenseRepository,
+        balanceRepository,
         monthlyBalanceRepository,
         annualBalanceRepository,
         coinTypeRepository,
@@ -66,8 +63,7 @@ class StatisticsView extends ConsumerWidget {
   /// Get all data for statistics page
   @visibleForTesting
   Future<StatisticsDataModel> getStatisticData(
-    IRevenueRepository revenueRepository,
-    IExpenseRepository expenseRepository,
+    IBalanceRepository balanceRepository,
     IMonthlyBalanceRepository monthlyBalanceRepository,
     IAnnualBalanceRepository annualBalanceRepository,
     ICoinTypeRepository coinTypeRepositoryProvider,
@@ -90,16 +86,18 @@ class StatisticsView extends ConsumerWidget {
     );
     if (statisticsData == null) {
       statisticsData = StatisticsDataModel(
-        expenses: await expenseRepository.getExpenses(
+        expenses: await balanceRepository.getBalances(
+          BalanceTypeEnum.expense,
           dateFrom: dateFrom,
           dateTo: dateTo
         ),
-        revenues: await revenueRepository.getRevenues(
+        revenues: await balanceRepository.getBalances(
+          BalanceTypeEnum.revenue,
           dateFrom: dateFrom,
           dateTo: dateTo
         ),
-        expenseYears: await expenseRepository.getExpenseYears(),
-        revenueYears: await revenueRepository.getRevenueYears(),
+        expenseYears: await balanceRepository.getBalanceYears(BalanceTypeEnum.expense),
+        revenueYears: await balanceRepository.getBalanceYears(BalanceTypeEnum.revenue),
         monthlyBalances: await monthlyBalanceRepository.getMonthlyBalances(
           year: savingsSelectedDate.year
         ),
@@ -113,11 +111,13 @@ class StatisticsView extends ConsumerWidget {
       );
     } else {
       if(selectedBalanceDate != statisticsData!.selectedBalanceDate) {
-        statisticsData!.expenses = await expenseRepository.getExpenses(
+        statisticsData!.expenses = await balanceRepository.getBalances(
+          BalanceTypeEnum.expense,
           dateFrom: dateFrom,
           dateTo: dateTo
         );
-        statisticsData!.revenues = await revenueRepository.getRevenues(
+        statisticsData!.revenues = await balanceRepository.getBalances(
+          BalanceTypeEnum.revenue,
           dateFrom: dateFrom,
           dateTo: dateTo
         );

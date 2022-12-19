@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_provider.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
 import 'package:balance_home_app/src/features/register/logic/providers/register_form_state_notifier.dart';
@@ -22,7 +22,7 @@ final registerStateNotifierProvider = StateNotifierProvider<RegisterStateNotifie
     return RegisterStateNotifier(
       localizations: localizations,
       authRepository: ref.watch(authRepositoryProvider),
-      accountModelStateNotifier: ref.watch(accountStateNotifierProvider.notifier)
+      accountModelStateNotifier: ref.read(accountStateNotifierProvider.notifier)
     );
   }
 );

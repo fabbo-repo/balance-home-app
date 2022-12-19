@@ -1,7 +1,6 @@
 
-import 'package:balance_home_app/src/core/providers/localization_provider.dart';
-import 'package:balance_home_app/src/features/expense/data/models/expense_model.dart';
-import 'package:balance_home_app/src/features/revenue/data/models/revenue_model.dart';
+import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
+import 'package:balance_home_app/src/features/balance/data/models/balance_model.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/selected_exchange_model.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/statistics_data_model.dart';
 import 'package:balance_home_app/src/features/statistics/logic/providers/selected_exchange/selected_exchange_model_provider.dart';
@@ -112,17 +111,17 @@ class CurrencyChartContainer extends ConsumerWidget {
     );
   }
 
-  List<ExpenseModel> getExpenses(int month) {
-    List<ExpenseModel> expenses = [];
-    for (ExpenseModel expense in statisticsData.expenses) {
+  List<BalanceModel> getExpenses(int month) {
+    List<BalanceModel> expenses = [];
+    for (BalanceModel expense in statisticsData.expenses) {
       if (expense.date.month == month) expenses.add(expense);
     }
     return expenses;
   }
   
-  List<RevenueModel> getRevenues(int month) {
-    List<RevenueModel> revenues = [];
-    for (RevenueModel revenue in statisticsData.revenues) {
+  List<BalanceModel> getRevenues(int month) {
+    List<BalanceModel> revenues = [];
+    for (BalanceModel revenue in statisticsData.revenues) {
       if (revenue.date.month == month) revenues.add(revenue);
     }
     return revenues;

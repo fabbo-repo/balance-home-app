@@ -13,7 +13,6 @@ class UserPutTests(APITestCase):
 
         self.user_post_url=reverse('user_post')
         self.jwt_obtain_url=reverse('jwt_obtain_pair')
-        self.change_password_url=reverse('change_password')
         self.user_get_del_url=reverse('user_put_get_del')
 
         # Create InvitationCode

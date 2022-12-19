@@ -1,5 +1,5 @@
 import 'package:balance_home_app/src/core/providers/http_service_provider.dart';
-import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/email_code/email_code_form_state_notifier.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/email_code/email_code_state_notifier.dart';

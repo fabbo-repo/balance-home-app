@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/email_code/email_code_provider.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/utils.dart';
 import 'package:balance_home_app/src/core/widgets/password_text_field.dart';
@@ -32,7 +32,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
     final loginForm  = ref.watch(loginFormStateProvider).form;
     final loginFormState = ref.read(loginFormStateProvider.notifier);
     final loginState = ref.watch(loginStateNotifierProvider);
-    final loginStateNotifier = ref.watch(loginStateNotifierProvider.notifier);
+    final loginStateNotifier = ref.read(loginStateNotifierProvider.notifier);
     final emailCodeStateNotifier = ref.read(emailCodeStateNotifierProvider.notifier);
     final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
     return Padding(

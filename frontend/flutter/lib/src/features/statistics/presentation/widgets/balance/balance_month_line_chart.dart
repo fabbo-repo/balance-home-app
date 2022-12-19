@@ -1,7 +1,5 @@
 import 'dart:math';
-
-import 'package:balance_home_app/src/features/expense/data/models/expense_model.dart';
-import 'package:balance_home_app/src/features/revenue/data/models/revenue_model.dart';
+import 'package:balance_home_app/src/features/balance/data/models/balance_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -74,8 +72,8 @@ class BalanceMonthLineChart extends StatelessWidget {
 
   final int selectedMonth;
   final int selectedYear;
-  final List<RevenueModel> revenues;
-  final List<ExpenseModel> expenses;
+  final List<BalanceModel> revenues;
+  final List<BalanceModel> expenses;
   
   const BalanceMonthLineChart({
     required this.selectedMonth,
@@ -111,7 +109,7 @@ class BalanceMonthLineChart extends StatelessWidget {
     int days = DateUtils.getDaysInMonth(selectedYear, selectedMonth);
     // Dictionary with days and revenue quantities per day
     Map<int, double> spotsMap = {};
-    for (RevenueModel revenue in revenues) {
+    for (BalanceModel revenue in revenues) {
       if (spotsMap.containsKey(revenue.date.day)) {
         spotsMap[revenue.date.day] = spotsMap[revenue.date.day]! + revenue.quantity;
       } else {
@@ -149,7 +147,7 @@ class BalanceMonthLineChart extends StatelessWidget {
     int days = DateUtils.getDaysInMonth(selectedYear, selectedMonth);
     // Dictionary with days and expense quantities per day
     Map<int, double> spotsMap = {};
-    for (ExpenseModel expense in expenses) {
+    for (BalanceModel expense in expenses) {
       if (spotsMap.containsKey(expense.date.day)) {
         spotsMap[expense.date.day] = spotsMap[expense.date.day]! + expense.quantity;
       } else {
@@ -186,7 +184,7 @@ class BalanceMonthLineChart extends StatelessWidget {
   double getMaxQuantity() {
     double quantity = 4.0;
     Map<int, double> quantityMap = {};
-    for (RevenueModel revenue in revenues) {
+    for (BalanceModel revenue in revenues) {
       if (quantityMap.containsKey(revenue.date.day)) {
         quantityMap[revenue.date.day] = quantityMap[revenue.date.day]! + revenue.quantity;
       } else {
@@ -197,7 +195,7 @@ class BalanceMonthLineChart extends StatelessWidget {
       quantity = quantityMap.values.reduce(max);
     }
     quantityMap = {};
-    for (ExpenseModel expense in expenses) {
+    for (BalanceModel expense in expenses) {
       if (quantityMap.containsKey(expense.date.day)) {
         quantityMap[expense.date.day] = quantityMap[expense.date.day]! + expense.quantity;
       } else {

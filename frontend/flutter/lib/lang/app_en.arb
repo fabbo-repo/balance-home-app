@@ -36,6 +36,12 @@
     "version": "Version",
     "confirmation": "Confirm",
     "cancel": "Cancel",
+    "orderBy": "Order by",
+    "limit": "Limit",
+    "noLimit": "No limit",
+    "name": "Name",
+    "quantity": "Quantity",
+    "date": "Date",
 
     "@_HOME":{},
     "statistics": "Statistics",
@@ -97,5 +103,13 @@
     "balanceChartTitle": "Revenues and expenses for",
     "savingsChartTitle": "Savings for",
     "savingsEightChartTitle": "Last 8 years savings",
-    "currencyChartTitle": "Currency exchange"
+    "currencyChartTitle": "Currency exchange",
+    
+    "@_BALANCES":{},
+    "revenueDialogTitle": "Delete revenue",
+    "expenseDialogTitle": "Delete expense",
+    "revenueDialogDescription": "Are you sure you want to delete a revenue?",
+    "expenseDialogDescription": "Are you sure you want to delete an expense?",
+    "maxRevenueDialoTitle": "Maximum number of revenues to display",
+    "maxExpenseDialoTitle": "Maximum number of expenses to display"
 }

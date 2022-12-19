@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/core/providers/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
 import 'package:balance_home_app/src/core/services/request_error_handler_libw.dart';
 import 'package:balance_home_app/src/core/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/widgets/language_picker_dropdown.dart';
