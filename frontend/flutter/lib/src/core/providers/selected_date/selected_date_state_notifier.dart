@@ -14,10 +14,6 @@ class SelectedDateStateNotifier extends StateNotifier<SelectedDateState> {
           selectedDateMode: selectedDateMode ?? SelectedDateEnum.day
         )
       ));
-  
-  SelectedDateModel getSelectedDate() {
-    return state.date;
-  }
 
   void setSelectedDate(SelectedDateModel date) {
     state = state.copyWith(date: date);

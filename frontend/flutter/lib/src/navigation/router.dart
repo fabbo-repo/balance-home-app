@@ -2,12 +2,13 @@ import 'dart:async';
 import 'package:balance_home_app/src/core/views/app_info_loading_view.dart';
 import 'package:balance_home_app/src/core/views/loading_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
+import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
+import 'package:balance_home_app/src/features/balance/presentation/views/balance_view.dart';
 import 'package:balance_home_app/src/features/home/presentation/views/home_tabs.dart';
 import 'package:balance_home_app/src/features/home/presentation/views/home_view.dart';
 import 'package:balance_home_app/src/features/login/logic/providers/login_provider.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
 import 'package:balance_home_app/src/features/login/presentation/views/forgot_password_view.dart';
-import 'package:balance_home_app/src/features/revenue/presentation/views/revenue_view.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/views/statistics_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,7 +49,7 @@ class RouterNotifier extends ChangeNotifier {
           key: _scaffoldKey,
           child: HomeView(
             selectedSection: HomeTab.revenues,
-            child: RevenueView()
+            child: BalanceView(balanceType: BalanceTypeEnum.revenue,)
           )
         ),
     ),
@@ -61,7 +62,7 @@ class RouterNotifier extends ChangeNotifier {
           key: _scaffoldKey,
           child: HomeView(
             selectedSection: HomeTab.expenses,
-            child: const Center(child: Text("Hello World"))
+            child: BalanceView(balanceType: BalanceTypeEnum.expense,)
           )
         ),
     ),

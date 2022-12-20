@@ -3,8 +3,6 @@ import 'package:balance_home_app/src/core/widgets/info_dialog.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_model.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
 import 'package:balance_home_app/src/features/balance/logic/providers/balance_provider.dart';
-import 'package:balance_home_app/src/features/expense/logic/providers/expense_list_provider.dart';
-import 'package:balance_home_app/src/features/revenue/logic/providers/revenue_list_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
