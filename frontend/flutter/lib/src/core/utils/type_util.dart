@@ -26,6 +26,6 @@ class TypeUtil {
       case "studies": return appLocalizations.studies;
       case "vacation": return appLocalizations.vacation;
     }
-    return appLocalizations.january;
+    return type;
   }
 }
