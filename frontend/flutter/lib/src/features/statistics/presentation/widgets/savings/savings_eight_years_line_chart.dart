@@ -1,104 +1,131 @@
 import 'dart:math';
 import 'package:balance_home_app/src/core/data/models/min_max_model.dart';
+import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
+import 'package:balance_home_app/src/core/widgets/chart_indicator.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/annual_balance_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // ignore: must_be_immutable
-class SavingsEightYearsLineChart extends StatelessWidget {
-  /// Border chart lines decoration 
+class SavingsEightYearsLineChart extends ConsumerWidget {
+  /// Border chart lines decoration
   FlBorderData get borderData => FlBorderData(
-    show: true,
-    border: const Border(
-      bottom: BorderSide(color: Colors.black, width: 2),
-      left: BorderSide(color: Colors.black, width: 2),
-      right: BorderSide(color: Colors.transparent),
-      top: BorderSide(color: Colors.transparent),
-    ),
-  );
+        show: true,
+        border: const Border(
+          bottom: BorderSide(color: Colors.black, width: 2),
+          left: BorderSide(color: Colors.black, width: 2),
+          right: BorderSide(color: Colors.transparent),
+          top: BorderSide(color: Colors.transparent),
+        ),
+      );
 
   SideTitles get bottomTitles => SideTitles(
-    showTitles: true,
-    reservedSize: 22,
-    interval: 1,
-    getTitlesWidget: (double value, TitleMeta meta) {
-      const style = TextStyle(
-        color: Colors.black,
-        fontSize: 12,
+        showTitles: true,
+        reservedSize: 22,
+        interval: 1,
+        getTitlesWidget: (double value, TitleMeta meta) {
+          const style = TextStyle(
+            color: Colors.black,
+            fontSize: 12,
+          );
+          return SideTitleWidget(
+            axisSide: meta.axisSide,
+            space: 5,
+            child: Text("$value", style: style),
+          );
+        },
       );
-      return SideTitleWidget(
-        axisSide: meta.axisSide,
-        space: 5,
-        child: Text("$value", style: style),
-      );
-    },
-  );
 
   SideTitles get leftTitles => SideTitles(
-    getTitlesWidget: (double value, TitleMeta meta) {
-      const style = TextStyle(
-        color: Color(0xff75729e),
-        fontWeight: FontWeight.bold,
-        fontSize: 14,
+        getTitlesWidget: (double value, TitleMeta meta) {
+          const style = TextStyle(
+            color: Color(0xff75729e),
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          );
+          return Text("$value", style: style, textAlign: TextAlign.center);
+        },
+        showTitles: true,
+        interval: (([
+                  getMinMaxQuantity().max.ceilToDouble(),
+                  getMinMaxQuantity().min.floorToDouble().abs()
+                ].reduce(max)) /
+                5)
+            .abs()
+            .ceilToDouble(),
+        reservedSize: 40,
       );
-      return Text("$value", style: style, textAlign: TextAlign.center);
-    },
-    showTitles: true,
-    interval: (
-      ([getMinMaxQuantity().max.ceilToDouble(), 
-      getMinMaxQuantity().min.floorToDouble().abs()].reduce(max))
-      / 5)
-      .abs().ceilToDouble(),
-    reservedSize: 40,
-  );
 
   /// Border chart side tittles setup
   FlTitlesData get titlesData => FlTitlesData(
-    bottomTitles: AxisTitles(
-      sideTitles: bottomTitles,
-    ),
-    // Ignore right details
-    rightTitles: AxisTitles(
-      sideTitles: SideTitles(showTitles: false),
-    ),
-    // Ignore top details
-    topTitles: AxisTitles(
-      sideTitles: SideTitles(showTitles: false),
-    ),
-    leftTitles: AxisTitles(
-      sideTitles: leftTitles,
-    ),
-  );
+        bottomTitles: AxisTitles(
+          sideTitles: bottomTitles,
+        ),
+        // Ignore right details
+        rightTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        // Ignore top details
+        topTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: leftTitles,
+        ),
+      );
 
   List<LineChartBarData> get lineBarsData => [
-    quantityChartBarData(),
-    expectedChartBarData(),
-  ];
-  
+        quantityChartBarData(),
+        expectedChartBarData(),
+      ];
+
   final List<AnnualBalanceModel> annualBalances;
   MinMaxModel? minMaxModel;
 
-  SavingsEightYearsLineChart({
-    required this.annualBalances,
-    this.minMaxModel,
-    super.key});
+  SavingsEightYearsLineChart(
+      {required this.annualBalances, this.minMaxModel, super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appLocalizations =
+        ref.watch(localizationStateNotifierProvider).localization;
     return Padding(
       padding: const EdgeInsets.all(15),
-      child: LineChart(
-        LineChartData(
-          gridData: FlGridData(show: true),
-          titlesData: titlesData,
-          borderData: borderData,
-          lineBarsData: lineBarsData,
-          minX: DateTime.now().year.toDouble() - 7,
-          maxX: DateTime.now().year.toDouble(),
-          maxY: getMinMaxQuantity().max.ceilToDouble(),
-          minY: getMinMaxQuantity().min.floorToDouble(),
-        ),
-        swapAnimationDuration: const Duration(milliseconds: 250),
+      child: Column(
+        children: [
+          Expanded(
+            child: LineChart(
+              LineChartData(
+                gridData: FlGridData(show: true),
+                titlesData: titlesData,
+                borderData: borderData,
+                lineBarsData: lineBarsData,
+                minX: DateTime.now().year.toDouble() - 7,
+                maxX: DateTime.now().year.toDouble(),
+                maxY: getMinMaxQuantity().max.ceilToDouble(),
+                minY: getMinMaxQuantity().min.floorToDouble(),
+              ),
+              swapAnimationDuration: const Duration(milliseconds: 250),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ChartIndicator(
+                color: const Color.fromARGB(225, 224, 167, 231),
+                text: appLocalizations.expected,
+                isSquare: true,
+              ),
+              const SizedBox(width: 10),
+              ChartIndicator(
+                color: const Color.fromARGB(184, 7, 95, 15),
+                text: appLocalizations.quantity,
+                isSquare: true,
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
@@ -109,13 +136,16 @@ class SavingsEightYearsLineChart extends StatelessWidget {
     Map<int, double> spotsMap = {};
     for (AnnualBalanceModel annualBalance in annualBalances) {
       if (spotsMap.containsKey(annualBalance.year)) {
-        spotsMap[annualBalance.year] = spotsMap[annualBalance.year]! + annualBalance.grossQuantity;
+        spotsMap[annualBalance.year] =
+            spotsMap[annualBalance.year]! + annualBalance.grossQuantity;
       } else {
         spotsMap[annualBalance.year] = annualBalance.grossQuantity;
       }
     }
     // Check unexistant years
-    for (int year = DateTime.now().year-7; year <= DateTime.now().year; year++) {
+    for (int year = DateTime.now().year - 7;
+        year <= DateTime.now().year;
+        year++) {
       if (!spotsMap.containsKey(year)) {
         spotsMap[year] = 0.0;
       }
@@ -126,29 +156,30 @@ class SavingsEightYearsLineChart extends StatelessWidget {
       spots.add(FlSpot(year.toDouble(), spotsMap[year]!.toDouble()));
     }
     return LineChartBarData(
-      isCurved: true,
-      preventCurveOverShooting: true,
-      color: const Color.fromARGB(184, 7, 95, 15),
-      barWidth: 2,
-      isStrokeCapRound: true,
-      dotData: FlDotData(show: false),
-      belowBarData: BarAreaData(
-        show: true,
-        color: const Color.fromARGB(34, 9, 82, 15),
-      ),
-      spots: spots
-    );
+        isCurved: true,
+        preventCurveOverShooting: true,
+        color: const Color.fromARGB(184, 7, 95, 15),
+        barWidth: 2,
+        isStrokeCapRound: true,
+        dotData: FlDotData(show: false),
+        belowBarData: BarAreaData(
+          show: true,
+          color: const Color.fromARGB(34, 9, 82, 15),
+        ),
+        spots: spots);
   }
 
   @visibleForTesting
-  LineChartBarData expectedChartBarData() { 
+  LineChartBarData expectedChartBarData() {
     // Dictionary with years and expected quantities per year
     Map<int, double> spotsMap = {};
     for (AnnualBalanceModel annualBalance in annualBalances) {
       spotsMap[annualBalance.year] = annualBalance.expectedQuantity;
     }
     // Check unexistant years
-    for (int year = DateTime.now().year-7; year <= DateTime.now().year; year++) {
+    for (int year = DateTime.now().year - 7;
+        year <= DateTime.now().year;
+        year++) {
       if (!spotsMap.containsKey(year)) {
         spotsMap[year] = 0.0;
       }
@@ -159,18 +190,17 @@ class SavingsEightYearsLineChart extends StatelessWidget {
       spots.add(FlSpot(year.toDouble(), spotsMap[year]!.toDouble()));
     }
     return LineChartBarData(
-      isCurved: true,
-      preventCurveOverShooting: true,
-      color: const Color.fromARGB(225, 224, 167, 231),
-      barWidth: 2,
-      isStrokeCapRound: true,
-      dotData: FlDotData(show: false),
-      belowBarData: BarAreaData(
-        show: true,
-        color: const Color.fromARGB(47, 224, 167, 231),
-      ),
-      spots: spots
-    );
+        isCurved: true,
+        preventCurveOverShooting: true,
+        color: const Color.fromARGB(225, 224, 167, 231),
+        barWidth: 2,
+        isStrokeCapRound: true,
+        dotData: FlDotData(show: false),
+        belowBarData: BarAreaData(
+          show: true,
+          color: const Color.fromARGB(47, 224, 167, 231),
+        ),
+        spots: spots);
   }
 
   @visibleForTesting

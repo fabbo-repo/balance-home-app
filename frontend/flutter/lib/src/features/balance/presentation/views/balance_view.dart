@@ -113,7 +113,7 @@ class BalanceView extends ConsumerWidget {
             children: [
               Expanded(
                 child: BalanaceLeftPanel(
-                  balanceTypeEnum: balanceType
+                  balanceType: balanceType
                 ),
               ),
               SizedBox(

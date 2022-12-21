@@ -1,6 +1,6 @@
+import 'package:balance_home_app/src/core/data/models/selected_date_enum.dart';
+import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_chart_container.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/statistics_data_model.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance/balance_month_chart_container.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance/balance_year_chart_container.dart';
 import 'package:flutter/material.dart';
 
 class StatisticsViewMobile extends StatelessWidget {
@@ -17,8 +17,14 @@ class StatisticsViewMobile extends StatelessWidget {
       color: const Color.fromARGB(254, 254, 252, 224),
       child: Column(
         children: [
-          BalanceMonthChartContainer(statisticsData: statisticsData),
-          BalanceYearChartContainer(statisticsData: statisticsData),
+          BalanceChartContainer(
+            statisticsData: statisticsData,
+            dateType: SelectedDateEnum.month
+          ),
+          BalanceChartContainer(
+            statisticsData: statisticsData,
+            dateType: SelectedDateEnum.year
+          ),
         ],
       ),
     );

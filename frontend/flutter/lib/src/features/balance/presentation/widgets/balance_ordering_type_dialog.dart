@@ -21,7 +21,7 @@ class BalanceOrderingTypeDialog extends ConsumerWidget {
       ref.read(expenseOrderingTypeStateNotifierProvider.notifier) : 
       ref.read(revenueOrderingTypeStateNotifierProvider.notifier);
     BalanceOrderingTypeEnum currentType = (balanceType == BalanceTypeEnum.expense) ?
-    ref.watch(expenseOrderingTypeStateNotifierProvider).orderingType : 
+      ref.watch(expenseOrderingTypeStateNotifierProvider).orderingType : 
       ref.watch(revenueOrderingTypeStateNotifierProvider).orderingType;
     final appLocalizations = ref.read(localizationStateNotifierProvider).localization;
     return AlertDialog(

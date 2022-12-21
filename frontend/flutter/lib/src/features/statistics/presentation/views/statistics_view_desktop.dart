@@ -1,6 +1,6 @@
+import 'package:balance_home_app/src/core/data/models/selected_date_enum.dart';
+import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_chart_container.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/statistics_data_model.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance/balance_month_chart_container.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance/balance_year_chart_container.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/currency/currency_chart_container.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings/savings_eight_years_chart_container.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings/savings_year_chart_container.dart';
@@ -25,8 +25,14 @@ class StatisticsViewDesktop extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                BalanceMonthChartContainer(statisticsData: statisticsData),
-                BalanceYearChartContainer(statisticsData: statisticsData),
+                BalanceChartContainer(
+                  statisticsData: statisticsData,
+                  dateType: SelectedDateEnum.month
+                ),
+                BalanceChartContainer(
+                  statisticsData: statisticsData,
+                  dateType: SelectedDateEnum.year
+                ),
               ],
             ),
           ),

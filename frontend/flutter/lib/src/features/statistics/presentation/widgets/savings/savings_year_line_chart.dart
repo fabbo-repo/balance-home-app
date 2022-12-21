@@ -1,11 +1,14 @@
 import 'dart:math';
 import 'package:balance_home_app/src/core/data/models/min_max_model.dart';
+import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
+import 'package:balance_home_app/src/core/widgets/chart_indicator.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/monthly_balance_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // ignore: must_be_immutable
-class SavingsYearLineChart extends StatelessWidget {
+class SavingsYearLineChart extends ConsumerWidget {
   /// Border chart lines decoration 
   FlBorderData get borderData => FlBorderData(
     show: true,
@@ -87,21 +90,45 @@ class SavingsYearLineChart extends StatelessWidget {
     super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appLocalizations =
+        ref.watch(localizationStateNotifierProvider).localization;
     return Padding(
       padding: const EdgeInsets.all(15),
-      child: LineChart(
-        LineChartData(
-          gridData: FlGridData(show: true),
-          titlesData: titlesData,
-          borderData: borderData,
-          lineBarsData: lineBarsData,
-          minX: 1,
-          maxX: 12,
-          maxY: getMinMaxQuantity().max.ceilToDouble(),
-          minY: getMinMaxQuantity().min.floorToDouble(),
-        ),
-        swapAnimationDuration: const Duration(milliseconds: 250),
+      child: Column(
+        children: [
+          Expanded(
+            child: LineChart(
+              LineChartData(
+                gridData: FlGridData(show: true),
+                titlesData: titlesData,
+                borderData: borderData,
+                lineBarsData: lineBarsData,
+                minX: 1,
+                maxX: 12,
+                maxY: getMinMaxQuantity().max.ceilToDouble(),
+                minY: getMinMaxQuantity().min.floorToDouble(),
+              ),
+              swapAnimationDuration: const Duration(milliseconds: 250),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ChartIndicator(
+                color: const Color.fromARGB(225, 224, 167, 231),
+                text: appLocalizations.expected,
+                isSquare: true,
+              ),
+              const SizedBox(width: 10),
+              ChartIndicator(
+                color: const Color.fromARGB(184, 7, 95, 15),
+                text: appLocalizations.quantity,
+                isSquare: true,
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
