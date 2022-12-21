@@ -38,7 +38,7 @@ class BalanaceLeftPanel extends ConsumerWidget {
         child: Column(
           children: [
             SizedBox(
-              height: chartLineHeight * 1.3,
+              height: chartLineHeight * 1.1,
               width: (PlatformService().isSmallWindow(context)) ? 
                 screenWidth * 0.95 : screenWidth * 0.45,
               child: BalanceBarChart(

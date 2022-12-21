@@ -23,64 +23,51 @@ class BalanceCard extends ConsumerWidget {
     final balanceListNotifier = (balanceTypeEnum == BalanceTypeEnum.expense) ? 
       ref.read(expenseListProvider.notifier): ref.read(revenueListProvider.notifier);
     final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
-    return Card(
-      color: const Color.fromARGB(255, 232, 234, 246),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          ListTile(
-            leading: Image.network(balance.balanceType.image),
-            title: Text(balance.name, overflow: TextOverflow.ellipsis),
-            subtitle: Text("${balance.quantity} ${balance.coinType}", overflow: TextOverflow.ellipsis),
-            trailing: Text("${balance.date.day}-${balance.date.month}-${balance.date.year}"),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith((states) {
-                    // If the button is pressed, return grey, otherwise red
-                    if (states.contains(MaterialState.pressed)) {
-                      return Colors.grey;
+    return GestureDetector(
+      onTap: () {
+        // TODO
+      },
+      child: Card(
+        color: const Color.fromARGB(255, 232, 234, 246),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Image.network(balance.balanceType.image),
+              title: Text(balance.name, overflow: TextOverflow.ellipsis),
+              subtitle: Text("${balance.quantity} ${balance.coinType}", overflow: TextOverflow.ellipsis),
+              trailing: Text("${balance.date.day}-${balance.date.month}-${balance.date.year}"),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith((states) {
+                      // If the button is pressed, return grey, otherwise red
+                      if (states.contains(MaterialState.pressed)) {
+                        return Colors.grey;
+                      }
+                      return Colors.red;
+                    }),
+                  ),
+                  onPressed: () async {
+                    if (await showDeleteAdviceDialog(context, appLocalizations)) {
+                      balanceRepository.deleteBalance(balance, balanceTypeEnum);
+                      balanceListNotifier.removeBalance(balance);
                     }
-                    return (balanceTypeEnum == BalanceTypeEnum.expense) ?
-                      Colors.orange : Colors.green;
-                  }),
+                  },
+                  child: const Icon(
+                    Icons.delete,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.edit,
-                ),
-                onPressed: () {
-                  
-                },
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith((states) {
-                    // If the button is pressed, return grey, otherwise red
-                    if (states.contains(MaterialState.pressed)) {
-                      return Colors.grey;
-                    }
-                    return Colors.red;
-                  }),
-                ),
-                onPressed: () async {
-                  if (await showDeleteAdviceDialog(context, appLocalizations)) {
-                    balanceRepository.deleteBalance(balance, balanceTypeEnum);
-                    balanceListNotifier.removeBalance(balance);
-                  }
-                },
-                child: const Icon(
-                  Icons.delete,
-                ),
-              ),
-              const SizedBox(width: 8),
-            ],
-          ),
-          const SizedBox(height: 8),
-        ],
+                const SizedBox(width: 8),
+              ],
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }
