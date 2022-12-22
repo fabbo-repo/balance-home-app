@@ -2,32 +2,27 @@ import 'package:balance_home_app/src/features/balance/data/models/balance_limit_
 import 'package:balance_home_app/src/features/balance/data/models/balance_model.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_ordering_type_enum.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
+import 'package:balance_home_app/src/features/balance/logic/providers/balance_provider.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_card.dart';
-import 'package:balance_home_app/src/features/expense/logic/providers/expense_limit_type_provider.dart';
-import 'package:balance_home_app/src/features/expense/logic/providers/expense_list_provider.dart';
-import 'package:balance_home_app/src/features/expense/logic/providers/expense_ordering_type_provider.dart';
-import 'package:balance_home_app/src/features/revenue/logic/providers/revenue_limit_type_provider.dart';
-import 'package:balance_home_app/src/features/revenue/logic/providers/revenue_list_provider.dart';
-import 'package:balance_home_app/src/features/revenue/logic/providers/revenue_ordering_type_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BalanceList extends ConsumerWidget {
-  final BalanceTypeEnum balanceTypeEnum;
+  final BalanceTypeEnum balanceType;
 
   const BalanceList({
-    required this.balanceTypeEnum,
+    required this.balanceType,
     super.key
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final balanceListProvider = (balanceTypeEnum == BalanceTypeEnum.expense) ? 
-      ref.watch(expenseListProvider): ref.watch(revenueListProvider);
-    final orderingType = (balanceTypeEnum == BalanceTypeEnum.expense) ? 
+    final balanceListProvider = (balanceType == BalanceTypeEnum.expense) ? 
+      ref.watch(expenseListProvider) : ref.watch(revenueListProvider);
+    final orderingType = (balanceType == BalanceTypeEnum.expense) ? 
       ref.watch(expenseOrderingTypeStateNotifierProvider).orderingType
       : ref.watch(revenueOrderingTypeStateNotifierProvider).orderingType;
-    final limitType = (balanceTypeEnum == BalanceTypeEnum.expense) ? 
+    final limitType = (balanceType == BalanceTypeEnum.expense) ? 
       ref.watch(expenseLimitTypeStateNotifierProvider).limitType
       : ref.watch(revenueLimitTypeStateNotifierProvider).limitType;
     List<BalanceModel> balanceList = orderBy(balanceListProvider.models, orderingType, limitType);
@@ -39,7 +34,7 @@ class BalanceList extends ConsumerWidget {
           itemBuilder: (BuildContext context, int index) {
             return BalanceCard(
               balance: balanceList[index], 
-              balanceTypeEnum: balanceTypeEnum
+              balanceTypeEnum: balanceType
             );
           },
           separatorBuilder: (BuildContext context, int index) => const Divider(),
@@ -51,7 +46,7 @@ class BalanceList extends ConsumerWidget {
             onPressed: () {
               // TODO Add your onPressed code here!
             },
-            backgroundColor: (balanceTypeEnum == BalanceTypeEnum.expense) ? 
+            backgroundColor: (balanceType == BalanceTypeEnum.expense) ? 
               Colors.orange : Colors.green,
             child: const Icon(Icons.add),
           ),
@@ -92,7 +87,7 @@ class BalanceList extends ConsumerWidget {
       } else if (limitType == BalanceLimitTypeEnum.limit15) {
         aux = aux.take(15).toList();
       }
-    } 
+    }
     return aux;
   }
 }

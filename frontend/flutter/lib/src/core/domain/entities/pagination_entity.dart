@@ -1,17 +1,17 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'pagination_model.g.dart';
+part 'pagination_entity.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class PaginationModel extends Equatable {
+class PaginationEntity extends Equatable {
 
   final int count;
   final String? next;
   final String? previous;
   final List<dynamic> results;
 
-  const PaginationModel({
+  const PaginationEntity({
       required this.count,
       this.next,
       this.previous,
@@ -19,10 +19,10 @@ class PaginationModel extends Equatable {
   });
 
   // Json Serializable
-  factory PaginationModel.fromJson(Map<String, dynamic> json) =>
-    _$PaginationModelFromJson(json);
+  factory PaginationEntity.fromJson(Map<String, dynamic> json) =>
+    _$PaginationEntityFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PaginationModelToJson(this);
+  Map<String, dynamic> toJson() => _$PaginationEntityToJson(this);
 
   @override
   List<Object?> get props => [];

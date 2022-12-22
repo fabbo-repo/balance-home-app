@@ -1,5 +1,5 @@
-import 'package:balance_home_app/src/core/data/models/pagination_model.dart';
-import 'package:balance_home_app/src/core/services/api_contract.dart';
+import 'package:balance_home_app/config/api_contract.dart';
+import 'package:balance_home_app/src/core/domain/entities/pagination_entity.dart';
 import 'package:balance_home_app/src/core/services/http_service.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/annual_balance_model.dart';
 
@@ -33,13 +33,13 @@ class AnnualBalanceRepository implements IAnnualBalanceRepository {
     HttpResponse response = await httpService.sendGetRequest(
       '${APIContract.revenue}?page=$pageNumber'
     );
-    PaginationModel page = PaginationModel.fromJson(response.content);
+    PaginationEntity page = PaginationEntity.fromJson(response.content);
     List<AnnualBalanceModel> annualBalances = page.results.map((e) => AnnualBalanceModel.fromJson(e)).toList();
     while (page.next != null) {
       HttpResponse response = await httpService.sendGetRequest(
         '${APIContract.revenue}?page=$pageNumber'
       );
-      page = PaginationModel.fromJson(response.content);
+      page = PaginationEntity.fromJson(response.content);
       annualBalances += page.results.map((e) => AnnualBalanceModel.fromJson(e)).toList();
       pageNumber ++;
     }
@@ -54,13 +54,13 @@ class AnnualBalanceRepository implements IAnnualBalanceRepository {
     HttpResponse response = await httpService.sendGetRequest(
       '${APIContract.annualBalance}?page=$pageNumber'
     );
-    PaginationModel page = PaginationModel.fromJson(response.content);
+    PaginationEntity page = PaginationEntity.fromJson(response.content);
     List<AnnualBalanceModel> annualBalances = page.results.map((e) => AnnualBalanceModel.fromJson(e)).toList();
     while (page.next != null && annualBalances.length < 8) {
       HttpResponse response = await httpService.sendGetRequest(
         '${APIContract.annualBalance}?page=$pageNumber'
       );
-      page = PaginationModel.fromJson(response.content);
+      page = PaginationEntity.fromJson(response.content);
       annualBalances += page.results.map((e) => AnnualBalanceModel.fromJson(e)).toList();
       pageNumber ++;
     }

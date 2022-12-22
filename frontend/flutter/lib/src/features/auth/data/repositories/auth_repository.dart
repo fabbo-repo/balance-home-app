@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/core/services/api_contract.dart';
+import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/src/core/services/http_service.dart';
 import 'package:balance_home_app/src/features/auth/data/models/account_model.dart';
 import 'package:balance_home_app/src/features/register/data/models/register_model.dart';

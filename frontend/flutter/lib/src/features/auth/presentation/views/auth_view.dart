@@ -1,7 +1,7 @@
+import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/language_picker_dropdown.dart';
 import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
 import 'package:balance_home_app/src/core/services/request_error_handler_libw.dart';
-import 'package:balance_home_app/src/core/views/app_titlle.dart';
-import 'package:balance_home_app/src/core/widgets/language_picker_dropdown.dart';
 import 'package:balance_home_app/src/features/coin/data/models/coin_type_model.dart';
 import 'package:balance_home_app/src/features/coin/logic/providers/coin_provider.dart';
 import 'package:balance_home_app/src/features/login/presentation/views/login_view.dart';

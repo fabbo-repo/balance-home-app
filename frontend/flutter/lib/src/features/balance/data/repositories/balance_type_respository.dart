@@ -1,7 +1,7 @@
+import 'package:balance_home_app/src/core/domain/entities/pagination_entity.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_type_model.dart';
-import 'package:balance_home_app/src/core/data/models/pagination_model.dart';
-import 'package:balance_home_app/src/core/services/api_contract.dart';
+import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/src/core/services/http_service.dart';
 
 abstract class IBalanceTypeRepository {
@@ -36,13 +36,13 @@ class BalanceTypeRepository implements IBalanceTypeRepository {
     HttpResponse response = await httpService.sendGetRequest(
       '$baseUrl?page=$pageNumber'
     );
-    PaginationModel page = PaginationModel.fromJson(response.content);
+    PaginationEntity page = PaginationEntity.fromJson(response.content);
     List<BalanceTypeModel> balanceTypes = page.results.map((e) => BalanceTypeModel.fromJson(e)).toList();
     while (page.next != null) {
       HttpResponse response = await httpService.sendGetRequest(
         '$baseUrl?page=$pageNumber'
       );
-      page = PaginationModel.fromJson(response.content);
+      page = PaginationEntity.fromJson(response.content);
       balanceTypes += page.results.map((e) => BalanceTypeModel.fromJson(e)).toList();
       pageNumber ++;
     }

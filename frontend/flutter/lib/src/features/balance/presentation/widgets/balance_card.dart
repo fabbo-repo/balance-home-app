@@ -1,10 +1,8 @@
+import 'package:balance_home_app/src/core/presentation/widgets/info_dialog.dart';
 import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
-import 'package:balance_home_app/src/core/widgets/info_dialog.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_model.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
 import 'package:balance_home_app/src/features/balance/logic/providers/balance_provider.dart';
-import 'package:balance_home_app/src/features/expense/logic/providers/expense_list_provider.dart';
-import 'package:balance_home_app/src/features/revenue/logic/providers/revenue_list_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,64 +23,51 @@ class BalanceCard extends ConsumerWidget {
     final balanceListNotifier = (balanceTypeEnum == BalanceTypeEnum.expense) ? 
       ref.read(expenseListProvider.notifier): ref.read(revenueListProvider.notifier);
     final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
-    return Card(
-      color: const Color.fromARGB(255, 232, 234, 246),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          ListTile(
-            leading: Image.network(balance.balanceType.image),
-            title: Text(balance.name, overflow: TextOverflow.ellipsis),
-            subtitle: Text("${balance.quantity} ${balance.coinType}", overflow: TextOverflow.ellipsis),
-            trailing: Text("${balance.date.day}-${balance.date.month}-${balance.date.year}"),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith((states) {
-                    // If the button is pressed, return grey, otherwise red
-                    if (states.contains(MaterialState.pressed)) {
-                      return Colors.grey;
+    return GestureDetector(
+      onTap: () {
+        // TODO
+      },
+      child: Card(
+        color: const Color.fromARGB(255, 232, 234, 246),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Image.network(balance.balanceType.image),
+              title: Text(balance.name, overflow: TextOverflow.ellipsis),
+              subtitle: Text("${balance.quantity} ${balance.coinType}", overflow: TextOverflow.ellipsis),
+              trailing: Text("${balance.date.day}-${balance.date.month}-${balance.date.year}"),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith((states) {
+                      // If the button is pressed, return grey, otherwise red
+                      if (states.contains(MaterialState.pressed)) {
+                        return Colors.grey;
+                      }
+                      return Colors.red;
+                    }),
+                  ),
+                  onPressed: () async {
+                    if (await showDeleteAdviceDialog(context, appLocalizations)) {
+                      balanceRepository.deleteBalance(balance, balanceTypeEnum);
+                      balanceListNotifier.removeBalance(balance);
                     }
-                    return (balanceTypeEnum == BalanceTypeEnum.expense) ?
-                      Colors.orange : Colors.green;
-                  }),
+                  },
+                  child: const Icon(
+                    Icons.delete,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.edit,
-                ),
-                onPressed: () {
-                  
-                },
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith((states) {
-                    // If the button is pressed, return grey, otherwise red
-                    if (states.contains(MaterialState.pressed)) {
-                      return Colors.grey;
-                    }
-                    return Colors.red;
-                  }),
-                ),
-                onPressed: () async {
-                  if (await showDeleteAdviceDialog(context, appLocalizations)) {
-                    balanceRepository.deleteBalance(balance, balanceTypeEnum);
-                    balanceListNotifier.removeBalance(balance);
-                  }
-                },
-                child: const Icon(
-                  Icons.delete,
-                ),
-              ),
-              const SizedBox(width: 8),
-            ],
-          ),
-          const SizedBox(height: 8),
-        ],
+                const SizedBox(width: 8),
+              ],
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }

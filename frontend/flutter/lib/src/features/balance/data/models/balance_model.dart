@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_type_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';

@@ -1,6 +1,7 @@
+import 'package:balance_home_app/src/core/infrastructure/datasources/selected_date.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/future_widget.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/responsive_layout.dart';
 import 'package:balance_home_app/src/features/statistics/logic/providers/selected_date_model_provider.dart';
-import 'package:balance_home_app/src/core/widgets/future_widget.dart';
-import 'package:balance_home_app/src/core/widgets/responsive_layout.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
 import 'package:balance_home_app/src/features/balance/data/repositories/balance_repository.dart';
 import 'package:balance_home_app/src/features/balance/logic/providers/balance_provider.dart';
@@ -8,7 +9,6 @@ import 'package:balance_home_app/src/features/coin/data/repositories/coin_type_r
 import 'package:balance_home_app/src/features/coin/data/repositories/exchange_repository.dart';
 import 'package:balance_home_app/src/features/coin/logic/providers/coin_provider.dart';
 import 'package:balance_home_app/src/features/coin/logic/providers/exchange_provider.dart';
-import 'package:balance_home_app/src/core/data/models/selected_date_model.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/statistics_data_model.dart';
 import 'package:balance_home_app/src/features/statistics/data/repositories/annual_balance_repository.dart';
 import 'package:balance_home_app/src/features/statistics/data/repositories/monthly_balance_repository.dart';
@@ -67,8 +67,8 @@ class StatisticsView extends ConsumerWidget {
     IMonthlyBalanceRepository monthlyBalanceRepository,
     IAnnualBalanceRepository annualBalanceRepository,
     ICoinTypeRepository coinTypeRepositoryProvider,
-    SelectedDateModel selectedBalanceDate,
-    SelectedDateModel savingsSelectedDate,
+    SelectedDate selectedBalanceDate,
+    SelectedDate savingsSelectedDate,
     IExchangeRepository exchangeRepository,
     String selectedCoinFrom,
     String selectedCoinTo

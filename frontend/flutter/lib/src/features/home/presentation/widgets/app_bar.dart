@@ -1,6 +1,6 @@
+import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
 import 'package:balance_home_app/src/core/services/platform_service.dart';
-import 'package:balance_home_app/src/core/views/app_titlle.dart';
 import 'package:balance_home_app/src/features/auth/data/models/account_model.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_provider.dart';
 import 'package:balance_home_app/src/features/login/logic/providers/login_provider.dart';

@@ -1,5 +1,5 @@
+import 'package:balance_home_app/src/core/presentation/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
-import 'package:balance_home_app/src/core/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_limit_type_dialog.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_list.dart';
@@ -8,18 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BalanaceRightPanel extends ConsumerWidget {
-  final BalanceTypeEnum balanceTypeEnum;
+  final BalanceTypeEnum balanceType;
   
   const BalanaceRightPanel({
-    required this.balanceTypeEnum,
+    required this.balanceType,
     super.key
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      color: (balanceTypeEnum == BalanceTypeEnum.expense) ?
+      color: (balanceType == BalanceTypeEnum.expense) ?
         const Color.fromARGB(254, 236, 182, 163) : 
         const Color.fromARGB(254, 174, 221, 148),
       child: Column(
@@ -29,7 +30,10 @@ class BalanaceRightPanel extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SimpleTextButton(
-                width: 160,
+                width: 
+                  (screenWidth * 0.1 > 160) ? 160 :
+                    (screenWidth * 0.1 < 100) ? 100 : 
+                      screenWidth * 0.1,
                 height: 40,
                 backgroundColor: Colors.white,
                 onPressed: () {
@@ -39,7 +43,10 @@ class BalanaceRightPanel extends ConsumerWidget {
               ),
               const SizedBox(width: 30),
               SimpleTextButton(
-                width: 160,
+                width:
+                  (screenWidth * 0.1 > 160) ? 160 :
+                    (screenWidth * 0.1 < 100) ? 100 : 
+                      screenWidth * 0.1,
                 height: 40,
                 backgroundColor: Colors.white,
                 onPressed: () {
@@ -50,7 +57,7 @@ class BalanaceRightPanel extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 10),
-          Expanded(child: BalanceList(balanceTypeEnum: balanceTypeEnum)),
+          Expanded(child: BalanceList(balanceType: balanceType)),
         ],
       ),
     );
@@ -61,7 +68,7 @@ class BalanaceRightPanel extends ConsumerWidget {
     context: context,
     builder: (context) {
       return BalanceOrderingTypeDialog(
-        balanceTypeEnum: balanceTypeEnum);
+        balanceType: balanceType);
     }
   );
   
@@ -70,7 +77,7 @@ class BalanaceRightPanel extends ConsumerWidget {
     context: context,
     builder: (context) {
       return BalanceLimitTypeDialog(
-        balanceTypeEnum: balanceTypeEnum);
+        balanceType: balanceType);
     }
   );
 }

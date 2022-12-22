@@ -1,11 +1,14 @@
 import 'dart:math';
-import 'package:balance_home_app/src/core/data/models/min_max_model.dart';
+import 'package:balance_home_app/src/core/infrastructure/datasources/min_max.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/chart_indicator.dart';
+import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/monthly_balance_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // ignore: must_be_immutable
-class SavingsYearLineChart extends StatelessWidget {
+class SavingsYearLineChart extends ConsumerWidget {
   /// Border chart lines decoration 
   FlBorderData get borderData => FlBorderData(
     show: true,
@@ -78,7 +81,7 @@ class SavingsYearLineChart extends StatelessWidget {
   
   final List<String> monthList;
   final List<MonthlyBalanceModel> monthlyBalances;
-  MinMaxModel? minMaxModel;
+  MinMax? minMaxModel;
 
   SavingsYearLineChart({
     required this.monthList,
@@ -87,21 +90,45 @@ class SavingsYearLineChart extends StatelessWidget {
     super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appLocalizations =
+        ref.watch(localizationStateNotifierProvider).localization;
     return Padding(
       padding: const EdgeInsets.all(15),
-      child: LineChart(
-        LineChartData(
-          gridData: FlGridData(show: true),
-          titlesData: titlesData,
-          borderData: borderData,
-          lineBarsData: lineBarsData,
-          minX: 1,
-          maxX: 12,
-          maxY: getMinMaxQuantity().max.ceilToDouble(),
-          minY: getMinMaxQuantity().min.floorToDouble(),
-        ),
-        swapAnimationDuration: const Duration(milliseconds: 250),
+      child: Column(
+        children: [
+          Expanded(
+            child: LineChart(
+              LineChartData(
+                gridData: FlGridData(show: true),
+                titlesData: titlesData,
+                borderData: borderData,
+                lineBarsData: lineBarsData,
+                minX: 1,
+                maxX: 12,
+                maxY: getMinMaxQuantity().max.ceilToDouble(),
+                minY: getMinMaxQuantity().min.floorToDouble(),
+              ),
+              swapAnimationDuration: const Duration(milliseconds: 250),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ChartIndicator(
+                color: const Color.fromARGB(225, 224, 167, 231),
+                text: appLocalizations.expected,
+                isSquare: true,
+              ),
+              const SizedBox(width: 10),
+              ChartIndicator(
+                color: const Color.fromARGB(184, 7, 95, 15),
+                text: appLocalizations.quantity,
+                isSquare: true,
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
@@ -181,7 +208,7 @@ class SavingsYearLineChart extends StatelessWidget {
   }
 
   @visibleForTesting
-  MinMaxModel getMinMaxQuantity() {
+  MinMax getMinMaxQuantity() {
     if (minMaxModel != null) return minMaxModel!;
     double maxQuantity = 4.0;
     double minQuantity = 0.0;
@@ -210,7 +237,7 @@ class SavingsYearLineChart extends StatelessWidget {
     }
     if (maxQuantity < 4) maxQuantity = 4;
     if (minQuantity > 0) minQuantity = 0;
-    minMaxModel = MinMaxModel(min: minQuantity, max: maxQuantity);
+    minMaxModel = MinMax(min: minQuantity, max: maxQuantity);
     return minMaxModel!;
   }
 }

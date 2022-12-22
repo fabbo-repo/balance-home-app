@@ -1,10 +1,10 @@
 
+import 'package:balance_home_app/src/core/infrastructure/datasources/selected_date.dart';
 import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
 import 'package:balance_home_app/src/features/statistics/logic/providers/selected_date_model_provider.dart';
 import 'package:balance_home_app/src/core/providers/selected_date/selected_date_state_notifier.dart';
 import 'package:balance_home_app/src/core/services/platform_service.dart';
 import 'package:balance_home_app/src/core/utils/date_util.dart';
-import 'package:balance_home_app/src/core/data/models/selected_date_model.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/statistics_data_model.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings/savings_year_line_chart.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,7 @@ class SavingsYearChartContainer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
-    SelectedDateModel selectedSavingsDate = ref.watch(selectedSavingsDateStateNotifierProvider).date;
+    SelectedDate selectedSavingsDate = ref.watch(selectedSavingsDateStateNotifierProvider).date;
     SelectedDateStateNotifier selectedSavingsDateNotifier = ref.read(selectedSavingsDateStateNotifierProvider.notifier);
     List<int> years = <int>{
       ...statisticsData.revenueYears, ...statisticsData.expenseYears
