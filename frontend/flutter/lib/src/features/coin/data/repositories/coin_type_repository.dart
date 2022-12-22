@@ -1,5 +1,5 @@
-import 'package:balance_home_app/src/core/data/models/pagination_model.dart';
-import 'package:balance_home_app/src/core/services/api_contract.dart';
+import 'package:balance_home_app/config/api_contract.dart';
+import 'package:balance_home_app/src/core/domain/entities/pagination_entity.dart';
 import 'package:balance_home_app/src/core/services/http_service.dart';
 import 'package:balance_home_app/src/features/coin/data/models/coin_type_model.dart';
 
@@ -31,13 +31,13 @@ class CoinTypeRepository implements ICoinTypeRepository {
     HttpResponse response = await httpService.sendGetRequest(
       '${APIContract.coinType}?page=$pageNumber'
     );
-    PaginationModel page = PaginationModel.fromJson(response.content);
+    PaginationEntity page = PaginationEntity.fromJson(response.content);
     List<CoinTypeModel> coinTypes = page.results.map((e) => CoinTypeModel.fromJson(e)).toList();
     while (page.next != null) {
       HttpResponse response = await httpService.sendGetRequest(
         '${APIContract.coinType}?page=$pageNumber'
       );
-      page = PaginationModel.fromJson(response.content);
+      page = PaginationEntity.fromJson(response.content);
       coinTypes += page.results.map((e) => CoinTypeModel.fromJson(e)).toList();
       pageNumber ++;
     }

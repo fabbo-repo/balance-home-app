@@ -1,6 +1,6 @@
 
-import 'package:balance_home_app/src/core/widgets/error_dialog.dart';
-import 'package:balance_home_app/src/core/widgets/info_dialog.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/error_dialog.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/info_dialog.dart';
 import 'package:balance_home_app/src/features/login/presentation/widgets/email_code_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

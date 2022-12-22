@@ -1,5 +1,5 @@
-import 'package:balance_home_app/src/core/data/models/selected_date_enum.dart';
-import 'package:balance_home_app/src/core/data/models/selected_date_model.dart';
+import 'package:balance_home_app/src/core/infrastructure/datasources/selected_date.dart';
+import 'package:balance_home_app/src/core/infrastructure/datasources/selected_date_enum.dart';
 import 'package:balance_home_app/src/core/providers/selected_date/selected_date_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,7 +7,7 @@ class SelectedDateStateNotifier extends StateNotifier<SelectedDateState> {
   SelectedDateStateNotifier({SelectedDateEnum? selectedDateMode}) : 
     super(
       SelectedDateState(
-        SelectedDateModel(
+        SelectedDate(
           day: DateTime.now().day, 
           month: DateTime.now().month, 
           year: DateTime.now().year,
@@ -15,12 +15,12 @@ class SelectedDateStateNotifier extends StateNotifier<SelectedDateState> {
         )
       ));
 
-  void setSelectedDate(SelectedDateModel date) {
+  void setSelectedDate(SelectedDate date) {
     state = state.copyWith(date: date);
   }
   
   void setDay(int day) {
-    SelectedDateModel date = SelectedDateModel(
+    SelectedDate date = SelectedDate(
       day: day,
       month: state.date.month,
       year: state.date.year,
@@ -30,7 +30,7 @@ class SelectedDateStateNotifier extends StateNotifier<SelectedDateState> {
   }
   
   void setMonth(int month) {
-    SelectedDateModel date = SelectedDateModel(
+    SelectedDate date = SelectedDate(
       day: state.date.day,
       month: month,
       year: state.date.year,
@@ -40,7 +40,7 @@ class SelectedDateStateNotifier extends StateNotifier<SelectedDateState> {
   }
   
   void setYear(int year) {
-    SelectedDateModel date = SelectedDateModel(
+    SelectedDate date = SelectedDate(
       day: state.date.day,
       month: state.date.month,
       year: year,
@@ -50,7 +50,7 @@ class SelectedDateStateNotifier extends StateNotifier<SelectedDateState> {
   }
   
   void setSelectedDateMode(SelectedDateEnum selectedDateMode) {
-    SelectedDateModel date = SelectedDateModel(
+    SelectedDate date = SelectedDate(
       day: state.date.day,
       month: state.date.month,
       year: state.date.year,

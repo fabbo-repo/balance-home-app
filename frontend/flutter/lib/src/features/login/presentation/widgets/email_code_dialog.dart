@@ -1,5 +1,5 @@
-import 'package:balance_home_app/src/core/widgets/simple_text_button.dart';
-import 'package:balance_home_app/src/core/widgets/simple_text_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/simple_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/simple_text_field.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/email_code/email_code_provider.dart';
 import 'package:balance_home_app/src/features/login/data/models/email_code_model.dart';

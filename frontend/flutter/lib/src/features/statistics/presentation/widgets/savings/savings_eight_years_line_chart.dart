@@ -1,7 +1,7 @@
 import 'dart:math';
-import 'package:balance_home_app/src/core/data/models/min_max_model.dart';
+import 'package:balance_home_app/src/core/infrastructure/datasources/min_max.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/chart_indicator.dart';
 import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
-import 'package:balance_home_app/src/core/widgets/chart_indicator.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/annual_balance_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +81,7 @@ class SavingsEightYearsLineChart extends ConsumerWidget {
       ];
 
   final List<AnnualBalanceModel> annualBalances;
-  MinMaxModel? minMaxModel;
+  MinMax? minMaxModel;
 
   SavingsEightYearsLineChart(
       {required this.annualBalances, this.minMaxModel, super.key});
@@ -204,7 +204,7 @@ class SavingsEightYearsLineChart extends ConsumerWidget {
   }
 
   @visibleForTesting
-  MinMaxModel getMinMaxQuantity() {
+  MinMax getMinMaxQuantity() {
     if (minMaxModel != null) return minMaxModel!;
     double maxQuantity = 4.0;
     double minQuantity = 0.0;
@@ -233,7 +233,7 @@ class SavingsEightYearsLineChart extends ConsumerWidget {
     }
     if (maxQuantity < 4) maxQuantity = 4;
     if (minQuantity > 0) minQuantity = 0;
-    minMaxModel = MinMaxModel(min: minQuantity, max: maxQuantity);
+    minMaxModel = MinMax(min: minQuantity, max: maxQuantity);
     return minMaxModel!;
   }
 }

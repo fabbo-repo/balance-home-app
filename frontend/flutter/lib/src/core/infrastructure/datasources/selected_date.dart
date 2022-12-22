@@ -1,13 +1,14 @@
-import 'package:balance_home_app/src/core/data/models/selected_date_enum.dart';
+import 'package:balance_home_app/src/core/infrastructure/datasources/selected_date_enum.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class SelectedDateModel extends Equatable {
+class SelectedDate extends Equatable {
 
   final int day;
   final int month;
   final int year;
   final SelectedDateEnum selectedDateMode; 
+  
   DateTime get dateFrom {
     if (selectedDateMode == SelectedDateEnum.month) {
       return DateTime(year, month, 1);
@@ -25,7 +26,7 @@ class SelectedDateModel extends Equatable {
     return DateTime(year, month, day); 
   }
   
-  const SelectedDateModel({
+  const SelectedDate({
     required this.day,
     required this.month,
     required this.year,

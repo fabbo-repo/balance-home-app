@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-class MinMaxModel extends Equatable {
+class MinMax extends Equatable {
 
   final double min;
   final double max;
 
-  const MinMaxModel({
+  const MinMax({
     required this.min,
     required this.max
   });

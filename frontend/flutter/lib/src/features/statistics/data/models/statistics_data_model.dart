@@ -1,9 +1,9 @@
+import 'package:balance_home_app/src/core/infrastructure/datasources/selected_date.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_model.dart';
 import 'package:balance_home_app/src/features/coin/data/models/coin_type_model.dart';
 import 'package:balance_home_app/src/features/coin/data/models/date_exchanges_list_model.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/annual_balance_model.dart';
 import 'package:balance_home_app/src/features/statistics/data/models/monthly_balance_model.dart';
-import 'package:balance_home_app/src/core/data/models/selected_date_model.dart';
 
 class StatisticsDataModel {
   List<BalanceModel> revenues;
@@ -12,8 +12,8 @@ class StatisticsDataModel {
   List<int> expenseYears;
   List<MonthlyBalanceModel> monthlyBalances;
   List<AnnualBalanceModel> annualBalances;
-  SelectedDateModel selectedBalanceDate;
-  SelectedDateModel savingsSelectedDate;
+  SelectedDate selectedBalanceDate;
+  SelectedDate savingsSelectedDate;
   DateExchangesListModel dateExchangesModel;
   String selectedCoinFrom;
   String selectedCoinTo;

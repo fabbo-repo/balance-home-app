@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:balance_home_app/src/core/views/app_info_loading_view.dart';
-import 'package:balance_home_app/src/core/views/loading_view.dart';
+import 'package:balance_home_app/src/core/presentation/views/app_info_loading_view.dart';
+import 'package:balance_home_app/src/core/presentation/views/loading_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
 import 'package:balance_home_app/src/features/balance/presentation/views/balance_view.dart';

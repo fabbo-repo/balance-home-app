@@ -1,6 +1,6 @@
+import 'package:balance_home_app/src/core/domain/entities/pagination_entity.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_model.dart';
-import 'package:balance_home_app/src/core/data/models/pagination_model.dart';
-import 'package:balance_home_app/src/core/services/api_contract.dart';
+import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/src/core/services/http_service.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_years_model.dart';
@@ -63,7 +63,7 @@ class BalanceRepository implements IBalanceRepository {
     HttpResponse response = await httpService.sendGetRequest(
       '$baseUrl?page=$pageNumber$extraArgs'
     );
-    PaginationModel page = PaginationModel.fromJson(response.content);
+    PaginationEntity page = PaginationEntity.fromJson(response.content);
     List<BalanceModel> balances = page.results.map((e) {
       e["balance_type"] = (balanceTypeEnum == BalanceTypeEnum.expense) ? 
         e["exp_type"] : e["rev_type"];
@@ -74,7 +74,7 @@ class BalanceRepository implements IBalanceRepository {
       HttpResponse response = await httpService.sendGetRequest(
         '$baseUrl?page=$pageNumber$extraArgs'
       );
-      page = PaginationModel.fromJson(response.content);
+      page = PaginationEntity.fromJson(response.content);
       balances += page.results.map((e) {
         e["balance_type"] = (balanceTypeEnum == BalanceTypeEnum.expense) ? 
           e["exp_type"] : e["rev_type"];

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:balance_home_app/src/core/env/environment_config.dart';
 import 'package:balance_home_app/src/core/exceptions/http_exceptions.dart';
-import 'package:balance_home_app/src/core/services/api_contract.dart';
+import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/src/core/services/request_error_handler_libw.dart';
 import 'package:balance_home_app/src/features/login/data/models/credentials_model.dart';
 import 'package:balance_home_app/src/features/login/data/models/jwt_model.dart';

@@ -1,9 +1,9 @@
+import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/language_picker_dropdown.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/password_text_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/simple_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/simple_text_field.dart';
 import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
-import 'package:balance_home_app/src/core/views/app_titlle.dart';
-import 'package:balance_home_app/src/core/widgets/language_picker_dropdown.dart';
-import 'package:balance_home_app/src/core/widgets/password_text_field.dart';
-import 'package:balance_home_app/src/core/widgets/simple_text_button.dart';
-import 'package:balance_home_app/src/core/widgets/simple_text_field.dart';
 import 'package:balance_home_app/src/features/login/logic/providers/forgot_password/forgot_password_provider.dart';
 import 'package:balance_home_app/src/features/login/logic/providers/forgot_password/forgot_password_state.dart';
 import 'package:flutter/material.dart';

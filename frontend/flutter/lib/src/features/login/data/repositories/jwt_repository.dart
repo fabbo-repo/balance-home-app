@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/core/services/api_contract.dart';
+import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/src/core/services/http_service.dart';
 import 'package:balance_home_app/src/features/login/data/models/credentials_model.dart';
 import 'package:balance_home_app/src/features/login/data/models/jwt_model.dart';

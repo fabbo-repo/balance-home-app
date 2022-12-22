@@ -1,5 +1,4 @@
-
-import 'package:balance_home_app/src/core/data/models/selected_date_enum.dart';
+import 'package:balance_home_app/src/core/infrastructure/datasources/selected_date_enum.dart';
 import 'package:balance_home_app/src/core/providers/http_service_provider.dart';
 import 'package:balance_home_app/src/core/providers/selected_date/selected_date_state.dart';
 import 'package:balance_home_app/src/core/providers/selected_date/selected_date_state_notifier.dart';

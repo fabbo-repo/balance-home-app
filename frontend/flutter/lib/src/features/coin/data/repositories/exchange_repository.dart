@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/core/services/api_contract.dart';
+import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/src/core/services/http_service.dart';
 import 'package:balance_home_app/src/features/coin/data/models/date_exchanges_list_model.dart';
 import 'package:balance_home_app/src/features/coin/data/models/exchanges_list_model.dart';

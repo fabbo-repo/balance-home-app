@@ -1,10 +1,9 @@
-import 'package:balance_home_app/src/core/data/models/selected_date_enum.dart';
-import 'package:balance_home_app/src/core/data/models/selected_date_model.dart';
+import 'package:balance_home_app/src/core/infrastructure/datasources/selected_date.dart';
+import 'package:balance_home_app/src/core/infrastructure/datasources/selected_date_enum.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/future_widget.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/responsive_layout.dart';
 import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
-import 'package:balance_home_app/src/core/providers/selected_date/selected_date_state_notifier.dart';
 import 'package:balance_home_app/src/core/utils/date_util.dart';
-import 'package:balance_home_app/src/core/widgets/future_widget.dart';
-import 'package:balance_home_app/src/core/widgets/responsive_layout.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_model.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
 import 'package:balance_home_app/src/features/balance/data/repositories/balance_repository.dart';
@@ -55,7 +54,7 @@ class BalanceView extends ConsumerWidget {
   Widget topContainer(
     BuildContext context, 
     AppLocalizations appLocalizations,
-    SelectedDateModel selectedDate
+    SelectedDate selectedDate
   ) {
     String monthText = DateUtil.getMonthList(appLocalizations)[selectedDate.month-1];
     String dateText = (selectedDate.selectedDateMode == SelectedDateEnum.year) ?
@@ -83,7 +82,7 @@ class BalanceView extends ConsumerWidget {
   Widget shortPanel(
     BuildContext context, 
     AppLocalizations appLocalizations,
-    SelectedDateModel selectedDate
+    SelectedDate selectedDate
   ) {
     return Column(
       children: [
@@ -101,7 +100,7 @@ class BalanceView extends ConsumerWidget {
   Widget widePanel(
     BuildContext context, 
     AppLocalizations appLocalizations,
-    SelectedDateModel selectedDate
+    SelectedDate selectedDate
   ) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Column(
@@ -133,7 +132,7 @@ class BalanceView extends ConsumerWidget {
   Future<bool> fetchData(
     IBalanceRepository balanceRepository,
     BalanceListStateNotifier balanceListNotifier,
-    SelectedDateModel selectedDate
+    SelectedDate selectedDate
   ) async {
     List<BalanceModel> balances = [];
     if (

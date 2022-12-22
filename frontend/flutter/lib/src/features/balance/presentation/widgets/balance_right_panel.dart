@@ -1,5 +1,5 @@
+import 'package:balance_home_app/src/core/presentation/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
-import 'package:balance_home_app/src/core/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_limit_type_dialog.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_list.dart';
