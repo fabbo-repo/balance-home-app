@@ -3,7 +3,7 @@ import 'package:balance_home_app/src/core/presentation/widgets/language_picker_d
 import 'package:balance_home_app/src/core/presentation/widgets/password_text_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_field.dart';
-import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/login/logic/providers/forgot_password/forgot_password_provider.dart';
 import 'package:balance_home_app/src/features/login/logic/providers/forgot_password/forgot_password_state.dart';
 import 'package:flutter/material.dart';
@@ -21,30 +21,32 @@ class ForgotPasswordView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
+    final appLocalizations = ref.watch(appLocalizationsProvider);
     final forgotPasswordForm = ref.watch(forgotPasswordFormStateProvider).form;
-    final forgotPasswordFormState = ref.read(forgotPasswordFormStateProvider.notifier);
+    final forgotPasswordFormState =
+        ref.read(forgotPasswordFormStateProvider.notifier);
     final forgotPasswordState = ref.watch(forgotPasswordStateNotifierProvider);
-    final forgotPasswordStateNotifier = ref.read(forgotPasswordStateNotifierProvider.notifier);
-    final localizationStateNotifier = ref.read(localizationStateNotifierProvider.notifier);
+    final forgotPasswordStateNotifier =
+        ref.read(forgotPasswordStateNotifierProvider.notifier);
+    final localizationStateNotifier =
+        ref.read(appLocalizationsProvider.notifier);
     return Scaffold(
-      body: SafeArea(
-        child: Container(
+        body: SafeArea(
+      child: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/images/auth_background_image.jpg"),
-              fit: BoxFit.cover
-            ),
+                image: AssetImage("assets/images/auth_background_image.jpg"),
+                fit: BoxFit.cover),
           ),
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
               Row(
-                children: [                  
+                children: [
                   Align(
                     alignment: Alignment.topLeft,
                     child: ElevatedButton(
-                      onPressed: () { 
+                      onPressed: () {
                         try {
                           context.pop();
                         } catch (e) {
@@ -55,141 +57,147 @@ class ForgotPasswordView extends ConsumerWidget {
                     ),
                   ),
                   // Space between buttons:
-                  Expanded(child: Container(),),
+                  Expanded(
+                    child: Container(),
+                  ),
                   Align(
                     alignment: Alignment.topRight,
                     child: CustomLanguagePickerDropdown(
-                      appLocalizations: appLocalizations,
-                      onValuePicked: (Language language) {
-                        Locale locale = Locale(language.isoCode);
-                        localizationStateNotifier.setLocalization(locale);
-                      }
-                    ),
+                        appLocalizations: appLocalizations,
+                        onValuePicked: (Language language) {
+                          Locale locale = Locale(language.isoCode);
+                          localizationStateNotifier.setLocale(locale);
+                        }),
                   ),
                 ],
               ),
               if (MediaQuery.of(context).size.height > 400)
                 Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.fromLTRB(40, 70, 40, 40),
-                  child: const AppTittle()
-                ),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.fromLTRB(40, 70, 40, 40),
+                    child: const AppTittle()),
               Expanded(
                 child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      // Email field
-                      SimpleTextField(
-                        enabled: forgotPasswordState is ForgotPasswordStateInitial 
-                          || forgotPasswordState is ForgotPasswordStateCodeSentError,
-                        title: appLocalizations.emailAddress,
-                        maxWidth: 400,
-                        controller: emailController,
-                        onChanged: (email) {
-                          forgotPasswordFormState.setEmail(email);
-                        },
-                        error: (forgotPasswordState is ForgotPasswordStateCodeSentError) ?
-                          forgotPasswordState.error :
-                          forgotPasswordForm.email.errorMessage,
-                      ),
-                      // Password 1 field
-                      PasswordTextField(
-                        enabled: forgotPasswordState is ForgotPasswordStateCodeSent
-                          || forgotPasswordState is ForgotPasswordStateCodeVerifyError,
-                        title: appLocalizations.password,
-                        maxWidth: 400,
-                        controller: passwordController,
-                        onChanged: (password) {
-                          forgotPasswordFormState.setPassword(password);
-                          forgotPasswordFormState.setPassword2(forgotPasswordForm.password2.value);
-                        },
-                        error: forgotPasswordForm.password.errorMessage,
-                      ),
-                      // Password 2 field
-                      PasswordTextField(
-                        enabled: forgotPasswordState is ForgotPasswordStateCodeSent
-                          || forgotPasswordState is ForgotPasswordStateCodeVerifyError,
-                        title: appLocalizations.repeatPassword,
-                        maxWidth: 400,
-                        controller: repeatPasswordController,
-                        onChanged: (password) {
-                          forgotPasswordFormState.setPassword2(password);
-                        },
-                        error: forgotPasswordForm.password2.errorMessage,
-                      ),
-                      // Code field
-                      SimpleTextField(
-                        enabled: forgotPasswordState is ForgotPasswordStateCodeSent
-                          || forgotPasswordState is ForgotPasswordStateCodeVerifyError,
-                        textAlign: TextAlign.center,
-                        maxCharacters: 6,
-                        maxWidth: 150,
-                        title: appLocalizations.code, 
-                        controller: codeController,
-                        onChanged: (code) {
-                          forgotPasswordFormState.setCode(code);
-                          forgotPasswordStateNotifier.setHasCodeSent();
-                        },
-                        error: (forgotPasswordState is ForgotPasswordStateCodeVerifyError) ?
-                          forgotPasswordState.error :
-                          forgotPasswordForm.code.errorMessage,
-                      ),
-                      Flex(
-                        direction: (MediaQuery.of(context).size.width <= 700) ? 
-                          Axis.vertical : Axis.horizontal,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
+                  child: Column(children: [
+                    // Email field
+                    SimpleTextField(
+                      enabled:
+                          forgotPasswordState is ForgotPasswordStateInitial ||
+                              forgotPasswordState
+                                  is ForgotPasswordStateCodeSentError,
+                      title: appLocalizations.emailAddress,
+                      maxWidth: 400,
+                      controller: emailController,
+                      onChanged: (email) {
+                        forgotPasswordFormState.setEmail(email);
+                      },
+                      error: (forgotPasswordState
+                              is ForgotPasswordStateCodeSentError)
+                          ? forgotPasswordState.error
+                          : forgotPasswordForm.email.errorMessage,
+                    ),
+                    // Password 1 field
+                    PasswordTextField(
+                      enabled:
+                          forgotPasswordState is ForgotPasswordStateCodeSent ||
+                              forgotPasswordState
+                                  is ForgotPasswordStateCodeVerifyError,
+                      title: appLocalizations.password,
+                      maxWidth: 400,
+                      controller: passwordController,
+                      onChanged: (password) {
+                        forgotPasswordFormState.setPassword(password);
+                        forgotPasswordFormState
+                            .setPassword2(forgotPasswordForm.password2.value);
+                      },
+                      error: forgotPasswordForm.password.errorMessage,
+                    ),
+                    // Password 2 field
+                    PasswordTextField(
+                      enabled:
+                          forgotPasswordState is ForgotPasswordStateCodeSent ||
+                              forgotPasswordState
+                                  is ForgotPasswordStateCodeVerifyError,
+                      title: appLocalizations.repeatPassword,
+                      maxWidth: 400,
+                      controller: repeatPasswordController,
+                      onChanged: (password) {
+                        forgotPasswordFormState.setPassword2(password);
+                      },
+                      error: forgotPasswordForm.password2.errorMessage,
+                    ),
+                    // Code field
+                    SimpleTextField(
+                      enabled:
+                          forgotPasswordState is ForgotPasswordStateCodeSent ||
+                              forgotPasswordState
+                                  is ForgotPasswordStateCodeVerifyError,
+                      textAlign: TextAlign.center,
+                      maxCharacters: 6,
+                      maxWidth: 150,
+                      title: appLocalizations.code,
+                      controller: codeController,
+                      onChanged: (code) {
+                        forgotPasswordFormState.setCode(code);
+                        forgotPasswordStateNotifier.setHasCodeSent();
+                      },
+                      error: (forgotPasswordState
+                              is ForgotPasswordStateCodeVerifyError)
+                          ? forgotPasswordState.error
+                          : forgotPasswordForm.code.errorMessage,
+                    ),
+                    Flex(
+                      direction: (MediaQuery.of(context).size.width <= 700)
+                          ? Axis.vertical
+                          : Axis.horizontal,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
                             height: 70,
                             width: 250,
                             padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-                            child:  SimpleTextButton(
-                              enabled: forgotPasswordForm.email.isValid
-                                && forgotPasswordState is! ForgotPasswordStateLoading,
-                              onPressed: () async {
-                                await forgotPasswordStateNotifier.requestCode(
-                                  forgotPasswordForm.email.value
-                                );
-                              }, 
-                              child: forgotPasswordState is ForgotPasswordStateLoading ?
-                                const CircularProgressIndicator() : 
-                                Text(
-                                  forgotPasswordState is ForgotPasswordStateInitial ?
-                                  appLocalizations.sendCode :
-                                  appLocalizations.reSendCode
-                                )
-                            )
-                          ),
-                          Container(
+                            child: SimpleTextButton(
+                                enabled: forgotPasswordForm.email.isValid &&
+                                    forgotPasswordState
+                                        is! ForgotPasswordStateLoading,
+                                onPressed: () async {
+                                  await forgotPasswordStateNotifier.requestCode(
+                                      forgotPasswordForm.email.value);
+                                },
+                                loading: forgotPasswordState
+                                    is ForgotPasswordStateLoading,
+                                text: forgotPasswordState
+                                        is ForgotPasswordStateInitial
+                                    ? appLocalizations.sendCode
+                                    : appLocalizations.reSendCode)),
+                        Container(
                             height: 70,
                             width: 250,
                             padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-                            child:  SimpleTextButton(
-                              enabled: forgotPasswordForm.isValid && forgotPasswordState is ForgotPasswordStateCodeSent,
-                              onPressed: () async {
-                                await forgotPasswordStateNotifier.verifyCode(
-                                  forgotPasswordForm.toModel()
-                                );
-                                if (ref.read(forgotPasswordStateNotifierProvider) is ForgotPasswordStateSuccess) {
-                                  // ignore: use_build_context_synchronously
-                                  context.go("/");
-                                }
-                              },
-                              child: forgotPasswordState is ForgotPasswordStateLoading ?
-                                const CircularProgressIndicator() : 
-                                Text(appLocalizations.verifyCode)
-                            )
-                          ),
-                        ],
-                      ),
-                    ]
-                  ),
+                            child: SimpleTextButton(
+                                enabled: forgotPasswordForm.isValid &&
+                                    forgotPasswordState
+                                        is ForgotPasswordStateCodeSent,
+                                onPressed: () async {
+                                  await forgotPasswordStateNotifier
+                                      .verifyCode(forgotPasswordForm.toModel());
+                                  if (ref.read(
+                                          forgotPasswordStateNotifierProvider)
+                                      is ForgotPasswordStateSuccess) {
+                                    // ignore: use_build_context_synchronously
+                                    context.go("/");
+                                  }
+                                },
+                                loading: forgotPasswordState
+                                    is ForgotPasswordStateLoading,
+                                text: appLocalizations.verifyCode)),
+                      ],
+                    ),
+                  ]),
                 ),
               ),
             ],
-          )
-        ),
-      )
-    );
+          )),
+    ));
   }
 }

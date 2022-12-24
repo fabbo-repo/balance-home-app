@@ -34,6 +34,7 @@
 
     "@_GENERIC":{},
     "version": "Version",
+    "loadingData": "Loading data",
     "confirmation": "Confirm",
     "cancel": "Cancel",
     "orderBy": "Order by",

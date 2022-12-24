@@ -1,11 +1,11 @@
 import 'package:balance_home_app/src/core/presentation/widgets/password_text_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_field.dart';
-import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/email_code/email_code_provider.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/utils.dart';
-import 'package:balance_home_app/src/features/coin/data/models/coin_type_model.dart';
+import 'package:balance_home_app/src/features/coin/domain/entities/coin_type_entity.dart';
 import 'package:balance_home_app/src/features/coin/presentation/widgets/dropdown_picker_field.dart';
 import 'package:balance_home_app/src/features/register/data/models/register_model.dart';
 import 'package:balance_home_app/src/features/register/logic/providers/register_provider.dart';
@@ -18,16 +18,17 @@ class RegisterView extends ConsumerStatefulWidget {
   final TextEditingController passwordController;
   final TextEditingController password2Controller;
   final TextEditingController invitationCodeController;
-  final List<CoinTypeModel> coinTypes;
+  final List<CoinTypeEntity> coinTypes;
 
-  const RegisterView({
-    required this.usernameController,
-    required this.emailController,
-    required this.passwordController,
-    required this.password2Controller,
-    required this.invitationCodeController,
-    required this.coinTypes, 
-    Key? key}) : super(key: key);
+  const RegisterView(
+      {required this.usernameController,
+      required this.emailController,
+      required this.passwordController,
+      required this.password2Controller,
+      required this.invitationCodeController,
+      required this.coinTypes,
+      Key? key})
+      : super(key: key);
 
   @override
   ConsumerState<RegisterView> createState() => _RegisterViewState();
@@ -38,12 +39,14 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    final registerForm  = ref.watch(registerFormStateProvider).form;
+    final registerForm = ref.watch(registerFormStateProvider).form;
     final registerFormState = ref.read(registerFormStateProvider.notifier);
     final registerState = ref.watch(registerStateNotifierProvider);
-    final registerStateNotifier = ref.read(registerStateNotifierProvider.notifier);
-    final emailCodeStateNotifier = ref.read(emailCodeStateNotifierProvider.notifier);
-    final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
+    final registerStateNotifier =
+        ref.read(registerStateNotifierProvider.notifier);
+    final emailCodeStateNotifier =
+        ref.read(emailCodeStateNotifierProvider.notifier);
+    final appLocalizations = ref.watch(appLocalizationsProvider);
     return Padding(
       padding: const EdgeInsets.all(10),
       child: SingleChildScrollView(
@@ -97,59 +100,59 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
               },
               error: registerForm.invCode.errorMessage,
             ),
-            (widget.coinTypes.isNotEmpty) ?
-              DropdownPickerField(
-                name: appLocalizations.coinType,
-                initialValue: widget.coinTypes[0].code,
-                items: widget.coinTypes.map((e) => e.code).toList(),
-                onChanged: (value) {
-                  prefCoinType = value;
-                }
-              ) :
-              Text(appLocalizations.genericError)
-            ,
+            (widget.coinTypes.isNotEmpty)
+                ? DropdownPickerField(
+                    name: appLocalizations.coinType,
+                    initialValue: widget.coinTypes[0].code,
+                    items: widget.coinTypes.map((e) => e.code).toList(),
+                    onChanged: (value) {
+                      prefCoinType = value;
+                    })
+                : Text(appLocalizations.genericError),
             Text(
-              (registerState is AuthStateError) ?
-              registerState.error : 
-              "",
-              style: const TextStyle(
-                color: Colors.red, 
-                fontSize: 14
-              ),
+              (registerState is AuthStateError) ? registerState.error : "",
+              style: const TextStyle(color: Colors.red, fontSize: 14),
             ),
             Container(
-              height: 100,
-              width: 300,
-              padding: const EdgeInsets.fromLTRB(10, 35, 10, 15),
-              child:  SimpleTextButton(
-                enabled: registerForm.isValid
-                  && registerState is! AuthStateLoading,
-                onPressed: () async {
-                  registerFormState.setLanguage(appLocalizations.localeName);
-                  registerFormState.setPrefCoinType(prefCoinType ?? widget.coinTypes[0].code);
-                  RegisterModel registration = ref.read(registerFormStateProvider).form.toModel();
-                  await registerStateNotifier.createAccount(registration);
-                  if (ref.read(registerStateNotifierProvider) is AuthStateSuccess) {
-                    if (!mounted) return;
-                    bool sendCode = await showCodeAdviceDialog(context, appLocalizations);
-                    if (sendCode) {
-                      await emailCodeStateNotifier.requestCode(registration.email);
-                      AuthState newEmailCodeState = ref.read(emailCodeStateNotifierProvider);
-                      if (newEmailCodeState is! AuthStateError) {
+                height: 100,
+                width: 300,
+                padding: const EdgeInsets.fromLTRB(10, 35, 10, 15),
+                child: SimpleTextButton(
+                    enabled: registerForm.isValid &&
+                        registerState is! AuthStateLoading,
+                    onPressed: () async {
+                      registerFormState
+                          .setLanguage(appLocalizations.localeName);
+                      registerFormState.setPrefCoinType(
+                          prefCoinType ?? widget.coinTypes[0].code);
+                      RegisterModel registration =
+                          ref.read(registerFormStateProvider).form.toModel();
+                      await registerStateNotifier.createAccount(registration);
+                      if (ref.read(registerStateNotifierProvider)
+                          is AuthStateSuccess) {
                         if (!mounted) return;
-                        showCodeSendDialog(context, appLocalizations, registration.email);
-                      } else {
-                        if (!mounted) return;
-                        showErrorCodeDialog(context, appLocalizations, newEmailCodeState.error);
+                        bool sendCode = await showCodeAdviceDialog(
+                            context, appLocalizations);
+                        if (sendCode) {
+                          await emailCodeStateNotifier
+                              .requestCode(registration.email);
+                          AuthState newEmailCodeState =
+                              ref.read(emailCodeStateNotifierProvider);
+                          if (newEmailCodeState is! AuthStateError) {
+                            if (!mounted) return;
+                            showCodeSendDialog(
+                                context, appLocalizations, registration.email);
+                          } else {
+                            if (!mounted) return;
+                            showErrorCodeDialog(context, appLocalizations,
+                                newEmailCodeState.error);
+                          }
+                        }
                       }
-                    }
-                  }
-                }, 
-                child: ref.read(registerStateNotifierProvider) is AuthStateLoading ?
-                  const CircularProgressIndicator() : 
-                  Text(appLocalizations.register)
-              )
-            ),
+                    },
+                    loading: ref.read(registerStateNotifierProvider)
+                        is AuthStateLoading,
+                    text: appLocalizations.register)),
           ],
         ),
       ),

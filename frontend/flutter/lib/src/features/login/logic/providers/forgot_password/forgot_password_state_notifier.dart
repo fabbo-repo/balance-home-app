@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/core/exceptions/http_exceptions.dart';
+import 'package:balance_home_app/src/core/infrastructure/exceptions/http_exceptions.dart';
 import 'package:balance_home_app/src/features/login/data/models/forgot_password_model.dart';
 import 'package:balance_home_app/src/features/login/data/repositories/forgot_password_repository.dart';
 import 'package:balance_home_app/src/features/login/logic/providers/forgot_password/forgot_password_state.dart';

@@ -1,7 +1,7 @@
 import 'package:balance_home_app/src/core/presentation/widgets/password_text_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_field.dart';
-import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/email_code/email_code_provider.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/utils.dart';
 import 'package:balance_home_app/src/features/login/data/models/credentials_model.dart';
@@ -15,26 +15,26 @@ class LoginView extends ConsumerStatefulWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
 
-  const LoginView({
-    required this.emailController, 
-    required this.passwordController, 
-    Key? key
-  }) : super(key: key);
+  const LoginView(
+      {required this.emailController,
+      required this.passwordController,
+      Key? key})
+      : super(key: key);
 
   @override
   ConsumerState<LoginView> createState() => _LoginViewState();
 }
 
 class _LoginViewState extends ConsumerState<LoginView> {
-
   @override
   Widget build(BuildContext context) {
-    final loginForm  = ref.watch(loginFormStateProvider).form;
+    final loginForm = ref.watch(loginFormStateProvider).form;
     final loginFormState = ref.read(loginFormStateProvider.notifier);
     final loginState = ref.watch(loginStateNotifierProvider);
     final loginStateNotifier = ref.read(loginStateNotifierProvider.notifier);
-    final emailCodeStateNotifier = ref.read(emailCodeStateNotifierProvider.notifier);
-    final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
+    final emailCodeStateNotifier =
+        ref.read(emailCodeStateNotifierProvider.notifier);
+    final appLocalizations = ref.watch(appLocalizationsProvider);
     return Padding(
       padding: const EdgeInsets.all(10),
       child: SingleChildScrollView(
@@ -59,50 +59,50 @@ class _LoginViewState extends ConsumerState<LoginView> {
               error: loginForm.password.errorMessage,
             ),
             Text(
-              (loginState is AuthStateError) ?
-              loginState.error : "",
-              style: const TextStyle(
-                color: Colors.red, 
-                fontSize: 14
-              ),
+              (loginState is AuthStateError) ? loginState.error : "",
+              style: const TextStyle(color: Colors.red, fontSize: 14),
             ),
             Container(
-              height: 100,
-              width: 300,
-              padding: const EdgeInsets.fromLTRB(10, 35, 10, 15),
-              child:  SimpleTextButton(
-                enabled: loginForm.isValid
-                  && loginState is! AuthStateLoading,
-                onPressed: () async {
-                  CredentialsModel credentials = loginForm.toModel();
-                  await loginStateNotifier.updateJwtAndAccount(credentials);
-                  AuthState newLoginState = ref.read(loginStateNotifierProvider);
-                  if (newLoginState is AuthStateSuccess) {
-                    // Context is not used if widget is not in the tree
-                    if (!mounted) return;
-                    context.go("/");
-                  } else if (newLoginState is AuthStateError
-                    && newLoginState.error == appLocalizations.emailNotVerified) {
-                    if (!mounted) return;
-                    bool sendCode = await showCodeAdviceDialog(context, appLocalizations);
-                    if (sendCode) {
-                      await emailCodeStateNotifier.requestCode(credentials.email);
-                      AuthState newEmailCodeState = ref.read(emailCodeStateNotifierProvider);
-                      if (newEmailCodeState is! AuthStateError) {
+                height: 100,
+                width: 300,
+                padding: const EdgeInsets.fromLTRB(10, 35, 10, 15),
+                child: SimpleTextButton(
+                    enabled:
+                        loginForm.isValid && loginState is! AuthStateLoading,
+                    onPressed: () async {
+                      CredentialsModel credentials = loginForm.toModel();
+                      await loginStateNotifier.updateJwtAndAccount(credentials);
+                      AuthState newLoginState =
+                          ref.read(loginStateNotifierProvider);
+                      if (newLoginState is AuthStateSuccess) {
+                        // Context is not used if widget is not in the tree
                         if (!mounted) return;
-                        showCodeSendDialog(context, appLocalizations, credentials.email);
-                      } else {
+                        context.go("/");
+                      } else if (newLoginState is AuthStateError &&
+                          newLoginState.error ==
+                              appLocalizations.emailNotVerified) {
                         if (!mounted) return;
-                        showErrorCodeDialog(context, appLocalizations, newEmailCodeState.error);
+                        bool sendCode = await showCodeAdviceDialog(
+                            context, appLocalizations);
+                        if (sendCode) {
+                          await emailCodeStateNotifier
+                              .requestCode(credentials.email);
+                          AuthState newEmailCodeState =
+                              ref.read(emailCodeStateNotifierProvider);
+                          if (newEmailCodeState is! AuthStateError) {
+                            if (!mounted) return;
+                            showCodeSendDialog(
+                                context, appLocalizations, credentials.email);
+                          } else {
+                            if (!mounted) return;
+                            showErrorCodeDialog(context, appLocalizations,
+                                newEmailCodeState.error);
+                          }
+                        }
                       }
-                    }
-                  }
-                }, 
-                child: loginState is AuthStateLoading ?
-                  const CircularProgressIndicator() : 
-                  Text(appLocalizations.signIn)
-              )
-            ),
+                    },
+                    loading: loginState is AuthStateLoading,
+                    text: appLocalizations.signIn)),
             TextButton(
               onPressed: () {
                 showResetPasswordAdviceDialog(context, appLocalizations);

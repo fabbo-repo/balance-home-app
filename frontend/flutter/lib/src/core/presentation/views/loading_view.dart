@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
 class LoadingView extends StatelessWidget {
+  /// Named route for [LoadingView]
+  static const String routeName = 'loading';
+
+  /// Path route for [LoadingView]
+  static const String routePath = 'load';
+
   final void Function(BuildContext context)? func;
   const LoadingView({
     this.func,

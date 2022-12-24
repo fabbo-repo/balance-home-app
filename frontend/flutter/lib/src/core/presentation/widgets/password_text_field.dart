@@ -8,16 +8,15 @@ class PasswordTextField extends StatefulWidget {
   final bool? enabled;
   final Function(String)? onChanged;
 
-
-  const PasswordTextField({
-    required this.title, 
-    required this.controller,
-    this.error,
-    this.maxWidth,
-    this.enabled,
-    this.onChanged,
-    Key? key
-  }) : super(key: key);
+  const PasswordTextField(
+      {required this.title,
+      required this.controller,
+      this.error,
+      this.maxWidth,
+      this.enabled,
+      this.onChanged,
+      Key? key})
+      : super(key: key);
 
   @override
   State<PasswordTextField> createState() => _PasswordTextFieldState();
@@ -43,42 +42,43 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
               decoration: InputDecoration(
                 counterText: '',
                 enabledBorder: OutlineInputBorder(
-                  borderSide: 
-                    (widget.error != null && widget.error != "") ?
-                      const BorderSide(color: Colors.red):
-                      const BorderSide(color: Colors.black),
+                  borderSide: (widget.error != null && widget.error != "")
+                      ? const BorderSide(color: Colors.red)
+                      : const BorderSide(color: Colors.black),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: 
-                    (widget.error != null && widget.error != "") ?
-                      const BorderSide(color: Colors.red):
-                      const BorderSide(color: Colors.blue),
+                  borderSide: (widget.error != null && widget.error != "")
+                      ? const BorderSide(color: Colors.red)
+                      : const BorderSide(color: Colors.blue),
                 ),
                 border: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black)
-                ),
+                    borderSide: BorderSide(color: Colors.black)),
                 suffixIconColor: Colors.black,
-                labelStyle: const TextStyle(color: Colors.black),
+                labelStyle: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: Theme.of(context).brightness == Brightness.light
+                    ? Colors.white
+                    : const Color.fromARGB(255, 119, 119, 119),
                 labelText: widget.title,
                 suffixIcon: InkWell(
                   onTap: () {
-                    setState(() { showPassword = !showPassword; });
+                    setState(() {
+                      showPassword = !showPassword;
+                    });
                   },
                   child: (showPassword)
-                    ? const Icon(Icons.visibility)
-                    : const Icon(Icons.visibility_off),
+                      ? const Icon(Icons.visibility)
+                      : const Icon(Icons.visibility_off),
                 ),
               ),
             ),
           ),
           Text(
             widget.error ?? "",
-            style: const TextStyle(
-              color: Colors.red, 
-              fontSize: 14
-            ),
+            style: const TextStyle(color: Colors.red, fontSize: 14),
           )
         ],
       ),

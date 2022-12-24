@@ -8,17 +8,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
-
 class EmailCodeDialog extends ConsumerStatefulWidget {
   final AppLocalizations appLocalizations;
   final String email;
   final inputController = TextEditingController();
 
-  EmailCodeDialog({
-    required this.appLocalizations,
-    required this.email,
-    super.key
-  });
+  EmailCodeDialog(
+      {required this.appLocalizations, required this.email, super.key});
 
   @override
   EmailCodeDialogState createState() => EmailCodeDialogState();
@@ -27,10 +23,11 @@ class EmailCodeDialog extends ConsumerStatefulWidget {
 class EmailCodeDialogState extends ConsumerState<EmailCodeDialog> {
   @override
   Widget build(BuildContext context) {
-    final emailCodeForm  = ref.watch(emailCodeFormStateProvider).form;
+    final emailCodeForm = ref.watch(emailCodeFormStateProvider).form;
     final emailCodeFormState = ref.read(emailCodeFormStateProvider.notifier);
     final emailCodeState = ref.watch(emailCodeStateNotifierProvider);
-    final emailCodeStateNotifier = ref.read(emailCodeStateNotifierProvider.notifier);
+    final emailCodeStateNotifier =
+        ref.read(emailCodeStateNotifierProvider.notifier);
     return AlertDialog(
       title: Text(widget.appLocalizations.emailVerifiactionCode),
       content: Container(
@@ -43,7 +40,7 @@ class EmailCodeDialogState extends ConsumerState<EmailCodeDialog> {
                 textAlign: TextAlign.center,
                 maxCharacters: 6,
                 maxWidth: 150,
-                title: "", 
+                title: "",
                 controller: widget.inputController,
                 onChanged: (code) {
                   emailCodeFormState.setCode(code);
@@ -56,16 +53,16 @@ class EmailCodeDialogState extends ConsumerState<EmailCodeDialog> {
       ),
       actions: <Widget>[
         SimpleTextButton(
-          enabled: emailCodeForm.isValid
-            && emailCodeState is! AuthStateLoading,
-          child: emailCodeState is AuthStateLoading ?
-            const CircularProgressIndicator() : 
-            Text(widget.appLocalizations.verifyCode),
+          enabled: emailCodeForm.isValid && emailCodeState is! AuthStateLoading,
+          loading: emailCodeState is AuthStateLoading,
+          text: widget.appLocalizations.verifyCode,
           onPressed: () async {
             emailCodeFormState.setEmail(widget.email);
-            EmailCodeModel codeModel = ref.read(emailCodeFormStateProvider).form.toModel();
+            EmailCodeModel codeModel =
+                ref.read(emailCodeFormStateProvider).form.toModel();
             await emailCodeStateNotifier.verifyCode(codeModel);
-            AuthState newEmailCodeState = ref.read(emailCodeStateNotifierProvider);
+            AuthState newEmailCodeState =
+                ref.read(emailCodeStateNotifierProvider);
             if (newEmailCodeState is! AuthStateError) {
               if (!mounted) return;
               context.go("/");

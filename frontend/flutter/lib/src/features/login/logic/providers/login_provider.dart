@@ -1,5 +1,4 @@
-import 'package:balance_home_app/src/core/providers/http_service_provider.dart';
-import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_provider.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
 import 'package:balance_home_app/src/features/login/data/repositories/jwt_repository.dart';
@@ -12,7 +11,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final loginFormStateProvider = StateNotifierProvider<LoginFormStateProvider, LoginFormState>(
   (StateNotifierProviderRef<LoginFormStateProvider, LoginFormState> ref) {
-    AppLocalizations localizations = ref.watch(localizationStateNotifierProvider).localization;
+    AppLocalizations localizations = ref.watch(appLocalizationsProvider);
     return LoginFormStateProvider(localizations);
   }
 );
@@ -20,7 +19,7 @@ final loginFormStateProvider = StateNotifierProvider<LoginFormStateProvider, Log
 /// StateNotifier
 final loginStateNotifierProvider = StateNotifierProvider<LoginStateNotifier, AuthState>(
   (StateNotifierProviderRef<LoginStateNotifier, AuthState> ref) {
-    AppLocalizations localizations = ref.watch(localizationStateNotifierProvider).localization;
+    AppLocalizations localizations = ref.watch(appLocalizationsProvider);
     return LoginStateNotifier(
       localizations: localizations,
       jwtRepository: ref.watch(jwtRepositoryProvider),

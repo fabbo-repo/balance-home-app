@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class SimpleTextField extends StatelessWidget {
-  
   final String title;
   final TextEditingController controller;
   final String? error;
@@ -11,19 +10,17 @@ class SimpleTextField extends StatelessWidget {
   final TextAlign? textAlign;
   final Function(String)? onChanged;
 
-
-  const SimpleTextField({
-    required this.title,
-    required this.controller,
-    this.error,
-    this.maxWidth,
-    this.onChanged,
-    this.maxCharacters,
-    this.enabled,
-    this.textAlign,
-    Key? key
-  }) : super(key: key);
-
+  const SimpleTextField(
+      {required this.title,
+      required this.controller,
+      this.error,
+      this.maxWidth,
+      this.onChanged,
+      this.maxCharacters,
+      this.enabled,
+      this.textAlign,
+      Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,33 +39,32 @@ class SimpleTextField extends StatelessWidget {
               decoration: InputDecoration(
                 counterText: '',
                 enabledBorder: OutlineInputBorder(
-                  borderSide: 
-                    (error != null && error != "") ?
-                      const BorderSide(color: Colors.red):
-                      const BorderSide(color: Colors.black),
+                  borderSide: (error != null && error != "")
+                      ? const BorderSide(color: Colors.red)
+                      : const BorderSide(color: Colors.black),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: 
-                    (error != null && error != "") ?
-                      const BorderSide(color: Colors.red):
-                      const BorderSide(color: Colors.blue),
+                  borderSide: (error != null && error != "")
+                      ? const BorderSide(color: Colors.red)
+                      : const BorderSide(color: Colors.blue),
                 ),
                 border: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black)
-                ),
-                labelStyle: const TextStyle(color: Colors.black),
+                    borderSide: BorderSide(color: Colors.black)),
+                labelStyle: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: Theme.of(context).brightness == Brightness.light
+                    ? Colors.white
+                    : const Color.fromARGB(255, 119, 119, 119),
                 labelText: title,
               ),
             ),
           ),
           Text(
             error ?? "",
-            style: const TextStyle(
-              color: Colors.red, 
-              fontSize: 14
-            ),
+            style: const TextStyle(color: Colors.red, fontSize: 14),
           )
         ],
       ),
