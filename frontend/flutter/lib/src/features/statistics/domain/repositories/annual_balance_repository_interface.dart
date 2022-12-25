@@ -1,13 +1,16 @@
+import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/features/statistics/domain/entities/annual_balance_entity.dart';
+import 'package:fpdart/fpdart.dart';
 
 /// Annual Balance Repository Interface.
 abstract class AnnualBalanceRepositoryInterface {
   /// Get [AnnualBalanceEntity] by `id`.
-  Future<AnnualBalanceEntity> getAnnualBalance(int id);
+  Future<Either<Failure, AnnualBalanceEntity>> getAnnualBalance(int id);
 
   /// Get a list of [AnnualBalanceEntity].
-  Future<List<AnnualBalanceEntity>> getAnnualBalances();
+  Future<Either<Failure, List<AnnualBalanceEntity>>> getAnnualBalances();
 
   /// Get last eight [AnnualBalanceEntity].
-  Future<List<AnnualBalanceEntity>> getLastEightYearsAnnualBalances();
+  Future<Either<Failure, List<AnnualBalanceEntity>>>
+      getLastEightYearsAnnualBalances();
 }

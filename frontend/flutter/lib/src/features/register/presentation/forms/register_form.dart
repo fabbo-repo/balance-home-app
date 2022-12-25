@@ -1,5 +1,5 @@
 import 'package:balance_home_app/src/core/forms/string_field.dart';
-import 'package:balance_home_app/src/features/register/data/models/register_model.dart';
+import 'package:balance_home_app/src/features/register/domain/entities/register_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'register_form.freezed.dart';
@@ -33,8 +33,8 @@ class RegisterForm with _$RegisterForm {
 
   bool get isValid => email.isValid && password.isValid;
 
-  RegisterModel toModel() {
-    return RegisterModel(
+  RegisterEntity toModel() {
+    return RegisterEntity(
       username: username.value,
       email: email.value, 
       password: password.value,

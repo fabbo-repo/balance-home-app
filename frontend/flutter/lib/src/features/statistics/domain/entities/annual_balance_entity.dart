@@ -8,11 +8,11 @@ part 'annual_balance_entity.g.dart';
 class AnnualBalanceEntity with _$AnnualBalanceEntity {
 
   /// Factory constructor
-  /// [grossQuantity] - [AnnualBalanceEntity] gross quantity
-  /// [expectedQuantity] - [AnnualBalanceEntity] expected quantity
-  /// [coinType] - [AnnualBalanceEntity] coin type code
-  /// [year] - [AnnualBalanceEntity] year
-  /// [created] - [AnnualBalanceEntity] created
+  /// [grossQuantity] - [double] gross quantity
+  /// [expectedQuantity] - [double] expected quantity
+  /// [coinType] - [String] coin type code
+  /// [year] - [int] year
+  /// [created] - [DateTime] created
   // ignore: invalid_annotation_target
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory AnnualBalanceEntity({

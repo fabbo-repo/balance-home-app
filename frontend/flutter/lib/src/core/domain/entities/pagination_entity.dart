@@ -8,10 +8,10 @@ part 'pagination_entity.g.dart';
 class PaginationEntity with _$PaginationEntity {
   
   /// Factory constructor
-  /// [count] - [PaginationEntity] number of elements in results
-  /// [next] - [PaginationEntity] next page url
-  /// [previous] - [PaginationEntity] previous page url
-  /// [results] - [PaginationEntity] results list
+  /// [count] - [int] number of elements in results for all pages
+  /// [next] - [String] next page url
+  /// [previous] - [String] previous page url
+  /// [results] - [List] results list
   // ignore: invalid_annotation_target
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory PaginationEntity({

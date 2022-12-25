@@ -1,8 +1,7 @@
-import 'package:balance_home_app/src/core/infrastructure/exceptions/http_exceptions.dart';
 import 'package:balance_home_app/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/account/account_model_state_notifier.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
-import 'package:balance_home_app/src/features/register/data/models/register_model.dart';
+import 'package:balance_home_app/src/features/register/domain/entities/register_entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,13 +20,13 @@ class RegisterStateNotifier extends StateNotifier<AuthState> {
   }) : secureStorage = secureStorage ?? const FlutterSecureStorage(),
     super(const AuthStateInitial());
   
-  Future<void> createAccount(RegisterModel registration) async {
+  Future<void> createAccount(RegisterEntity registration) async {
     state = const AuthStateLoading();
     try {
       await _createAccount(registration);
       state = const AuthStateSuccess();
     } catch (e) {
-      if(e is BadRequestHttpException) {
+      /*if(e is BadRequestHttpException) {
         if (e.content.keys.contains("password")) {
           if (e.content["password"].first.contains("too common")) {
             state = AuthStateError(localizations.tooCommonPassword);
@@ -49,12 +48,12 @@ class RegisterStateNotifier extends StateNotifier<AuthState> {
             return;
           } 
         }
-      } 
+      } */
       state = AuthStateError(localizations.genericError);
     }
   }
 
-  Future<void> _createAccount(RegisterModel registration) async {
+  Future<void> _createAccount(RegisterEntity registration) async {
     await authRepository.createAccount(registration);
     await secureStorage.write(key: "email", value: registration.email);
     await secureStorage.write(key: "password", value: registration.password);

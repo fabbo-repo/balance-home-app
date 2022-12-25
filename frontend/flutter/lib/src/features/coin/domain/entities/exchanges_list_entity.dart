@@ -8,8 +8,8 @@ part 'exchanges_list_entity.g.dart';
 @freezed
 class ExchangesListEntity with _$ExchangesListEntity {
   /// Factory constructor
-  /// [code] - [ExchangesListEntity] code
-  /// [exchanges] - [ExchangesListEntity] exchanges
+  /// [code] - [String] code
+  /// [exchanges] - [List] exchanges
   // ignore: invalid_annotation_target
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory ExchangesListEntity(

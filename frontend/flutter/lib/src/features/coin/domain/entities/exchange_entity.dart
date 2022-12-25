@@ -7,8 +7,8 @@ part 'exchange_entity.g.dart';
 @freezed
 class ExchangeEntity with _$ExchangeEntity {
   /// Factory constructor
-  /// [code] - [ExchangeEntity] code
-  /// [value] - [ExchangeEntity] value
+  /// [code] - [String] code
+  /// [value] - [double] value
   // ignore: invalid_annotation_target
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory ExchangeEntity({required String code, required double value}) =

@@ -1,4 +1,3 @@
-import 'package:balance_home_app/src/core/infrastructure/exceptions/http_exceptions.dart';
 import 'package:balance_home_app/src/features/login/data/models/forgot_password_model.dart';
 import 'package:balance_home_app/src/features/login/data/repositories/forgot_password_repository.dart';
 import 'package:balance_home_app/src/features/login/logic/providers/forgot_password/forgot_password_state.dart';
@@ -21,7 +20,7 @@ class ForgotPasswordStateNotifier extends StateNotifier<ForgotPasswordState> {
       await forgotPasswordRepository.requestCode(email);
       state = const ForgotPasswordStateCodeSent();
     } catch (e) {
-      if(e is BadRequestHttpException) {
+      /*if(e is BadRequestHttpException) {
         if (e.content.keys.contains("email") 
           && e.content["email"].contains("User not found")) {
           state = ForgotPasswordStateCodeSentError(localizations.emailNotValid);
@@ -35,7 +34,7 @@ class ForgotPasswordStateNotifier extends StateNotifier<ForgotPasswordState> {
         state = ForgotPasswordStateCodeSentError(localizations.errorSendingCode);
       } else {
         state = ForgotPasswordStateError(localizations.genericError);
-      }
+      }*/
     }
   }
 
@@ -45,7 +44,7 @@ class ForgotPasswordStateNotifier extends StateNotifier<ForgotPasswordState> {
       await forgotPasswordRepository.verifyCode(model);
       state = const ForgotPasswordStateSuccess();
     } catch (e) {
-      if(e is BadRequestHttpException) {
+      /*if(e is BadRequestHttpException) {
         if (e.content.keys.contains("code") 
           && e.content["code"].contains("Invalid code")) {
           state = ForgotPasswordStateCodeVerifyError(localizations.invalidCode);
@@ -63,7 +62,7 @@ class ForgotPasswordStateNotifier extends StateNotifier<ForgotPasswordState> {
         state = ForgotPasswordStateCodeVerifyError(localizations.errorVerifyingCode);
       } else {
         state = ForgotPasswordStateError(localizations.genericError);
-      }
+      }*/
     }
   }
 

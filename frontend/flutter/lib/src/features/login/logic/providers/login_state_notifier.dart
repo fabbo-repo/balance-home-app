@@ -1,4 +1,3 @@
-import 'package:balance_home_app/src/core/infrastructure/exceptions/http_exceptions.dart';
 import 'package:balance_home_app/src/features/auth/data/models/account_model.dart';
 import 'package:balance_home_app/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/account/account_model_state_notifier.dart';
@@ -35,13 +34,13 @@ class LoginStateNotifier extends StateNotifier<AuthState> {
       await _updateAccount();
       state = const AuthStateSuccess();
     } catch (e) {
-      if(e is UnauthorizedHttpException) {
+      /*if(e is UnauthorizedHttpException) {
         state = AuthStateError(localizations.wrongCredentials);
       } else if(e is BadRequestHttpException) {
         state = AuthStateError(localizations.emailNotVerified);
       } else {
         state = AuthStateError(localizations.genericError);
-      }
+      }*/
     }
   }
 
@@ -52,13 +51,13 @@ class LoginStateNotifier extends StateNotifier<AuthState> {
       await _delteLocalAccount();
       state = const AuthStateInitial();
     } catch (e) {
-      if(e is UnauthorizedHttpException) {
+      /*if(e is UnauthorizedHttpException) {
         state = AuthStateError(localizations.wrongCredentials);
       } else if(e is BadRequestHttpException) {
         state = AuthStateError(localizations.emailNotVerified);
       } else {
         state = AuthStateError(localizations.genericError);
-      }
+      }*/
     }
   }
 

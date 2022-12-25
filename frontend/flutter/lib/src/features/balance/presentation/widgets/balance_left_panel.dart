@@ -1,3 +1,4 @@
+import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/platform_utils.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/providers.dart';
@@ -32,8 +33,8 @@ class BalanaceLeftPanel extends ConsumerWidget {
     return Container(
       constraints: const BoxConstraints.expand(),
       color: balanceTypeMode == BalanceTypeMode.expense
-          ? const Color.fromARGB(254, 255, 236, 215)
-          : const Color.fromARGB(254, 223, 237, 214),
+          ? AppColors.expenseBackgroundColor
+          : AppColors.revenueBackgroundColor,
       child: SingleChildScrollView(
         child: Column(
           children: [

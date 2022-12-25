@@ -1,3 +1,4 @@
+import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
@@ -24,7 +25,7 @@ class StatisticsViewDesktop extends ConsumerWidget {
         child: Column(
           children: [
             Container(
-              color: const Color.fromARGB(254, 254, 252, 224),
+              color: AppColors.balanceBackgroundColor,
               foregroundDecoration: BoxDecoration(border: Border.all()),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -46,7 +47,7 @@ class StatisticsViewDesktop extends ConsumerWidget {
               ),
             ),
             Container(
-              color: const Color.fromARGB(254, 254, 252, 224),
+              color: AppColors.balanceBackgroundColor,
               foregroundDecoration: BoxDecoration(border: Border.all()),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

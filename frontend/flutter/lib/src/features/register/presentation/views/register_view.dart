@@ -7,7 +7,7 @@ import 'package:balance_home_app/src/features/auth/logic/providers/email_code/em
 import 'package:balance_home_app/src/features/auth/presentation/views/utils.dart';
 import 'package:balance_home_app/src/features/coin/domain/entities/coin_type_entity.dart';
 import 'package:balance_home_app/src/features/coin/presentation/widgets/dropdown_picker_field.dart';
-import 'package:balance_home_app/src/features/register/data/models/register_model.dart';
+import 'package:balance_home_app/src/features/register/domain/entities/register_entity.dart';
 import 'package:balance_home_app/src/features/register/logic/providers/register_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,9 +47,9 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
     final emailCodeStateNotifier =
         ref.read(emailCodeStateNotifierProvider.notifier);
     final appLocalizations = ref.watch(appLocalizationsProvider);
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
             SimpleTextField(
@@ -125,7 +125,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                           .setLanguage(appLocalizations.localeName);
                       registerFormState.setPrefCoinType(
                           prefCoinType ?? widget.coinTypes[0].code);
-                      RegisterModel registration =
+                      RegisterEntity registration =
                           ref.read(registerFormStateProvider).form.toModel();
                       await registerStateNotifier.createAccount(registration);
                       if (ref.read(registerStateNotifierProvider)

@@ -13,7 +13,7 @@ class HomeView extends ConsumerWidget {
   final HomeTab selectedSection;
   final Widget child;
 
-  HomeView(
+  const HomeView(
       {required this.selectedSection,
       required this.child,
       super.key});

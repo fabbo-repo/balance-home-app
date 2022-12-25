@@ -5,6 +5,7 @@ import 'package:balance_home_app/src/core/presentation/views/loading_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
+import 'package:balance_home_app/src/features/balance/presentation/views/balance_create_view.dart';
 import 'package:balance_home_app/src/features/balance/presentation/views/balance_view.dart';
 import 'package:balance_home_app/src/features/home/presentation/views/home_tabs.dart';
 import 'package:balance_home_app/src/features/home/presentation/views/home_view.dart';
@@ -28,6 +29,7 @@ import 'package:go_router/go_router.dart';
 ///
 final router = GoRouter(
   errorBuilder: (context, state) => ErrorView(location: state.location),
+  navigatorKey: navigatorKey,
   debugLogDiagnostics: true,
   refreshListenable: authStateListenable,
   redirect: appGuard,
@@ -40,34 +42,48 @@ final router = GoRouter(
         redirect: authGuard,
         pageBuilder: (context, state) => FadeTransitionPage(
             key: _scaffoldKey,
-            child: HomeView(
+            child: const HomeView(
                 selectedSection: HomeTab.statistics,
-                child: const Center(child: StatisticsView()))),
+                child: Center(child: StatisticsView()))),
       ),
       GoRoute(
-        name: BalanceView.routeRevenueName,
-        path: BalanceView.routeRevenuePath,
-        redirect: authGuard,
-        pageBuilder: (context, state) => FadeTransitionPage(
-            key: _scaffoldKey,
-            child: HomeView(
-                selectedSection: HomeTab.revenues,
-                child: const BalanceView(
-                  balanceTypeMode: BalanceTypeMode.revenue,
-                ))),
-      ),
+          name: BalanceView.routeRevenueName,
+          path: BalanceView.routeRevenuePath,
+          redirect: authGuard,
+          pageBuilder: (context, state) => FadeTransitionPage(
+              key: _scaffoldKey,
+              child: const HomeView(
+                  selectedSection: HomeTab.revenues,
+                  child: BalanceView(
+                    balanceTypeMode: BalanceTypeMode.revenue,
+                  ))),
+          routes: [
+            GoRoute(
+                name: BalanceCreateView.routeName,
+                path: BalanceCreateView.routePath,
+                builder: (context, state) => const BalanceCreateView(
+                      balanceTypeMode: BalanceTypeMode.revenue,
+                    )),
+          ]),
       GoRoute(
-        name: BalanceView.routeExpenseName,
-        path: BalanceView.routeExpensePath,
-        redirect: authGuard,
-        pageBuilder: (context, state) => FadeTransitionPage(
-            key: _scaffoldKey,
-            child: HomeView(
-                selectedSection: HomeTab.expenses,
-                child: const BalanceView(
-                  balanceTypeMode: BalanceTypeMode.expense,
-                ))),
-      ),
+          name: BalanceView.routeExpenseName,
+          path: BalanceView.routeExpensePath,
+          redirect: authGuard,
+          pageBuilder: (context, state) => FadeTransitionPage(
+              key: _scaffoldKey,
+              child: const HomeView(
+                  selectedSection: HomeTab.expenses,
+                  child: BalanceView(
+                    balanceTypeMode: BalanceTypeMode.expense,
+                  ))),
+          routes: [
+            GoRoute(
+                name: BalanceCreateView.routeName,
+                path: BalanceCreateView.routePath,
+                builder: (context, state) => const BalanceCreateView(
+                      balanceTypeMode: BalanceTypeMode.expense,
+                    )),
+          ]),
       GoRoute(
         name: AppInfoLoadingView.routeName,
         path: AppInfoLoadingView.routePath,
@@ -78,7 +94,7 @@ final router = GoRouter(
         path: LoadingView.routePath,
         builder: (context, state) => const LoadingView(),
       ),
-      GoRoute(path: '/password/', routes: [
+      GoRoute(path: 'password', routes: [
         GoRoute(
           name: 'forgotPasswordReset',
           path: 'reset',
@@ -95,6 +111,8 @@ final router = GoRouter(
   ],
 );
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 const ValueKey<String> _scaffoldKey = ValueKey<String>('balhom_scaffold');
 
 /// Route observer to use with RouteAware
@@ -103,12 +121,6 @@ final RouteObserver<ModalRoute<void>> routeObserver =
 
 @visibleForTesting
 String? appGuard(BuildContext context, GoRouterState state) {
-  return null;
-}
-
-@visibleForTesting
-String? errorGuard(BuildContext context, GoRouterState state) {
-  if (state.extra == null) return '/';
   return null;
 }
 

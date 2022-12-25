@@ -63,6 +63,8 @@ dependencies:
   syncfusion_flutter_charts: ^20.3.61
   # Env code generation
   envied: ^0.2.4
+  # Functional programing
+  fpdart: ^0.4.0
   
 
 dev_dependencies:

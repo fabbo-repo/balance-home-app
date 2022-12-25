@@ -7,7 +7,7 @@ part 'coin_type_entity.g.dart';
 @freezed
 class CoinTypeEntity with _$CoinTypeEntity {
   /// Factory constructor
-  /// [code] - [CoinTypeEntity] code
+  /// [code] - [String] code
   // ignore: invalid_annotation_target
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory CoinTypeEntity({required String code}) = _CoinTypeEntity;

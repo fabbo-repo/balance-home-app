@@ -8,7 +8,7 @@ part 'date_exchanges_list_entity.g.dart';
 @freezed
 class DateExchangesListEntity with _$DateExchangesListEntity {
   /// Factory constructor
-  /// [dateExchanges] - [DateExchangesListEntity] dateExchanges
+  /// [dateExchanges] - [List] dateExchanges
   // ignore: invalid_annotation_target
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory DateExchangesListEntity(

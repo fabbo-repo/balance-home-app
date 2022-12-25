@@ -2,10 +2,13 @@ import 'package:balance_home_app/src/features/balance/domain/entities/balance_en
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:balance_home_app/src/features/balance/presentation/models/balance_limit_type.dart';
 import 'package:balance_home_app/src/features/balance/presentation/models/balance_ordering_type.dart';
+import 'package:balance_home_app/src/features/balance/presentation/views/balance_create_view.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_card.dart';
+import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_create_form.dart';
 import 'package:balance_home_app/src/features/balance/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class BalanceList extends ConsumerWidget {
   final BalanceTypeMode balanceTypeMode;
@@ -37,8 +40,12 @@ class BalanceList extends ConsumerWidget {
         margin: const EdgeInsets.only(bottom: 10),
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton(
-          onPressed: () {
-            // TODO Add your onPressed code here!
+          onPressed: () async {
+            if (balanceTypeMode == BalanceTypeMode.expense) {
+              context.push("/${BalanceCreateView.routeExpensePath}");
+            } else {
+              context.push("/${BalanceCreateView.routeRevenuePath}");
+            }
           },
           backgroundColor: balanceTypeMode == BalanceTypeMode.expense
               ? Colors.orange

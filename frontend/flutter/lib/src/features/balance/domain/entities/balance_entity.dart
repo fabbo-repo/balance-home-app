@@ -10,17 +10,18 @@ class BalanceEntity with _$BalanceEntity {
   const BalanceEntity._();
 
   /// Factory constructor
-  /// [id] - [BalanceEntity] id
-  /// [name] - [BalanceEntity] name
-  /// [description] - [BalanceEntity] description
-  /// [quantity] - [BalanceEntity] quantity
-  /// [date] - [BalanceEntity] date
-  /// [coinType] - [BalanceEntity] coin type code
-  /// [balanceType] - [BalanceEntity] balance type
+  /// [id] - [int] id
+  /// [name] - [String] name
+  /// [description] - [String] description
+  /// [quantity] - [double] quantity
+  /// [date] - [DateTime] date
+  /// [coinType] - [String] coin type code
+  /// [balanceType] - [BalanceTypeEntity] balance type
   // ignore: invalid_annotation_target
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory BalanceEntity({
-    required int id,
+    // ignore: invalid_annotation_target
+    @JsonKey(includeIfNull: false) required int? id,
     required String name,
     required String description,
     required double quantity,
@@ -45,13 +46,13 @@ class BalanceEntity with _$BalanceEntity {
 
   Map<String, dynamic> toRevenueJson() {
     Map<String, dynamic> map = toJson();
-    map["rev_type"] = map.remove("balance_type");
+    map["rev_type"] = (map.remove("balance_type") as BalanceTypeEntity).name;
     return map;
   }
 
   Map<String, dynamic> toExpenseJson() {
     Map<String, dynamic> map = toJson();
-    map["exp_type"] = map.remove("balance_type");
+    map["exp_type"] = (map.remove("balance_type") as BalanceTypeEntity).name;
     return map;
   }
 }

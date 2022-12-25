@@ -8,8 +8,8 @@ part 'balance_type_entity.g.dart';
 class BalanceTypeEntity with _$BalanceTypeEntity {
 
   /// Factory constructor
-  /// [name] - [BalanceTypeEntity] name
-  /// [image] - [BalanceTypeEntity] image url
+  /// [name] - [String] name
+  /// [image] - [String] image url
   // ignore: invalid_annotation_target
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory BalanceTypeEntity({

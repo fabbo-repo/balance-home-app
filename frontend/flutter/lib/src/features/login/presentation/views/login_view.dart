@@ -35,9 +35,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
     final emailCodeStateNotifier =
         ref.read(emailCodeStateNotifierProvider.notifier);
     final appLocalizations = ref.watch(appLocalizationsProvider);
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
             SimpleTextField(

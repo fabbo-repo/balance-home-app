@@ -1,3 +1,4 @@
+import 'package:balance_home_app/config/app_layout.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/info_dialog.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
@@ -25,6 +26,9 @@ class BalanceCard extends ConsumerWidget {
         // TODO
       },
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppLayout.cardRadius),
+        ),
         color: Theme.of(context).brightness == Brightness.light
             ? const Color.fromARGB(255, 232, 234, 246)
             : const Color.fromARGB(255, 123, 127, 148),

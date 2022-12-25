@@ -1,3 +1,4 @@
+import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/platform_utils.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/providers.dart';
@@ -25,7 +26,7 @@ class CustomAppBar extends ConsumerWidget {
       titleSpacing: 0,
       elevation: 0,
       centerTitle: true,
-      backgroundColor: const Color.fromARGB(255, 43, 43, 43),
+      backgroundColor: AppColors.appBarBackgroundColor,
       // If platform window is considered as large or medium, then the [AppTittle]
       // should be shown, otherwise if mobile is the current platform nothing will be shown,
       // else cases a balance counter should be rendered

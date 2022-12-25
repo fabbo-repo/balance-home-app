@@ -19,14 +19,15 @@ class BalanceListController
   Future<void> getBalances() async {
     final res = await _repository.getBalances(_balanceTypeMode,
         dateFrom: _selectedDate.dateFrom, dateTo: _selectedDate.dateTo);
-    state = AsyncValue.data(res);
+    state = res.fold(
+        (l) => AsyncValue.error(l.error, StackTrace.fromString("")),
+        AsyncValue.data);
   }
 
   /// Add an entity to list
   void addBalance(BalanceEntity entity) {
     final items = state.value ?? [];
     state = const AsyncValue.loading();
-    _repository.createBalance(entity, _balanceTypeMode);
     items.add(entity);
     state = AsyncValue.data(items);
   }
@@ -37,7 +38,6 @@ class BalanceListController
     state = const AsyncValue.loading();
     final i = items.indexWhere((element) => element.id == entity.id);
     if (i != -1) {
-      _repository.updateBalance(entity, _balanceTypeMode);
       items
         ..removeAt(i)
         ..insert(i, entity);
@@ -49,7 +49,6 @@ class BalanceListController
   void deleteBalance(BalanceEntity entity) {
     final items = state.value!;
     state = const AsyncValue.loading();
-    _repository.deleteBalance(entity, _balanceTypeMode);
     items.remove(entity);
     state = AsyncValue.data(items);
   }

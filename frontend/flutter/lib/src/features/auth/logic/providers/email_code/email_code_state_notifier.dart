@@ -1,4 +1,3 @@
-import 'package:balance_home_app/src/core/infrastructure/exceptions/http_exceptions.dart';
 import 'package:balance_home_app/src/features/login/data/models/email_code_model.dart';
 import 'package:balance_home_app/src/features/login/data/repositories/email_code_repository.dart';
 import 'package:balance_home_app/src/features/auth/logic/providers/auth_state.dart';
@@ -21,11 +20,11 @@ class EmailCodeStateNotifier extends StateNotifier<AuthState> {
       await emailCodeRepository.requestCode(email);
       state = const AuthStateSuccess();
     } catch (e) {
-      if(e is BadRequestHttpException) {
+      /*if(e is BadRequestHttpException) {
         state = AuthStateError(localizations.errorSendingEmailCode);
       } else {
         state = AuthStateError(localizations.genericError);
-      }
+      }*/
     }
   }
   
@@ -35,7 +34,7 @@ class EmailCodeStateNotifier extends StateNotifier<AuthState> {
       await emailCodeRepository.verifyCode(code);
       state = const AuthStateSuccess();
     } catch (e) {
-      if(e is BadRequestHttpException) {
+      /*if(e is BadRequestHttpException) {
         if (e.content.keys.contains("code") 
           && e.content["code"].contains("Invalid code")) {
           state = AuthStateError(localizations.invalidEmailCode);
@@ -48,7 +47,7 @@ class EmailCodeStateNotifier extends StateNotifier<AuthState> {
         state = AuthStateError(localizations.errorVerifyingEmailCode);
       } else {
         state = AuthStateError(localizations.genericError);
-      }
+      }*/
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/providers.dart';
+import 'package:balance_home_app/src/features/balance/application/balance_create_controller.dart';
 import 'package:balance_home_app/src/features/balance/application/balance_list_controller.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_repository_interface.dart';
@@ -44,6 +45,20 @@ final expenseListControllerProvider = StateNotifierProvider<
   const balanceTypeMode = BalanceTypeMode.expense;
   final selectedDate = ref.watch(expenseSelectedDateProvider);
   return BalanceListController(repo, balanceTypeMode, selectedDate);
+});
+
+final revenueCreateControllerProvider =
+    StateNotifierProvider<BalanceCreateController, AsyncValue<BalanceEntity?>>(
+        (ref) {
+  final repo = ref.watch(balanceRepositoryProvider);
+  return BalanceCreateController(repo, BalanceTypeMode.revenue);
+});
+
+final expenseCreateControllerProvider =
+    StateNotifierProvider<BalanceCreateController, AsyncValue<BalanceEntity?>>(
+        (ref) {
+  final repo = ref.watch(balanceRepositoryProvider);
+  return BalanceCreateController(repo, BalanceTypeMode.revenue);
 });
 
 ///

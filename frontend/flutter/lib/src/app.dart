@@ -1,6 +1,6 @@
+import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/config/theme.dart';
 import 'package:balance_home_app/src/core/providers.dart';
-import 'package:balance_home_app/src/navigation/router_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -16,7 +16,6 @@ class BalanceHomeAppState extends ConsumerState<BalanceHomeApp> {
 
   @override
   Widget build(BuildContext context) {
-    final router = ref.watch(routerProvider);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,

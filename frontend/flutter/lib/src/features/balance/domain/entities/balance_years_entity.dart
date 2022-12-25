@@ -8,7 +8,7 @@ part 'balance_years_entity.g.dart';
 class BalanceYearsEntity with _$BalanceYearsEntity {
 
   /// Factory constructor
-  /// [years] - [BalanceYearsEntity] list of years
+  /// [years] - [List] list of years
   // ignore: invalid_annotation_target
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory BalanceYearsEntity({

@@ -10,22 +10,25 @@ class AppVersionController extends StateNotifier<AsyncValue<AppVersion>> {
 
   /// Package info comparison with app version.
   Future<void> handle() async {
-    AppVersion remoteVersion = await _repository.getVersion();
-    state = const AsyncValue.loading();
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    AppVersion localVersion = AppVersion.fromPackageInfo(packageInfo);
-    if (localVersion.x != remoteVersion.x) {
-      localVersion =
-          localVersion.copyWith(isLower: localVersion.x < remoteVersion.x);
-    } else if (localVersion.y != remoteVersion.y) {
-      localVersion =
-          localVersion.copyWith(isLower: localVersion.y < remoteVersion.y);
-    } else if (localVersion.z != remoteVersion.z) {
-      localVersion =
-          localVersion.copyWith(isLower: localVersion.z < remoteVersion.z);
-    } else {
-      localVersion = localVersion.copyWith(isLower: false);
-    }
-    state = AsyncValue.data(localVersion);
+    final res = await _repository.getVersion();
+    state = res
+        .fold((l) => AsyncValue.error(l.error, StackTrace.fromString("")),
+            (remoteVersion) {
+      AppVersion localVersion = AppVersion.fromPackageInfo(packageInfo);
+      if (localVersion.x != remoteVersion.x) {
+        localVersion =
+            localVersion.copyWith(isLower: localVersion.x < remoteVersion.x);
+      } else if (localVersion.y != remoteVersion.y) {
+        localVersion =
+            localVersion.copyWith(isLower: localVersion.y < remoteVersion.y);
+      } else if (localVersion.z != remoteVersion.z) {
+        localVersion =
+            localVersion.copyWith(isLower: localVersion.z < remoteVersion.z);
+      } else {
+        localVersion = localVersion.copyWith(isLower: false);
+      }
+      return AsyncValue.data(localVersion);
+    });
   }
 }
