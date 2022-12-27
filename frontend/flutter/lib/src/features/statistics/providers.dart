@@ -21,12 +21,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Annual balance repository
 final annualBalanceRepositoryProvider =
     Provider<AnnualBalanceRepositoryInterface>((ref) =>
-        AnnualBalanceRepository(httpService: ref.read(httpServiceProvider)));
+        AnnualBalanceRepository(httpService: ref.watch(httpServiceProvider)));
 
 /// Monthly balance repository
 final monthlyBalanceRepositoryProvider =
     Provider<MonthlyBalanceRepositoryInterface>((ref) =>
-        MonthlyBalanceRepository(httpService: ref.read(httpServiceProvider)));
+        MonthlyBalanceRepository(httpService: ref.watch(httpServiceProvider)));
 
 ///
 /// Application dependencies
@@ -35,11 +35,11 @@ final monthlyBalanceRepositoryProvider =
 final statisticsControllerProvider =
     StateNotifierProvider<StatisticsController, AsyncValue<StatisticsData>>(
         (ref) {
-  final balanceRepo = ref.read(balanceRepositoryProvider);
-  final annualBalanceRepo = ref.read(annualBalanceRepositoryProvider);
-  final monthlyBalanceRepo = ref.read(monthlyBalanceRepositoryProvider);
-  final coinTypeRepository = ref.read(coinTypeRepositoryProvider);
-  final exchangeRepository = ref.read(exchangeRepositoryProvider);
+  final balanceRepo = ref.watch(balanceRepositoryProvider);
+  final annualBalanceRepo = ref.watch(annualBalanceRepositoryProvider);
+  final monthlyBalanceRepo = ref.watch(monthlyBalanceRepositoryProvider);
+  final coinTypeRepository = ref.watch(coinTypeRepositoryProvider);
+  final exchangeRepository = ref.watch(exchangeRepositoryProvider);
   final selectedBalanceDate = ref.watch(statisticsBalanceSelectedDateProvider);
   final selectedSavingsDate = ref.watch(statisticsSavingsSelectedDateProvider);
   return StatisticsController(

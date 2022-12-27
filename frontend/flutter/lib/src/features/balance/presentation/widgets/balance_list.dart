@@ -3,6 +3,7 @@ import 'package:balance_home_app/src/features/balance/domain/repositories/balanc
 import 'package:balance_home_app/src/features/balance/presentation/models/balance_limit_type.dart';
 import 'package:balance_home_app/src/features/balance/presentation/models/balance_ordering_type.dart';
 import 'package:balance_home_app/src/features/balance/presentation/views/balance_create_view.dart';
+import 'package:balance_home_app/src/features/balance/presentation/views/balance_view.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_card.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_create_form.dart';
 import 'package:balance_home_app/src/features/balance/providers.dart';
@@ -42,9 +43,9 @@ class BalanceList extends ConsumerWidget {
         child: FloatingActionButton(
           onPressed: () async {
             if (balanceTypeMode == BalanceTypeMode.expense) {
-              context.push("/${BalanceCreateView.routeExpensePath}");
+              context.push("${BalanceView.routeExpensePath}/${BalanceCreateView.routePath}");
             } else {
-              context.push("/${BalanceCreateView.routeRevenuePath}");
+              context.push("${BalanceView.routeRevenuePath}/${BalanceCreateView.routePath}");
             }
           },
           backgroundColor: balanceTypeMode == BalanceTypeMode.expense

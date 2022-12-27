@@ -26,5 +26,7 @@ class Failure implements Exception {
       ? (this as _UnprocessableEntityFailure).message 
       : this is _BadRequestFailure
       ? (this as _BadRequestFailure).message
+      : this is _UnauthorizedFailure 
+      ? "Unauthorized"
       : '$this';
 }

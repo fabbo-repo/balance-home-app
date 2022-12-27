@@ -64,7 +64,6 @@
     "errorSendingEmailCode": "Email verification code could not be sent, please try again later",
     "errorVerifyingCode": "Code could not be verified, please try again later",
     "errorVerifyingEmailCode": "Email could not be verified, please try again later",
-    "codeSixLength": "Email code must have six characters",
     "invalidCode": "Invalid code",
     "invalidEmailCode": "Invalid email code",
     "noLongerValidCode": "No longer valid code",

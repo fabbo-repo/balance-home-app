@@ -1,4 +1,5 @@
 import 'package:balance_home_app/config/router.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/custom_error_widget.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,10 +23,10 @@ class ErrorView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
     return Scaffold(
-      body: Center(
-        child: (location == '/server-error') ? 
-        Text(appLocalizations.genericError)
-        : Text(appLocalizations.pageNotFound),
+      body: CustomErrorWidget(
+        text: (location == '/$routePath') ? 
+        appLocalizations.genericError
+        : appLocalizations.pageNotFound,
       ),
     );
   }

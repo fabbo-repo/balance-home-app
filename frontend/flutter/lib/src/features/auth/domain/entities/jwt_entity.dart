@@ -13,7 +13,9 @@ class JwtEntity with _$JwtEntity {
   // ignore: invalid_annotation_target
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory JwtEntity({
-    required String access,
+    // ignore: invalid_annotation_target
+    @JsonKey(includeIfNull: false) 
+    required String? access,
     required String refresh
   }) = _JwtEntity;
 

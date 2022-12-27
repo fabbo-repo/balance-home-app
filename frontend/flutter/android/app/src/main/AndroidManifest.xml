@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fabbo.balance_home_app">
-   <application
-        android:label="balance_home_app"
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
+        android:label="BalHom"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

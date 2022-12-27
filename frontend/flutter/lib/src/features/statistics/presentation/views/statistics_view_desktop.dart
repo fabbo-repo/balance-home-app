@@ -1,6 +1,6 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
-import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/custom_error_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/models/statistics_data.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/statistics_balance_chart_container.dart';
@@ -74,10 +74,12 @@ class StatisticsViewDesktop extends ConsumerWidget {
         ),
       );
       return cache;
-    }, error: (Object o, StackTrace st) {
-      debugPrint("[STATISTICS_DESKTOP] $o -> $st");
-      ErrorView.go();
-      return const LoadingWidget(color: Colors.red);
+    }, error: (error, stackTrace) {
+      debugPrint("[STATISTICS_DESKTOP] $error -> $stackTrace");
+      return Stack(alignment: AlignmentDirectional.centerStart, children: [
+        cache,
+        const CustomErrorWidget(),
+      ]);
     }, loading: () {
       ref.read(statisticsControllerProvider.notifier).handle();
       return Stack(alignment: AlignmentDirectional.centerStart, children: [

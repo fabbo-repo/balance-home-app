@@ -1,5 +1,6 @@
 import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
 import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/custom_error_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
@@ -40,17 +41,15 @@ class AppInfoLoadingView extends ConsumerWidget {
               appVersion.isLower == null)) {
         return const LoadingWidget(color: Colors.grey);
       }
-      return LoadingWidget(
+      return CustomErrorWidget(
         color: Colors.red,
         text: appLocalizations.wrongVersion,
       );
     }, error: (Object o, StackTrace st) {
       debugPrint("[APP_INFO_LOADING_VIEW] $o -> $st");
-      context.go("/${ErrorView.routePath}");
-      return const LoadingWidget(color: Colors.red);
+      return CustomErrorWidget(
+          color: Colors.red, text: appLocalizations.genericError);
     }, loading: () {
-      // Handle app version
-      ref.read(appVersionController.notifier).handle();
       return const LoadingWidget(color: Colors.grey);
     }));
   }

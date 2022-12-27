@@ -22,11 +22,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Balance type repository
 final balanceTypeRepositoryProvider = Provider<BalanceTypeRepositoryInterface>(
-    (ref) => BalanceTypeRepository(httpService: ref.read(httpServiceProvider)));
+    (ref) => BalanceTypeRepository(httpService: ref.watch(httpServiceProvider)));
 
 /// Balance repository
 final balanceRepositoryProvider = Provider<BalanceRepositoryInterface>(
-    (ref) => BalanceRepository(httpService: ref.read(httpServiceProvider)));
+    (ref) => BalanceRepository(httpService: ref.watch(httpServiceProvider)));
 
 ///
 /// Application dependencies

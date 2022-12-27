@@ -1,19 +1,23 @@
 import 'package:balance_home_app/src/core/domain/repositories/app_info_repository_interface.dart';
 import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AppVersionController extends StateNotifier<AsyncValue<AppVersion>> {
   final AppInfoRepositoryInterface _repository;
 
-  AppVersionController(this._repository) : super(const AsyncValue.loading());
+  AppVersionController(this._repository) : super(const AsyncValue.loading()) {
+    handle();
+  }
 
   /// Package info comparison with app version.
+  @visibleForTesting
   Future<void> handle() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     final res = await _repository.getVersion();
     state = res
-        .fold((l) => AsyncValue.error(l.error, StackTrace.fromString("")),
+        .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
             (remoteVersion) {
       AppVersion localVersion = AppVersion.fromPackageInfo(packageInfo);
       if (localVersion.x != remoteVersion.x) {

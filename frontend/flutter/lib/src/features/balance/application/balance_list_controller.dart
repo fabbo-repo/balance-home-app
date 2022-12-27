@@ -20,7 +20,7 @@ class BalanceListController
     final res = await _repository.getBalances(_balanceTypeMode,
         dateFrom: _selectedDate.dateFrom, dateTo: _selectedDate.dateTo);
     state = res.fold(
-        (l) => AsyncValue.error(l.error, StackTrace.fromString("")),
+        (l) => AsyncValue.error(l.error, StackTrace.empty),
         AsyncValue.data);
   }
 

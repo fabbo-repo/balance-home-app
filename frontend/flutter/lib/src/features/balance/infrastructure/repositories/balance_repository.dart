@@ -2,7 +2,7 @@ import 'package:balance_home_app/src/core/domain/entities/pagination_entity.dart
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/config/api_contract.dart';
-import 'package:balance_home_app/src/core/infrastructure/datasources/remote/http_service.dart';
+import 'package:balance_home_app/src/http_service.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_years_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_repository_interface.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';

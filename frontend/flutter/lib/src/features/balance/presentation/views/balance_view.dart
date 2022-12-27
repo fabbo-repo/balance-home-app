@@ -1,6 +1,7 @@
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/custom_error_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/responsive_layout.dart';
 import 'package:balance_home_app/src/core/providers.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+// ignore: must_be_immutable
 class BalanceView extends ConsumerWidget {
   /// Named route for revenues [BalanceView]
   static const String routeRevenueName = 'revenues';
@@ -28,8 +30,9 @@ class BalanceView extends ConsumerWidget {
   static const String routeExpensePath = 'expenses';
 
   final BalanceTypeMode balanceTypeMode;
+  Widget cache = Container();
 
-  const BalanceView({required this.balanceTypeMode, super.key});
+  BalanceView({required this.balanceTypeMode, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,15 +45,20 @@ class BalanceView extends ConsumerWidget {
     final appLocalizations = ref.watch(appLocalizationsProvider);
     return balanceListController.when<Widget>(
         data: (List<BalanceEntity> balances) {
-      return ResponsiveLayout(
-          mobileChild: shortPanel(context, appLocalizations, selectedDate, balances),
-          tabletChild: shortPanel(context, appLocalizations, selectedDate, balances),
+      cache = ResponsiveLayout(
+          mobileChild:
+              shortPanel(context, appLocalizations, selectedDate, balances),
+          tabletChild:
+              shortPanel(context, appLocalizations, selectedDate, balances),
           desktopChild:
               widePanel(context, appLocalizations, selectedDate, balances));
+      return cache;
     }, error: (Object o, StackTrace st) {
       debugPrint("[BALANCE_VIEW] $o -> $st");
-      ErrorView.go();
-      return const LoadingWidget(color: Colors.red);
+      return Stack(alignment: AlignmentDirectional.centerStart, children: [
+        cache,
+        const CustomErrorWidget(),
+      ]);
     }, loading: () {
       return const LoadingWidget(color: Colors.grey);
     });
@@ -85,7 +93,8 @@ class BalanceView extends ConsumerWidget {
       children: [
         topContainer(context, appLocalizations, selectedDate),
         Expanded(
-          child: BalanaceRightPanel(balances: balances, balanceTypeMode: balanceTypeMode),
+          child: BalanaceRightPanel(
+              balances: balances, balanceTypeMode: balanceTypeMode),
         ),
       ],
     );
@@ -108,7 +117,8 @@ class BalanceView extends ConsumerWidget {
               ),
               SizedBox(
                 width: (screenWidth * 0.3 > 440) ? 440 : screenWidth * 0.3,
-                child: BalanaceRightPanel(balances: balances, balanceTypeMode: balanceTypeMode),
+                child: BalanaceRightPanel(
+                    balances: balances, balanceTypeMode: balanceTypeMode),
               )
             ],
           ),

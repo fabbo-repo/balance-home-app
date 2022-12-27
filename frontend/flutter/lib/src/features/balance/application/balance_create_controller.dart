@@ -1,4 +1,3 @@
-import 'package:balance_home_app/src/core/application/utils.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_type_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_repository_interface.dart';
@@ -25,34 +24,34 @@ class BalanceCreateController
       String coinType,
       BalanceTypeEntity balanceType) async {
     state = const AsyncValue.loading();
-    if (name.value.isLeft()) {
-      state = ControllerUtils.asyncError(name.value);
-      return;
-    }
-    if (description.value.isLeft()) {
-      state = ControllerUtils.asyncError(description.value);
-      return;
-    }
-    if (quantity.value.isLeft()) {
-      state = ControllerUtils.asyncError(quantity.value);
-      return;
-    }
-    if (date.value.isLeft()) {
-      state = ControllerUtils.asyncError(date.value);
-      return;
-    }
-    final res = await _repository.createBalance(
-        BalanceEntity(
-            id: null,
-            name: ControllerUtils.getRight(name.value, ""),
-            description: ControllerUtils.getRight(description.value, ""),
-            quantity: ControllerUtils.getRight(quantity.value, 0),
-            date: ControllerUtils.getRight(date.value, DateTime.now()),
-            coinType: coinType,
-            balanceType: balanceType),
-        _balanceTypeMode);
-    state = res.fold(
-        (l) => AsyncValue.error(l.error, StackTrace.fromString("")),
-        AsyncValue.data);
+    state = await name.value
+        .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
+            (name) async {
+      return await description.value
+          .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
+              (description) async {
+        return await quantity.value
+            .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
+                (quantity) async {
+          return await date.value
+              .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
+                  (date) async {
+            final res = await _repository.createBalance(
+                BalanceEntity(
+                    id: null,
+                    name: name,
+                    description: description,
+                    quantity: quantity,
+                    date: date,
+                    coinType: coinType,
+                    balanceType: balanceType),
+                _balanceTypeMode);
+            return res.fold(
+                (l) => AsyncValue.error(l.error, StackTrace.empty),
+                AsyncValue.data);
+          });
+        });
+      });
+    });
   }
 }
