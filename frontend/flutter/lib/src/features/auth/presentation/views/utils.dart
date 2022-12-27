@@ -49,6 +49,17 @@ Future<void> showErrorResetPasswordCodeDialog(
           ));
 }
 
+Future<void> showErrorRegisterDialog(
+    AppLocalizations appLocalizations, String error) async {
+  await showDialog(
+      context: navigatorKey.currentContext!,
+      builder: (context) => ErrorDialog(
+            dialogTitle: appLocalizations.register,
+            dialogDescription: error,
+            cancelText: appLocalizations.cancel,
+          ));
+}
+
 Future<void> showErrorLoginDialog(
     AppLocalizations appLocalizations, String error) async {
   await showDialog(

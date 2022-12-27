@@ -1,9 +1,8 @@
 import 'package:balance_home_app/config/app_layout.dart';
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/password_text_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/password_text_form_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/simple_text_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/login_password.dart';
@@ -15,14 +14,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-// ignore: must_be_immutable
-class LoginForm extends ConsumerWidget {
+class LoginForm extends ConsumerStatefulWidget {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController;
   final TextEditingController passwordController;
-  UserEmail? _email;
-  LoginPassword? _password;
-  Widget cache = Container();
 
   LoginForm(
       {required this.emailController,
@@ -31,10 +26,19 @@ class LoginForm extends ConsumerWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends ConsumerState<LoginForm> {
+  UserEmail? _email;
+  LoginPassword? _password;
+  Widget cache = Container();
+
+  @override
+  Widget build(BuildContext context) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
-    _email = UserEmail(appLocalizations, emailController.text);
-    _password = LoginPassword(appLocalizations, passwordController.text);
+    _email = UserEmail(appLocalizations, widget.emailController.text);
+    _password = LoginPassword(appLocalizations, widget.passwordController.text);
     final auth = ref.watch(authControllerProvider);
     final authController = ref.read(authControllerProvider.notifier);
     final emailCode = ref.watch(emailCodeControllerProvider);
@@ -51,7 +55,7 @@ class LoginForm extends ConsumerWidget {
         );
     cache = SingleChildScrollView(
       child: Form(
-        key: _formKey,
+        key: widget._formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -59,17 +63,19 @@ class LoginForm extends ConsumerWidget {
             children: [
               SimpleTextFormField(
                 maxWidth: 400,
+                maxCharacters: 300,
                 title: appLocalizations.emailAddress,
-                controller: emailController,
+                controller: widget.emailController,
                 onChanged: (value) =>
                     _email = UserEmail(appLocalizations, value),
                 validator: (value) => _email?.validate,
               ),
               space(),
-              SimpleTextFormField(
+              PasswordTextFormField(
                 maxWidth: 400,
+                maxCharacters: 400,
                 title: appLocalizations.password,
-                controller: passwordController,
+                controller: widget.passwordController,
                 onChanged: (value) =>
                     _password = LoginPassword(appLocalizations, value),
                 validator: (value) => _password?.validate,
@@ -82,14 +88,12 @@ class LoginForm extends ConsumerWidget {
                   child: SimpleTextButton(
                       enabled: !isLoading,
                       onPressed: () async {
-                        if (_formKey.currentState == null ||
-                            !_formKey.currentState!.validate()) {
+                        if (widget._formKey.currentState == null ||
+                            !widget._formKey.currentState!.validate()) {
                           return;
                         }
-                        print("YUola11");
                         if (_email == null) return;
                         if (_password == null) return;
-                        print("YUola");
                         (await authController.signIn(
                                 _email!, _password!, appLocalizations))
                             .fold((l) async {
@@ -103,14 +107,15 @@ class LoginForm extends ConsumerWidget {
                                 showErrorEmailSendCodeDialog(
                                     appLocalizations, l.error);
                               }, (r) {
-                                showCodeSendDialog(emailController.text);
+                                showCodeSendDialog(widget.emailController.text);
                               });
                             }
                           } else {
                             showErrorLoginDialog(appLocalizations, l.error);
                           }
                         }, (r) {
-                          navigatorKey.currentContext!.go("/${StatisticsView.routePath}");
+                          navigatorKey.currentContext!
+                              .go("/${StatisticsView.routePath}");
                         });
                       },
                       text: appLocalizations.signIn)),

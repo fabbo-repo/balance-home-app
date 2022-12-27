@@ -1,13 +1,23 @@
+import 'package:balance_home_app/config/app_layout.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/password_text_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/password_text_form_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/simple_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/invitation_code.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/user_name.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/user_password.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/user_repeat_password.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/utils.dart';
+import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/coin/domain/entities/coin_type_entity.dart';
 import 'package:balance_home_app/src/features/coin/presentation/widgets/dropdown_picker_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-/*
+
 class RegisterForm extends ConsumerStatefulWidget {
   final TextEditingController usernameController;
   final TextEditingController emailController;
@@ -15,8 +25,9 @@ class RegisterForm extends ConsumerStatefulWidget {
   final TextEditingController password2Controller;
   final TextEditingController invitationCodeController;
   final List<CoinTypeEntity> coinTypes;
+  final _formKey = GlobalKey<FormState>();
 
-  const RegisterForm(
+  RegisterForm(
       {required this.usernameController,
       required this.emailController,
       required this.passwordController,
@@ -27,125 +38,171 @@ class RegisterForm extends ConsumerStatefulWidget {
       : super(key: key);
 
   @override
-  ConsumerState<RegisterView> createState() => _RegisterViewState();
+  ConsumerState<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _RegisterViewState extends ConsumerState<RegisterView> {
+class _RegisterFormState extends ConsumerState<RegisterForm> {
+  UserName? _username;
+  UserEmail? _email;
+  UserPassword? _password;
+  UserRepeatPassword? _repeatPassword;
+  InvitationCode? _invitationCode;
+  Widget cache = Container();
   String? prefCoinType;
 
   @override
   Widget build(BuildContext context) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            SimpleTextField(
-              maxCharacters: 15,
-              maxWidth: 400,
-              title: appLocalizations.username,
-              controller: widget.usernameController,
-              onChanged: (username) {
-                registerFormState.setUsername(username);
-              },
-              error: registerForm.username.errorMessage,
-            ),
-            SimpleTextField(
-              title: appLocalizations.emailAddress,
-              maxWidth: 400,
-              controller: widget.emailController,
-              onChanged: (email) {
-                registerFormState.setEmail(email);
-              },
-              error: registerForm.email.errorMessage,
-            ),
-            PasswordTextField(
-              title: appLocalizations.password,
-              maxWidth: 400,
-              controller: widget.passwordController,
-              onChanged: (password) {
-                registerFormState.setPassword(password);
-                registerFormState.setPassword2(registerForm.password2.value);
-              },
-              error: registerForm.password.errorMessage,
-            ),
-            PasswordTextField(
-              title: appLocalizations.repeatPassword,
-              maxWidth: 400,
-              controller: widget.password2Controller,
-              onChanged: (password2) {
-                registerFormState.setPassword2(password2);
-              },
-              error: registerForm.password2.errorMessage,
-            ),
-            SimpleTextField(
-              title: appLocalizations.invitationCode,
-              maxWidth: 450,
-              maxCharacters: 36,
-              controller: widget.invitationCodeController,
-              onChanged: (invitationCode) {
-                registerFormState.setInvitationCode(invitationCode);
-              },
-              error: registerForm.invCode.errorMessage,
-            ),
-            (widget.coinTypes.isNotEmpty)
-                ? DropdownPickerField(
-                    name: appLocalizations.coinType,
-                    initialValue: widget.coinTypes[0].code,
-                    items: widget.coinTypes.map((e) => e.code).toList(),
-                    onChanged: (value) {
-                      prefCoinType = value;
-                    })
-                : Text(appLocalizations.genericError),
-            Text(
-              (registerState is AuthStateError) ? registerState.error : "",
-              style: const TextStyle(color: Colors.red, fontSize: 14),
-            ),
-            Container(
-                height: 100,
-                width: 300,
-                padding: const EdgeInsets.fromLTRB(10, 35, 10, 15),
-                child: SimpleTextButton(
-                    enabled: registerForm.isValid &&
-                        registerState is! AuthStateLoading,
-                    onPressed: () async {
-                      registerFormState
-                          .setLanguage(appLocalizations.localeName);
-                      registerFormState.setPrefCoinType(
-                          prefCoinType ?? widget.coinTypes[0].code);
-                      RegisterEntity registration =
-                          ref.read(registerFormStateProvider).form.toModel();
-                      await registerStateNotifier.createAccount(registration);
-                      if (ref.read(registerStateNotifierProvider)
-                          is AuthStateSuccess) {
-                        if (!mounted) return;
-                        bool sendCode = await showCodeAdviceDialog(
-                            context, appLocalizations);
-                        if (sendCode) {
-                          await emailCodeStateNotifier
-                              .requestCode(registration.email);
-                          AuthState newEmailCodeState =
-                              ref.read(emailCodeStateNotifierProvider);
-                          if (newEmailCodeState is! AuthStateError) {
-                            if (!mounted) return;
-                            showCodeSendDialog(
-                                context, appLocalizations, registration.email);
-                          } else {
-                            if (!mounted) return;
-                            showErrorCodeDialog(context, appLocalizations,
-                                newEmailCodeState.error);
-                          }
+    _username = UserName(appLocalizations, widget.usernameController.text);
+    _email = UserEmail(appLocalizations, widget.emailController.text);
+    _password = UserPassword(appLocalizations, widget.passwordController.text);
+    _repeatPassword = UserRepeatPassword(appLocalizations,
+        widget.passwordController.text, widget.password2Controller.text);
+    _invitationCode =
+        InvitationCode(appLocalizations, widget.invitationCodeController.text);
+    final auth = ref.watch(authControllerProvider);
+    final authController = ref.read(authControllerProvider.notifier);
+    final emailCode = ref.watch(emailCodeControllerProvider);
+    final emailCodeController = ref.read(emailCodeControllerProvider.notifier);
+    final isLoading = auth.maybeWhen(
+          data: (_) => auth.isRefreshing,
+          loading: () => true,
+          orElse: () => false,
+        ) ||
+        emailCode.maybeWhen(
+          data: (_) => auth.isRefreshing,
+          loading: () => true,
+          orElse: () => false,
+        );
+    cache = SingleChildScrollView(
+      child: Form(
+        key: widget._formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              SimpleTextFormField(
+                maxCharacters: 15,
+                maxWidth: 400,
+                title: appLocalizations.username,
+                controller: widget.usernameController,
+                onChanged: (value) =>
+                    _username = UserName(appLocalizations, value),
+                validator: (value) => _username?.validate,
+              ),
+              space(),
+              SimpleTextFormField(
+                title: appLocalizations.emailAddress,
+                maxWidth: 400,
+                maxCharacters: 300,
+                controller: widget.emailController,
+                onChanged: (value) =>
+                    _email = UserEmail(appLocalizations, value),
+                validator: (value) => _email?.validate,
+              ),
+              space(),
+              PasswordTextFormField(
+                title: appLocalizations.password,
+                maxWidth: 400,
+                maxCharacters: 400,
+                controller: widget.passwordController,
+                onChanged: (value) =>
+                    _password = UserPassword(appLocalizations, value),
+                validator: (value) => _password?.validate,
+              ),
+              space(),
+              PasswordTextFormField(
+                title: appLocalizations.repeatPassword,
+                maxWidth: 400,
+                maxCharacters: 400,
+                controller: widget.password2Controller,
+                onChanged: (value) => _repeatPassword = UserRepeatPassword(
+                    appLocalizations, widget.passwordController.text, value),
+                validator: (value) => _repeatPassword?.validate,
+              ),
+              space(),
+              SimpleTextFormField(
+                title: appLocalizations.invitationCode,
+                maxWidth: 400,
+                maxCharacters: 36,
+                controller: widget.invitationCodeController,
+                onChanged: (value) =>
+                    _invitationCode = InvitationCode(appLocalizations, value),
+                validator: (value) => _invitationCode?.validate,
+              ),
+              space(),
+              (widget.coinTypes.isNotEmpty)
+                  ? DropdownPickerField(
+                      name: appLocalizations.coinType,
+                      initialValue: widget.coinTypes[0].code,
+                      items: widget.coinTypes.map((e) => e.code).toList(),
+                      onChanged: (value) {
+                        prefCoinType = value;
+                      })
+                  : Text(appLocalizations.genericError),
+              Container(
+                  height: 100,
+                  width: 300,
+                  padding: const EdgeInsets.fromLTRB(10, 35, 10, 15),
+                  child: SimpleTextButton(
+                      enabled: !isLoading,
+                      onPressed: () async {
+                        if (widget._formKey.currentState == null ||
+                            !widget._formKey.currentState!.validate()) {
+                          return;
                         }
-                      }
-                    },
-                    loading: ref.read(registerStateNotifierProvider)
-                        is AuthStateLoading,
-                    text: appLocalizations.register)),
-          ],
+                        if (_username == null) return;
+                        if (_email == null) return;
+                        if (_password == null) return;
+                        if (_invitationCode == null) return;
+                        if (_repeatPassword == null) return;
+                        String lang = appLocalizations.localeName;
+                        prefCoinType = prefCoinType ?? widget.coinTypes[0].code;
+                        (await authController.createUser(
+                                _username!,
+                                _email!,
+                                lang,
+                                _invitationCode!,
+                                prefCoinType!,
+                                _password!,
+                                _repeatPassword!,
+                                appLocalizations))
+                            .fold((l) {
+                          showErrorRegisterDialog(appLocalizations, l.error);
+                        }, (r) async {
+                          bool sendCode =
+                              await showCodeAdviceDialog(appLocalizations);
+                          if (sendCode) {
+                            (await emailCodeController.requestCode(
+                                    _email!, appLocalizations))
+                                .fold((l) {
+                              showErrorEmailSendCodeDialog(
+                                  appLocalizations, l.error);
+                            }, (r) {
+                              showCodeSendDialog(widget.emailController.text);
+                            });
+                          }
+                        });
+                      },
+                      text: appLocalizations.register)),
+            ],
+          ),
         ),
       ),
     );
+    return isLoading
+        ? Stack(alignment: AlignmentDirectional.centerStart, children: [
+            cache,
+            const LoadingWidget(color: Colors.grey),
+          ])
+        : cache;
+  }
+
+  @visibleForTesting
+  Widget space() {
+    return const SizedBox(
+      height: AppLayout.genericPadding,
+    );
   }
 }
-*/

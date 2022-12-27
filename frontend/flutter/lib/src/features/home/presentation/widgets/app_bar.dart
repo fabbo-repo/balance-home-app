@@ -17,6 +17,7 @@ class CustomAppBar extends ConsumerWidget {
     final user = ref.watch(authControllerProvider).asData!.value;
     final appLocalizations = ref.watch(appLocalizationsProvider);
     return AppBar(
+      automaticallyImplyLeading: false,
       systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.white10,
           statusBarBrightness: Brightness.dark, //Dark icons for Android
@@ -39,7 +40,7 @@ class CustomAppBar extends ConsumerWidget {
           : null,
       leadingWidth: (PlatformUtils().isLargeWindow(context) ||
               PlatformUtils().isMediumWindow(context))
-          ? 200
+          ? MediaQuery.of(context).size.width
           : 0,
       actions: [_profileButton(user!)],
     );

@@ -43,9 +43,9 @@ class BalanceList extends ConsumerWidget {
         child: FloatingActionButton(
           onPressed: () async {
             if (balanceTypeMode == BalanceTypeMode.expense) {
-              context.push("${BalanceView.routeExpensePath}/${BalanceCreateView.routePath}");
+              context.push("/${BalanceView.routeExpensePath}/${BalanceCreateView.routePath}");
             } else {
-              context.push("${BalanceView.routeRevenuePath}/${BalanceCreateView.routePath}");
+              context.push("/${BalanceView.routeRevenuePath}/${BalanceCreateView.routePath}");
             }
           },
           backgroundColor: balanceTypeMode == BalanceTypeMode.expense

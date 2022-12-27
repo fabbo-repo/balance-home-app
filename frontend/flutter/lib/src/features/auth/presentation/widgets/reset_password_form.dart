@@ -93,22 +93,18 @@ class ResetPasswordForm extends ConsumerWidget {
               ),
               space(),
               ElevatedButton(
-                onPressed: _formKey.currentState == null ||
-                        !_formKey.currentState!.validate()
-                    ? null
-                    : () async {
-                        if (!_formKey.currentState!.validate()) {
-                          return;
-                        }
-                        if (_email == null) return;
-                        (await resetPasswordController.requestCode(
-                                _email!, appLocalizations))
-                            .fold((l) {
-                          showErrorResetPasswordCodeDialog(
-                              appLocalizations, l.error);
-                        }, (r) {});
-                      },
-                child: progress != ResetPasswordProgress.none
+                onPressed: () async {
+                  if (!_formKey.currentState!.validate()) {
+                    return;
+                  }
+                  if (_email == null) return;
+                  (await resetPasswordController.requestCode(
+                          _email!, appLocalizations))
+                      .fold((l) {
+                    showErrorResetPasswordCodeDialog(appLocalizations, l.error);
+                  }, (r) {});
+                },
+                child: progress == ResetPasswordProgress.none
                     ? Text(appLocalizations.sendCode)
                     : Text(appLocalizations.reSendCode),
               ),
@@ -133,7 +129,6 @@ class ResetPasswordForm extends ConsumerWidget {
                         }, (r) {
                           context.go("/${AuthView.routePath}");
                         });
-                        ;
                       },
                 child: Text(appLocalizations.verifyCode),
               ),

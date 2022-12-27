@@ -39,120 +39,103 @@ class AuthView extends ConsumerWidget {
     final appLocalizationStateNotifier =
         ref.read(appLocalizationsProvider.notifier);
     final coinTypeListController = ref.watch(coinTypeListsControllerProvider);
-    final authController = ref.watch(authControllerProvider);
-    final isLoading = authController.maybeWhen(
-      data: (_) => authController.isRefreshing,
-      loading: () => true,
-      orElse: () => false,
-    );
 
     return Scaffold(
       appBar: AppBar(
-        title: const AppTittle(fontSize: 30),
-        backgroundColor: AppColors.appBarBackgroundColor,
-        automaticallyImplyLeading: false
-      ),
+          title: const AppTittle(fontSize: 30),
+          backgroundColor: AppColors.appBarBackgroundColor,
+          automaticallyImplyLeading: false),
       body: SafeArea(
-        child: isLoading
-            ? const LoadingWidget()
-            : Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(
-                          (ref.watch(themeModeProvider) == ThemeMode.dark)
-                              ? "assets/images/auth_background_dark_image.jpg"
-                              : "assets/images/auth_background_image.jpg"),
-                      fit: BoxFit.cover),
-                ),
-                padding: const EdgeInsets.all(10),
-                child: coinTypeListController.when<Widget>(data: (coinTypes) {
-                  cache = Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: CustomLanguagePickerDropdown(
-                            appLocalizations: appLocalizations,
-                            onValuePicked: (Language language) {
-                              Locale locale = Locale(language.isoCode);
-                              appLocalizationStateNotifier.setLocale(locale);
-                            }),
+        child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage(
+                      (ref.watch(themeModeProvider) == ThemeMode.dark)
+                          ? "assets/images/auth_background_dark_image.jpg"
+                          : "assets/images/auth_background_image.jpg"),
+                  fit: BoxFit.cover),
+            ),
+            padding: const EdgeInsets.all(10),
+            child: coinTypeListController.when<Widget>(data: (coinTypes) {
+              cache = Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: CustomLanguagePickerDropdown(
+                        appLocalizations: appLocalizations,
+                        onValuePicked: (Language language) {
+                          Locale locale = Locale(language.isoCode);
+                          appLocalizationStateNotifier.setLocale(locale);
+                        }),
+                  ),
+                  const SizedBox(height: AppLayout.genericPadding),
+                  Expanded(
+                    child: DefaultTabController(
+                      length: 2,
+                      initialIndex: 0,
+                      child: Column(
+                        children: [
+                          TabBar(
+                              isScrollable: true,
+                              indicatorColor:
+                                  const Color.fromARGB(255, 7, 136, 76),
+                              tabs: [
+                                Tab(
+                                  child: Text(
+                                    appLocalizations.signIn,
+                                    style: const TextStyle(
+                                        color: Color.fromARGB(255, 27, 27, 27),
+                                        fontSize: 20),
+                                  ),
+                                ),
+                                Tab(
+                                  child: Text(
+                                    appLocalizations.register,
+                                    style: const TextStyle(
+                                        color: Color.fromARGB(255, 27, 27, 27),
+                                        fontSize: 20),
+                                  ),
+                                )
+                              ]),
+                          Expanded(
+                              child: TabBarView(children: [
+                            LoginForm(
+                              emailController: loginEmailController,
+                              passwordController: loginPasswordController,
+                            ),
+                            RegisterForm(
+                                usernameController: registerUsernameController,
+                                emailController: registerEmailController,
+                                passwordController: registerPasswordController,
+                                password2Controller:
+                                    registerPassword2Controller,
+                                invitationCodeController:
+                                    registerInvitationCodeController,
+                                coinTypes: coinTypes)
+                          ])),
+                        ],
                       ),
-                      const SizedBox(height: AppLayout.genericPadding),
-                      Expanded(
-                        child: DefaultTabController(
-                          length: 2,
-                          initialIndex: 0,
-                          child: Column(
-                            children: [
-                              TabBar(
-                                  isScrollable: true,
-                                  indicatorColor:
-                                      const Color.fromARGB(255, 7, 136, 76),
-                                  tabs: [
-                                    Tab(
-                                      child: Text(
-                                        appLocalizations.signIn,
-                                        style: const TextStyle(
-                                            color:
-                                                Color.fromARGB(255, 27, 27, 27),
-                                            fontSize: 20),
-                                      ),
-                                    ),
-                                    Tab(
-                                      child: Text(
-                                        appLocalizations.register,
-                                        style: const TextStyle(
-                                            color:
-                                                Color.fromARGB(255, 27, 27, 27),
-                                            fontSize: 20),
-                                      ),
-                                    )
-                                  ]),
-                              Expanded(
-                                  child: TabBarView(children: [
-                                LoginForm(
-                                  emailController: loginEmailController,
-                                  passwordController: loginPasswordController,
-                                ),
-                                LoginForm(
-                                  emailController: loginEmailController,
-                                  passwordController: loginPasswordController,
-                                ),
-                                /*RegisterForm(
-                                    usernameController:
-                                        registerUsernameController,
-                                    emailController: registerEmailController,
-                                    passwordController:
-                                        registerPasswordController,
-                                    password2Controller:
-                                        registerPassword2Controller,
-                                    invitationCodeController:
-                                        registerInvitationCodeController,
-                                    coinTypes: coinTypes)*/
-                              ])),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  );
-                  return cache;
-                }, error: (error, stackTrace) {
-                  debugPrint("[RESET_PASSWORD_FORM] $error -> $stackTrace");
-                  return Stack(
-                      alignment: AlignmentDirectional.centerStart,
-                      children: [
-                        cache,
-                        const CustomErrorWidget(),
-                      ]);
-                }, loading: () {
-                  return Stack(
-                      alignment: AlignmentDirectional.centerStart,
-                      children: [
-                        cache,
-                        const LoadingWidget(color: Colors.grey),
-                      ]);
-                })),
+                    ),
+                  )
+                ],
+              );
+              return cache;
+            }, error: (error, stackTrace) {
+              debugPrint("[RESET_PASSWORD_FORM] $error -> $stackTrace");
+              return Stack(
+                  alignment: AlignmentDirectional.centerStart,
+                  children: [
+                    cache,
+                    const CustomErrorWidget(),
+                  ]);
+            }, loading: () {
+              return Stack(
+                  alignment: AlignmentDirectional.centerStart,
+                  children: [
+                    cache,
+                    const LoadingWidget(color: Colors.grey),
+                  ]);
+            })),
       ),
     );
   }

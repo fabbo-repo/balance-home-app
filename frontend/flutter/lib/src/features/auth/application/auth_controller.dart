@@ -3,6 +3,7 @@ import 'package:balance_home_app/src/features/auth/domain/entities/credentials_e
 import 'package:balance_home_app/src/features/auth/domain/entities/register_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/invitation_code.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/login_password.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_name.dart';
@@ -47,7 +48,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
       UserName username,
       UserEmail email,
       String language,
-      VerificationCode invCode,
+      InvitationCode invCode,
       String prefCoinType,
       UserPassword password,
       UserRepeatPassword password2,
