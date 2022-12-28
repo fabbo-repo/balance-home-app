@@ -26,9 +26,19 @@ class _TextCheckBoxState extends State<TextCheckBox> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           checkBox(widget.fillColor),
-          Text(
-            widget.title,
-            style: TextStyle(color: widget.fillColor, fontSize: 14),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                isChecked = !isChecked;
+                if (widget.onChanged != null) {
+                  widget.onChanged!(isChecked);
+                }
+              });
+            },
+            child: Text(
+              widget.title,
+              style: TextStyle(color: widget.fillColor, fontSize: 14),
+            ),
           )
         ],
       ),
