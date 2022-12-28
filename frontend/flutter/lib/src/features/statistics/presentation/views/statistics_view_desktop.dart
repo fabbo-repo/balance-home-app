@@ -1,60 +1,91 @@
-import 'package:balance_home_app/src/features/statistics/data/models/statistics_data_model.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance/balance_month_chart_container.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/balance/balance_year_chart_container.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/currency/currency_chart_container.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings/savings_eight_years_chart_container.dart';
-import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings/savings_year_chart_container.dart';
+import 'package:balance_home_app/config/app_colors.dart';
+import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/custom_error_widget.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/models/statistics_data.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/statistics_balance_chart_container.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/currency/statistics_currency_chart_container.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings/statistics_savings_eight_years_chart_container.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings/statistics_savings_year_chart_container.dart';
+import 'package:balance_home_app/src/features/statistics/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class StatisticsViewDesktop extends StatelessWidget {
-  final StatisticsDataModel statisticsData;
-  
-  const StatisticsViewDesktop({
-    required this.statisticsData,
-    super.key
-  });
+// ignore: must_be_immutable
+class StatisticsViewDesktop extends ConsumerWidget {
+  Widget cache = Container();
+
+  StatisticsViewDesktop({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            color: const Color.fromARGB(254, 254, 252, 224),
-            foregroundDecoration: borderDecoration(),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                BalanceMonthChartContainer(statisticsData: statisticsData),
-                BalanceYearChartContainer(statisticsData: statisticsData),
-              ],
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ref.watch(statisticsControllerProvider).when<Widget>(
+        data: (StatisticsData data) {
+      cache = SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              color: AppColors.balanceBackgroundColor,
+              foregroundDecoration: BoxDecoration(border: Border.all()),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  StatisticsBalanceChartContainer(
+                    dateMode: SelectedDateMode.month,
+                    revenues: data.revenues,
+                    expenses: data.expenses,
+                    revenueYears: data.revenueYears,
+                    expenseYears: data.expenseYears,
+                  ),
+                  StatisticsBalanceChartContainer(
+                      dateMode: SelectedDateMode.year,
+                      revenues: data.revenues,
+                      expenses: data.expenses,
+                      revenueYears: data.revenueYears,
+                      expenseYears: data.expenseYears),
+                ],
+              ),
             ),
-          ),
-          Container(
-            color: const Color.fromARGB(254, 254, 252, 224),
-            foregroundDecoration: borderDecoration(),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SavingsYearChartContainer(statisticsData: statisticsData),
-                SavingsEightYearsChartContainer(statisticsData: statisticsData)
-              ],
+            Container(
+              color: AppColors.balanceBackgroundColor,
+              foregroundDecoration: BoxDecoration(border: Border.all()),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  StatisticsSavingsYearChartContainer(
+                    monthlyBalances: data.monthlyBalances,
+                    revenueYears: data.revenueYears,
+                    expenseYears: data.expenseYears,
+                  ),
+                  StatisticsSavingsEightYearsChartContainer(
+                    annualBalances: data.annualBalances,
+                  )
+                ],
+              ),
             ),
-          ),
-          Container(
-            color: const Color.fromARGB(254, 201, 241, 253),
-            foregroundDecoration: borderDecoration(),
-            child: CurrencyChartContainer(statisticsData: statisticsData)
-          ),
-        ],
-      ),
-    );
-  }
-
-  @visibleForTesting
-  BoxDecoration borderDecoration() {
-    return BoxDecoration(
-      border: Border.all(),
-    );
+            Container(
+                color: const Color.fromARGB(254, 201, 241, 253),
+                foregroundDecoration: BoxDecoration(border: Border.all()),
+                child: StatisticsCurrencyChartContainer(
+                  dateExchanges: data.dateExchanges,
+                  coinTypes: data.coinTypes,
+                ))
+          ],
+        ),
+      );
+      return cache;
+    }, error: (error, stackTrace) {
+      debugPrint("[STATISTICS_DESKTOP] $error -> $stackTrace");
+      return Stack(alignment: AlignmentDirectional.centerStart, children: [
+        cache,
+        const CustomErrorWidget(),
+      ]);
+    }, loading: () {
+      ref.read(statisticsControllerProvider.notifier).handle();
+      return Stack(alignment: AlignmentDirectional.centerStart, children: [
+        cache,
+        const LoadingWidget(color: Colors.grey),
+      ]);
+    });
   }
 }

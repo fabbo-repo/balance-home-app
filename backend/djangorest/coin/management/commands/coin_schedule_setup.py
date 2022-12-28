@@ -7,11 +7,11 @@ class Command(BaseCommand):
     """
     Will be executed with:
     ~~~
-    python manage.py schedule_setup
+    python manage.py coin_schedule_setup
     ~~~
     """
     
-    help = "Run the schedule_setup function"
+    help = "Run the coin_schedule_setup function"
 
     def handle(self, *args, **options):
         schedule_setup()

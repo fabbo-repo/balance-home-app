@@ -48,8 +48,7 @@ class ChangePasswordView(generics.CreateAPIView):
             return Response({}, status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ResetPasswordStartView(generics.GenericAPIView, mixins.CreateModelMixin, 
-    mixins.RetrieveModelMixin):
+class ResetPasswordStartView(generics.CreateAPIView):
     """
     An endpoint for password reset start
     """
@@ -57,7 +56,7 @@ class ResetPasswordStartView(generics.GenericAPIView, mixins.CreateModelMixin,
     permission_classes = (AllowAny,)
     parser_classes = (JSONParser,)
 
-    def post(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             code = os.urandom(3).hex()
@@ -69,8 +68,7 @@ class ResetPasswordStartView(generics.GenericAPIView, mixins.CreateModelMixin,
             return Response({}, status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ResetPasswordVerifyView(generics.GenericAPIView, mixins.CreateModelMixin, 
-    mixins.RetrieveModelMixin):
+class ResetPasswordVerifyView(generics.CreateAPIView):
     """
     An endpoint for password reset verify
     """
@@ -78,7 +76,7 @@ class ResetPasswordVerifyView(generics.GenericAPIView, mixins.CreateModelMixin,
     permission_classes = (AllowAny,)
     parser_classes = (JSONParser,)
 
-    def post(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = User.objects.get(email=serializer.data["email"])

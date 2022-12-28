@@ -6,29 +6,7 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import check_for_language
 from django.core.exceptions import ValidationError
-
-
-def check_inv_code(code):
-    """
-    Checks if an invitation code is created and valid
-    """
-    inv_code = None
-    try: inv_code = InvitationCode.objects.get(code=code)
-    except: raise serializers.ValidationError(_("Invitation code not found"))
-    if not inv_code.is_active:
-        raise serializers.ValidationError(_("Invalid invitation code"))
-
-def check_username_pass12(username, email, password1, password2):
-    """
-    Checks if 2 passwords are different, also that username and email 
-    are different to the passwords
-    """
-    if password1 != password2:
-        raise serializers.ValidationError(
-            {"password": _("Password fields do not match")})
-    if username == password1 or email == password1:
-        raise serializers.ValidationError(
-            {"password": _("Password cannot match other profile data")})
+from custom_auth.api.serializers.utils import check_username_pass12, check_inv_code
 
 
 class UserCreationSerializer(serializers.ModelSerializer):

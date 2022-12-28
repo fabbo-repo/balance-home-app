@@ -1,1 +1,5 @@
-enum HomeTab { statistics, revenues, expenses }
+enum HomeTab {
+  statistics,
+  revenues,
+  expenses
+}

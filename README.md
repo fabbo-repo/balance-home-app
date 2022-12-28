@@ -1,3 +1,4 @@
+![Alt text](./balance_home_app.png?raw=true "")
 
 # Balance Home App or *BalHom*
 

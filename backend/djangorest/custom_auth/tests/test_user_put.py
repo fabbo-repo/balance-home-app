@@ -133,6 +133,31 @@ class UserPutTests(APITestCase):
         """
         Checks that password is changed
         """
+        # Wrong old password
+        response=self.client.post(
+            self.change_password_url,
+            data=json.dumps(
+                {
+                    "old_password": "password1@214",
+                    "new_password": "password1@213"
+                }
+            ),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        # Same password
+        response=self.client.post(
+            self.change_password_url,
+            data=json.dumps(
+                {
+                    "old_password": "password1@212",
+                    "new_password": "password1@212"
+                }
+            ),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        # Correct passwords
         response=self.client.post(
             self.change_password_url,
             data=json.dumps(
@@ -144,6 +169,7 @@ class UserPutTests(APITestCase):
             content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Check authentication with new password
         self.credentials["password"]= "password1@213"
         response = self.jwt_obtain()
         self.assertEqual(response.status_code, status.HTTP_200_OK)

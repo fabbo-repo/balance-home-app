@@ -1,8 +1,10 @@
 import 'package:adaptive_navigation/adaptive_navigation.dart';
-import 'package:balance_home_app/src/core/providers/localization_provider.dart';
-import 'package:balance_home_app/src/core/services/platform_service.dart';
+import 'package:balance_home_app/src/core/providers.dart';
+import 'package:balance_home_app/config/platform_utils.dart';
+import 'package:balance_home_app/src/features/balance/presentation/views/balance_view.dart';
 import 'package:balance_home_app/src/features/home/presentation/views/home_tabs.dart';
 import 'package:balance_home_app/src/features/home/presentation/widgets/app_bar.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/views/statistics_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,35 +12,31 @@ import 'package:go_router/go_router.dart';
 class HomeView extends ConsumerWidget {
   final HomeTab selectedSection;
   final Widget child;
-  final PlatformService platformService;
-  
-  HomeView({
-    required this.selectedSection,
-    required this.child,
-    PlatformService? platformService,
-    super.key
-  }) : platformService = platformService ?? PlatformService();
+
+  const HomeView(
+      {required this.selectedSection,
+      required this.child,
+      super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
+    final appLocalizations = ref.watch(appLocalizationsProvider);
     return AdaptiveNavigationScaffold(
-      appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(40), 
-          child: CustomAppBar()),
+      appBar: const PreferredSize(
+          preferredSize: Size.fromHeight(40), child: CustomAppBar()),
       resizeToAvoidBottomInset: false,
       body: SafeArea(child: child),
       selectedIndex: selectedSection.index,
       onDestinationSelected: (int index) {
         switch (HomeTab.values[index]) {
           case HomeTab.statistics:
-            context.go("/statistics");
+            context.go("/${StatisticsView.routePath}");
             break;
           case HomeTab.revenues:
-            context.go("/revenues");
+            context.go("/${BalanceView.routeRevenuePath}");
             break;
           case HomeTab.expenses:
-            context.go("/expenses");
+            context.go("/${BalanceView.routeExpensePath}");
             break;
         }
       },
@@ -61,7 +59,8 @@ class HomeView extends ConsumerWidget {
   }
 
   NavigationType navigationTypeResolver(BuildContext context) {
-    if (platformService.isLargeWindow(context) || platformService.isMediumWindow(context)) {
+    if (PlatformUtils().isLargeWindow(context) ||
+        PlatformUtils().isMediumWindow(context)) {
       return NavigationType.rail;
     } else {
       return NavigationType.bottom;

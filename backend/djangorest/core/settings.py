@@ -255,6 +255,8 @@ class Dev(Configuration):
     # Email verification code validity duration
     EMAIL_CODE_VALID = get_int_env('APP_EMAIL_CODE_VALID', 120)
 
+    UNVERIFIED_USER_DAYS = get_int_env('APP_UNVERIFIED_USER_DAYS', 2)
+
     COIN_TYPE_CODES = get_list_env('COIN_TYPE_CODES', ['EUR', 'USD'])
 
 class Prod(Dev):

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 11:31+0100\n"
+"POT-Creation-Date: 2022-12-16 12:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,67 +26,67 @@ msgstr "name"
 msgid "description"
 msgstr "description"
 
-#: .\balance\models.py:25
+#: .\balance\models.py:26
 msgid "quantity"
 msgstr "quantity"
 
-#: .\balance\models.py:29
+#: .\balance\models.py:30
 msgid "date"
 msgstr "date"
 
-#: .\balance\models.py:33 .\balance\models.py:73
+#: .\balance\models.py:34 .\balance\models.py:74
 msgid "coin type"
 msgstr "coin type"
 
-#: .\balance\models.py:38 .\balance\models.py:80
+#: .\balance\models.py:39 .\balance\models.py:81
 msgid "owner"
 msgstr "owner"
 
-#: .\balance\models.py:45
+#: .\balance\models.py:46
 msgid "Balance"
 msgstr "Balance"
 
-#: .\balance\models.py:46
+#: .\balance\models.py:47
 msgid "Balances"
 msgstr "Balances"
 
-#: .\balance\models.py:63
+#: .\balance\models.py:64
 msgid "gross quantity"
 msgstr "gross quantity"
 
-#: .\balance\models.py:68
+#: .\balance\models.py:69
 msgid "expected quantity"
 msgstr "expected quantity"
 
-#: .\balance\models.py:87
+#: .\balance\models.py:88
 msgid "Date balance"
 msgstr "Date balance"
 
-#: .\balance\models.py:88
+#: .\balance\models.py:89
 msgid "Date balances"
 msgstr "Date balance"
 
-#: .\balance\models.py:97 .\balance\models.py:113
+#: .\balance\models.py:98 .\balance\models.py:114
 msgid "year"
 msgstr "year"
 
-#: .\balance\models.py:105
+#: .\balance\models.py:106
 msgid "Annual balance"
 msgstr "Annual balance"
 
-#: .\balance\models.py:106
+#: .\balance\models.py:107
 msgid "Annual balances"
 msgstr "Annual balances"
 
-#: .\balance\models.py:120
+#: .\balance\models.py:121
 msgid "month"
 msgstr "month"
 
-#: .\balance\models.py:128
+#: .\balance\models.py:129
 msgid "Monthly balance"
 msgstr "Monthly balance"
 
-#: .\balance\models.py:129
+#: .\balance\models.py:130
 msgid "Monthly balances"
 msgstr "Monthly balances"
 
@@ -94,7 +94,7 @@ msgstr "Monthly balances"
 msgid "{} code not supported"
 msgstr "{} code not supported"
 
-#: .\coin\api\views.py:60
+#: .\coin\api\views.py:68
 msgid "No exchange data, try later"
 msgstr "No exchange data, try later"
 
@@ -146,31 +146,39 @@ msgstr "English"
 msgid "Spanish"
 msgstr "Spanish"
 
-#: .\custom_auth\api\serializers\code_serializers.py:28
-#: .\custom_auth\api\serializers\code_serializers.py:96
+#: .\custom_auth\api\serializers\code_serializers.py:30
+#: .\custom_auth\api\serializers\code_serializers.py:98
 msgid "Code has already been sent, wait {} seconds"
 msgstr "Code has already been sent, wait {} seconds"
 
-#: .\custom_auth\api\serializers\code_serializers.py:60
-#: .\custom_auth\api\serializers\code_serializers.py:125
+#: .\custom_auth\api\serializers\code_serializers.py:62
+#: .\custom_auth\api\serializers\code_serializers.py:127
 msgid "No code sent"
 msgstr "No code sent"
 
-#: .\custom_auth\api\serializers\code_serializers.py:65
-#: .\custom_auth\api\serializers\code_serializers.py:130
+#: .\custom_auth\api\serializers\code_serializers.py:67
+#: .\custom_auth\api\serializers\code_serializers.py:132
 msgid "Code is no longer valid"
 msgstr "Code is no longer valid"
 
-#: .\custom_auth\api\serializers\code_serializers.py:67
-#: .\custom_auth\api\serializers\code_serializers.py:133
+#: .\custom_auth\api\serializers\code_serializers.py:69
+#: .\custom_auth\api\serializers\code_serializers.py:135
 msgid "Invalid code"
 msgstr "Invalid code"
 
-#: .\custom_auth\api\serializers\code_serializers.py:87
-#: .\custom_auth\api\serializers\code_serializers.py:118
-#: .\custom_auth\api\serializers\utils.py:12
+#: .\custom_auth\api\serializers\code_serializers.py:89
+#: .\custom_auth\api\serializers\code_serializers.py:120
+#: .\custom_auth\api\serializers\utils.py:13
 msgid "User not found"
 msgstr "User not found"
+
+#: .\custom_auth\api\serializers\code_serializers.py:156
+msgid "New password must be different from old password"
+msgstr "New password must be different from old password"
+
+#: .\custom_auth\api\serializers\code_serializers.py:159
+msgid "Invalid old password"
+msgstr "Invalid old password"
 
 #: .\custom_auth\api\serializers\jwt_serializers.py:15
 msgid "No invitation code stored"
@@ -188,36 +196,39 @@ msgstr "No active account found with the given credentials"
 msgid "Invalid refresh token"
 msgstr "Invalid refresh token"
 
-#: .\custom_auth\api\serializers\user_serializers.py:17
-msgid "Invitation code not found"
-msgstr "Invitation code not found"
-
-#: .\custom_auth\api\serializers\user_serializers.py:19
-msgid "Invalid invitation code"
-msgstr "Invalid invitation code"
-
-#: .\custom_auth\api\serializers\user_serializers.py:28
-msgid "Password fields do not match"
-msgstr "Password fields do not match"
-
-#: .\custom_auth\api\serializers\user_serializers.py:31
-#: .\custom_auth\models.py:175
-msgid "Password cannot match other profile data"
-msgstr "Password cannot match other profile data"
-
-#: .\custom_auth\api\serializers\user_serializers.py:85
+#: .\custom_auth\api\serializers\user_serializers.py:63
 #: .\custom_auth\models.py:172
 msgid "Language not supported"
 msgstr "Language not supported"
 
-#: .\custom_auth\api\serializers\user_serializers.py:97
+#: .\custom_auth\api\serializers\user_serializers.py:75
 #: .\custom_auth\models.py:178
 msgid "Username and email can not be the same"
 msgstr "Username and email can not be the same"
 
-#: .\custom_auth\api\serializers\utils.py:15
+#: .\custom_auth\api\serializers\utils.py:16
 msgid "User already verified"
 msgstr "User already verified"
+
+#: .\custom_auth\api\serializers\utils.py:24
+msgid "New password cannot match other profile data"
+msgstr "New password cannot match other profile data"
+
+#: .\custom_auth\api\serializers\utils.py:33
+msgid "Password fields do not match"
+msgstr "Password fields do not match"
+
+#: .\custom_auth\api\serializers\utils.py:36 .\custom_auth\models.py:175
+msgid "Password cannot match other profile data"
+msgstr "Password cannot match other profile data"
+
+#: .\custom_auth\api\serializers\utils.py:44
+msgid "Invitation code not found"
+msgstr "Invitation code not found"
+
+#: .\custom_auth\api\serializers\utils.py:46
+msgid "Invalid invitation code"
+msgstr "Invalid invitation code"
 
 #: .\custom_auth\models.py:12
 msgid "uuid code"

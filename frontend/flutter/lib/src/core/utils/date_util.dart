@@ -3,18 +3,30 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class DateUtil {
   static String monthNumToString(int month, AppLocalizations appLocalizations) {
     switch (month) {
-      case 1: return appLocalizations.january;
-      case 2: return appLocalizations.february;
-      case 3: return appLocalizations.march;
-      case 4: return appLocalizations.april;
-      case 5: return appLocalizations.may;
-      case 6: return appLocalizations.june;
-      case 7: return appLocalizations.july;
-      case 8: return appLocalizations.august;
-      case 9: return appLocalizations.september;
-      case 10: return appLocalizations.october;
-      case 11: return appLocalizations.november;
-      case 12: return appLocalizations.december;
+      case 1:
+        return appLocalizations.january;
+      case 2:
+        return appLocalizations.february;
+      case 3:
+        return appLocalizations.march;
+      case 4:
+        return appLocalizations.april;
+      case 5:
+        return appLocalizations.may;
+      case 6:
+        return appLocalizations.june;
+      case 7:
+        return appLocalizations.july;
+      case 8:
+        return appLocalizations.august;
+      case 9:
+        return appLocalizations.september;
+      case 10:
+        return appLocalizations.october;
+      case 11:
+        return appLocalizations.november;
+      case 12:
+        return appLocalizations.december;
     }
     return appLocalizations.january;
   }

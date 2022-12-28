@@ -8,6 +8,8 @@ from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import gettext_lazy as _
 from custom_auth.tasks import send_email_code
 import os
+from custom_auth.api.serializers.utils import check_username_newpass
+from django.core.exceptions import ValidationError
 
 
 class CodeSerializer(serializers.Serializer):
@@ -139,9 +141,22 @@ class ChangePasswordSerializer(serializers.Serializer):
     """
     old_password = serializers.CharField(
         required=True,
+        # No validation needed for old password
         #validators=[validate_password]
     )
     new_password = serializers.CharField(
         required=True,
         validators=[validate_password]
     )
+
+    def validate(self, attrs):
+        user = self.context["request"].user
+        if attrs['old_password'] == attrs['new_password']:
+            raise ValidationError(
+                {'new_password': _("New password must be different from old password")})
+        if not user.check_password(attrs['old_password']):
+            raise ValidationError(
+                {'old_password': _("Invalid old password")})
+        check_username_newpass(user.username, user.email, 
+            attrs['new_password'])
+        return attrs

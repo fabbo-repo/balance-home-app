@@ -1,5 +1,6 @@
-import 'package:balance_home_app/src/core/providers/localization_provider.dart';
-import 'package:balance_home_app/src/navigation/router_provider.dart';
+import 'package:balance_home_app/config/router.dart';
+import 'package:balance_home_app/config/theme.dart';
+import 'package:balance_home_app/src/core/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -15,27 +16,16 @@ class BalanceHomeAppState extends ConsumerState<BalanceHomeApp> {
 
   @override
   Widget build(BuildContext context) {
-    final router = ref.watch(routerProvider);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-        navigationRailTheme: const NavigationRailThemeData(
-          selectedIconTheme: IconThemeData(color: Colors.white),
-          unselectedIconTheme: IconThemeData(color: Colors.white54),
-          backgroundColor: Color.fromARGB(255, 70, 70, 70)
-        ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white54,
-          backgroundColor: Color.fromARGB(255, 70, 70, 70)
-        )
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ref.watch(themeModeProvider),
       onGenerateTitle: (context) {
         // In the app build, the context does not contain an AppLocalizations instance.
         // However, at the moment the title is ggoing to be generated 
         // the AppLocalizations instance is not null
-        final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
+        final appLocalizations = ref.read(appLocalizationsProvider);
         return appLocalizations.appTitle;
       },
       localizationsDelegates: AppLocalizations.localizationsDelegates,

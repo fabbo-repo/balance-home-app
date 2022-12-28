@@ -5,9 +5,6 @@ from coin.currency_converter_integration import convert_or_fetch
 from custom_auth.models import User
 from balance import notifications
 
-import logging
-logger = logging.getLogger(__name__)
-
 
 @shared_task
 def send_monthly_balance(user, month, year):
