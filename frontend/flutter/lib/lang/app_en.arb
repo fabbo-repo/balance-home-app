@@ -99,7 +99,7 @@
     "needInvitationCode": "Invitation code needed",
     "invitationCodeNotValid": "Invitation code not valid",
     "needCoinType": "Coin type needed",
-    "storeCredentials": "Remember crdentials?",
+    "storeCredentials": "Remember crdentials",
 
     "@_STATISTICS":{},
     "balanceChartTitle": "Revenues and expenses for",
