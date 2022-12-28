@@ -115,7 +115,8 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
   }
 
   Future<Either<Failure, bool>> signIn(UserEmail email, LoginPassword password,
-      AppLocalizations appLocalizations) async {
+      AppLocalizations appLocalizations,
+      {bool store = false}) async {
     state = const AsyncValue.loading();
     return email.value.fold((l) {
       state = const AsyncValue.data(null);
@@ -125,8 +126,9 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
         state = const AsyncValue.data(null);
         return left(l);
       }, (password) async {
-        final res = await _repository
-            .signIn(CredentialsEntity(email: email, password: password));
+        final res = await _repository.signIn(
+            CredentialsEntity(email: email, password: password),
+            store: store);
         return res.fold((l) {
           state = const AsyncValue.data(null);
           String error = l.error.toLowerCase();

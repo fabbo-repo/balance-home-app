@@ -139,10 +139,10 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         prefCoinType = value;
                       })
                   : Text(appLocalizations.genericError),
-              Container(
-                  height: 100,
-                  width: 300,
-                  padding: const EdgeInsets.fromLTRB(10, 35, 10, 15),
+              space(),
+              SizedBox(
+                  height: 50,
+                  width: 240,
                   child: SimpleTextButton(
                       enabled: !isLoading,
                       onPressed: () async {

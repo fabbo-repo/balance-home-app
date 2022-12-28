@@ -179,6 +179,19 @@ class HttpService {
             Uri.parse("$baseUrl${APIContract.jwtRefresh}"),
             headers: getHeaders(),
             body: jsonEncode({"refresh": _jwtEntity!.refresh})));
+      } else {
+        String? refreshJwt = await _secureStorage.read(key: "refresh_jwt");
+        if (refreshJwt != null) {
+          newResponse = _createHttpResponse(await _client.post(
+              Uri.parse("$baseUrl${APIContract.jwtRefresh}"),
+              headers: getHeaders(),
+              body: jsonEncode({"refresh": refreshJwt})));
+          if (newResponse.statusCode == 401) {
+            setJwtEntity(JwtEntity(
+                access: newResponse.content["access"], refresh: refreshJwt));
+            return true;
+          }
+        }
       }
       // If 401 is recived it should be tried with stored credentials
       if (newResponse.statusCode == 401) {

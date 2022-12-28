@@ -50,7 +50,12 @@ class AuthRepository implements AuthRepositoryInterface {
   @override
   Future<Either<Failure, bool>> trySignIn() async {
     final credentials = await credentialsLocalDataSource.get();
-    return credentials.fold((l) => left(l), (credentials) async {
+    return await credentials.fold((l) async {
+      // Clean wrong data
+      await credentialsLocalDataSource.remove();
+      await jwtLocalDataSource.remove();
+      return left(l);
+    }, (credentials) async {
       // Clean jwt
       httpService.setJwtEntity(null);
       HttpResponse response = await httpService.sendPostRequest(
@@ -63,9 +68,10 @@ class AuthRepository implements AuthRepositoryInterface {
       return right(true);
     });
   }
-  
+
   @override
-  Future<Either<Failure, bool>> signIn(CredentialsEntity credentials) async {
+  Future<Either<Failure, bool>> signIn(CredentialsEntity credentials,
+      {bool store = false}) async {
     // Clean jwt
     httpService.setJwtEntity(null);
     HttpResponse response = await httpService.sendPostRequest(
@@ -76,7 +82,7 @@ class AuthRepository implements AuthRepositoryInterface {
     JwtEntity jwt = JwtEntity.fromJson(response.content);
     httpService.setJwtEntity(jwt);
     await jwtLocalDataSource.store(jwt);
-    await credentialsLocalDataSource.store(credentials);
+    if (store) await credentialsLocalDataSource.store(credentials);
     return right(true);
   }
 

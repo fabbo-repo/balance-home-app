@@ -4,6 +4,7 @@ import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.da
 import 'package:balance_home_app/src/core/presentation/widgets/password_text_form_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/text_check_box.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/login_password.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
@@ -32,6 +33,7 @@ class LoginForm extends ConsumerStatefulWidget {
 class _LoginFormState extends ConsumerState<LoginForm> {
   UserEmail? _email;
   LoginPassword? _password;
+  bool storeCredentials = false;
   Widget cache = Container();
 
   @override
@@ -81,10 +83,17 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 validator: (value) => _password?.validate,
               ),
               space(),
-              Container(
-                  height: 100,
-                  width: 300,
-                  padding: const EdgeInsets.fromLTRB(10, 35, 10, 15),
+              TextCheckBox(
+                title: appLocalizations.storeCredentials,
+                fillColor: const Color.fromARGB(255, 65, 65, 65),
+                onChanged: (value) {
+                  storeCredentials = value!;
+                },
+              ),
+              space(),
+              SizedBox(
+                  height: 50,
+                  width: 200,
                   child: SimpleTextButton(
                       enabled: !isLoading,
                       onPressed: () async {
@@ -95,7 +104,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                         if (_email == null) return;
                         if (_password == null) return;
                         (await authController.signIn(
-                                _email!, _password!, appLocalizations))
+                                _email!, _password!, appLocalizations,
+                                store: storeCredentials))
                             .fold((l) async {
                           if (l.error == appLocalizations.emailNotVerified) {
                             bool sendCode =
@@ -119,6 +129,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                         });
                       },
                       text: appLocalizations.signIn)),
+              space(),
               TextButton(
                 onPressed: () {
                   ref
@@ -128,7 +139,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 },
                 child: Text(
                   appLocalizations.forgotPassword,
-                  style: TextStyle(color: Colors.grey[800]),
+                  style:
+                      const TextStyle(color: Color.fromARGB(255, 65, 65, 65)),
                 ),
               ),
             ],

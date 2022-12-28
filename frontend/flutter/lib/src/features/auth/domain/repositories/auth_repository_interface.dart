@@ -12,7 +12,8 @@ abstract class AuthRepositoryInterface {
 
   Future<Either<Failure, bool>> trySignIn();
 
-  Future<Either<Failure, bool>> signIn(CredentialsEntity credentials);
+  Future<Either<Failure, bool>> signIn(CredentialsEntity credentials,
+      {bool store = false});
 
   Future<Either<Failure, bool>> signOut();
 }
