@@ -1,6 +1,5 @@
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
-import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/custom_error_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/responsive_layout.dart';

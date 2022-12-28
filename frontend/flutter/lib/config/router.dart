@@ -111,6 +111,7 @@ final router = GoRouter(
               name: 'passwordRoot',
               path: 'password',
               redirect: passwordGuard,
+              builder: (_, __) => const LoadingView(),
               routes: [
                 GoRoute(
                   name: ResetPasswordView.routeName,

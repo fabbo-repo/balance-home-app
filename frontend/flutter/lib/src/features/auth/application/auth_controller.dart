@@ -1,4 +1,5 @@
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/presentation/states/app_localizations_state.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/credentials_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/register_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
@@ -9,7 +10,6 @@ import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart
 import 'package:balance_home_app/src/features/auth/domain/values/user_name.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_password.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_repeat_password.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/verification_code.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,8 +19,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// State controller for authentication
 class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
   final AuthRepositoryInterface _repository;
+  final AppLocalizationsState _appLocalizationsState;
 
-  AuthController(this._repository) : super(const AsyncValue.data(null)) {
+  AuthController(this._repository, this._appLocalizationsState)
+      : super(const AsyncValue.data(null)) {
     trySignIn();
   }
 
@@ -39,6 +41,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
       }, (r) {
         state = AsyncValue.data(r);
         updateAuthState();
+        updateAppLocaalizationsState();
         return right(true);
       });
     });
@@ -141,6 +144,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
           return res.fold((l) => left(l), (r) {
             state = AsyncValue.data(r);
             updateAuthState();
+            updateAppLocaalizationsState();
             return right(true);
           });
         });
@@ -160,5 +164,10 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
   @visibleForTesting
   void updateAuthState() {
     authStateListenable.value = state.hasValue && state.asData!.value != null;
+  }
+
+  @visibleForTesting
+  void updateAppLocaalizationsState() {
+    _appLocalizationsState.setLocale(Locale(state.asData!.value!.language));
   }
 }

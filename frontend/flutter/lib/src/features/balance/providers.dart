@@ -1,6 +1,6 @@
+import 'package:balance_home_app/config/providers.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
-import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/balance/application/balance_create_controller.dart';
 import 'package:balance_home_app/src/features/balance/application/balance_list_controller.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';

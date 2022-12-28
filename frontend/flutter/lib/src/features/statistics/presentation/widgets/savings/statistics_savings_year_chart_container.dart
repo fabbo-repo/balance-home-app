@@ -52,7 +52,7 @@ class StatisticsSavingsYearChartContainer extends ConsumerWidget {
               margin: const EdgeInsets.only(top: 20, bottom: 10),
               color: const Color.fromARGB(255, 194, 56, 235),
               height: 45,
-              width: (PlatformUtils().isSmallWindow(context))
+              width: (PlatformUtils().isSmallWindow())
                   ? screenWidth * 0.80
                   : screenWidth * 0.35,
               child: Center(
@@ -84,7 +84,7 @@ class StatisticsSavingsYearChartContainer extends ConsumerWidget {
         ),
         SizedBox(
             height: chartLineHeight,
-            width: (PlatformUtils().isSmallWindow(context))
+            width: (PlatformUtils().isSmallWindow())
                 ? screenWidth * 0.95
                 : screenWidth * 0.45,
             child: StatisticsSavingsYearLineChart(

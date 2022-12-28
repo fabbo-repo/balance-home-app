@@ -1,9 +1,7 @@
 import 'package:balance_home_app/config/app_layout.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/password_text_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/password_text_form_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/simple_text_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/invitation_code.dart';

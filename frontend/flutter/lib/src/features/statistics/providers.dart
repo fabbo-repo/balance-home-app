@@ -1,7 +1,8 @@
+import 'package:balance_home_app/config/providers.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
-import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/presentation/states/selected_date_state.dart';
+import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/providers.dart';
 import 'package:balance_home_app/src/features/coin/providers.dart';
 import 'package:balance_home_app/src/features/statistics/application/statistics_controller.dart';
@@ -71,6 +72,8 @@ final statisticsSavingsSelectedDateProvider =
 /// Selected exchange for statistic's currency chart
 final statisticsCurrencySelectedExchangeProvider =
     StateNotifierProvider<SelectedExchangeState, SelectedExchange>((ref) {
-  // TODO check  user preferred coin when is logged in
-  return SelectedExchangeState(coinFrom: "EUR", coinTo: "USD");
+  final user = ref.watch(authControllerProvider).asData?.value;
+  String coinFrom = user != null ? user.prefCoinType : "EUR";
+  String cointTo = coinFrom == "EUR" ? "USD" : "EUR";
+  return SelectedExchangeState(coinFrom: coinFrom, coinTo: cointTo);
 });

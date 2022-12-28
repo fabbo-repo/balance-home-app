@@ -40,7 +40,7 @@ class BalanaceLeftPanel extends ConsumerWidget {
           children: [
             SizedBox(
               height: chartLineHeight * 1.1,
-              width: PlatformUtils().isSmallWindow(context)
+              width: PlatformUtils().isSmallWindow()
                   ? screenWidth * 0.95
                   : screenWidth * 0.45,
               child: BalanceBarChart(
@@ -50,7 +50,7 @@ class BalanaceLeftPanel extends ConsumerWidget {
             if (selectedDate.selectedDateMode != SelectedDateMode.day)
               SizedBox(
                 height: chartLineHeight,
-                width: PlatformUtils().isSmallWindow(context)
+                width: PlatformUtils().isSmallWindow()
                     ? screenWidth * 0.95
                     : screenWidth * 0.45,
                 child: BalanceLineChart(

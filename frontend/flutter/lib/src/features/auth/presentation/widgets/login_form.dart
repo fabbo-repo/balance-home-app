@@ -121,6 +121,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                       text: appLocalizations.signIn)),
               TextButton(
                 onPressed: () {
+                  ref
+                      .read(resetPasswordControllerProvider.notifier)
+                      .resetProgress();
                   showResetPasswordAdviceDialog(appLocalizations);
                 },
                 child: Text(
@@ -134,7 +137,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       ),
     );
     return isLoading
-        ? Stack(alignment: AlignmentDirectional.centerStart, children: [
+        ? Stack(children: [
             cache,
             const LoadingWidget(color: Colors.grey),
           ])

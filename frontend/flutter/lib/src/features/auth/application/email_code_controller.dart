@@ -21,7 +21,6 @@ class EmailCodeController extends StateNotifier<AsyncValue<void>> {
     }, (email) async {
       final res = await _repository.requestCode(email);
       return res.fold((l) {
-        print("AAAAAAAAAAAAAAAAAAAAAAA"+l.error);
         state = AsyncValue.error(l.error, StackTrace.empty);
         String error = l.error.toLowerCase();
         if (error.startsWith("email") && error.contains("user not found")) {

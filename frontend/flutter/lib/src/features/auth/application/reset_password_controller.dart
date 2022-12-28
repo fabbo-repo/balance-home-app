@@ -15,16 +15,25 @@ class ResetPasswordController
   ResetPasswordController(this._repository)
       : super(const AsyncValue.data(ResetPasswordProgress.none));
 
+  void resetProgress() {
+    state = const AsyncValue.data(ResetPasswordProgress.none);
+  }
+
   Future<Either<Failure, bool>> requestCode(
-      UserEmail email, AppLocalizations appLocalizations) async {
+      UserEmail email, AppLocalizations appLocalizations,
+      {bool retry = false}) async {
     state = const AsyncValue.loading();
     return await email.value.fold((l) {
-      state = const AsyncValue.data(ResetPasswordProgress.none);
+      state = !retry
+          ? const AsyncValue.data(ResetPasswordProgress.none)
+          : const AsyncValue.data(ResetPasswordProgress.started);
       return left(l);
     }, (email) async {
       final res = await _repository.requestCode(email);
       return res.fold((l) {
-        state = const AsyncValue.data(ResetPasswordProgress.none);
+        state = !retry
+            ? const AsyncValue.data(ResetPasswordProgress.none)
+            : const AsyncValue.data(ResetPasswordProgress.started);
         String error = l.error.toLowerCase();
         if (error.startsWith("email") && error.contains("user not found")) {
           return left(Failure.unprocessableEntity(

@@ -16,32 +16,47 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-// ignore: must_be_immutable
-class ResetPasswordForm extends ConsumerWidget {
+class ResetPasswordForm extends ConsumerStatefulWidget {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _repeatPasswordController = TextEditingController();
   final _codeController = TextEditingController();
-  UserEmail? _email;
-  UserPassword? _password;
-  UserRepeatPassword? _repeatPassword;
-  VerificationCode? _code;
-  Widget cache = Container();
 
   ResetPasswordForm({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ResetPasswordForm> createState() => _ResetPasswordFormState();
+}
+
+class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
+  UserEmail? _email;
+  UserPassword? _password;
+  UserRepeatPassword? _repeatPassword;
+  VerificationCode? _code;
+  Widget cache = Container();
+
+  @override
+  Widget build(BuildContext context) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
+    _email = UserEmail(appLocalizations, widget._emailController.text);
     final res = ref.watch(resetPasswordControllerProvider);
     final resetPasswordController =
         ref.read(resetPasswordControllerProvider.notifier);
     return res.when(data: (progress) {
+      if (progress == ResetPasswordProgress.started) {
+        _password =
+            UserPassword(appLocalizations, widget._passwordController.text);
+        _repeatPassword = UserRepeatPassword(
+            appLocalizations,
+            widget._passwordController.text,
+            widget._repeatPasswordController.text);
+        _code = VerificationCode(appLocalizations, widget._codeController.text);
+      }
       return Form(
-        key: _formKey,
+        key: widget._formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Padding(
           padding: const EdgeInsets.all(8),
@@ -56,7 +71,7 @@ class ResetPasswordForm extends ConsumerWidget {
                 readOnly: progress != ResetPasswordProgress.none,
                 maxCharacters: 300,
                 maxWidth: 400,
-                controller: _emailController,
+                controller: widget._emailController,
               ),
               space(),
               PasswordTextFormField(
@@ -67,17 +82,17 @@ class ResetPasswordForm extends ConsumerWidget {
                 readOnly: progress != ResetPasswordProgress.started,
                 maxCharacters: 500,
                 maxWidth: 400,
-                controller: _passwordController,
+                controller: widget._passwordController,
               ),
               PasswordTextFormField(
                 onChanged: (value) => _repeatPassword = UserRepeatPassword(
-                    appLocalizations, _passwordController.text, value),
+                    appLocalizations, widget._passwordController.text, value),
                 title: appLocalizations.repeatPassword,
                 validator: (value) => _repeatPassword?.validate,
                 readOnly: progress != ResetPasswordProgress.started,
                 maxCharacters: 500,
                 maxWidth: 400,
-                controller: _repeatPasswordController,
+                controller: widget._repeatPasswordController,
               ),
               space(),
               SimpleTextFormField(
@@ -88,18 +103,20 @@ class ResetPasswordForm extends ConsumerWidget {
                 readOnly: progress != ResetPasswordProgress.started,
                 maxCharacters: 6,
                 maxWidth: 200,
-                controller: _codeController,
+                controller: widget._codeController,
                 textAlign: TextAlign.center,
               ),
               space(),
               ElevatedButton(
                 onPressed: () async {
-                  if (!_formKey.currentState!.validate()) {
+                  if (progress == ResetPasswordProgress.none &&
+                      !widget._formKey.currentState!.validate()) {
                     return;
                   }
                   if (_email == null) return;
                   (await resetPasswordController.requestCode(
-                          _email!, appLocalizations))
+                          _email!, appLocalizations,
+                          retry: progress == ResetPasswordProgress.started))
                       .fold((l) {
                     showErrorResetPasswordCodeDialog(appLocalizations, l.error);
                   }, (r) {});
@@ -113,8 +130,8 @@ class ResetPasswordForm extends ConsumerWidget {
                 onPressed: progress != ResetPasswordProgress.started
                     ? null
                     : () async {
-                        if (_formKey.currentState == null ||
-                            !_formKey.currentState!.validate()) {
+                        if (widget._formKey.currentState == null ||
+                            !widget._formKey.currentState!.validate()) {
                           return;
                         }
                         if (_email == null) return;

@@ -56,7 +56,7 @@ class HttpService {
       }
       return response;
     } catch (e) {
-      log(e.toString());
+      log("${Uri.parse("$baseUrl$subPath")} -> $e");
       return HttpResponse(500, {"message": e.toString()});
     }
   }
@@ -75,7 +75,7 @@ class HttpService {
       }
       return response;
     } catch (e) {
-      log(e.toString());
+      log("${Uri.parse("$baseUrl$subPath")} -> $e");
       return HttpResponse(500, {"message": e.toString()});
     }
   }
@@ -103,7 +103,7 @@ class HttpService {
       }
       return response;
     } catch (e) {
-      log(e.toString());
+      log("${Uri.parse("$baseUrl$subPath")} -> $e");
       return HttpResponse(500, {"message": e.toString()});
     }
   }
@@ -122,7 +122,7 @@ class HttpService {
       }
       return response;
     } catch (e) {
-      log(e.toString());
+      log("${Uri.parse("$baseUrl$subPath")} -> $e");
       return HttpResponse(500, {"message": e.toString()});
     }
   }
@@ -141,7 +141,7 @@ class HttpService {
       }
       return response;
     } catch (e) {
-      log(e.toString());
+      log("${Uri.parse("$baseUrl$subPath")} -> $e");
       return HttpResponse(500, {"message": e.toString()});
     }
   }
@@ -157,7 +157,7 @@ class HttpService {
       }
       return response;
     } catch (e) {
-      log(e.toString());
+      log("${Uri.parse("$baseUrl$subPath")} -> $e");
       return HttpResponse(500, {"message": e.toString()});
     }
   }
@@ -182,7 +182,7 @@ class HttpService {
       }
       // If 401 is recived it should be tried with stored credentials
       if (newResponse.statusCode == 401) {
-        _jwtEntity = null; // Current token is not valid
+        setJwtEntity(null); // Current token is not valid
         String? email = await _secureStorage.read(key: "email");
         String? password = await _secureStorage.read(key: "password");
         if (email != null && password != null) {
@@ -194,15 +194,15 @@ class HttpService {
                       .toJson())));
           if (newResponse.statusCode != 401) {
             // Update current JWT
-            _jwtEntity = JwtEntity.fromJson(newResponse.content);
+            setJwtEntity(JwtEntity.fromJson(newResponse.content));
             return true;
           }
         }
       } else if (_jwtEntity != null) {
         // Update current JWT
-        _jwtEntity = JwtEntity(
+        setJwtEntity(JwtEntity(
             access: newResponse.content["access"],
-            refresh: _jwtEntity!.refresh);
+            refresh: _jwtEntity!.refresh));
         return true;
       }
     }
@@ -232,4 +232,3 @@ class HttpResponse {
 
   HttpResponse(this.statusCode, this.content);
 }
- 

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:balance_home_app/config/platform_utils.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/chart_indicator.dart';
 import 'package:balance_home_app/src/core/providers.dart';
@@ -23,7 +24,10 @@ class BalanceLineChart extends ConsumerWidget {
   SideTitles get bottomTitles => SideTitles(
         showTitles: true,
         reservedSize: 22,
-        interval: 1,
+        interval: PlatformUtils().isSmallWindow() &&
+                selectedDateMode == SelectedDateMode.month
+            ? 2
+            : 1,
         getTitlesWidget: (double value, TitleMeta meta) {
           const style = TextStyle(
             color: Colors.black,
@@ -31,7 +35,7 @@ class BalanceLineChart extends ConsumerWidget {
           );
           String tittle = (selectedDateMode == SelectedDateMode.year)
               ? monthList[value.toInt() - 1]
-              : "$value";
+              : "${value.toInt()}";
           return SideTitleWidget(
             axisSide: meta.axisSide,
             space: 5,
@@ -45,13 +49,14 @@ class BalanceLineChart extends ConsumerWidget {
           const style = TextStyle(
             color: Color(0xff75729e),
             fontWeight: FontWeight.bold,
-            fontSize: 14,
+            fontSize: 12,
           );
-          return Text("$value", style: style, textAlign: TextAlign.center);
+          return Text("${value.toInt()}",
+              style: style, textAlign: TextAlign.center);
         },
         showTitles: true,
         interval: (getMaxQuantity() / 5).ceilToDouble(),
-        reservedSize: 40,
+        reservedSize: 30,
       );
 
   /// Border chart side tittles setup

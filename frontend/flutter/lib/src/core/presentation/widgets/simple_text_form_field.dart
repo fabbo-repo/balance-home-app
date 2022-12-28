@@ -43,8 +43,8 @@ class SimpleTextFormField extends StatelessWidget {
         children: [
           Container(
             constraints: BoxConstraints(
-              maxHeight: maxHeight ?? double.infinity,
-              maxWidth: maxWidth ?? 700),
+                maxHeight: maxHeight ?? double.infinity,
+                maxWidth: maxWidth ?? 700),
             padding: const EdgeInsets.all(10),
             child: TextFormField(
               keyboardType: multiLine ? TextInputType.multiline : null,
@@ -79,9 +79,11 @@ class SimpleTextFormField extends StatelessWidget {
                         ? Colors.black
                         : Colors.white),
                 filled: true,
-                fillColor: Theme.of(context).brightness == Brightness.light
-                    ? Colors.white
-                    : const Color.fromARGB(255, 119, 119, 119),
+                fillColor: readOnly != null && readOnly!
+                    ? const Color.fromARGB(108, 167, 167, 167)
+                    : Theme.of(context).brightness == Brightness.light
+                        ? Colors.white
+                        : const Color.fromARGB(255, 119, 119, 119),
               ),
             ),
           ),

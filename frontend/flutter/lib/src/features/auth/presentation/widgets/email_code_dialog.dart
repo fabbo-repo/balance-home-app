@@ -1,7 +1,6 @@
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/simple_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
-import 'package:balance_home_app/src/features/auth/domain/entities/email_code_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/verification_code.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';

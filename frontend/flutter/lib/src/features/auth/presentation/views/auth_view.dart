@@ -7,7 +7,6 @@ import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.da
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/presentation/widgets/login_form.dart';
 import 'package:balance_home_app/src/features/auth/presentation/widgets/register_form.dart';
-import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/coin/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,7 +38,6 @@ class AuthView extends ConsumerWidget {
     final appLocalizationStateNotifier =
         ref.read(appLocalizationsProvider.notifier);
     final coinTypeListController = ref.watch(coinTypeListsControllerProvider);
-
     return Scaffold(
       appBar: AppBar(
           title: const AppTittle(fontSize: 30),

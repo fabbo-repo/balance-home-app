@@ -25,7 +25,7 @@ class BalanceHomeAppState extends ConsumerState<BalanceHomeApp> {
         // In the app build, the context does not contain an AppLocalizations instance.
         // However, at the moment the title is ggoing to be generated 
         // the AppLocalizations instance is not null
-        final appLocalizations = ref.watch(appLocalizationsProvider);
+        final appLocalizations = ref.read(appLocalizationsProvider);
         return appLocalizations.appTitle;
       },
       localizationsDelegates: AppLocalizations.localizationsDelegates,

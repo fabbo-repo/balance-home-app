@@ -40,7 +40,7 @@ class CustomAppBar extends ConsumerWidget {
           : null,
       leadingWidth: (PlatformUtils().isLargeWindow(context) ||
               PlatformUtils().isMediumWindow(context))
-          ? MediaQuery.of(context).size.width
+          ? 250
           : 0,
       actions: [_profileButton(user!)],
     );

@@ -87,9 +87,11 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
                         ? Colors.black
                         : Colors.white),
                 filled: true,
-                fillColor: Theme.of(context).brightness == Brightness.light
-                    ? Colors.white
-                    : const Color.fromARGB(255, 119, 119, 119),
+                fillColor: widget.readOnly != null && widget.readOnly!
+                    ? const Color.fromARGB(108, 167, 167, 167)
+                    : Theme.of(context).brightness == Brightness.light
+                        ? Colors.white
+                        : const Color.fromARGB(255, 119, 119, 119),
                 suffixIcon: InkWell(
                   onTap: () {
                     setState(() {
