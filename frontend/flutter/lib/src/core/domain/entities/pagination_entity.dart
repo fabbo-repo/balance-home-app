@@ -1,29 +1,27 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'pagination_entity.freezed.dart';
 part 'pagination_entity.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.snake)
-class PaginationEntity extends Equatable {
+/// [PaginationEntity] model
+@freezed
+class PaginationEntity with _$PaginationEntity {
+  
+  /// Factory constructor
+  /// [count] - [int] number of elements in results for all pages
+  /// [next] - [String] next page url
+  /// [previous] - [String] previous page url
+  /// [results] - [List] results list
+  // ignore: invalid_annotation_target
+  @JsonSerializable(fieldRename: FieldRename.snake)
+  const factory PaginationEntity({
+      required int count,
+      String? next,
+      String? previous,
+      required List<dynamic> results,
+  }) = _PaginationEntity;
 
-  final int count;
-  final String? next;
-  final String? previous;
-  final List<dynamic> results;
-
-  const PaginationEntity({
-      required this.count,
-      this.next,
-      this.previous,
-      required this.results,
-  });
-
-  // Json Serializable
+  // Serialization
   factory PaginationEntity.fromJson(Map<String, dynamic> json) =>
     _$PaginationEntityFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PaginationEntityToJson(this);
-
-  @override
-  List<Object?> get props => [];
 }

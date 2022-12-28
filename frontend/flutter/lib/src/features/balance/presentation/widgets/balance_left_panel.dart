@@ -1,65 +1,69 @@
-import 'package:balance_home_app/src/core/infrastructure/datasources/selected_date_enum.dart';
-import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
-import 'package:balance_home_app/src/core/services/platform_service.dart';
+import 'package:balance_home_app/config/app_colors.dart';
+import 'package:balance_home_app/config/platform_utils.dart';
+import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
+import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/date_util.dart';
-import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
-import 'package:balance_home_app/src/features/balance/logic/providers/balance_provider.dart';
+import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
+import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_bar_chart.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_line_chart.dart';
+import 'package:balance_home_app/src/features/balance/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BalanaceLeftPanel extends ConsumerWidget {
-  final BalanceTypeEnum balanceType;
-  
-  const BalanaceLeftPanel({
-    required this.balanceType,
-    super.key
-  });
+  final List<BalanceEntity> balances;
+  final BalanceTypeMode balanceTypeMode;
+
+  const BalanaceLeftPanel({required this.balances, required this.balanceTypeMode, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
-    final selectedBalanceDate = (balanceType == BalanceTypeEnum.expense) ? 
-      ref.watch(selectedExpenseDateStateNotifierProvider).date 
-      : ref.watch(selectedRevenueDateStateNotifierProvider).date;
-    final balanceListProvider = (balanceType == BalanceTypeEnum.expense) ? 
-      ref.watch(expenseListProvider) : ref.watch(revenueListProvider);
+    final appLocalizations = ref.watch(appLocalizationsProvider);
+    final selectedDate = balanceTypeMode == BalanceTypeMode.expense
+        ? ref.watch(expenseSelectedDateProvider)
+        : ref.watch(revenueSelectedDateProvider);
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    double chartLineHeight = (screenHeight * 0.45 <= 300) ? 
-      300 : (screenHeight * 0.45 <= 400) ? screenHeight * 0.45 : 400;
+    double chartLineHeight = (screenHeight * 0.45 <= 300)
+        ? 300
+        : (screenHeight * 0.45 <= 400)
+            ? screenHeight * 0.45
+            : 400;
     return Container(
       constraints: const BoxConstraints.expand(),
-      color: (balanceType == BalanceTypeEnum.expense) ?
-        const Color.fromARGB(254, 255, 236, 215) : 
-        const Color.fromARGB(254, 223, 237, 214),
+      color: balanceTypeMode == BalanceTypeMode.expense
+          ? AppColors.expenseBackgroundColor
+          : AppColors.revenueBackgroundColor,
       child: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
               height: chartLineHeight * 1.1,
-              width: (PlatformService().isSmallWindow(context)) ? 
-                screenWidth * 0.95 : screenWidth * 0.45,
+              width: PlatformUtils().isSmallWindow()
+                  ? screenWidth * 0.95
+                  : screenWidth * 0.45,
               child: BalanceBarChart(
-                balances: balanceListProvider.models,
-                balanceType: balanceType
-              ),
+                  balances: balances,
+                  balanceType: balanceTypeMode),
             ),
-            if (selectedBalanceDate.selectedDateMode != SelectedDateEnum.day) 
+            if (selectedDate.selectedDateMode != SelectedDateMode.day)
               SizedBox(
                 height: chartLineHeight,
-                width: (PlatformService().isSmallWindow(context)) ? 
-                  screenWidth * 0.95 : screenWidth * 0.45,
+                width: PlatformUtils().isSmallWindow()
+                    ? screenWidth * 0.95
+                    : screenWidth * 0.45,
                 child: BalanceLineChart(
                   monthList: DateUtil.getMonthList(appLocalizations),
-                  revenues: (balanceType == BalanceTypeEnum.revenue) ? 
-                    balanceListProvider.models : null,
-                  expenses: (balanceType == BalanceTypeEnum.expense) ? 
-                    balanceListProvider.models : null,
-                  dateType: selectedBalanceDate.selectedDateMode,
-                  selectedMonth: selectedBalanceDate.month,
-                  selectedYear: selectedBalanceDate.year,
+                  revenues: (balanceTypeMode == BalanceTypeMode.revenue)
+                      ? balances
+                      : null,
+                  expenses: balanceTypeMode == BalanceTypeMode.expense
+                      ? balances
+                      : null,
+                  selectedDateMode: selectedDate.selectedDateMode,
+                  selectedMonth: selectedDate.month,
+                  selectedYear: selectedDate.year,
                 ),
               )
           ],

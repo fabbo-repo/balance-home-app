@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
+import 'package:balance_home_app/src/core/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,7 +9,7 @@ class AppTittle extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appLocalizations = ref.watch(localizationStateNotifierProvider).localization;
+    final appLocalizations = ref.watch(appLocalizationsProvider);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

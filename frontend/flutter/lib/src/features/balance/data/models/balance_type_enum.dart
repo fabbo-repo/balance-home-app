@@ -1,4 +1,0 @@
-enum BalanceTypeEnum {
-  revenue,
-  expense
-}

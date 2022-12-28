@@ -1,9 +1,10 @@
 import 'dart:math';
-import 'package:balance_home_app/src/core/infrastructure/datasources/selected_date_enum.dart';
+import 'package:balance_home_app/config/platform_utils.dart';
+import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/chart_indicator.dart';
-import 'package:balance_home_app/src/core/providers/localization/localization_provider.dart';
-import 'package:balance_home_app/src/features/balance/data/models/balance_model.dart';
-import 'package:balance_home_app/src/features/balance/data/models/balance_type_enum.dart';
+import 'package:balance_home_app/src/core/providers.dart';
+import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
+import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,15 +24,18 @@ class BalanceLineChart extends ConsumerWidget {
   SideTitles get bottomTitles => SideTitles(
         showTitles: true,
         reservedSize: 22,
-        interval: 1,
+        interval: PlatformUtils().isSmallWindow() &&
+                selectedDateMode == SelectedDateMode.month
+            ? 2
+            : 1,
         getTitlesWidget: (double value, TitleMeta meta) {
           const style = TextStyle(
             color: Colors.black,
             fontSize: 12,
           );
-          String tittle = (dateType == SelectedDateEnum.year)
+          String tittle = (selectedDateMode == SelectedDateMode.year)
               ? monthList[value.toInt() - 1]
-              : "$value";
+              : "${value.toInt()}";
           return SideTitleWidget(
             axisSide: meta.axisSide,
             space: 5,
@@ -45,13 +49,14 @@ class BalanceLineChart extends ConsumerWidget {
           const style = TextStyle(
             color: Color(0xff75729e),
             fontWeight: FontWeight.bold,
-            fontSize: 14,
+            fontSize: 12,
           );
-          return Text("$value", style: style, textAlign: TextAlign.center);
+          return Text("${value.toInt()}",
+              style: style, textAlign: TextAlign.center);
         },
         showTitles: true,
         interval: (getMaxQuantity() / 5).ceilToDouble(),
-        reservedSize: 40,
+        reservedSize: 30,
       );
 
   /// Border chart side tittles setup
@@ -77,13 +82,13 @@ class BalanceLineChart extends ConsumerWidget {
 
   /// List of revenues. If empty then all revenues are
   /// set to 0, if `null` then revenue line are not shown
-  final List<BalanceModel>? revenues;
+  final List<BalanceEntity>? revenues;
 
   /// List of expenses. If empty then all expenses are
   /// set to 0, if `null` then expense line are not shown
-  final List<BalanceModel>? expenses;
+  final List<BalanceEntity>? expenses;
 
-  final SelectedDateEnum dateType;
+  final SelectedDateMode selectedDateMode;
 
   /// Required for `SelectedDate.month` as [dateType]
   final int? selectedMonth;
@@ -95,15 +100,14 @@ class BalanceLineChart extends ConsumerWidget {
       {required this.monthList,
       required this.revenues,
       required this.expenses,
-      required this.dateType,
+      required this.selectedDateMode,
       required this.selectedMonth,
       required this.selectedYear,
       super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appLocalizations =
-        ref.watch(localizationStateNotifierProvider).localization;
+    final appLocalizations = ref.watch(appLocalizationsProvider);
     return Padding(
       padding: const EdgeInsets.all(15),
       child: Column(
@@ -116,12 +120,12 @@ class BalanceLineChart extends ConsumerWidget {
                 borderData: borderData,
                 lineBarsData: [
                   if (revenues != null)
-                    balancesChartBarData(revenues!, BalanceTypeEnum.revenue),
+                    balancesChartBarData(revenues!, BalanceTypeMode.revenue),
                   if (expenses != null)
-                    balancesChartBarData(expenses!, BalanceTypeEnum.expense),
+                    balancesChartBarData(expenses!, BalanceTypeMode.expense),
                 ],
                 minX: 1,
-                maxX: (dateType == SelectedDateEnum.year)
+                maxX: selectedDateMode == SelectedDateMode.year
                     ? 12
                     : DateUtils.getDaysInMonth(
                             selectedYear ?? DateTime.now().year,
@@ -159,11 +163,11 @@ class BalanceLineChart extends ConsumerWidget {
 
   @visibleForTesting
   LineChartBarData balancesChartBarData(
-      List<BalanceModel> balances, BalanceTypeEnum balanceType) {
+      List<BalanceEntity> balances, BalanceTypeMode balanceType) {
     // Dictionary with balances quantities per month or day
     Map<int, double> spotsMap = {};
-    for (BalanceModel balance in balances) {
-      int key = (dateType == SelectedDateEnum.year)
+    for (BalanceEntity balance in balances) {
+      int key = selectedDateMode == SelectedDateMode.year
           ? balance.date.month
           : balance.date.day;
       if (spotsMap.containsKey(key)) {
@@ -172,12 +176,12 @@ class BalanceLineChart extends ConsumerWidget {
         spotsMap[key] = balance.quantity;
       }
     }
-    if (dateType == SelectedDateEnum.year) {
+    if (selectedDateMode == SelectedDateMode.year) {
       // Check unexistant months
       for (int month = 1; month <= 12; month++) {
         if (!spotsMap.containsKey(month)) spotsMap[month] = 0.0;
       }
-    } else if (dateType == SelectedDateEnum.month) {
+    } else if (selectedDateMode == SelectedDateMode.month) {
       int days = DateUtils.getDaysInMonth(selectedYear ?? DateTime.now().year,
           selectedMonth ?? DateTime.now().month);
       // Check unexistant days
@@ -193,7 +197,7 @@ class BalanceLineChart extends ConsumerWidget {
     return LineChartBarData(
         isCurved: true,
         preventCurveOverShooting: true,
-        color: (balanceType == BalanceTypeEnum.expense)
+        color: (balanceType == BalanceTypeMode.expense)
             ? const Color.fromARGB(188, 255, 17, 0)
             : const Color.fromARGB(184, 0, 175, 15),
         barWidth: 2,
@@ -201,7 +205,7 @@ class BalanceLineChart extends ConsumerWidget {
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(
           show: true,
-          color: (balanceType == BalanceTypeEnum.expense)
+          color: (balanceType == BalanceTypeMode.expense)
               ? const Color.fromARGB(55, 212, 117, 117)
               : const Color.fromARGB(55, 0, 175, 15),
         ),
@@ -213,8 +217,8 @@ class BalanceLineChart extends ConsumerWidget {
     double quantity = 4.0;
     Map<String, double> quantityMap = {};
     if (revenues != null) {
-      for (BalanceModel revenue in revenues!) {
-        String key = (dateType == SelectedDateEnum.year)
+      for (BalanceEntity revenue in revenues!) {
+        String key = selectedDateMode == SelectedDateMode.year
             ? "${revenue.date.month}"
             : "${revenue.date.day}";
         if (quantityMap.containsKey(key)) {
@@ -229,8 +233,8 @@ class BalanceLineChart extends ConsumerWidget {
     }
     quantityMap = {};
     if (expenses != null) {
-      for (BalanceModel expense in expenses!) {
-        String key = (dateType == SelectedDateEnum.year)
+      for (BalanceEntity expense in expenses!) {
+        String key = (selectedDateMode == SelectedDateMode.year)
             ? "${expense.date.month}"
             : "${expense.date.day}";
         if (quantityMap.containsKey(key)) {

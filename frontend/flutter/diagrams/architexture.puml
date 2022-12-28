@@ -1,0 +1,55 @@
+@startuml architecture
+
+component User
+
+User --> Presentation
+User <-- Presentation
+
+node Presentation {
+    skinparam borderColor Cyan
+    component Widgets
+    component RawData
+    Widgets - RawData
+    
+    component States
+    component Models
+
+    RawData --> Models
+    Widgets <-- States
+}
+
+node Application {
+    component Controllers
+
+    States <-- Controllers
+    Models --> Controllers
+}
+
+node Domain {
+    component ValueObjects
+    component Entities
+    component Failures
+
+    Entities --> Controllers
+    ValueObjects --> Controllers 
+    ValueObjects --> States
+    Failures --> Controllers 
+}
+
+node Infrastructure {
+    component Repositories
+    component LocalDataSources
+    component RemoteDataSources
+
+    Entities --> Repositories
+    Failures --> Repositories
+    Repositories <--> LocalDataSources
+    Repositories <--> RemoteDataSources
+}
+
+component API
+component LocalStorage
+LocalDataSources --> LocalStorage
+RemoteDataSources --> API
+
+@enduml

@@ -5,7 +5,7 @@ description: Revenues and expenses management.
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 0.0.3+3
+version: 0.0.4+4
 
 environment:
   sdk: '>=2.18.2 <3.0.0'
@@ -63,7 +63,7 @@ dependencies:
   syncfusion_flutter_charts: ^20.3.61
   # Env code generation
   envied: ^0.2.4
-  # Error handling
+  # Functional programing
   fpdart: ^0.4.0
   
 
