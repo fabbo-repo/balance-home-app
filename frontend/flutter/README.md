@@ -2,40 +2,61 @@
 
 Multiplatform frontend of Balance Home App, ```riverpod``` is used for state management and ```go_router``` for navigation.
 
+## Architecture diagram
+
+![Alt text](./diagrams/architecture.png?raw=true "")
+
 ## Directory tree example
 
-~~~bash
+~~~
 flutter/
     ├── lang
+    │   ├── app_colors.dart
+    │   ├── app_layout.dart
+    │   ├── providers.dart
+    │   ├── router.dart
+    │   ├── theme.dart
+    │   ├── environment.dart
+    │   └── ...
+    ├── config
     │   ├── app_en.arb
     │   └── ...
     ├── src
     │   ├── core
-    │   |   ├── data
+    │   |   ├── application
+    |   │   |   ├── controller1.dart
+    |   │   |   └── ...
+    │   |   ├── domain
+    |   │   |   ├── entities
+    |   │   |   ├── failures
     |   │   |   ├── repositories
-    |   │   |   └── models
-    │   |   ├── env
-    │   |   ├── exceptions
-    │   |   ├── forms
-    │   |   ├── providers
-    │   |   ├── services
-    │   |   ├── views
-    │   |   └── widgets
+    |   │   |   └── values
+    │   |   ├── infrastructure
+    |   │   |   ├── datasources
+    |   │   |   |   |── local
+    |   │   |   |   └── remote
+    |   │   |   └── repositories
+    │   |   ├── presentation
+    │   |   └── providers.dart
     │   ├── features
     │   |   ├── feature1
-    │   |   |   ├── data
-    |   │   |   |   ├── repositories
-    |   │   |   |   └── models
-    │   |   |   ├── logic
-    |   │   |   |   └── providers
-    │   |   |   └── presentation
-    |   │   |       ├── forms
-    |   │   |       ├── widgets
-    |   │   |       └── views
+    |   │   |   ├── application
+    |   |   │   |   ├── controller1.dart
+    |   |   │   |   └── ...
+    |   │   |   ├── domain
+    |   |   │   |   ├── entities
+    |   |   │   |   ├── failures
+    |   |   │   |   ├── repositories
+    |   |   │   |   └── values
+    |   │   |   ├── infrastructure
+    |   |   │   |   ├── datasources
+    |   |   │   |   |   |── local
+    |   |   │   |   |   └── remote
+    |   |   │   |   └── repositories
+    |   │   |   ├── presentation
+    |   │   |   └── providers.dart
     │   |   └── ...
-    │   ├── navigation
-    │   |   ├── router_provider.dart
-    │   |   └── router.dart
+    │   |── bootstrap.dart
     │   └── app.dart
     └── main.dart
 ~~~
