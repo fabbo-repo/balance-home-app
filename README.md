@@ -1,4 +1,4 @@
-![Alt text](./frontend/flutter/assets/images/balance_home_app_icon.png?raw=true "")
+![Alt text](./balance_home_app.png?raw=true "")
 
 # Balance Home App or *BalHom*
 
