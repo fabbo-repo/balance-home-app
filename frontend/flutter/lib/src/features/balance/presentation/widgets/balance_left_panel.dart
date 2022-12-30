@@ -20,6 +20,7 @@ class BalanaceLeftPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
+    final theme = ref.watch(themeModeProvider);
     final selectedDate = balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseSelectedDateProvider)
         : ref.watch(revenueSelectedDateProvider);
@@ -33,14 +34,18 @@ class BalanaceLeftPanel extends ConsumerWidget {
     return Container(
       constraints: const BoxConstraints.expand(),
       color: balanceTypeMode == BalanceTypeMode.expense
-          ? AppColors.expenseBackgroundColor
-          : AppColors.revenueBackgroundColor,
+          ? theme == ThemeMode.dark
+              ? AppColors.expenseBackgroundDarkColor
+              : AppColors.expenseBackgroundLightColor
+          : theme == ThemeMode.dark
+              ? AppColors.revenueBackgroundDarkColor
+              : AppColors.revenueBackgroundLightColor,
       child: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
               height: chartLineHeight * 1.1,
-              width: PlatformUtils().isSmallWindow()
+              width: PlatformUtils().isSmallWindow(context)
                   ? screenWidth * 0.95
                   : screenWidth * 0.45,
               child: BalanceBarChart(
@@ -50,7 +55,7 @@ class BalanaceLeftPanel extends ConsumerWidget {
             if (selectedDate.selectedDateMode != SelectedDateMode.day)
               SizedBox(
                 height: chartLineHeight,
-                width: PlatformUtils().isSmallWindow()
+                width: PlatformUtils().isSmallWindow(context)
                     ? screenWidth * 0.95
                     : screenWidth * 0.45,
                 child: BalanceLineChart(

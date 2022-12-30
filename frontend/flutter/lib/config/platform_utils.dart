@@ -1,4 +1,3 @@
-import 'package:balance_home_app/config/router.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 // ignore: depend_on_referenced_packages
@@ -29,14 +28,14 @@ class PlatformUtils {
   
   // Whether the platform window is considered as large
   bool isLargeWindow(BuildContext context) =>
-    getWindowType(navigatorKey.currentContext!) >= AdaptiveWindowType.large;
+    getWindowType(context) >= AdaptiveWindowType.large;
   
   // Whether the platform window is considered as medium
   bool isMediumWindow(BuildContext context) =>
-    getWindowType(navigatorKey.currentContext!) == AdaptiveWindowType.medium;
+    getWindowType(context) == AdaptiveWindowType.medium;
   
   // Whether the platform window is considered as small
-  bool isSmallWindow() =>
-    getWindowType(navigatorKey.currentContext!) == AdaptiveWindowType.small 
-    || getWindowType(navigatorKey.currentContext!) == AdaptiveWindowType.xsmall;
+  bool isSmallWindow(BuildContext context) =>
+    getWindowType(context) == AdaptiveWindowType.small 
+    || getWindowType(context) == AdaptiveWindowType.xsmall;
 }

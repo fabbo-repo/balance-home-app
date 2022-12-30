@@ -11,29 +11,33 @@ class ErrorView extends ConsumerWidget {
 
   /// Path route for [ErrorView].
   static const String routePath = 'error';
+  
+  /// Path route for [ErrorView] with not found error.
+  static const String notFoundPath = 'not-found';
 
   final String location;
 
-  const ErrorView({
-    required this.location,
-    super.key
-  });
+  const ErrorView({required this.location, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
     return Scaffold(
       body: CustomErrorWidget(
-        text: (location == '/$routePath') ? 
-        appLocalizations.genericError
-        : appLocalizations.pageNotFound,
+        text: (location == '/$routePath')
+            ? appLocalizations.genericError
+            : appLocalizations.pageNotFound,
       ),
     );
   }
 
-  /// Redirects current view to [ErrorView].
+  /// Redirects current view to [ErrorView] using a gneric error.
   static void go() {
-    navigatorKey.currentContext!
-      .go('/$routePath');
+    navigatorKey.currentContext!.go('/$routePath');
+  }
+  
+  /// Redirects current view to [ErrorView] using a not found error.
+  static void go404() {
+    navigatorKey.currentContext!.go('/$notFoundPath');
   }
 }

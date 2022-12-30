@@ -63,12 +63,12 @@ def update_exchange_data():
     """
     Create a new CoinExchange for today
     """
-    last_coin_exchange = CoinExchange.objects.last()
+    first_coin_exchange = CoinExchange.objects.first()
     currency_converter = get_converter_from_settings()
     # A coin exchange for today should be created if there is no coin exchange 
-    # or the last one created has a date diferent compàred to today
-    if not last_coin_exchange \
-        or last_coin_exchange.created.date() != now().date():
+    # or the newest one created has a date diferent compared to today
+    if not first_coin_exchange \
+        or first_coin_exchange.created.date() != now().date():
         CoinExchange.objects.create(
             exchange_data = json.dumps(
                 dict(currency_converter.get_currency_data().data))

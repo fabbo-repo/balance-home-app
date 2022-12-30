@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-16 12:30+0100\n"
+"POT-Creation-Date: 2022-12-30 16:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -146,37 +146,41 @@ msgstr "Inglés"
 msgid "Spanish"
 msgstr "Español"
 
-#: .\custom_auth\api\serializers\code_serializers.py:30
-#: .\custom_auth\api\serializers\code_serializers.py:98
+#: .\custom_auth\api\serializers\code_serializers.py:32
+#: .\custom_auth\api\serializers\code_serializers.py:108
 msgid "Code has already been sent, wait {} seconds"
 msgstr "El código se ha enviado, espere {} segundos"
 
-#: .\custom_auth\api\serializers\code_serializers.py:62
-#: .\custom_auth\api\serializers\code_serializers.py:127
+#: .\custom_auth\api\serializers\code_serializers.py:66
+#: .\custom_auth\api\serializers\code_serializers.py:141
 msgid "No code sent"
 msgstr "Ningún código enviado"
 
-#: .\custom_auth\api\serializers\code_serializers.py:67
-#: .\custom_auth\api\serializers\code_serializers.py:132
+#: .\custom_auth\api\serializers\code_serializers.py:71
+#: .\custom_auth\api\serializers\code_serializers.py:146
 msgid "Code is no longer valid"
 msgstr "El código ya no es válido"
 
-#: .\custom_auth\api\serializers\code_serializers.py:69
-#: .\custom_auth\api\serializers\code_serializers.py:135
+#: .\custom_auth\api\serializers\code_serializers.py:73
+#: .\custom_auth\api\serializers\code_serializers.py:149
 msgid "Invalid code"
 msgstr "Código invalido"
 
-#: .\custom_auth\api\serializers\code_serializers.py:89
-#: .\custom_auth\api\serializers\code_serializers.py:120
+#: .\custom_auth\api\serializers\code_serializers.py:93
+#: .\custom_auth\api\serializers\code_serializers.py:133
 #: .\custom_auth\api\serializers\utils.py:13
 msgid "User not found"
 msgstr "Usuario no encontrado"
 
-#: .\custom_auth\api\serializers\code_serializers.py:156
+#: .\custom_auth\api\serializers\code_serializers.py:104
+msgid "Only three codes can be sent per day"
+msgstr "Solo se pueden enviar tres códigos por día"
+
+#: .\custom_auth\api\serializers\code_serializers.py:170
 msgid "New password must be different from old password"
 msgstr "La contraseña nueva debe ser distinta que la antigua"
 
-#: .\custom_auth\api\serializers\code_serializers.py:159
+#: .\custom_auth\api\serializers\code_serializers.py:173
 msgid "Invalid old password"
 msgstr "Contraseña antigua inválida"
 
@@ -197,12 +201,12 @@ msgid "Invalid refresh token"
 msgstr "Token de actualización no válido"
 
 #: .\custom_auth\api\serializers\user_serializers.py:63
-#: .\custom_auth\models.py:172
+#: .\custom_auth\models.py:177
 msgid "Language not supported"
 msgstr "Lenguaje no soportado"
 
 #: .\custom_auth\api\serializers\user_serializers.py:75
-#: .\custom_auth\models.py:178
+#: .\custom_auth\models.py:183
 msgid "Username and email can not be the same"
 msgstr "Nombre de usuario y correo electrónico no pueden contener lo mismo"
 
@@ -218,7 +222,7 @@ msgstr "La contraseña nueva no puede coincidir con otro dato del perfil"
 msgid "Password fields do not match"
 msgstr "Los campos de contraseña no coinciden"
 
-#: .\custom_auth\api\serializers\utils.py:36 .\custom_auth\models.py:175
+#: .\custom_auth\api\serializers\utils.py:36 .\custom_auth\models.py:180
 msgid "Password cannot match other profile data"
 msgstr "La contraseña no puede coincidir con otro dato del perfil"
 
@@ -319,6 +323,10 @@ msgid "date of last password reset code sent"
 msgstr "fecha del último código de restablecimiento de contraseña enviado"
 
 #: .\custom_auth\models.py:158
+msgid "number of requests for password reset code"
+msgstr "número de solicitudes para el restablecimiento de contraseña"
+
+#: .\custom_auth\models.py:163
 msgid "preferred coin type"
 msgstr "tipo de moneda preferida"
 

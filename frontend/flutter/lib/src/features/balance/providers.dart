@@ -3,7 +3,9 @@ import 'package:balance_home_app/src/core/presentation/models/selected_date.dart
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/features/balance/application/balance_create_controller.dart';
 import 'package:balance_home_app/src/features/balance/application/balance_list_controller.dart';
+import 'package:balance_home_app/src/features/balance/application/balance_type_list_controller.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
+import 'package:balance_home_app/src/features/balance/domain/entities/balance_type_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_repository_interface.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_respository_interface.dart';
@@ -58,7 +60,21 @@ final expenseCreateControllerProvider =
     StateNotifierProvider<BalanceCreateController, AsyncValue<BalanceEntity?>>(
         (ref) {
   final repo = ref.watch(balanceRepositoryProvider);
-  return BalanceCreateController(repo, BalanceTypeMode.revenue);
+  return BalanceCreateController(repo, BalanceTypeMode.expense);
+});
+
+final revenueTypeListControllerProvider = StateNotifierProvider<
+    BalanceTypeListController, AsyncValue<List<BalanceTypeEntity>>>((ref) {
+  final repo = ref.watch(balanceTypeRepositoryProvider);
+  const balanceTypeMode = BalanceTypeMode.revenue;
+  return BalanceTypeListController(repo, balanceTypeMode);
+});
+
+final expenseTypeListControllerProvider = StateNotifierProvider<
+    BalanceTypeListController, AsyncValue<List<BalanceTypeEntity>>>((ref) {
+  final repo = ref.watch(balanceTypeRepositoryProvider);
+  const balanceTypeMode = BalanceTypeMode.expense;
+  return BalanceTypeListController(repo, balanceTypeMode);
 });
 
 ///

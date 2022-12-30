@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-class SimpleTextFormField extends StatelessWidget {
+class CustomTextFormField extends StatelessWidget {
   final String title;
   final TextEditingController controller;
-  final String? error;
   final double? maxWidth;
   final double? maxHeight;
   final int? maxCharacters;
@@ -17,10 +16,9 @@ class SimpleTextFormField extends StatelessWidget {
   final Function()? onTap;
   final String? Function(String?)? validator;
 
-  const SimpleTextFormField(
+  const CustomTextFormField(
       {required this.title,
       required this.controller,
-      this.error,
       this.maxWidth,
       this.maxHeight,
       this.onChanged,
@@ -60,17 +58,12 @@ class SimpleTextFormField extends StatelessWidget {
               decoration: InputDecoration(
                 counterText: showCounterText ? null : '',
                 labelText: title,
-                errorText: error,
                 errorStyle: const TextStyle(fontSize: 14),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: (error != null && error != "")
-                      ? const BorderSide(color: Colors.red)
-                      : const BorderSide(color: Colors.black),
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: (error != null && error != "")
-                      ? const BorderSide(color: Colors.red)
-                      : const BorderSide(color: Colors.blue),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue),
                 ),
                 border: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black)),
