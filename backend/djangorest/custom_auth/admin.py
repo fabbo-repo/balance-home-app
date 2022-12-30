@@ -31,12 +31,14 @@ class UserAdmin(admin.ModelAdmin):
         'date_code_sent',
         'pass_reset', 
         'date_pass_reset',
+        'count_pass_reset',
         ('balance', 'pref_coin_type',),
         ('expected_annual_balance', 'expected_monthly_balance',),
     )
     readonly_fields = (
         'id', 'last_login', 'date_joined', 
-        'code_sent', 'date_code_sent', 'balance',
+        'code_sent', 'date_code_sent', 'pass_reset', 
+        'date_pass_reset', 'count_pass_reset', 'balance',
     )
     list_display = (
         'email', 

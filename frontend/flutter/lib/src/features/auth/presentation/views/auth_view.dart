@@ -48,7 +48,7 @@ class AuthView extends ConsumerWidget {
             decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage(
-                      (ref.watch(themeModeProvider) == ThemeMode.dark)
+                      ref.watch(themeModeProvider) == ThemeMode.dark
                           ? "assets/images/auth_background_dark_image.jpg"
                           : "assets/images/auth_background_image.jpg"),
                   fit: BoxFit.cover),

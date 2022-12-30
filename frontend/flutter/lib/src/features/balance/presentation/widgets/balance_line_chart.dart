@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:balance_home_app/config/platform_utils.dart';
+import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/chart_indicator.dart';
 import 'package:balance_home_app/src/core/providers.dart';
@@ -24,7 +25,7 @@ class BalanceLineChart extends ConsumerWidget {
   SideTitles get bottomTitles => SideTitles(
         showTitles: true,
         reservedSize: 22,
-        interval: PlatformUtils().isSmallWindow() &&
+        interval: PlatformUtils().isSmallWindow(navigatorKey.currentContext!) &&
                 selectedDateMode == SelectedDateMode.month
             ? 2
             : 1,

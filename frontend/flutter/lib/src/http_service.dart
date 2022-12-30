@@ -186,7 +186,7 @@ class HttpService {
               Uri.parse("$baseUrl${APIContract.jwtRefresh}"),
               headers: getHeaders(),
               body: jsonEncode({"refresh": refreshJwt})));
-          if (newResponse.statusCode == 401) {
+          if (newResponse.statusCode != 401 && newResponse.statusCode != 400) {
             setJwtEntity(JwtEntity(
                 access: newResponse.content["access"], refresh: refreshJwt));
             return true;
@@ -194,7 +194,7 @@ class HttpService {
         }
       }
       // If 401 is recived it should be tried with stored credentials
-      if (newResponse.statusCode == 401) {
+      if (newResponse.statusCode == 401 && newResponse.statusCode != 400) {
         setJwtEntity(null); // Current token is not valid
         String? email = await _secureStorage.read(key: "email");
         String? password = await _secureStorage.read(key: "password");
@@ -205,7 +205,7 @@ class HttpService {
               body: jsonEncode(
                   CredentialsEntity(email: email, password: password)
                       .toJson())));
-          if (newResponse.statusCode != 401) {
+          if (newResponse.statusCode != 401 && newResponse.statusCode != 400) {
             // Update current JWT
             setJwtEntity(JwtEntity.fromJson(newResponse.content));
             return true;

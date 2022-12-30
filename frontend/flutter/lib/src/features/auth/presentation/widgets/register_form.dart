@@ -1,15 +1,15 @@
 import 'package:balance_home_app/config/app_layout.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/password_text_form_field.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/simple_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/simple_text_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/custom_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/invitation_code.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_name.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_password.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_repeat_password.dart';
-import 'package:balance_home_app/src/features/auth/presentation/views/utils.dart';
+import 'package:balance_home_app/src/core/utils/dialog_utils.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/coin/domain/entities/coin_type_entity.dart';
 import 'package:balance_home_app/src/features/coin/presentation/widgets/dropdown_picker_field.dart';
@@ -80,7 +80,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
-              SimpleTextFormField(
+              CustomTextFormField(
                 maxCharacters: 15,
                 maxWidth: 400,
                 title: appLocalizations.username,
@@ -90,7 +90,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 validator: (value) => _username?.validate,
               ),
               space(),
-              SimpleTextFormField(
+              CustomTextFormField(
                 title: appLocalizations.emailAddress,
                 maxWidth: 400,
                 maxCharacters: 300,
@@ -120,7 +120,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 validator: (value) => _repeatPassword?.validate,
               ),
               space(),
-              SimpleTextFormField(
+              CustomTextFormField(
                 title: appLocalizations.invitationCode,
                 maxWidth: 400,
                 maxCharacters: 36,
@@ -143,7 +143,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
               SizedBox(
                   height: 50,
                   width: 240,
-                  child: SimpleTextButton(
+                  child: CustomTextButton(
                       enabled: !isLoading,
                       onPressed: () async {
                         if (widget._formKey.currentState == null ||

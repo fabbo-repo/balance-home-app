@@ -3,6 +3,7 @@ import 'package:balance_home_app/src/core/presentation/widgets/error_dialog.dart
 import 'package:balance_home_app/src/core/presentation/widgets/info_dialog.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/reset_password_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/widgets/email_code_dialog.dart';
+import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -88,6 +89,19 @@ Future<void> showErrorEmailVerifiactionCodeDialog(
       context: navigatorKey.currentContext!,
       builder: (context) => ErrorDialog(
             dialogTitle: appLocalizations.emailVerifiactionCode,
+            dialogDescription: error,
+            cancelText: appLocalizations.cancel,
+          ));
+}
+
+Future<void> showErrorBalanceCreationDialog(AppLocalizations appLocalizations,
+    String error, BalanceTypeMode balanceTypeMode) async {
+  await showDialog(
+      context: navigatorKey.currentContext!,
+      builder: (context) => ErrorDialog(
+            dialogTitle: balanceTypeMode == BalanceTypeMode.expense
+                ? appLocalizations.expenseCreateDialogTitle
+                : appLocalizations.revenueCreateDialogTitle,
             dialogDescription: error,
             cancelText: appLocalizations.cancel,
           ));

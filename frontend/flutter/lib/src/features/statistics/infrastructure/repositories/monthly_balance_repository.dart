@@ -41,6 +41,7 @@ class MonthlyBalanceRepository implements MonthlyBalanceRepositoryInterface {
     List<MonthlyBalanceEntity> monthlyBalances =
         page.results.map((e) => MonthlyBalanceEntity.fromJson(e)).toList();
     while (page.next != null) {
+      pageNumber++;
       HttpResponse response = await httpService.sendGetRequest(
           '${APIContract.monthlyBalance}?page=$pageNumber$extraArgs');
       if (response.hasError) {
@@ -49,7 +50,6 @@ class MonthlyBalanceRepository implements MonthlyBalanceRepositoryInterface {
       page = PaginationEntity.fromJson(response.content);
       monthlyBalances +=
           page.results.map((e) => MonthlyBalanceEntity.fromJson(e)).toList();
-      pageNumber++;
     }
     return right(monthlyBalances);
   }

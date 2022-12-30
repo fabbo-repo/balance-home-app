@@ -2,7 +2,7 @@ from unittest import mock
 from django.test import TestCase
 from coin.tasks import periodic_update_exchange_data
 from coin.schedule_setup import schedule_setup
-from django_celery_beat.models import CrontabSchedule
+from django_celery_beat.models import IntervalSchedule
 
 
 class CoinTasksTests(TestCase):
@@ -37,14 +37,11 @@ class CoinTasksTests(TestCase):
 
     def test_schedule_setup(self):
         """
-        Checks that schedule_setup creates the correct crontab
+        Checks that schedule_setup creates the correct interval
         """
         schedule_setup()
-        crontab_schedules = CrontabSchedule.objects.all()
-        self.assertEqual(crontab_schedules.count(), 1)
-        crontab_schedule = crontab_schedules.first()
-        self.assertEqual(crontab_schedule.minute, "0")
-        self.assertEqual(crontab_schedule.hour, "0")
-        self.assertEqual(crontab_schedule.day_of_week, "*")
-        self.assertEqual(crontab_schedule.day_of_month, "*")
-        self.assertEqual(crontab_schedule.month_of_year, "*")
+        interval_schedules = IntervalSchedule.objects.all()
+        self.assertEqual(interval_schedules.count(), 1)
+        interval_schedule = interval_schedules.first()
+        self.assertEqual(interval_schedule.period, IntervalSchedule.HOURS)
+        self.assertEqual(interval_schedule.every, 12)

@@ -44,6 +44,7 @@ class BalanceTypeRepository implements BalanceTypeRepositoryInterface {
     List<BalanceTypeEntity> balanceTypes =
         page.results.map((e) => BalanceTypeEntity.fromJson(e)).toList();
     while (page.next != null) {
+      pageNumber++;
       HttpResponse response =
           await httpService.sendGetRequest('$baseUrl?page=$pageNumber');
       if (response.hasError) {
@@ -52,7 +53,6 @@ class BalanceTypeRepository implements BalanceTypeRepositoryInterface {
       page = PaginationEntity.fromJson(response.content);
       balanceTypes +=
           page.results.map((e) => BalanceTypeEntity.fromJson(e)).toList();
-      pageNumber++;
     }
     return right(balanceTypes);
   }

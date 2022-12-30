@@ -34,25 +34,33 @@ class BalanceEntity with _$BalanceEntity {
   factory BalanceEntity.fromJson(Map<String, dynamic> json) =>
       _$BalanceEntityFromJson(json);
 
-  factory BalanceEntity.fromRevenueJson(Map<String, dynamic> json) {
-    json["balance_type"] = json.remove("rev_type");
+  factory BalanceEntity.fromRevenueJson(Map<String, dynamic> json,
+      {BalanceTypeEntity? type}) {
+    json["balance_type"] =
+        type != null ? type.toJson() : json.remove("rev_type");
     return _$BalanceEntityFromJson(json);
   }
 
-  factory BalanceEntity.fromExpenseJson(Map<String, dynamic> json) {
-    json["balance_type"] = json.remove("exp_type");
+  factory BalanceEntity.fromExpenseJson(Map<String, dynamic> json,
+      {BalanceTypeEntity? type}) {
+    json["balance_type"] =
+        type != null ? type.toJson() : json.remove("exp_type");
     return _$BalanceEntityFromJson(json);
   }
 
   Map<String, dynamic> toRevenueJson() {
     Map<String, dynamic> map = toJson();
+    map["date"] = _dateToJson(date);
     map["rev_type"] = (map.remove("balance_type") as BalanceTypeEntity).name;
     return map;
   }
 
   Map<String, dynamic> toExpenseJson() {
     Map<String, dynamic> map = toJson();
+    map["date"] = _dateToJson(date);
     map["exp_type"] = (map.remove("balance_type") as BalanceTypeEntity).name;
     return map;
   }
+
+  String _dateToJson(DateTime date) => "${date.year}-${date.month}-${date.day}";
 }

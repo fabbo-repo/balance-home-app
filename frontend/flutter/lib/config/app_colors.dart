@@ -11,7 +11,11 @@ class AppColors {
   
   static const Color balanceBackgroundColor = Color.fromARGB(254, 254, 252, 224);
   
-  static const Color revenueBackgroundColor = Color.fromARGB(254, 223, 237, 214);
+  static const Color revenueBackgroundLightColor = Color.fromARGB(255, 223, 237, 214);
   
-  static const Color expenseBackgroundColor = Color.fromARGB(254, 255, 236, 215);
+  static const Color revenueBackgroundDarkColor = Color.fromARGB(255, 80, 110, 64);
+  
+  static const Color expenseBackgroundLightColor = Color.fromARGB(255, 255, 236, 215);
+
+  static const Color expenseBackgroundDarkColor = Color.fromARGB(255, 182, 125, 108);
 }

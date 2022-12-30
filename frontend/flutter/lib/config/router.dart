@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:balance_home_app/src/core/presentation/views/app_info_loading_view.dart';
+import 'package:balance_home_app/src/core/presentation/views/auth_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/loading_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
@@ -48,9 +50,20 @@ final router = GoRouter(
         redirect: rootGuard,
         routes: [
           GoRoute(
+            name: AuthLoadingView.routeName,
+            path: AuthLoadingView.routePath,
+            builder: (context, state) {
+              Codec<String, String> stringToBase64 = utf8.fuse(base64Url);
+              return AuthLoadingView(
+                  location: state.queryParams['path'] != null
+                      ? stringToBase64.decode(state.queryParams['path']!)
+                      : "/${AuthLoadingView.routePath}");
+            },
+          ),
+          GoRoute(
             name: StatisticsView.routeName,
             path: StatisticsView.routePath,
-            redirect: authGuard,
+            redirect: authGuardOrNone,
             pageBuilder: (context, state) => FadeTransitionPage(
                 key: _scaffoldKey,
                 child: const HomeView(
@@ -60,7 +73,7 @@ final router = GoRouter(
           GoRoute(
               name: BalanceView.routeRevenueName,
               path: BalanceView.routeRevenuePath,
-              redirect: authGuard,
+              redirect: authGuardOrNone,
               pageBuilder: (context, state) => FadeTransitionPage(
                   key: _scaffoldKey,
                   child: HomeView(
@@ -80,7 +93,7 @@ final router = GoRouter(
           GoRoute(
               name: BalanceView.routeExpenseName,
               path: BalanceView.routeExpensePath,
-              redirect: authGuard,
+              redirect: authGuardOrNone,
               pageBuilder: (context, state) => FadeTransitionPage(
                   key: _scaffoldKey,
                   child: HomeView(
@@ -111,7 +124,9 @@ final router = GoRouter(
               name: 'passwordRoot',
               path: 'password',
               redirect: passwordGuard,
-              builder: (_, __) => const LoadingView(),
+              builder: (_, __) => LoadingView(func: (context) {
+                    context.go("/${AuthView.routePath}");
+                  }),
               routes: [
                 GoRoute(
                   name: ResetPasswordView.routeName,
@@ -157,6 +172,17 @@ Future<String?> authGuard(BuildContext context, GoRouterState state) async {
   if (!loggedIn && goingToAuth) return null;
   if (loggedIn && goingToAuth) return "/${StatisticsView.routePath}";
   if (!loggedIn) return '/';
+  return null;
+}
+
+Future<String?> authGuardOrNone(
+    BuildContext context, GoRouterState state) async {
+  final loggedIn = authStateListenable.value;
+  if (!loggedIn) {
+    Codec<String, String> stringToBase64 =
+        utf8.fuse(const Base64Codec.urlSafe());
+    return "/${AuthLoadingView.routePath}?path=${stringToBase64.encode(state.location)}";
+  }
   return null;
 }
 

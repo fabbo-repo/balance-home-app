@@ -1,6 +1,7 @@
 import 'package:balance_home_app/config/app_layout.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/info_dialog.dart';
 import 'package:balance_home_app/src/core/providers.dart';
+import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:balance_home_app/src/features/balance/providers.dart';
@@ -17,6 +18,7 @@ class BalanceCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authController = ref.read(authControllerProvider.notifier);
     final balanceListController = balanceTypeMode == BalanceTypeMode.expense
         ? ref.read(expenseListControllerProvider.notifier)
         : ref.read(revenueListControllerProvider.notifier);
@@ -62,6 +64,7 @@ class BalanceCard extends ConsumerWidget {
                     if (await showDeleteAdviceDialog(
                         context, appLocalizations)) {
                       balanceListController.deleteBalance(balance);
+                      authController.refreshUserData();
                     }
                   },
                   child: const Icon(
@@ -84,8 +87,8 @@ class BalanceCard extends ConsumerWidget {
             context: context,
             builder: (context) => InfoDialog(
                   dialogTitle: balanceTypeMode == BalanceTypeMode.expense
-                      ? appLocalizations.expenseDialogTitle
-                      : appLocalizations.revenueDialogTitle,
+                      ? appLocalizations.expenseDeleteDialogTitle
+                      : appLocalizations.revenueDeleteDialogTitle,
                   dialogDescription: balanceTypeMode == BalanceTypeMode.expense
                       ? appLocalizations.expenseDialogDescription
                       : appLocalizations.revenueDialogDescription,

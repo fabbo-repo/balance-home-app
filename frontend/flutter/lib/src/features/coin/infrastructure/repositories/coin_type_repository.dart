@@ -35,6 +35,7 @@ class CoinTypeRepository implements CoinTypeRepositoryInterface {
     List<CoinTypeEntity> coinTypes =
         page.results.map((e) => CoinTypeEntity.fromJson(e)).toList();
     while (page.next != null) {
+      pageNumber++;
       HttpResponse response = await httpService
           .sendGetRequest('${APIContract.coinType}?page=$pageNumber');
       if (response.hasError) {
@@ -42,7 +43,6 @@ class CoinTypeRepository implements CoinTypeRepositoryInterface {
       }
       page = PaginationEntity.fromJson(response.content);
       coinTypes += page.results.map((e) => CoinTypeEntity.fromJson(e)).toList();
-      pageNumber++;
     }
     return right(coinTypes);
   }

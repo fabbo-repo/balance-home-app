@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SimpleTextButton extends StatelessWidget {
+class CustomTextButton extends StatelessWidget {
   final void Function() onPressed;
   final String text;
   final Color? backgroundColor;
@@ -11,7 +11,7 @@ class SimpleTextButton extends StatelessWidget {
   final bool enabled;
   final bool loading;
 
-  const SimpleTextButton(
+  const CustomTextButton(
       {required this.text,
       required this.onPressed,
       this.backgroundColor,

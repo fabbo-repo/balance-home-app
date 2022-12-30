@@ -60,7 +60,7 @@ class StatisticsBalanceChartContainer extends ConsumerWidget {
               margin: const EdgeInsets.only(top: 20, bottom: 10),
               color: const Color.fromARGB(255, 114, 187, 83),
               height: 45,
-              width: (PlatformUtils().isSmallWindow())
+              width: (PlatformUtils().isSmallWindow(context))
                   ? screenWidth * 0.70
                   : screenWidth * 0.35,
               child: Center(
@@ -85,7 +85,7 @@ class StatisticsBalanceChartContainer extends ConsumerWidget {
         ),
         SizedBox(
             height: chartLineHeight,
-            width: (PlatformUtils().isSmallWindow())
+            width: (PlatformUtils().isSmallWindow(context))
                 ? screenWidth * 0.95
                 : screenWidth * 0.45,
             child: BalanceLineChart(

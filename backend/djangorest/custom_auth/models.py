@@ -153,6 +153,11 @@ class User(AbstractUser):
         blank = True,
         null = True
     )
+    # Number of requests for password reset code
+    count_pass_reset = models.IntegerField(
+        verbose_name = _("number of requests for password reset code"),
+        default=0
+    )
     pref_coin_type = models.ForeignKey(
         CoinType, on_delete = models.DO_NOTHING,
         verbose_name = _("preferred coin type"),

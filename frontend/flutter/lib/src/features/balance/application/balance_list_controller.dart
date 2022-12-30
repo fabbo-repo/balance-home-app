@@ -50,6 +50,7 @@ class BalanceListController
     final items = state.value!;
     state = const AsyncValue.loading();
     items.remove(entity);
+    _repository.deleteBalance(entity, _balanceTypeMode);
     state = AsyncValue.data(items);
   }
 }
