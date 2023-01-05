@@ -8,6 +8,7 @@ import 'package:balance_home_app/src/core/presentation/widgets/custom_text_form_
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/dialog_utils.dart';
 import 'package:balance_home_app/src/core/utils/type_util.dart';
+import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_type_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
@@ -81,12 +82,13 @@ class BalanceCreateForm extends ConsumerWidget {
         ref.read(balanceCreateControllerProvider.notifier);
 
     final user = ref.watch(authControllerProvider);
-    final balance = ref.watch(balanceCreateControllerProvider);
+    final balanceCreate = ref.watch(balanceCreateControllerProvider);
     final coinTypes = ref.watch(coinTypeListsControllerProvider);
     final balanceTypes = ref.watch(balanceTypeListControllerProvider);
     return user.when(data: (user) {
       _coinType ??= user!.prefCoinType;
-      return balance.when(data: (_) {
+      // This is used to refresh page in case handle controller
+      return balanceCreate.when(data: (_) {
         return balanceTypes.when(data: (balanceTypes) {
           _balanceTypeEntity ??= balanceTypes[0];
           return coinTypes.when(data: (coinTypes) {
@@ -98,7 +100,7 @@ class BalanceCreateForm extends ConsumerWidget {
                   padding: const EdgeInsets.all(8),
                   child: Column(
                     children: [
-                      space(),
+                      verticalSpace(),
                       CustomTextFormField(
                         onChanged: (value) =>
                             _name = BalanceName(appLocalizations, value),
@@ -108,7 +110,7 @@ class BalanceCreateForm extends ConsumerWidget {
                         maxWidth: 500,
                         controller: _nameController,
                       ),
-                      space(),
+                      verticalSpace(),
                       CustomTextFormField(
                         onChanged: (value) => _description =
                             BalanceDescription(appLocalizations, value),
@@ -122,7 +124,7 @@ class BalanceCreateForm extends ConsumerWidget {
                         showCounterText: true,
                         controller: _descriptionController,
                       ),
-                      space(),
+                      verticalSpace(),
                       CustomDoubleFormField(
                         onChanged: (value) => _quantity =
                             BalanceQuantity(appLocalizations, value),
@@ -131,7 +133,7 @@ class BalanceCreateForm extends ConsumerWidget {
                         maxWidth: 300,
                         controller: _quantityController,
                       ),
-                      space(),
+                      verticalSpace(),
                       CustomTextFormField(
                           onTap: () async {
                             // Below line stops keyboard from appearing
@@ -152,7 +154,7 @@ class BalanceCreateForm extends ConsumerWidget {
                           title: appLocalizations.balanceDate,
                           validator: (value) => _date?.validate,
                           maxWidth: 200),
-                      space(),
+                      verticalSpace(),
                       (balanceTypes.isNotEmpty)
                           ? DropdownPickerField(
                               name: appLocalizations.balanceType,
@@ -179,7 +181,7 @@ class BalanceCreateForm extends ConsumerWidget {
                                 _coinType = value;
                               })
                           : Text(appLocalizations.genericError),
-                      space(),
+                      verticalSpace(),
                       CustomTextButton(
                         width: 140,
                         height: 50,
@@ -220,49 +222,25 @@ class BalanceCreateForm extends ConsumerWidget {
               ),
             );
             return cache;
-          }, error: (error, stackTrace) {
-            return showError(error, stackTrace);
+          }, error: (o, st) {
+            return showError(o, st, cache: cache);
           }, loading: () {
-            return showLoading();
+            return showLoading(cache: cache);
           });
-        }, error: (error, stackTrace) {
-          return showError(error, stackTrace);
+        }, error: (o, st) {
+          return showError(o, st, cache: cache);
         }, loading: () {
-          return showLoading();
+          return showLoading(cache: cache);
         });
-      }, error: (error, stackTrace) {
-        return showError(error, stackTrace);
+      }, error: (o, st) {
+        return showError(o, st, cache: cache);
       }, loading: () {
-        return showLoading();
+        return showLoading(cache: cache);
       });
-    }, error: (error, stackTrace) {
-      return showError(error, stackTrace);
+    }, error: (o, st) {
+      return showError(o, st, cache: cache);
     }, loading: () {
-      return showLoading();
+      return showLoading(cache: cache);
     });
-  }
-
-  @visibleForTesting
-  Widget space() {
-    return const SizedBox(
-      height: AppLayout.genericPadding,
-    );
-  }
-
-  @visibleForTesting
-  Widget showLoading() {
-    return Stack(alignment: AlignmentDirectional.centerStart, children: [
-      cache,
-      const LoadingWidget(color: Colors.grey),
-    ]);
-  }
-
-  @visibleForTesting
-  Widget showError(error, stackTrace) {
-    debugPrint("[BALANCE_CREATE_FORM] $error -> $stackTrace");
-    return Stack(alignment: AlignmentDirectional.centerStart, children: [
-      cache,
-      const CustomErrorWidget(),
-    ]);
   }
 }

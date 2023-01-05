@@ -4,10 +4,13 @@ import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
+import 'package:balance_home_app/src/features/balance/presentation/views/balance_edit_view.dart';
+import 'package:balance_home_app/src/features/balance/presentation/views/balance_view.dart';
 import 'package:balance_home_app/src/features/balance/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class BalanceCard extends ConsumerWidget {
   final BalanceEntity balance;
@@ -25,7 +28,12 @@ class BalanceCard extends ConsumerWidget {
     final appLocalizations = ref.watch(appLocalizationsProvider);
     return GestureDetector(
       onTap: () {
-        // TODO
+        context.pushNamed(
+            (balanceTypeMode == BalanceTypeMode.expense
+                    ? BalanceView.routeExpenseName
+                    : BalanceView.routeRevenueName) +
+                BalanceEditView.routeName,
+            queryParams: {"id": "${balance.id}"});
       },
       child: Card(
         shape: RoundedRectangleBorder(

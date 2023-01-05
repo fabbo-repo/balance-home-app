@@ -9,6 +9,7 @@ import 'package:balance_home_app/src/features/auth/presentation/views/reset_pass
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:balance_home_app/src/features/balance/presentation/views/balance_create_view.dart';
+import 'package:balance_home_app/src/features/balance/presentation/views/balance_edit_view.dart';
 import 'package:balance_home_app/src/features/balance/presentation/views/balance_view.dart';
 import 'package:balance_home_app/src/features/home/presentation/views/home_tabs.dart';
 import 'package:balance_home_app/src/features/home/presentation/views/home_view.dart';
@@ -89,6 +90,14 @@ final router = GoRouter(
                     builder: (context, state) => const BalanceCreateView(
                           balanceTypeMode: BalanceTypeMode.revenue,
                         )),
+                GoRoute(
+                    name: BalanceView.routeRevenueName +
+                        BalanceEditView.routeName,
+                    path: BalanceEditView.routePath,
+                    builder: (context, state) => BalanceEditView(
+                      id: int.parse(state.queryParams['id']!),
+                          balanceTypeMode: BalanceTypeMode.revenue,
+                        )),
               ]),
           GoRoute(
               name: BalanceView.routeExpenseName,
@@ -107,6 +116,14 @@ final router = GoRouter(
                         BalanceCreateView.routeName,
                     path: BalanceCreateView.routePath,
                     builder: (context, state) => const BalanceCreateView(
+                          balanceTypeMode: BalanceTypeMode.expense,
+                        )),
+                GoRoute(
+                    name: BalanceView.routeExpenseName +
+                        BalanceEditView.routeName,
+                    path: BalanceEditView.routePath,
+                    builder: (context, state) => BalanceEditView(
+                      id: int.parse(state.queryParams['id']!),
                           balanceTypeMode: BalanceTypeMode.expense,
                         )),
               ]),

@@ -129,8 +129,8 @@ class BalanceRepository implements BalanceRepositoryInterface {
       return left(Failure.badRequest(message: response.errorMessage));
     }
     return right(balanceTypeMode == BalanceTypeMode.expense
-        ? BalanceEntity.fromExpenseJson(response.content)
-        : BalanceEntity.fromRevenueJson(response.content));
+        ? BalanceEntity.fromExpenseJson(response.content, type: balance.balanceType)
+        : BalanceEntity.fromRevenueJson(response.content, type: balance.balanceType));
   }
 
   /// Delete a [BalanceEntity].
