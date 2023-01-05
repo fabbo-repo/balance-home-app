@@ -6,7 +6,7 @@ class CustomTextFormField extends StatelessWidget {
   final double? maxWidth;
   final double? maxHeight;
   final int? maxCharacters;
-  final bool? readOnly;
+  final bool readOnly;
   final int? minLines;
   final int? maxLines;
   final bool multiLine;
@@ -25,7 +25,7 @@ class CustomTextFormField extends StatelessWidget {
       this.onTap,
       this.validator,
       this.maxCharacters,
-      this.readOnly,
+      this.readOnly = false,
       this.minLines,
       this.maxLines = 1,
       this.multiLine = false,
@@ -48,11 +48,11 @@ class CustomTextFormField extends StatelessWidget {
               keyboardType: multiLine ? TextInputType.multiline : null,
               minLines: minLines,
               maxLines: maxLines,
-              readOnly: readOnly ?? false,
+              readOnly: readOnly,
               textAlign: textAlign ?? TextAlign.start,
               maxLength: maxCharacters,
-              onChanged: onChanged,
-              onTap: onTap,
+              onChanged: readOnly ? null : onChanged,
+              onTap: readOnly ? null : onTap,
               controller: controller,
               validator: validator,
               decoration: InputDecoration(
@@ -72,7 +72,7 @@ class CustomTextFormField extends StatelessWidget {
                         ? Colors.black
                         : Colors.white),
                 filled: true,
-                fillColor: readOnly != null && readOnly!
+                fillColor: readOnly
                     ? const Color.fromARGB(108, 167, 167, 167)
                     : Theme.of(context).brightness == Brightness.light
                         ? Colors.white

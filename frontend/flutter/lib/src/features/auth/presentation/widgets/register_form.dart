@@ -4,6 +4,7 @@ import 'package:balance_home_app/src/core/presentation/widgets/password_text_for
 import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/custom_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
+import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/invitation_code.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_name.dart';
@@ -89,7 +90,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                     _username = UserName(appLocalizations, value),
                 validator: (value) => _username?.validate,
               ),
-              space(),
+              verticalSpace(),
               CustomTextFormField(
                 title: appLocalizations.emailAddress,
                 maxWidth: 400,
@@ -99,7 +100,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                     _email = UserEmail(appLocalizations, value),
                 validator: (value) => _email?.validate,
               ),
-              space(),
+              verticalSpace(),
               PasswordTextFormField(
                 title: appLocalizations.password,
                 maxWidth: 400,
@@ -109,7 +110,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                     _password = UserPassword(appLocalizations, value),
                 validator: (value) => _password?.validate,
               ),
-              space(),
+              verticalSpace(),
               PasswordTextFormField(
                 title: appLocalizations.repeatPassword,
                 maxWidth: 400,
@@ -119,7 +120,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                     appLocalizations, widget.passwordController.text, value),
                 validator: (value) => _repeatPassword?.validate,
               ),
-              space(),
+              verticalSpace(),
               CustomTextFormField(
                 title: appLocalizations.invitationCode,
                 maxWidth: 400,
@@ -129,7 +130,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                     _invitationCode = InvitationCode(appLocalizations, value),
                 validator: (value) => _invitationCode?.validate,
               ),
-              space(),
+              verticalSpace(),
               (widget.coinTypes.isNotEmpty)
                   ? DropdownPickerField(
                       name: appLocalizations.coinType,
@@ -139,7 +140,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         prefCoinType = value;
                       })
                   : Text(appLocalizations.genericError),
-              space(),
+              verticalSpace(),
               SizedBox(
                   height: 50,
                   width: 240,
@@ -189,18 +190,6 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         ),
       ),
     );
-    return isLoading
-        ? Stack(alignment: AlignmentDirectional.centerStart, children: [
-            cache,
-            const LoadingWidget(color: Colors.grey),
-          ])
-        : cache;
-  }
-
-  @visibleForTesting
-  Widget space() {
-    return const SizedBox(
-      height: AppLayout.genericPadding,
-    );
+    return isLoading ? showLoading(cache: cache) : cache;
   }
 }
