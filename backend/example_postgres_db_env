@@ -1,0 +1,3 @@
+POSTGRES_PASSWORD=password
+POSTGRES_USER=pguser
+POSTGRES_DB=balhomdb
