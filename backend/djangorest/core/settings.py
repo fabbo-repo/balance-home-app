@@ -36,10 +36,6 @@ class Dev(Configuration):
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
     BASE_DIR = Path(__file__).resolve().parent.parent
 
-    DOMAIN = get_env('APP_DOMAIN', '127.0.0.1')
-    PORT = get_env('APP_PORT', '8000')
-    BASE_URL = DOMAIN + ':' + PORT
-
     SECRET_KEY = os.urandom(34).hex()
 
     # True by default but have the option to set it false with an environment variable
@@ -262,10 +258,7 @@ class Dev(Configuration):
 class Prod(Dev):
     DEBUG = False
     
-    DOMAIN = get_env('APP_DOMAIN', '127.0.0.1')
-    PORT = get_env('APP_PORT', '80')
     SECRET_KEY = get_env('APP_SECRET_KEY', os.urandom(34).hex())
-    SECRET_KEY = os.urandom(20).hex()
     ALLOWED_HOSTS = get_list_env('APP_ALLOWED_HOSTS', 
         [ "localhost", "0.0.0.0" ])
     if get_list_env("APP_CORS_ALLOWED_HOSTS"):

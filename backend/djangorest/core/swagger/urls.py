@@ -11,7 +11,6 @@ schema_view = get_schema_view(
         default_version="v1",
         description="API for Balance Home App",
     ),
-    url=f"http://{settings.DOMAIN}:{settings.PORT}/api/v1/",
     public=True,
     permission_classes=(AllowAny,)
 )
