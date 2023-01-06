@@ -215,8 +215,8 @@ class DateBalanceLoicTests(APITestCase):
         self.assertEqual(past_date.month, second_to_last_monthly_balance.month)
         self.assertEqual(data['quantity'], 
             second_to_last_monthly_balance.gross_quantity)
-        last_annual_balance = AnnualBalance.objects.last()
-        self.assertEqual(now().date().year, last_annual_balance.year)
+        last_annual_balance = AnnualBalance.objects.get(year=past_date.year)
+        self.assertEqual(past_date.year, last_annual_balance.year)
         self.assertEqual(data['quantity'], last_annual_balance.gross_quantity)
         # Test update diferent quantity and date
         response = self.patch(self.revenue_url+'/'+str(rev.id), {
@@ -279,8 +279,8 @@ class DateBalanceLoicTests(APITestCase):
         self.assertEqual(past_date.month, second_to_last_monthly_balance.month)
         self.assertEqual(-data['quantity'], 
             second_to_last_monthly_balance.gross_quantity)
-        last_annual_balance = AnnualBalance.objects.last()
-        self.assertEqual(now().date().year, last_annual_balance.year)
+        last_annual_balance = AnnualBalance.objects.get(year=past_date.year)
+        self.assertEqual(past_date.year, last_annual_balance.year)
         self.assertEqual(-data['quantity'], last_annual_balance.gross_quantity)
         # Test update diferent quantity and date
         response = self.patch(self.expense_url+'/'+str(exp.id), {
