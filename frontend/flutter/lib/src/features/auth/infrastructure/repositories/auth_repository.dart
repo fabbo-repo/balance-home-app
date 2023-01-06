@@ -89,6 +89,9 @@ class AuthRepository implements AuthRepositoryInterface {
   @override
   Future<Either<Failure, bool>> signOut() async {
     if (!await jwtLocalDataSource.remove()) return left(const Failure.empty());
+    if (!await credentialsLocalDataSource.remove()) {
+      return left(const Failure.empty());
+    }
     httpService.setJwtEntity(null);
     return right(true);
   }

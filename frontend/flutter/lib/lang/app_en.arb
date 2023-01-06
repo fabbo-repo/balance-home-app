@@ -71,8 +71,11 @@
 
     "@_AUTH":{},
     "login": "Login",
+    "logout": "Logout",
     "register": "Register",
     "signIn": "Sign In",
+    "settings": "Settings",
+    "myAccount": "My Account",
     "username": "Username",
     "emailAddress": "Email address",
     "password": "Password",

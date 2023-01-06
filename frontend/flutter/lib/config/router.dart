@@ -4,6 +4,7 @@ import 'package:balance_home_app/src/core/presentation/views/app_info_loading_vi
 import 'package:balance_home_app/src/core/presentation/views/auth_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/loading_view.dart';
+import 'package:balance_home_app/src/core/presentation/views/logout_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/reset_password_view.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
@@ -60,6 +61,18 @@ final router = GoRouter(
                       ? stringToBase64.decode(state.queryParams['path']!)
                       : "/${AuthLoadingView.routePath}");
             },
+          ),
+          GoRoute(
+            name: AuthView.routeName,
+            path: AuthView.routePath,
+            redirect: authGuard,
+            builder: (context, state) => AuthView(),
+          ),
+          GoRoute(
+            name: LogoutView.routeName,
+            path: LogoutView.routePath,
+            redirect: authGuard,
+            builder: (context, state) => LogoutView(),
           ),
           GoRoute(
             name: StatisticsView.routeName,
@@ -151,12 +164,6 @@ final router = GoRouter(
                   builder: (context, state) => ResetPasswordView(),
                 ),
               ]),
-          GoRoute(
-            name: AuthView.routeName,
-            path: AuthView.routePath,
-            redirect: authGuard,
-            builder: (context, state) => AuthView(),
-          ),
         ]),
   ],
 );
