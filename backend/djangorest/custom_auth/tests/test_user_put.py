@@ -93,10 +93,15 @@ class UserPutTests(APITestCase):
         """
         Checks that email is changed
         """
-        response = self.user_patch({"email":"test2@gmail.com"})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        user = User.objects.get(email="test2@gmail.com")
-        self.assertFalse(user.verified)
+        self.user_patch({"email":"test2@gmail.com"})
+        try: 
+            User.objects.get(email="test2@gmail.com")
+            self.assertTrue(False)
+        except: self.assertTrue(True)
+        try: 
+            User.objects.get(email=self.user_data["email"])
+            self.assertTrue(True)
+        except: self.assertTrue(False)
 
     def test_change_user_annual_balance(self):
         """

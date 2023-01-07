@@ -76,6 +76,7 @@ class User(AbstractUser):
     email = models.EmailField(
         verbose_name=_("email address"),
         unique=True,
+        editable=False
     )
     language = models.CharField(
         verbose_name =_("language"),

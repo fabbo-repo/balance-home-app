@@ -1,12 +1,15 @@
 import 'package:balance_home_app/config/app_colors.dart';
+import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
+import 'package:balance_home_app/src/features/balance/presentation/views/balance_view.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_edit_form.dart';
 import 'package:balance_home_app/src/features/balance/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class BalanceEditView extends ConsumerStatefulWidget {
   /// Route name
@@ -46,6 +49,13 @@ class _BalanceEditViewState extends ConsumerState<BalanceEditView> {
         appBar: AppBar(
           title: const AppTittle(fontSize: 30),
           backgroundColor: AppColors.appBarBackgroundColor,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => navigatorKey.currentContext!.goNamed(
+                widget.balanceTypeMode == BalanceTypeMode.expense
+                    ? BalanceView.routeExpenseName
+                    : BalanceView.routeRevenueName),
+          ),
           actions: [
             IconButton(
               icon: Icon(

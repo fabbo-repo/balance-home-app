@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
+// ignore: depend_on_referenced_packages
+import 'package:mime/mime.dart' as mm;
 import 'package:balance_home_app/config/environment.dart';
 import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
@@ -9,7 +10,8 @@ import 'package:balance_home_app/src/features/auth/domain/entities/jwt_entity.da
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages, implementation_imports
-import 'package:http_parser/src/media_type.dart';
+import 'package:http_parser/src/media_type.dart' as mt;
+import 'package:universal_io/io.dart' as io;
 
 /// Encapsulates the proccess of making authorized HTTP requests from the services.
 ///
@@ -36,7 +38,7 @@ class HttpService {
   /// Returns the necessary content and authentication headers for all server requests.
   Map<String, String> getHeaders() {
     Map<String, String> headers = {
-      "Content-Type": ContentType.json.toString(),
+      "Content-Type": io.ContentType.json.toString(),
       "Accept-Language": "en"
     };
     if (_jwtEntity != null) {
@@ -80,17 +82,18 @@ class HttpService {
     }
   }
 
-  /// Sends a `POST` multipart request to upload the image located at `filePath` to `baseUrl`/`subPath`.
-  Future<HttpResponse> sendPostImageRequest(
-      String subPath, String filePath, String type) async {
+  /// Sends a `PATCH` multipart request to upload the image located at `filePath` to `baseUrl`/`subPath`.
+  Future<HttpResponse> sendPatchImageRequest(
+      String subPath, io.File file) async {
     try {
+      String? type = mm.lookupMimeType(file.path);
       http.MultipartRequest request =
           http.MultipartRequest('POST', Uri.parse("$baseUrl$subPath"));
-      List<int> bytes = await File(filePath).readAsBytes();
+      List<int> bytes = await file.readAsBytes();
       http.MultipartFile httpImage = http.MultipartFile.fromBytes(
           'upload_file', bytes,
-          contentType: MediaType.parse(type),
-          filename: 'upload_file_${filePath.hashCode}.$type');
+          contentType: mt.MediaType.parse(type ?? ""),
+          filename: 'upload_file_${file.hashCode}.$type');
       if (_jwtEntity != null) {
         request.headers["Authorization"] = "Bearer ${_jwtEntity!.access}";
       }
@@ -99,7 +102,7 @@ class HttpService {
           HttpResponse((await _client.send(request)).statusCode, {});
       if (await _shouldRepeatResponse(response)) {
         // Recursive call
-        return await sendPostImageRequest(subPath, filePath, type);
+        return await sendPatchImageRequest(subPath, file);
       }
       return response;
     } catch (e) {

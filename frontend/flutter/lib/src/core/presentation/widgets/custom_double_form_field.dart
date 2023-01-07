@@ -41,6 +41,14 @@ class CustomDoubleFormField extends StatelessWidget {
               inputFormatters: <TextInputFormatter>[
                 TextInputFormatter.withFunction(
                   (oldValue, newValue) {
+                    if (newValue.text.isEmpty) {
+                      return const TextEditingValue(text: "0");
+                    }
+                    return newValue;
+                  },
+                ),
+                TextInputFormatter.withFunction(
+                  (oldValue, newValue) {
                     if (RegExp(r'^[0-9]+[,.]{0,1}[0-9]{0,2}$')
                         .hasMatch(newValue.text)) return newValue;
                     return oldValue;

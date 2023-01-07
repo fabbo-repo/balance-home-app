@@ -3,6 +3,7 @@ import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/application/auth_controller.dart';
 import 'package:balance_home_app/src/features/auth/application/email_code_controller.dart';
 import 'package:balance_home_app/src/features/auth/application/reset_password_controller.dart';
+import 'package:balance_home_app/src/features/auth/application/user_edit_controller.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/email_code_repository_interface.dart';
@@ -54,7 +55,7 @@ final authStateListenable = ValueNotifier<bool>(false);
 final authControllerProvider =
     StateNotifierProvider<AuthController, AsyncValue<UserEntity?>>((ref) {
   final repo = ref.watch(authRepositoryProvider);
-    final appLocalizationsState = ref.read(appLocalizationsProvider.notifier);
+  final appLocalizationsState = ref.read(appLocalizationsProvider.notifier);
   return AuthController(repo, appLocalizationsState);
 });
 
@@ -64,8 +65,14 @@ final resetPasswordControllerProvider = StateNotifierProvider<
   return ResetPasswordController(repo);
 });
 
-final emailCodeControllerProvider = StateNotifierProvider<
-    EmailCodeController, AsyncValue<void>>((ref) {
+final emailCodeControllerProvider =
+    StateNotifierProvider<EmailCodeController, AsyncValue<void>>((ref) {
   final repo = ref.watch(emailCodeRepositoryProvider);
   return EmailCodeController(repo);
+});
+
+final userEditControllerProvider =
+    StateNotifierProvider<UserEditController, AsyncValue<void>>((ref) {
+  final repo = ref.watch(authRepositoryProvider);
+  return UserEditController(repo);
 });

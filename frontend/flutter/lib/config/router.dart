@@ -7,6 +7,7 @@ import 'package:balance_home_app/src/core/presentation/views/loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/logout_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/reset_password_view.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/user_edit_view.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:balance_home_app/src/features/balance/presentation/views/balance_create_view.dart';
@@ -72,7 +73,13 @@ final router = GoRouter(
             name: LogoutView.routeName,
             path: LogoutView.routePath,
             redirect: authGuard,
-            builder: (context, state) => LogoutView(),
+            builder: (context, state) => const LogoutView(),
+          ),
+          GoRoute(
+            name: UserEditView.routeName,
+            path: UserEditView.routePath,
+            redirect: authGuardOrNone,
+            builder: (context, state) => const UserEditView(),
           ),
           GoRoute(
             name: StatisticsView.routeName,

@@ -5,6 +5,7 @@ import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/presentation/views/logout_view.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/user_edit_view.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,7 +73,7 @@ class CustomAppBar extends ConsumerWidget {
       color: const Color.fromARGB(255, 80, 80, 80),
       onSelected: (value) {
         if (value == 0) {
-          // TODO Go to my account
+          navigatorKey.currentContext!.goNamed(UserEditView.routeName);
         } else if (value == 1) {
           // TODO Go to settings
         } else if (value == 2) {
@@ -87,7 +88,7 @@ class CustomAppBar extends ConsumerWidget {
             value: 0,
             child: Text(appLocalizations.myAccount),
           ),
-          // TODO: (Dark mode and language)
+          // TODO: (Dark mode, language and receive email balance)
           //PopupMenuItem<int>(
           //  value: 1,
           //  child: Text(appLocalizations.settings),
@@ -106,7 +107,12 @@ class CustomAppBar extends ConsumerWidget {
                 border: Border.all(width: 1),
               ),
               margin: const EdgeInsets.all(4),
-              child: Image.network(user.image),
+              child: user.image == null
+                  ? const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                    )
+                  : Image.network(user.image!),
             ),
           if (user != null)
             if (!PlatformUtils().isMobile)

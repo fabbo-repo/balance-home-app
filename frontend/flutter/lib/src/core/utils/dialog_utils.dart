@@ -107,6 +107,30 @@ Future<void> showErrorBalanceCreationDialog(AppLocalizations appLocalizations,
           ));
 }
 
+Future<void> showErrorBalanceEditDialog(AppLocalizations appLocalizations,
+    String error, BalanceTypeMode balanceTypeMode) async {
+  await showDialog(
+      context: navigatorKey.currentContext!,
+      builder: (context) => ErrorDialog(
+            dialogTitle: balanceTypeMode == BalanceTypeMode.expense
+                ? appLocalizations.expenseEditDialogTitle
+                : appLocalizations.revenueEditDialogTitle,
+            dialogDescription: error,
+            cancelText: appLocalizations.cancel,
+          ));
+}
+
+Future<void> showErrorUserEditDialog(AppLocalizations appLocalizations,
+    String error) async {
+  await showDialog(
+      context: navigatorKey.currentContext!,
+      builder: (context) => ErrorDialog(
+            dialogTitle: appLocalizations.userEditDialogTitle,
+            dialogDescription: error,
+            cancelText: appLocalizations.cancel,
+          ));
+}
+
 Future<void> showCodeSendDialog(String email) async {
   await showDialog(
       context: navigatorKey.currentContext!,

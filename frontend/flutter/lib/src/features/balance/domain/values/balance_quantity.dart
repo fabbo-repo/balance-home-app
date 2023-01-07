@@ -21,7 +21,7 @@ class BalanceQuantity extends ValueAbstract<double?> {
 /// * minimum: 0
 Either<Failure, double> _validate(
     AppLocalizations appLocalizations, double? input) {
-  if (input != null && input > 0) {
+  if (input != null && input >= 0) {
     return right(input);
   }
   String message = input == null

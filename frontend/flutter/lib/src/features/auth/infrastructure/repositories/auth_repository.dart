@@ -9,6 +9,7 @@ import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repo
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/credentials_local_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/jwt_local_data_source.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:universal_io/io.dart' as io;
 
 /// Repository that handles authorization and persists session
 class AuthRepository implements AuthRepositoryInterface {
@@ -31,6 +32,26 @@ class AuthRepository implements AuthRepositoryInterface {
   Future<Either<Failure, bool>> createUser(RegisterEntity registration) async {
     HttpResponse response =
         await httpService.sendGetRequest(APIContract.userProfile);
+    if (response.hasError) {
+      return left(Failure.badRequest(message: response.errorMessage));
+    }
+    return right(true);
+  }
+
+  @override
+  Future<Either<Failure, UserEntity>> updateUser(UserEntity user) async {
+    HttpResponse response = await httpService.sendPutRequest(
+        APIContract.userProfile, user.toJson());
+    if (response.hasError) {
+      return left(Failure.badRequest(message: response.errorMessage));
+    }
+    return right(UserEntity.fromJson(response.content));
+  }
+  
+  @override
+  Future<Either<Failure, bool>> updateUserImage(io.File image) async {
+    HttpResponse response = await httpService.sendPatchImageRequest(
+        APIContract.userProfile, image);
     if (response.hasError) {
       return left(Failure.badRequest(message: response.errorMessage));
     }
