@@ -4,10 +4,10 @@ import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repo
 import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_name.dart';
 import 'package:balance_home_app/src/features/balance/domain/values/balance_quantity.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:universal_io/io.dart';
 
 class UserEditController extends StateNotifier<AsyncValue<void>> {
   final AuthRepositoryInterface _repository;
@@ -66,10 +66,10 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
     });
   }
 
-  Future<Either<Failure, bool>> handleImage(
-      File image, AppLocalizations appLocalizations) async {
+  Future<Either<Failure, bool>> handleImage(Uint8List imageBytes,
+      String imageType, AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
-    final res = await _repository.updateUserImage(image);
+    final res = await _repository.updateUserImage(imageBytes, imageType);
     return res.fold((l) {
       state = const AsyncValue.data(null);
       return left(

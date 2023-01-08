@@ -36,7 +36,7 @@ class UserAdmin(admin.ModelAdmin):
         ('expected_annual_balance', 'expected_monthly_balance',),
     )
     readonly_fields = (
-        'id', 'last_login', 'date_joined', 
+        'id', 'last_login', 'date_joined', 'email', 
         'code_sent', 'date_code_sent', 'pass_reset', 
         'date_pass_reset', 'count_pass_reset', 'balance',
     )

@@ -8,8 +8,8 @@ import 'package:balance_home_app/src/features/auth/domain/entities/register_enti
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/credentials_local_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/jwt_local_data_source.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:universal_io/io.dart' as io;
 
 /// Repository that handles authorization and persists session
 class AuthRepository implements AuthRepositoryInterface {
@@ -49,9 +49,9 @@ class AuthRepository implements AuthRepositoryInterface {
   }
   
   @override
-  Future<Either<Failure, bool>> updateUserImage(io.File image) async {
+  Future<Either<Failure, bool>> updateUserImage(Uint8List imageBytes, String imageType) async {
     HttpResponse response = await httpService.sendPatchImageRequest(
-        APIContract.userProfile, image);
+        APIContract.userProfile, imageBytes, imageType);
     if (response.hasError) {
       return left(Failure.badRequest(message: response.errorMessage));
     }
