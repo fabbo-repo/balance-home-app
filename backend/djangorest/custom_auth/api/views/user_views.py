@@ -26,8 +26,10 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return self.request.user
     
     def perform_update(self, serializer):
-        if 'email' in serializer.validated_data:
-            serializer.validated_data['verified'] = False
+        # Email change is not allowed
+        #if 'email' in serializer.validated_data:
+        #    serializer.validated_data['verified'] = False
+        
         # The user balance should only be converted if
         # the same balance is provided in the request
         # and the pref_coin_type is changed, same for

@@ -1,9 +1,6 @@
-import 'package:balance_home_app/config/app_layout.dart';
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/custom_double_form_field.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_error_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/custom_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/dialog_utils.dart';
@@ -57,6 +54,10 @@ class BalanceEditForm extends ConsumerWidget {
     _nameController.text = balance.name;
     _descriptionController.text = balance.description;
     _quantityController.text = balance.quantity.toString().replaceAll(".", ",");
+    if (_dateController.text.isEmpty) {
+      _dateController.text =
+          "${balance.date.day}/${balance.date.month}/${balance.date.year}";
+    }
     _name = BalanceName(appLocalizations, _nameController.text);
     _description =
         BalanceDescription(appLocalizations, _descriptionController.text);
@@ -64,16 +65,11 @@ class BalanceEditForm extends ConsumerWidget {
         double.tryParse(_quantityController.text.replaceAll(",", ".")));
     _date = BalanceDate(
         appLocalizations,
-        _dateController.text.isNotEmpty
-            ? DateTime(
-                int.parse(_dateController.text.split("/")[2]),
-                int.parse(_dateController.text.split("/")[1]),
-                int.parse(_dateController.text.split("/")[0]))
-            : DateTime.now());
-    if (_dateController.text.isEmpty) {
-      _dateController.text =
-          "${balance.date.day}/${balance.date.month}/${balance.date.year}";
-    }
+        DateTime(
+            int.parse(_dateController.text.split("/")[2]),
+            int.parse(_dateController.text.split("/")[1]),
+            int.parse(_dateController.text.split("/")[0])));
+    _coinType ??= balance.coinType;
     final balanceEditControllerProvider =
         balanceTypeMode == BalanceTypeMode.expense
             ? expenseEditControllerProvider
@@ -92,7 +88,6 @@ class BalanceEditForm extends ConsumerWidget {
     final coinTypes = ref.watch(coinTypeListsControllerProvider);
     final balanceTypes = ref.watch(balanceTypeListControllerProvider);
     final balanceEdit = ref.watch(balanceEditControllerProvider);
-    _coinType ??= balance.coinType;
     // This is used to refresh page in case handle controller
     return balanceEdit.when(data: (_) {
       return balanceTypes.when(data: (balanceTypes) {
@@ -218,7 +213,7 @@ class BalanceEditForm extends ConsumerWidget {
                                   _balanceTypeEntity!,
                                   appLocalizations))
                               .fold((l) {
-                            showErrorBalanceCreationDialog(
+                            showErrorBalanceEditDialog(
                                 appLocalizations, l.error, balanceTypeMode);
                           }, (entity) {
                             navigatorKey.currentContext!.go(

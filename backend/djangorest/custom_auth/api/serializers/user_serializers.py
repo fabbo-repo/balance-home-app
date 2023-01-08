@@ -108,9 +108,6 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
         max_length=15,
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
-    email = serializers.EmailField(
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
 
     class Meta:
         model = User
@@ -129,4 +126,5 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             'last_login'
+            'email', 
         ]

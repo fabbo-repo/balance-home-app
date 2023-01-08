@@ -4,8 +4,12 @@ import 'package:balance_home_app/src/core/presentation/views/app_info_loading_vi
 import 'package:balance_home_app/src/core/presentation/views/auth_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/loading_view.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/logout_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/reset_password_view.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/settings_view.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/user_delete_view.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/user_edit_view.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:balance_home_app/src/features/balance/presentation/views/balance_create_view.dart';
@@ -60,6 +64,36 @@ final router = GoRouter(
                       ? stringToBase64.decode(state.queryParams['path']!)
                       : "/${AuthLoadingView.routePath}");
             },
+          ),
+          GoRoute(
+            name: AuthView.routeName,
+            path: AuthView.routePath,
+            redirect: authGuard,
+            builder: (context, state) => AuthView(),
+          ),
+          GoRoute(
+            name: LogoutView.routeName,
+            path: LogoutView.routePath,
+            redirect: authGuard,
+            builder: (context, state) => const LogoutView(),
+          ),
+          GoRoute(
+            name: UserEditView.routeName,
+            path: UserEditView.routePath,
+            redirect: authGuardOrNone,
+            builder: (context, state) => const UserEditView(),
+          ),
+          GoRoute(
+            name: UserDeleteView.routeName,
+            path: UserDeleteView.routePath,
+            redirect: authGuardOrNone,
+            builder: (context, state) => const UserDeleteView(),
+          ),
+          GoRoute(
+            name: SettingsView.routeName,
+            path: SettingsView.routePath,
+            redirect: authGuardOrNone,
+            builder: (context, state) => SettingsView(),
           ),
           GoRoute(
             name: StatisticsView.routeName,
@@ -151,12 +185,6 @@ final router = GoRouter(
                   builder: (context, state) => ResetPasswordView(),
                 ),
               ]),
-          GoRoute(
-            name: AuthView.routeName,
-            path: AuthView.routePath,
-            redirect: authGuard,
-            builder: (context, state) => AuthView(),
-          ),
         ]),
   ],
 );

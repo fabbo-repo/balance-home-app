@@ -8,6 +8,7 @@ import 'package:balance_home_app/src/features/auth/domain/entities/register_enti
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/credentials_local_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/jwt_local_data_source.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 
 /// Repository that handles authorization and persists session
@@ -38,6 +39,26 @@ class AuthRepository implements AuthRepositoryInterface {
   }
 
   @override
+  Future<Either<Failure, UserEntity>> updateUser(UserEntity user) async {
+    HttpResponse response = await httpService.sendPutRequest(
+        APIContract.userProfile, user.toJson());
+    if (response.hasError) {
+      return left(Failure.badRequest(message: response.errorMessage));
+    }
+    return right(UserEntity.fromJson(response.content));
+  }
+  
+  @override
+  Future<Either<Failure, bool>> updateUserImage(Uint8List imageBytes, String imageType) async {
+    HttpResponse response = await httpService.sendPatchImageRequest(
+        APIContract.userProfile, imageBytes, imageType);
+    if (response.hasError) {
+      return left(Failure.badRequest(message: response.errorMessage));
+    }
+    return right(true);
+  }
+
+  @override
   Future<Either<Failure, UserEntity>> getUser() async {
     HttpResponse response =
         await httpService.sendGetRequest(APIContract.userProfile);
@@ -45,6 +66,16 @@ class AuthRepository implements AuthRepositoryInterface {
       return left(Failure.badRequest(message: response.errorMessage));
     }
     return right(UserEntity.fromJson(response.content));
+  }
+
+  @override
+  Future<Either<Failure, bool>> deleteUser() async {
+    HttpResponse response =
+        await httpService.sendDelRequest(APIContract.userProfile);
+    if (response.hasError) {
+      return left(Failure.badRequest(message: response.errorMessage));
+    }
+    return right(true);
   }
 
   @override
@@ -89,6 +120,9 @@ class AuthRepository implements AuthRepositoryInterface {
   @override
   Future<Either<Failure, bool>> signOut() async {
     if (!await jwtLocalDataSource.remove()) return left(const Failure.empty());
+    if (!await credentialsLocalDataSource.remove()) {
+      return left(const Failure.empty());
+    }
     httpService.setJwtEntity(null);
     return right(true);
   }
