@@ -1,38 +1,30 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
-import 'package:balance_home_app/src/features/auth/presentation/views/user_delete_view.dart';
-import 'package:balance_home_app/src/features/auth/presentation/widgets/user_edit_form.dart';
+import 'package:balance_home_app/src/features/auth/presentation/widgets/settings_widget.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/views/statistics_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class UserEditView extends ConsumerStatefulWidget {
+// ignore: must_be_immutable
+class SettingsView extends ConsumerWidget {
   /// Route name
-  static const routeName = 'userEdit';
+  static const routeName = 'settings';
 
   /// Route path
-  static const routePath = 'user-edit';
+  static const routePath = 'settings';
 
-  const UserEditView({super.key});
-
-  @override
-  ConsumerState<UserEditView> createState() => _UserEditViewState();
-}
-
-class _UserEditViewState extends ConsumerState<UserEditView> {
-  bool edit = false;
   Widget cache = Container();
 
+  SettingsView({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authControllerProvider);
-    final appLocalizations = ref.watch(appLocalizationsProvider);
     return user.when(data: (data) {
       cache = Scaffold(
           appBar: AppBar(
@@ -43,19 +35,6 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
               onPressed: () => navigatorKey.currentContext!
                   .goNamed(StatisticsView.routeName),
             ),
-            actions: [
-              IconButton(
-                icon: Icon(
-                  (!edit) ? Icons.edit : Icons.cancel_outlined,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  setState(() {
-                    edit = !edit;
-                  });
-                },
-              )
-            ],
           ),
           body: SafeArea(
               child: Container(
@@ -68,23 +47,7 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
                   fit: BoxFit.cover),
             ),
             constraints: const BoxConstraints.expand(),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  UserEditForm(edit: edit, user: data!),
-                  if (!edit)
-                    CustomTextButton(
-                      text: appLocalizations.userDelete,
-                      height: 40,
-                      onPressed: () async {
-                        navigatorKey.currentContext!.goNamed(UserDeleteView.routeName);
-                      },
-                      backgroundColor: const Color.fromARGB(220, 221, 65, 54),
-                    ),
-                  verticalSpace(),
-                ],
-              ),
-            ),
+            child: SettingsWidget(user: data!),
           )));
       return cache;
     }, error: (o, st) {

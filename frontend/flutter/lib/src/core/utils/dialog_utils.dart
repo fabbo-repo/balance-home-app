@@ -131,6 +131,17 @@ Future<void> showErrorUserEditDialog(AppLocalizations appLocalizations,
           ));
 }
 
+Future<void> showErrorSettingsDialog(AppLocalizations appLocalizations,
+    String error) async {
+  await showDialog(
+      context: navigatorKey.currentContext!,
+      builder: (context) => ErrorDialog(
+            dialogTitle: appLocalizations.settingsDialogTitle,
+            dialogDescription: error,
+            cancelText: appLocalizations.cancel,
+          ));
+}
+
 Future<void> showCodeSendDialog(String email) async {
   await showDialog(
       context: navigatorKey.currentContext!,

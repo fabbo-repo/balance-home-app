@@ -2,9 +2,10 @@ import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/platform_utils.dart';
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
-import 'package:balance_home_app/src/core/presentation/views/logout_view.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/logout_view.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/settings_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/user_edit_view.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,7 @@ class CustomAppBar extends ConsumerWidget {
         if (value == 0) {
           navigatorKey.currentContext!.goNamed(UserEditView.routeName);
         } else if (value == 1) {
-          // TODO Go to settings
+          navigatorKey.currentContext!.goNamed(SettingsView.routeName);
         } else if (value == 2) {
           // It cannot call authController because it would change provider
           // while changing the entire three and that leads to an error
@@ -88,11 +89,10 @@ class CustomAppBar extends ConsumerWidget {
             value: 0,
             child: Text(appLocalizations.myAccount),
           ),
-          // TODO: (Dark mode, language and receive email balance)
-          //PopupMenuItem<int>(
-          //  value: 1,
-          //  child: Text(appLocalizations.settings),
-          //),
+          PopupMenuItem<int>(
+            value: 1,
+            child: Text(appLocalizations.settings),
+          ),
           PopupMenuItem<int>(
             value: 2,
             child: Text(appLocalizations.logout),

@@ -69,6 +69,16 @@ class AuthRepository implements AuthRepositoryInterface {
   }
 
   @override
+  Future<Either<Failure, bool>> deleteUser() async {
+    HttpResponse response =
+        await httpService.sendDelRequest(APIContract.userProfile);
+    if (response.hasError) {
+      return left(Failure.badRequest(message: response.errorMessage));
+    }
+    return right(true);
+  }
+
+  @override
   Future<Either<Failure, bool>> trySignIn() async {
     final credentials = await credentialsLocalDataSource.get();
     return await credentials.fold((l) async {

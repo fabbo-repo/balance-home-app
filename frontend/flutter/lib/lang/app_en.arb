@@ -107,6 +107,15 @@
     "needCoinType": "Coin type needed",
     "storeCredentials": "Remember crdentials",
     "userEditDialogTitle": "Edit account",
+    "userDelete": "Delete account",
+    "userDeleteDialogTitle": "Delete account",
+    "userDialogDescription": "Are you sure you want to delete the account?",
+
+    "@_SETTINGS":{},
+    "language": "Language",
+    "darkMode": "Dark Mode",
+    "receiveEmailBalance": "Receive email balance",
+    "settingsDialogTitle": "Settings",
 
     "@_STATISTICS":{},
     "balanceChartTitle": "Revenues and expenses for",

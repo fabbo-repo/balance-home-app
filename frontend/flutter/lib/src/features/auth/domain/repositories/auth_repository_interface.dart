@@ -15,6 +15,8 @@ abstract class AuthRepositoryInterface {
 
   Future<Either<Failure, UserEntity>> getUser();
 
+  Future<Either<Failure, bool>> deleteUser();
+
   Future<Either<Failure, bool>> trySignIn();
 
   Future<Either<Failure, bool>> signIn(CredentialsEntity credentials,

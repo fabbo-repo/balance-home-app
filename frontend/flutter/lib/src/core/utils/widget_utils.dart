@@ -25,3 +25,9 @@ Widget verticalSpace() {
     height: AppLayout.genericPadding,
   );
 }
+
+Widget horizontalSpace() {
+  return const SizedBox(
+    width: AppLayout.genericPadding,
+  );
+}
