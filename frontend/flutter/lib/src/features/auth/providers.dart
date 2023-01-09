@@ -17,6 +17,7 @@ import 'package:balance_home_app/src/features/auth/infrastructure/repositories/a
 import 'package:balance_home_app/src/features/auth/infrastructure/repositories/email_code_repository.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/repositories/reset_password_repository.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/repositories/settings_repository.dart';
+import 'package:balance_home_app/src/features/coin/providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -85,8 +86,9 @@ final emailCodeControllerProvider =
 
 final userEditControllerProvider =
     StateNotifierProvider<UserEditController, AsyncValue<void>>((ref) {
-  final repo = ref.watch(authRepositoryProvider);
-  return UserEditController(repo);
+  final authRepo = ref.watch(authRepositoryProvider);
+  final exchangeRepo = ref.watch(exchangeRepositoryProvider);
+  return UserEditController(authRepo, exchangeRepo);
 });
 
 final settingsControllerProvider =

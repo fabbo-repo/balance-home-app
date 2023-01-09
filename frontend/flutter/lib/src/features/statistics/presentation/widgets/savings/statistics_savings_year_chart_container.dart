@@ -77,7 +77,9 @@ class StatisticsSavingsYearChartContainer extends ConsumerWidget {
                     );
                   }).toList(),
                   onChanged: (year) {
-                    selectedDateState.setYear(year!);
+                    if (year! != selectedDate.year) {
+                      selectedDateState.setYear(year);
+                    }
                   }),
             )
           ],

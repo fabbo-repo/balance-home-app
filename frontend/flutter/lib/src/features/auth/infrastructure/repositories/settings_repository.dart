@@ -20,6 +20,8 @@ class SettingsRepository extends SettingsRepositoryInterface {
 
   @override
   Either<Failure, ThemeMode> getTheme() {
-    return right(themeLocalDataSource.get());
+    final theme = themeLocalDataSource.get();
+    if (theme == null) return left(const Failure.empty()); 
+    return right(theme);
   }
 }

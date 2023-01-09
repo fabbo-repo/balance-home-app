@@ -38,11 +38,12 @@ final themeModeProvider =
     StateNotifierProvider<ThemeModeState, ThemeMode>((ref) {
   final settingsRepository = ref.read(settingsRepositoryProvider);
   final theme = settingsRepository.getTheme().fold((l) {
-    (SchedulerBinding.instance.window.platformBrightness == Brightness.light)
+    return (SchedulerBinding.instance.window.platformBrightness ==
+            Brightness.light)
         ? ThemeMode.light
         : ThemeMode.dark;
   }, (r) => r);
-  return ThemeModeState(theme ?? ThemeMode.light);
+  return ThemeModeState(theme);
 });
 
 final appLocalizationsProvider =

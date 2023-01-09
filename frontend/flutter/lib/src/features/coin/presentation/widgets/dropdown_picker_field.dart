@@ -47,10 +47,10 @@ class _DropdownPickerFieldState extends State<DropdownPickerField> {
             onChanged: widget.readOnly
                 ? null
                 : (String? value) {
+                    if (widget.onChanged != null) {
+                      widget.onChanged!(value);
+                    }
                     setState(() {
-                      if (widget.onChanged != null) {
-                        widget.onChanged!(value);
-                      }
                       widget.initialValue = value!;
                     });
                   },

@@ -160,9 +160,28 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                         name: appLocalizations.coinType,
                         initialValue: _prefCoinType!,
                         items: coinTypes.map((e) => e.code).toList(),
-                        onChanged: (value) {
-                          // TODO Show a dialog with current balance changed
-                          _prefCoinType = value;
+                        onChanged: (value) async {
+                          if (value! == widget.user.prefCoinType) return;
+                          (await userEditController.getExchange(
+                                  widget.user.balance,
+                                  widget.user.prefCoinType,
+                                  value,
+                                  appLocalizations))
+                              .fold((l) {
+                            setState(() {
+                              _prefCoinType = widget.user.prefCoinType;
+                            });
+                            showErrorUserEditDialog(appLocalizations, l.error);
+                          }, (newBalance) async {
+                            if (await showCoinChangeAdviceDialog(
+                                appLocalizations, newBalance, value)) {
+                              _prefCoinType = value;
+                            } else {
+                              setState(() {
+                                _prefCoinType = widget.user.prefCoinType;
+                              });
+                            }
+                          });
                         })
                     : Text(appLocalizations.genericError),
                 verticalSpace(),

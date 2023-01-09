@@ -65,6 +65,9 @@ RUN mkdir -p /var/log/balance_app
 # Make migrations
 RUN python manage.py makemigrations
 
+# Compile translations
+RUN django-admin compilemessages --ignore=env
+
 # Change to a non-root user
 #USER ${APP_USER}:${APP_USER}
 

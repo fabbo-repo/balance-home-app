@@ -8,7 +8,7 @@ class ThemeLocalDataSource {
   /// Default constructor for [ThemeLocalDataSource]
   ThemeLocalDataSource(this._sharedPreferences);
 
-  ThemeMode get() {
+  ThemeMode? get() {
     String? themeStr = _sharedPreferences.getString("theme");
     if (themeStr != null && themeStr == "dark") {
       return ThemeMode.dark;
@@ -16,7 +16,7 @@ class ThemeLocalDataSource {
     if (themeStr != null && themeStr == "light") {
       return ThemeMode.light;
     }
-    return ThemeMode.system;
+    return null;
   }
 
   Future<bool> store(ThemeMode theme) async {

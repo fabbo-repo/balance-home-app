@@ -115,7 +115,7 @@ class ExpenseView(viewsets.ModelViewSet):
                 serializer.validated_data['converted_quantity'] = converted_quantity
                 converted_old_quantity = convert_or_fetch(
                     serializer.instance.coin_type, coin_to, 
-                    serializer.instance.converted_quantity
+                    serializer.instance.real_quantity
                 )
                 owner.balance -= converted_quantity \
                     - converted_old_quantity
@@ -136,7 +136,7 @@ class ExpenseView(viewsets.ModelViewSet):
                     else serializer.instance.coin_type
                 converted_quantity = convert_or_fetch(
                     coin_from, owner.pref_coin_type, 
-                    serializer.instance.converted_quantity
+                    serializer.instance.real_quantity
                 )
                 serializer.validated_data['converted_quantity'] = converted_quantity
                 # Create DateBalance or update it
@@ -155,7 +155,7 @@ class ExpenseView(viewsets.ModelViewSet):
             coin_to = owner.pref_coin_type
             converted_quantity = convert_or_fetch(
                 instance.coin_type, coin_to, 
-                instance.converted_quantity
+                instance.real_quantity
             )
             owner.balance += converted_quantity
             owner.balance = round(owner.balance, 2)

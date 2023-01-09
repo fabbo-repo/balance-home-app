@@ -2,6 +2,7 @@ import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/models/statistics_data.dart';
+import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings/statistics_savings_year_chart_container.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/statistics_balance_chart_container.dart';
 import 'package:balance_home_app/src/features/statistics/providers.dart';
 import 'package:flutter/material.dart';
@@ -22,10 +23,8 @@ class StatisticsViewMobile extends ConsumerWidget {
           color: AppColors.balanceBackgroundColor,
           child: Column(
             children: [
-              StatisticsBalanceChartContainer(
-                dateMode: SelectedDateMode.month,
-                revenues: data.revenues,
-                expenses: data.expenses,
+              StatisticsSavingsYearChartContainer(
+                monthlyBalances: data.monthlyBalances,
                 revenueYears: data.revenueYears,
                 expenseYears: data.expenseYears,
               ),
