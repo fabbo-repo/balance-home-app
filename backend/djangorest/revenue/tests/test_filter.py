@@ -53,7 +53,7 @@ class RevenueFilterTests(APITestCase):
         return {
             'name': 'Test name',
             'description': 'Test description',
-            'quantity': 2.6,
+            'real_quantity': 2.6,
             'coin_type': self.coin_type.code,
             'rev_type': self.rev_type.name,
             'date': str(now().date()),
@@ -139,13 +139,13 @@ class RevenueFilterTests(APITestCase):
         """
         self.authenticate_add_revenue()
         # Get revenue data
-        url = self.revenue_url+'?quantity_min=1.0&quantity_max=3.0'
+        url = self.revenue_url+'?converted_quantity_min=1.0&converted_quantity_max=3.0'
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
         # Get revenue data
-        url = self.revenue_url+'?quantity_min=6.0&quantity_max=8.0'
+        url = self.revenue_url+'?converted_quantity_min=6.0&converted_quantity_max=8.0'
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)

@@ -17,13 +17,15 @@ class ExpensePostPutDelSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'description',
-            'quantity',
+            'real_quantity',
+            'converted_quantity',
             'date',
             'coin_type',
             'exp_type'
         ]
         read_only_fields = [
-            'id'
+            'id',
+            'converted_quantity'
         ]
 
 class ExpenseListDetailSerializer(ExpensePostPutDelSerializer):

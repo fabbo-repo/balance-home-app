@@ -42,9 +42,11 @@ class BalanceList extends ConsumerWidget {
         child: FloatingActionButton(
           onPressed: () async {
             if (balanceTypeMode == BalanceTypeMode.expense) {
-              context.push("/${BalanceView.routeExpensePath}/${BalanceCreateView.routePath}");
+              context.push(
+                  "/${BalanceView.routeExpensePath}/${BalanceCreateView.routePath}");
             } else {
-              context.push("/${BalanceView.routeRevenuePath}/${BalanceCreateView.routePath}");
+              context.push(
+                  "/${BalanceView.routeRevenuePath}/${BalanceCreateView.routePath}");
             }
           },
           backgroundColor: balanceTypeMode == BalanceTypeMode.expense
@@ -68,7 +70,9 @@ class BalanceList extends ConsumerWidget {
             balance.date.isAfter(aux.elementAt(i).date)) break;
         // Case Quantity ordering
         if (orderingType == BalanceOrderingType.quantity &&
-            balance.quantity > aux.elementAt(i).quantity) break;
+            balance.converted_quantity! > aux.elementAt(i).converted_quantity!) {
+          break;
+        }
         // Case Name ordering
         if (orderingType == BalanceOrderingType.name &&
             balance.name.compareTo(aux.elementAt(i).name) < 0) break;

@@ -165,6 +165,13 @@ class User(AbstractUser):
         blank = True,
         null = True
     )
+    # Date of the last preferred coin type change.
+    # It is stored because this action requires time and compute power
+    date_coin_change = models.DateTimeField(
+        verbose_name = _("date of last preferred coin type change"),
+        blank = True,
+        null = True
+    )
 
     objects = BalanceUserManager()
     USERNAME_FIELD = "email"

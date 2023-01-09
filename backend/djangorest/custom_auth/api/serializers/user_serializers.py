@@ -126,5 +126,5 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             'last_login'
-            'email', 
+            'email',
         ]

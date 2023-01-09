@@ -214,6 +214,18 @@ python manage.py create_coin_models
 python manage.py users_schedule_setup
 ~~~
 
+* Create **new** invitation code with 1 usage:
+
+~~~bash
+python manage.py inv_code_create --init
+~~~
+
+* Create invitation code with X usage:
+
+~~~bash
+python manage.py inv_code_create --usage X
+~~~
+
 * Generate locale messages files
 
 ~~~bash

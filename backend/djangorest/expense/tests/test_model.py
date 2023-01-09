@@ -25,7 +25,7 @@ class ExpenseModelTests(APITestCase):
         return {
             'name': 'Test name',
             'description': 'Test description',
-            'quantity': 2.0,
+            'real_quantity': 2.0,
             'coin_type': self.coin_type,
             'exp_type': self.exp_type,
             'date': str(now().date()),
@@ -57,10 +57,12 @@ class ExpenseModelTests(APITestCase):
         Checks if expense is created
         """
         data = self.get_expense_data()
+        data["converted_quantity"] = 2.0
         expense = Expense.objects.create(**data)
         self.assertEqual(expense.name, data["name"])
         self.assertEqual(expense.description, data["description"])
-        self.assertEqual(expense.quantity, data["quantity"])
+        self.assertEqual(expense.real_quantity, data["real_quantity"])
+        self.assertEqual(expense.converted_quantity, data["converted_quantity"])
         self.assertEqual(expense.coin_type, data["coin_type"])
         self.assertEqual(expense.exp_type, data["exp_type"])
         self.assertEqual(expense.date, data["date"])

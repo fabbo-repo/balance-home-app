@@ -9,6 +9,10 @@ from custom_auth.api.serializers.user_serializers import (
     UserRetrieveUpdateDestroySerializer
 )
 from django.utils.translation import gettext_lazy as _
+from django.db import transaction
+from django.utils.timezone import now
+from rest_framework import serializers
+from custom_auth.tasks import change_converted_quantities
 
 class UserCreationView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -34,23 +38,57 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         # the same balance is provided in the request
         # and the pref_coin_type is changed, same for
         # expected_annual_balance and expected_monthly_balance
-        if 'pref_coin_type' in serializer.validated_data:
-            if 'balance' in serializer.validated_data:
-                serializer.validated_data['balance'] = convert_or_fetch(
-                    serializer.instance.pref_coin_type, 
-                    serializer.validated_data['pref_coin_type'],
-                    serializer.validated_data['balance']
-                )
-            if 'expected_annual_balance' in serializer.validated_data:
-                serializer.validated_data['expected_annual_balance'] = convert_or_fetch(
-                    serializer.instance.pref_coin_type, 
-                    serializer.validated_data['pref_coin_type'],
-                    serializer.validated_data['expected_annual_balance']
-                )
-            if 'expected_monthly_balance' in serializer.validated_data:
-                serializer.validated_data['expected_monthly_balance'] = convert_or_fetch(
-                    serializer.instance.pref_coin_type, 
-                    serializer.validated_data['pref_coin_type'],
-                    serializer.validated_data['expected_monthly_balance']
-                )
-        serializer.save()
+        with transaction.atomic():
+            if (
+                'pref_coin_type' in serializer.validated_data 
+                and serializer.validated_data["pref_coin_type"] != serializer.instance.pref_coin_type
+            ):
+                if 'balance' in serializer.validated_data:
+                    user = self.request.user
+                    if user.date_coin_change:
+                        duration_s = (now() - user.date_coin_change).total_seconds()
+                        if duration_s < 24 * 60 * 60 :
+                            raise serializers.ValidationError(
+                                {"pref_coin_type": _("Coin type has already been changed in the las 24 hours")})
+                    serializer.validated_data['balance'] = convert_or_fetch(
+                        serializer.instance.pref_coin_type, 
+                        serializer.validated_data['pref_coin_type'],
+                        serializer.validated_data['balance']
+                    )
+                    # Change expected annual balance
+                    if 'expected_annual_balance' not in serializer.validated_data:
+                        serializer.validated_data['expected_annual_balance'] =\
+                            self.request.user.expected_annual_balance
+                    serializer.validated_data['expected_annual_balance'] = convert_or_fetch(
+                        serializer.instance.pref_coin_type, 
+                        serializer.validated_data['pref_coin_type'],
+                        serializer.validated_data['expected_annual_balance']
+                    )
+                    # Change expected monthly balance
+                    if 'expected_monthly_balance' not in serializer.validated_data:
+                        serializer.validated_data['expected_monthly_balance'] =\
+                            self.request.user.expected_monthly_balance
+                    serializer.validated_data['expected_monthly_balance'] = convert_or_fetch(
+                        serializer.instance.pref_coin_type, 
+                        serializer.validated_data['pref_coin_type'],
+                        serializer.validated_data['expected_monthly_balance']
+                    )
+                    change_converted_quantities.delay(
+                        user.email, 
+                        user.pref_coin_type.code, 
+                        serializer.validated_data['pref_coin_type'].code
+                    )
+                    serializer.validated_data["date_coin_change"] = now()
+                if 'expected_annual_balance' in serializer.validated_data:
+                    serializer.validated_data['expected_annual_balance'] = convert_or_fetch(
+                        serializer.instance.pref_coin_type, 
+                        serializer.validated_data['pref_coin_type'],
+                        serializer.validated_data['expected_annual_balance']
+                    )
+                if 'expected_monthly_balance' in serializer.validated_data:
+                    serializer.validated_data['expected_monthly_balance'] = convert_or_fetch(
+                        serializer.instance.pref_coin_type, 
+                        serializer.validated_data['pref_coin_type'],
+                        serializer.validated_data['expected_monthly_balance']
+                    )
+            serializer.save()
