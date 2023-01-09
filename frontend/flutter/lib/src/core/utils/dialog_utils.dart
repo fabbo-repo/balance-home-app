@@ -22,6 +22,22 @@ Future<bool> showCodeAdviceDialog(AppLocalizations appLocalizations) async {
       false;
 }
 
+Future<bool> showCoinChangeAdviceDialog(
+    AppLocalizations appLocalizations, double newBalance, String coinType) async {
+  return (await showDialog(
+          context: navigatorKey.currentContext!,
+          builder: (context) => InfoDialog(
+                dialogTitle: appLocalizations.userEditDialogTitle,
+                dialogDescription: appLocalizations.userCoinChangeDescription
+                  .replaceFirst("{}", "$newBalance $coinType"),
+                confirmationText: appLocalizations.confirmation,
+                cancelText: appLocalizations.cancel,
+                onConfirmation: () => Navigator.pop(context, true),
+                onCancel: () => Navigator.pop(context, false),
+              ))) ??
+      false;
+}
+
 Future<void> showResetPasswordAdviceDialog(
     AppLocalizations appLocalizations) async {
   await showDialog(
@@ -120,8 +136,8 @@ Future<void> showErrorBalanceEditDialog(AppLocalizations appLocalizations,
           ));
 }
 
-Future<void> showErrorUserEditDialog(AppLocalizations appLocalizations,
-    String error) async {
+Future<void> showErrorUserEditDialog(
+    AppLocalizations appLocalizations, String error) async {
   await showDialog(
       context: navigatorKey.currentContext!,
       builder: (context) => ErrorDialog(
@@ -131,8 +147,8 @@ Future<void> showErrorUserEditDialog(AppLocalizations appLocalizations,
           ));
 }
 
-Future<void> showErrorSettingsDialog(AppLocalizations appLocalizations,
-    String error) async {
+Future<void> showErrorSettingsDialog(
+    AppLocalizations appLocalizations, String error) async {
   await showDialog(
       context: navigatorKey.currentContext!,
       builder: (context) => ErrorDialog(

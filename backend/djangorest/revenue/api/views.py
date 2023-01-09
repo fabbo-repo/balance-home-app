@@ -122,7 +122,7 @@ class RevenueView(viewsets.ModelViewSet):
                 # Serializer instance is previous model
                 converted_old_quantity = convert_or_fetch(
                     serializer.instance.coin_type, coin_to, 
-                    serializer.instance.converted_quantity
+                    serializer.instance.real_quantity
                 )
                 owner.balance += converted_quantity \
                     - converted_old_quantity
@@ -159,7 +159,7 @@ class RevenueView(viewsets.ModelViewSet):
             coin_to = owner.pref_coin_type
             converted_quantity = convert_or_fetch(
                 instance.coin_type, coin_to, 
-                instance.converted_quantity
+                instance.real_quantity
             )
             owner.balance -= converted_quantity
             owner.balance = round(owner.balance, 2)
