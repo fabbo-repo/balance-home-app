@@ -103,7 +103,7 @@ class ExpensePermissionsTests(APITestCase):
         return {
             'name': 'Test name',
             'description': 'Test description',
-            'quantity': 2.0,
+            'real_quantity': 2.0,
             'coin_type': self.coin_type.code,
             'exp_type': exp_type.name,
             'date': str(now().date())
@@ -178,14 +178,14 @@ class ExpensePermissionsTests(APITestCase):
         self.post(self.expense_url, data)
         expense = Expense.objects.get(name='Test name')
         # Try update as user1
-        response=self.patch(self.expense_url+'/'+str(expense.id), {'quantity': 35.0})
+        response=self.patch(self.expense_url+'/'+str(expense.id), {'real_quantity': 35.0})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Check expense
         expense = Expense.objects.get(name='Test name')
-        self.assertEqual(expense.quantity, 35.0)
+        self.assertEqual(expense.real_quantity, 35.0)
         # Try update as user2
         self.authenticate_user(self.credentials2)
-        response=self.patch(self.expense_url+'/'+str(expense.id), {'quantity': 30.0})
+        response=self.patch(self.expense_url+'/'+str(expense.id), {'real_quantity': 30.0})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_expense_delete_url(self):

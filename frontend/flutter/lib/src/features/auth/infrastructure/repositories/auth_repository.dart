@@ -30,8 +30,8 @@ class AuthRepository implements AuthRepositoryInterface {
 
   @override
   Future<Either<Failure, bool>> createUser(RegisterEntity registration) async {
-    HttpResponse response =
-        await httpService.sendGetRequest(APIContract.userProfile);
+    HttpResponse response = await httpService.sendPostRequest(
+        APIContract.userCreation, registration.toJson());
     if (response.hasError) {
       return left(Failure.badRequest(message: response.errorMessage));
     }
@@ -47,9 +47,10 @@ class AuthRepository implements AuthRepositoryInterface {
     }
     return right(UserEntity.fromJson(response.content));
   }
-  
+
   @override
-  Future<Either<Failure, bool>> updateUserImage(Uint8List imageBytes, String imageType) async {
+  Future<Either<Failure, bool>> updateUserImage(
+      Uint8List imageBytes, String imageType) async {
     HttpResponse response = await httpService.sendPatchImageRequest(
         APIContract.userProfile, imageBytes, imageType);
     if (response.hasError) {
@@ -81,14 +82,14 @@ class AuthRepository implements AuthRepositoryInterface {
   @override
   Future<Either<Failure, bool>> trySignIn() async {
     final credentials = await credentialsLocalDataSource.get();
+    // Clean jwt
+    httpService.setJwtEntity(null);
     return await credentials.fold((l) async {
       // Clean wrong data
       await credentialsLocalDataSource.remove();
       await jwtLocalDataSource.remove();
       return left(l);
     }, (credentials) async {
-      // Clean jwt
-      httpService.setJwtEntity(null);
       HttpResponse response = await httpService.sendPostRequest(
           APIContract.jwtLogin, credentials.toJson());
       if (response.hasError) {

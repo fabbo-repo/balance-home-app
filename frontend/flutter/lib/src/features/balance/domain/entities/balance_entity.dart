@@ -21,10 +21,13 @@ class BalanceEntity with _$BalanceEntity {
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory BalanceEntity({
     // ignore: invalid_annotation_target
-    @JsonKey(includeIfNull: false) required int? id,
+    @JsonKey(includeIfNull: false)
+    required int? id,
     required String name,
     required String description,
-    required double quantity,
+    required double real_quantity,
+    @JsonKey(includeIfNull: false)
+    required double? converted_quantity,
     required DateTime date,
     required String coinType,
     required BalanceTypeEntity balanceType,

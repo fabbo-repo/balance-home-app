@@ -61,7 +61,7 @@ class ExpenseLogicTests(APITestCase):
         return {
             'name': 'Test name',
             'description': '',
-            'quantity': 2.0,
+            'real_quantity': 2.0,
             'coin_type': self.coin_type.code,
             'exp_type': self.exp_type.name,
             'date': str(now().date()),
@@ -97,10 +97,10 @@ class ExpenseLogicTests(APITestCase):
         user=User.objects.get(email=self.user_data['email'])
         self.assertEqual(user.balance, 8)
         # Negative quantity not allowed
-        data['quantity'] = -10.0
+        data['real_quantity'] = -10.0
         response = self.post(self.expense_url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('quantity', response.data)
+        self.assertIn('real_quantity', response.data)
     
     def test_expense_patch(self):
         """
@@ -111,7 +111,7 @@ class ExpenseLogicTests(APITestCase):
         self.post(self.expense_url, data)
         expense = Expense.objects.get(name='Test name')
         # Patch method
-        self.patch(self.expense_url+'/'+str(expense.id), {'quantity': 5.0})
+        self.patch(self.expense_url+'/'+str(expense.id), {'real_quantity': 5.0})
         user = User.objects.get(email=self.user_data['email'])
         self.assertEqual(user.balance, 5)
 

@@ -49,10 +49,11 @@ class BalanceCreateController
                     id: null,
                     name: name,
                     description: description,
-                    quantity: quantity,
+                    real_quantity: quantity,
                     date: date,
                     coinType: coinType,
-                    balanceType: balanceType),
+                    balanceType: balanceType,
+                    converted_quantity: null),
                 _balanceTypeMode);
             return res.fold((l) {
               state = const AsyncValue.data(null);

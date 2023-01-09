@@ -53,7 +53,7 @@ class BalanceEditForm extends ConsumerWidget {
     final authController = ref.read(authControllerProvider.notifier);
     _nameController.text = balance.name;
     _descriptionController.text = balance.description;
-    _quantityController.text = balance.quantity.toString().replaceAll(".", ",");
+    _quantityController.text = balance.real_quantity.toString().replaceAll(".", ",");
     if (_dateController.text.isEmpty) {
       _dateController.text =
           "${balance.date.day}/${balance.date.month}/${balance.date.year}";

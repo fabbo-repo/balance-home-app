@@ -24,14 +24,15 @@ class UserPutTests(APITestCase):
         # Create InvitationCode
         self.inv_code = InvitationCode.objects.create()
         # User data
+        CoinType.objects.create(code='USD')
+        pref_coin_type = CoinType.objects.create(code='EUR')
         self.user_data={
             "username":"username",
             "email":"email@test.com",
             "password": "password1@212",
             "password2": "password1@212",
             "inv_code": str(self.inv_code.code),
-            'pref_coin_type': 
-                str(CoinType.objects.create(code='EUR').code),
+            'pref_coin_type': pref_coin_type.code,
             'language': 'en'
         }
         self.credentials = {
@@ -43,6 +44,7 @@ class UserPutTests(APITestCase):
             username=self.user_data["username"],
             email=self.user_data["email"],
             inv_code=self.inv_code,
+            pref_coin_type=pref_coin_type,
             verified=True
         )
         user.set_password(self.user_data['password'])
@@ -178,3 +180,31 @@ class UserPutTests(APITestCase):
         self.credentials["password"]= "password1@213"
         response = self.jwt_obtain()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_change_pref_coin_type(self):
+        """
+        Checks that pref coin type is changed
+        """
+        response=self.client.patch(
+            self.user_put_url,
+            data=json.dumps(
+                {
+                    "pref_coin_type": "USD",
+                    "balance": "0"
+                }
+            ),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response=self.client.patch(
+            self.user_put_url,
+            data=json.dumps(
+                {
+                    "pref_coin_type": "EUR",
+                    "balance": "0"
+                }
+            ),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue("pref_coin_type" in str(response.content))

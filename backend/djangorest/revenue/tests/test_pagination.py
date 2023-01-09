@@ -51,7 +51,7 @@ class RevenuePaginationTests(APITestCase):
         return {
             'name': 'Test name',
             'description': 'Test description',
-            'quantity': 2.0,
+            'real_quantity': 2.0,
             'coin_type': self.coin_type.code,
             'rev_type': self.rev_type.name,
             'date': str(now().date()),
@@ -96,7 +96,8 @@ class RevenuePaginationTests(APITestCase):
                     'id': 1, 
                     'name': 'Test name', 
                     'description': 'Test description', 
-                    'quantity': 2.0, 
+                    'real_quantity': 2.0, 
+                    'converted_quantity': 2.0, 
                     'date': str(now().date()), 
                     'coin_type': 'EUR', 
                     'rev_type': {

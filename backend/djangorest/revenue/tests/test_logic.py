@@ -61,7 +61,7 @@ class RevenueLogicTests(APITestCase):
         return {
             'name': 'Test name',
             'description': '',
-            'quantity': 2.0,
+            'real_quantity': 2.0,
             'coin_type': self.coin_type.code,
             'rev_type': self.rev_type.name,
             'date': str(now().date()),
@@ -98,10 +98,10 @@ class RevenueLogicTests(APITestCase):
         user=User.objects.get(email=self.user_data['email'])
         self.assertEqual(user.balance, 3)
         # Negative quantity not allowed
-        data['quantity'] = -10.0
+        data['real_quantity'] = -10.0
         response = self.post(self.revenue_url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('quantity', response.data)
+        self.assertIn('real_quantity', response.data)
     
     def test_revenue_patch(self):
         """
@@ -112,7 +112,7 @@ class RevenueLogicTests(APITestCase):
         self.post(self.revenue_url, data)
         revenue = Revenue.objects.get(name='Test name')
         # Patch method
-        self.patch(self.revenue_url+'/'+str(revenue.id), {'quantity': 35.0})
+        self.patch(self.revenue_url+'/'+str(revenue.id), {'real_quantity': 35.0})
         user = User.objects.get(email=self.user_data['email'])
         self.assertEqual(user.balance, 36)
 

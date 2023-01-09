@@ -15,7 +15,7 @@ class RevenueAdmin(admin.ModelAdmin):
     fields = (
         'name',
         'description',
-        ('quantity', 'date',),
+        ('real_quantity', 'converted_quantity', 'date',),
         ('coin_type', 'rev_type',),
         'owner',
         ('created', 'updated',),
@@ -25,7 +25,8 @@ class RevenueAdmin(admin.ModelAdmin):
     )
     list_display = (
         'name', 
-        'quantity',
+        'real_quantity',
+        'converted_quantity',
         'date',
         'owner',
     )

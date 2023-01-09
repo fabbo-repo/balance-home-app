@@ -22,8 +22,12 @@ class Balance(models.Model):
         max_length = 2000, 
         default = ""
     )
-    quantity = models.FloatField(
-        verbose_name = _('quantity'),
+    real_quantity = models.FloatField(
+        verbose_name = _('real quantity'),
+        validators = [MinValueValidator(0.0)],
+    )
+    converted_quantity = models.FloatField(
+        verbose_name = _('converted quantity'),
         validators = [MinValueValidator(0.0)],
     )
     date = models.DateField(

@@ -42,20 +42,22 @@ python manage.py balance_schedule_setup
 python manage.py create_balance_models
 python manage.py coin_schedule_setup
 python manage.py create_coin_models
+python manage.py users_schedule_setup
+python manage.py inv_code_create --init
 
+# https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20
 cat << "EOF"
 
 
-
-B)bbbb           l)L                                     H)    hh                                 A)aa                  
-B)   bb           l)                                     H)    hh                                A)  aa                 
-B)bbbb   a)AAAA   l)  a)AAAA  n)NNNN   c)CCCC e)EEEEE    H)hhhhhh  o)OOO   m)MM MMM  e)EEEEE    A)    aa p)PPPP  p)PPPP 
-B)   bb   a)AAA   l)   a)AAA  n)   NN c)      e)EEEE     H)    hh o)   OO m)  MM  MM e)EEEE     A)aaaaaa p)   PP p)   PP
-B)    bb a)   A   l)  a)   A  n)   NN c)      e)         H)    hh o)   OO m)  MM  MM e)         A)    aa p)   PP p)   PP
-B)bbbbb   a)AAAA l)LL  a)AAAA n)   NN  c)CCCC  e)EEEE    H)    hh  o)OOO  m)      MM  e)EEEE    A)    aa p)PPPP  p)PPPP 
-                                                                                                         p)      p)     
-                                                                                                         p)      p)  
-
+$$$$$$$\            $$\ $$\   $$\                         
+$$  __$$\           $$ |$$ |  $$ |                        
+$$ |  $$ | $$$$$$\  $$ |$$ |  $$ | $$$$$$\  $$$$$$\$$$$\  
+$$$$$$$\ | \____$$\ $$ |$$$$$$$$ |$$  __$$\ $$  _$$  _$$\ 
+$$  __$$\  $$$$$$$ |$$ |$$  __$$ |$$ /  $$ |$$ / $$ / $$ |
+$$ |  $$ |$$  __$$ |$$ |$$ |  $$ |$$ |  $$ |$$ | $$ | $$ |
+$$$$$$$  |\$$$$$$$ |$$ |$$ |  $$ |\$$$$$$  |$$ | $$ | $$ |
+\_______/  \_______|\__|\__|  \__| \______/ \__| \__| \__|
+                                                          
 
 EOF
 

@@ -101,7 +101,7 @@ class ExchangeLogicTests(APITestCase):
         return {
             'name': 'Test name',
             'description': 'Test description',
-            'quantity': 1.0,
+            'real_quantity': 1.0,
             'coin_type': coin_type.code,
             'rev_type': rev_type.name,
             'date': str(now().date()),
@@ -115,7 +115,8 @@ class ExchangeLogicTests(APITestCase):
         return Revenue.objects.create(
             name='Test name',
             description='Test description',
-            quantity=1.0,
+            real_quantity=1.0,
+            converted_quantity=1.0,
             coin_type=coin_type,
             rev_type=rev_type,
             date=now(),
@@ -132,7 +133,7 @@ class ExchangeLogicTests(APITestCase):
         return {
             'name': 'Test name',
             'description': 'Test description',
-            'quantity': 1.0,
+            'real_quantity': 1.0,
             'coin_type': coin_type.code,
             'exp_type': exp_type.name,
             'date': str(now().date()),
@@ -145,7 +146,8 @@ class ExchangeLogicTests(APITestCase):
         return Expense.objects.create(
             name='Test name',
             description='Test description',
-            quantity=1.0,
+            real_quantity=1.0,
+            converted_quantity=1.0,
             coin_type=coin_type,
             exp_type=exp_type,
             date=now(),
@@ -233,7 +235,7 @@ class ExchangeLogicTests(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(
             User.objects.get(email=self.user_data['email']).balance,
-            self.user_data['balance'] + (rev_data['quantity'] * 1.3)
+            self.user_data['balance'] + (rev_data['real_quantity'] * 1.3)
         )
     
     def test_post_expense_diff_coin_type(self):
@@ -255,7 +257,7 @@ class ExchangeLogicTests(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(
             User.objects.get(email=self.user_data['email']).balance,
-            self.user_data['balance'] - (exp_data['quantity'] * 1.3)
+            self.user_data['balance'] - (exp_data['real_quantity'] * 1.3)
         )
     
     def test_patch_revenue_diff_coin_type(self):
@@ -275,14 +277,14 @@ class ExchangeLogicTests(APITestCase):
         )
         rev = self.get_create_revenue(self.coin_type2)
         resp = self.patch(self.revenue_url+'/'+str(rev.id), {
-            'quantity': 2,
+            'real_quantity': 2,
             'coin_type': self.coin_type3.code
         })
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(
             User.objects.get(email=self.user_data['email']).balance,
             round(
-                self.user_data['balance'] + (2 * 0.8) - (rev.quantity * 1.3), 
+                self.user_data['balance'] + (2 * 0.8) - (rev.converted_quantity * 1.3), 
                 2
             )
         )
@@ -304,14 +306,14 @@ class ExchangeLogicTests(APITestCase):
         )
         exp = self.get_create_expense(self.coin_type2)
         resp = self.patch(self.expense_url+'/'+str(exp.id), {
-            'quantity': 2,
+            'real_quantity': 2,
             'coin_type': self.coin_type3.code
         })
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(
             User.objects.get(email=self.user_data['email']).balance,
             round(
-                self.user_data['balance'] - ((2 * 0.8) - (exp.quantity * 1.3)), 
+                self.user_data['balance'] - ((2 * 0.8) - (exp.converted_quantity * 1.3)), 
                 2
             )
         )
@@ -336,7 +338,7 @@ class ExchangeLogicTests(APITestCase):
         self.assertEqual(
             User.objects.get(email=self.user_data['email']).balance,
             round(
-                self.user_data['balance'] - (rev.quantity * 1.3), 
+                self.user_data['balance'] - (rev.converted_quantity * 1.3), 
                 2
             )
         )
@@ -361,7 +363,7 @@ class ExchangeLogicTests(APITestCase):
         self.assertEqual(
             User.objects.get(email=self.user_data['email']).balance,
             round(
-                self.user_data['balance'] + (exp.quantity * 1.3), 
+                self.user_data['balance'] + (exp.converted_quantity * 1.3), 
                 2
             )
         )

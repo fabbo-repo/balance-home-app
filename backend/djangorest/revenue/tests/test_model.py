@@ -25,7 +25,7 @@ class RevenueModelTests(APITestCase):
         return {
             'name': 'Test name',
             'description': 'Test description',
-            'quantity': 2.0,
+            'real_quantity': 2.0,
             'coin_type': self.coin_type,
             'rev_type': self.rev_type,
             'date': now().date(),
@@ -56,10 +56,12 @@ class RevenueModelTests(APITestCase):
         Checks if revenue is created
         """
         data = self.get_revenue_data()
+        data["converted_quantity"] = 2.0
         revenue = Revenue.objects.create(**data)
         self.assertEqual(revenue.name, data["name"])
         self.assertEqual(revenue.description, data["description"])
-        self.assertEqual(revenue.quantity, data["quantity"])
+        self.assertEqual(revenue.real_quantity, data["real_quantity"])
+        self.assertEqual(revenue.converted_quantity, data["converted_quantity"])
         self.assertEqual(revenue.coin_type, data["coin_type"])
         self.assertEqual(revenue.rev_type, data["rev_type"])
         self.assertEqual(revenue.date, data["date"])

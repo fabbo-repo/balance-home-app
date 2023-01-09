@@ -103,7 +103,7 @@ class RevenuePermissionsTests(APITestCase):
         return {
             'name': 'Test name',
             'description': 'Test description',
-            'quantity': 2.0,
+            'real_quantity': 2.0,
             'coin_type': self.coin_type.code,
             'rev_type': rev_type['name'],
             'date': str(now().date())
@@ -178,14 +178,14 @@ class RevenuePermissionsTests(APITestCase):
         self.post(self.revenue_url, data)
         revenue = Revenue.objects.get(name='Test name')
         # Try update as user1
-        response=self.patch(self.revenue_url+'/'+str(revenue.id), {'quantity': 35.0})
+        response=self.patch(self.revenue_url+'/'+str(revenue.id), {'real_quantity': 35.0})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Check revenue
         revenue = Revenue.objects.get(name='Test name')
-        self.assertEqual(revenue.quantity, 35.0)
+        self.assertEqual(revenue.real_quantity, 35.0)
         # Try update as user2
         self.authenticate_user(self.credentials2)
-        response=self.patch(self.revenue_url+'/'+str(revenue.id), {'quantity': 30.0})
+        response=self.patch(self.revenue_url+'/'+str(revenue.id), {'real_quantity': 30.0})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_revenue_delete_url(self):
