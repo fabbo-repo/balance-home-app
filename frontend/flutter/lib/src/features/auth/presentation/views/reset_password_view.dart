@@ -1,6 +1,7 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
+import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/widgets/reset_password_form.dart';
@@ -34,17 +35,7 @@ class ResetPasswordView extends ConsumerWidget {
               navigatorKey.currentContext!.goNamed(AuthView.routeName),
         ),
       ),
-      body: SafeArea(
-          child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(
-                        (ref.watch(themeModeProvider) == ThemeMode.dark)
-                            ? "assets/images/auth_background_dark_image.jpg"
-                            : "assets/images/auth_background_image.jpg"),
-                    fit: BoxFit.cover),
-              ),
-              child: ResetPasswordForm())),
+      body: SafeArea(child: BackgroundWidget(child: ResetPasswordForm())),
     );
   }
 }

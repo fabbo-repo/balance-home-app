@@ -1,6 +1,7 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
+import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/presentation/widgets/settings_widget.dart';
@@ -37,16 +38,7 @@ class SettingsView extends ConsumerWidget {
             ),
           ),
           body: SafeArea(
-              child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(
-                      ref.watch(themeModeProvider) == ThemeMode.dark
-                          ? "assets/images/auth_background_dark_image.jpg"
-                          : "assets/images/auth_background_image.jpg"),
-                  fit: BoxFit.cover),
-            ),
-            constraints: const BoxConstraints.expand(),
+              child: BackgroundWidget(
             child: SettingsWidget(user: data!),
           )));
       return cache;
