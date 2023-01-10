@@ -1,5 +1,9 @@
 # DRF Backend
 
+## Architecture diagram
+
+![Alt text](./diagrams/architecture.png?raw=true "")
+
 ## Directory tree example
 
 ~~~bash
