@@ -1,16 +1,15 @@
-import 'package:balance_home_app/config/app_layout.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_error_widget.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/password_text_form_field.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/simple_text_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/custom_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
+import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/application/reset_password_controller.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_password.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_repeat_password.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/verification_code.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
-import 'package:balance_home_app/src/features/auth/presentation/views/utils.dart';
+import 'package:balance_home_app/src/core/utils/dialog_utils.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,8 +61,8 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
           padding: const EdgeInsets.all(8),
           child: Column(
             children: [
-              space(),
-              SimpleTextFormField(
+              verticalSpace(),
+              CustomTextFormField(
                 onChanged: (value) =>
                     _email = UserEmail(appLocalizations, value),
                 title: appLocalizations.emailAddress,
@@ -73,7 +72,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                 maxWidth: 400,
                 controller: widget._emailController,
               ),
-              space(),
+              verticalSpace(),
               PasswordTextFormField(
                 onChanged: (value) =>
                     _password = UserPassword(appLocalizations, value),
@@ -94,8 +93,8 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                 maxWidth: 400,
                 controller: widget._repeatPasswordController,
               ),
-              space(),
-              SimpleTextFormField(
+              verticalSpace(),
+              CustomTextFormField(
                 onChanged: (value) =>
                     _code = VerificationCode(appLocalizations, value),
                 title: appLocalizations.code,
@@ -106,8 +105,10 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                 controller: widget._codeController,
                 textAlign: TextAlign.center,
               ),
-              space(),
-              ElevatedButton(
+              verticalSpace(),
+              CustomTextButton(
+                width: 200,
+                height: 50,
                 onPressed: () async {
                   if (progress == ResetPasswordProgress.none &&
                       !widget._formKey.currentState!.validate()) {
@@ -121,56 +122,42 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                     showErrorResetPasswordCodeDialog(appLocalizations, l.error);
                   }, (r) {});
                 },
-                child: progress == ResetPasswordProgress.none
-                    ? Text(appLocalizations.sendCode)
-                    : Text(appLocalizations.reSendCode),
+                text: progress == ResetPasswordProgress.none
+                    ? appLocalizations.sendCode
+                    : appLocalizations.reSendCode,
               ),
-              space(),
-              ElevatedButton(
-                onPressed: progress != ResetPasswordProgress.started
-                    ? null
-                    : () async {
-                        if (widget._formKey.currentState == null ||
-                            !widget._formKey.currentState!.validate()) {
-                          return;
-                        }
-                        if (_email == null) return;
-                        if (_password == null) return;
-                        if (_repeatPassword == null) return;
-                        if (_code == null) return;
-                        (await resetPasswordController.verifyCode(
-                                _email!, _code!, _password!, appLocalizations))
-                            .fold((l) {
-                          showErrorResetPasswordCodeDialog(
-                              appLocalizations, l.error);
-                        }, (r) {
-                          context.go("/${AuthView.routePath}");
-                        });
-                      },
-                child: Text(appLocalizations.verifyCode),
+              verticalSpace(),
+              CustomTextButton(
+                width: 200,
+                height: 50,
+                enabled: progress == ResetPasswordProgress.started,
+                onPressed: () async {
+                  if (widget._formKey.currentState == null ||
+                      !widget._formKey.currentState!.validate()) {
+                    return;
+                  }
+                  if (_email == null) return;
+                  if (_password == null) return;
+                  if (_repeatPassword == null) return;
+                  if (_code == null) return;
+                  (await resetPasswordController.verifyCode(
+                          _email!, _code!, _password!, appLocalizations))
+                      .fold((l) {
+                    showErrorResetPasswordCodeDialog(appLocalizations, l.error);
+                  }, (r) {
+                    context.go("/${AuthView.routePath}");
+                  });
+                },
+                text: appLocalizations.verifyCode,
               ),
             ],
           ),
         ),
       );
-    }, error: (error, stackTrace) {
-      debugPrint("[RESET_PASSWORD_FORM] $error -> $stackTrace");
-      return Stack(alignment: AlignmentDirectional.centerStart, children: [
-        cache,
-        const CustomErrorWidget(),
-      ]);
+    }, error: (o, st) {
+      return showError(o, st, cache: cache);
     }, loading: () {
-      return Stack(alignment: AlignmentDirectional.centerStart, children: [
-        cache,
-        const LoadingWidget(color: Colors.grey),
-      ]);
+      return showLoading(cache: cache);
     });
-  }
-
-  @visibleForTesting
-  Widget space() {
-    return const SizedBox(
-      height: AppLayout.genericPadding,
-    );
   }
 }

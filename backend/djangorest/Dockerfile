@@ -1,4 +1,4 @@
-FROM python:3.9.14
+FROM python:3.10-buster
 
 # Create a group and user to run our app
 ENV APP_USER=balance_app_user
@@ -18,25 +18,31 @@ RUN set -ex \
     && apt-get update && apt-get install -y --no-install-recommends $RUN_DEPS \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy Pipfile files
-#COPY Pipfile Pipfile.lock /
-COPY Pipfile /
+# Install Poetry
+#RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/etc/poetry python3 -
+#ENV PATH="/etc/poetry:${PATH}"
+
+# Copy dependency files
+#COPY pyproject.toml /
+#COPY poetry.lock /
+COPY requirements.txt /
 
 # Install build deps, then remove unneeded build deps all in a single step.
 # Correct the path to your production requirements file, if needed.
 RUN set -ex \
     && BUILD_DEPS=" \
     build-essential \
-    libpcre3-dev \
     libpq-dev \
     " \
     && apt-get update && apt-get install -y --no-install-recommends $BUILD_DEPS \
     && rm -rf /var/lib/apt/lists/*
 
-# Install pipenv and dependencies
-RUN pip install pipenv
-RUN pipenv lock
-RUN pipenv install --system --deploy
+# Add dependencies from requirements
+#RUN cat requirements.txt | xargs poetry add
+#RUN poetry lock
+# Install dependencies
+#RUN poetry install
+RUN pip install -r requirements.txt
 
 ENV PYTHONUNBUFFERED 1
 
@@ -58,6 +64,9 @@ RUN mkdir -p /var/log/balance_app
 
 # Make migrations
 RUN python manage.py makemigrations
+
+# Compile translations
+RUN django-admin compilemessages --ignore=env
 
 # Change to a non-root user
 #USER ${APP_USER}:${APP_USER}

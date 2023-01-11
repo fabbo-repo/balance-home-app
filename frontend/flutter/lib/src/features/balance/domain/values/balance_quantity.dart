@@ -4,12 +4,12 @@ import 'package:fpdart/fpdart.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Balance Quanity value
-class BalanceQuantity extends ValueAbstract<double> {
+class BalanceQuantity extends ValueAbstract<double?> {
   @override
   Either<Failure, double> get value => _value;
   final Either<Failure, double> _value;
 
-  factory BalanceQuantity(AppLocalizations appLocalizations, double input) {
+  factory BalanceQuantity(AppLocalizations appLocalizations, double? input) {
     return BalanceQuantity._(
       _validate(appLocalizations, input),
     );
@@ -20,13 +20,16 @@ class BalanceQuantity extends ValueAbstract<double> {
 
 /// * minimum: 0
 Either<Failure, double> _validate(
-    AppLocalizations appLocalizations, double input) {
-  if (input < 0) {
+    AppLocalizations appLocalizations, double? input) {
+  if (input != null && input >= 0) {
     return right(input);
   }
+  String message = input == null
+      ? appLocalizations.balanceQuantityRequired
+      : appLocalizations.balanceQuantityMinValue;
   return left(
     Failure.unprocessableEntity(
-      message: appLocalizations.balanceQuantityMinValue,
+      message: message,
     ),
   );
 }

@@ -1,12 +1,16 @@
 import 'package:balance_home_app/config/app_layout.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/info_dialog.dart';
 import 'package:balance_home_app/src/core/providers.dart';
+import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
+import 'package:balance_home_app/src/features/balance/presentation/views/balance_edit_view.dart';
+import 'package:balance_home_app/src/features/balance/presentation/views/balance_view.dart';
 import 'package:balance_home_app/src/features/balance/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class BalanceCard extends ConsumerWidget {
   final BalanceEntity balance;
@@ -17,13 +21,19 @@ class BalanceCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authController = ref.read(authControllerProvider.notifier);
     final balanceListController = balanceTypeMode == BalanceTypeMode.expense
         ? ref.read(expenseListControllerProvider.notifier)
         : ref.read(revenueListControllerProvider.notifier);
     final appLocalizations = ref.watch(appLocalizationsProvider);
     return GestureDetector(
       onTap: () {
-        // TODO
+        context.pushNamed(
+            (balanceTypeMode == BalanceTypeMode.expense
+                    ? BalanceView.routeExpenseName
+                    : BalanceView.routeRevenueName) +
+                BalanceEditView.routeName,
+            queryParams: {"id": "${balance.id}"});
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -38,7 +48,7 @@ class BalanceCard extends ConsumerWidget {
             ListTile(
               leading: Image.network(balance.balanceType.image),
               title: Text(balance.name, overflow: TextOverflow.ellipsis),
-              subtitle: Text("${balance.quantity} ${balance.coinType}",
+              subtitle: Text("${balance.real_quantity} ${balance.coinType}",
                   overflow: TextOverflow.ellipsis),
               trailing: Text(
                   "${balance.date.day}-${balance.date.month}-${balance.date.year}"),
@@ -62,6 +72,7 @@ class BalanceCard extends ConsumerWidget {
                     if (await showDeleteAdviceDialog(
                         context, appLocalizations)) {
                       balanceListController.deleteBalance(balance);
+                      authController.refreshUserData();
                     }
                   },
                   child: const Icon(
@@ -84,8 +95,8 @@ class BalanceCard extends ConsumerWidget {
             context: context,
             builder: (context) => InfoDialog(
                   dialogTitle: balanceTypeMode == BalanceTypeMode.expense
-                      ? appLocalizations.expenseDialogTitle
-                      : appLocalizations.revenueDialogTitle,
+                      ? appLocalizations.expenseDeleteDialogTitle
+                      : appLocalizations.revenueDeleteDialogTitle,
                   dialogDescription: balanceTypeMode == BalanceTypeMode.expense
                       ? appLocalizations.expenseDialogDescription
                       : appLocalizations.revenueDialogDescription,

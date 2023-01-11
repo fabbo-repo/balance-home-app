@@ -99,7 +99,7 @@ class BalanceRepository implements BalanceRepositoryInterface {
         ? APIContract.expense
         : APIContract.revenue;
     HttpResponse response = await httpService.sendPostRequest(
-        '$baseUrl/${balance.id.toString()}',
+        baseUrl,
         balanceTypeMode == BalanceTypeMode.expense
             ? balance.toExpenseJson()
             : balance.toRevenueJson());
@@ -107,8 +107,10 @@ class BalanceRepository implements BalanceRepositoryInterface {
       return left(Failure.badRequest(message: response.errorMessage));
     }
     return right(balanceTypeMode == BalanceTypeMode.expense
-        ? BalanceEntity.fromExpenseJson(response.content)
-        : BalanceEntity.fromRevenueJson(response.content));
+        ? BalanceEntity.fromExpenseJson(response.content,
+            type: balance.balanceType)
+        : BalanceEntity.fromRevenueJson(response.content,
+            type: balance.balanceType));
   }
 
   /// Update a [BalanceEntity].
@@ -127,8 +129,8 @@ class BalanceRepository implements BalanceRepositoryInterface {
       return left(Failure.badRequest(message: response.errorMessage));
     }
     return right(balanceTypeMode == BalanceTypeMode.expense
-        ? BalanceEntity.fromExpenseJson(response.content)
-        : BalanceEntity.fromRevenueJson(response.content));
+        ? BalanceEntity.fromExpenseJson(response.content, type: balance.balanceType)
+        : BalanceEntity.fromRevenueJson(response.content, type: balance.balanceType));
   }
 
   /// Delete a [BalanceEntity].

@@ -52,7 +52,7 @@ class StatisticsSavingsYearChartContainer extends ConsumerWidget {
               margin: const EdgeInsets.only(top: 20, bottom: 10),
               color: const Color.fromARGB(255, 194, 56, 235),
               height: 45,
-              width: (PlatformUtils().isSmallWindow())
+              width: (PlatformUtils().isSmallWindow(context))
                   ? screenWidth * 0.80
                   : screenWidth * 0.35,
               child: Center(
@@ -77,14 +77,16 @@ class StatisticsSavingsYearChartContainer extends ConsumerWidget {
                     );
                   }).toList(),
                   onChanged: (year) {
-                    selectedDateState.setYear(year!);
+                    if (year! != selectedDate.year) {
+                      selectedDateState.setYear(year);
+                    }
                   }),
             )
           ],
         ),
         SizedBox(
             height: chartLineHeight,
-            width: (PlatformUtils().isSmallWindow())
+            width: (PlatformUtils().isSmallWindow(context))
                 ? screenWidth * 0.95
                 : screenWidth * 0.45,
             child: StatisticsSavingsYearLineChart(

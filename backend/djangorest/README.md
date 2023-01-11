@@ -1,5 +1,9 @@
 # DRF Backend
 
+## Architecture diagram
+
+![Alt text](./diagrams/architecture.png?raw=true "")
+
 ## Directory tree example
 
 ~~~bash
@@ -77,9 +81,8 @@ djangorest/
 
 | NAME                      | DESCRIPTION                                                |
 | ------------------------- | ---------------------------------------------------------- |
-| APP_DOMAIN                | Backend host name                                          |
-| APP_PORT                  | Backend port                                               |
 | APP_DEBUG                 | Debug mode enabled (true|false)                            |
+| APP_SECRET_KEY            | Secret key for criptography (optional)                     |
 | APP_ALLOWED_HOSTS         | List of strings representing the allowed host/domain names |
 | APP_CORS_ALLOWED_HOSTS    | CORS allowed host/domain names                             |
 | APP_EMAIL_HOST            | Email service host name                                    |
@@ -213,6 +216,18 @@ python manage.py create_coin_models
 
 ~~~bash
 python manage.py users_schedule_setup
+~~~
+
+* Create **new** invitation code with 1 usage:
+
+~~~bash
+python manage.py inv_code_create --init
+~~~
+
+* Create invitation code with X usage:
+
+~~~bash
+python manage.py inv_code_create --usage X
 ~~~
 
 * Generate locale messages files

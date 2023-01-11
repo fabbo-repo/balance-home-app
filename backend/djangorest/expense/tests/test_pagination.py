@@ -52,7 +52,7 @@ class ExpensePaginationTests(APITestCase):
         return {
             'name': 'Test name',
             'description': 'Test description',
-            'quantity': 2.0,
+            'real_quantity': 2.0,
             'coin_type': self.coin_type.code,
             'exp_type': self.exp_type.name,
             'date': str(now().date()),
@@ -97,7 +97,8 @@ class ExpensePaginationTests(APITestCase):
                     'id': 1, 
                     'name': 'Test name', 
                     'description': 'Test description', 
-                    'quantity': 2.0, 
+                    'real_quantity': 2.0, 
+                    'converted_quantity': 2.0, 
                     'date': str(now().date()), 
                     'coin_type': 'EUR', 
                     'exp_type': {

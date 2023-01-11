@@ -3,6 +3,7 @@ import 'package:balance_home_app/src/core/presentation/widgets/error_dialog.dart
 import 'package:balance_home_app/src/core/presentation/widgets/info_dialog.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/reset_password_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/widgets/email_code_dialog.dart';
+import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +15,22 @@ Future<bool> showCodeAdviceDialog(AppLocalizations appLocalizations) async {
                 dialogTitle: appLocalizations.emailVerifiactionCode,
                 dialogDescription: appLocalizations.emailVerifiactionAdvice,
                 confirmationText: appLocalizations.sendCode,
+                cancelText: appLocalizations.cancel,
+                onConfirmation: () => Navigator.pop(context, true),
+                onCancel: () => Navigator.pop(context, false),
+              ))) ??
+      false;
+}
+
+Future<bool> showCoinChangeAdviceDialog(
+    AppLocalizations appLocalizations, double newBalance, String coinType) async {
+  return (await showDialog(
+          context: navigatorKey.currentContext!,
+          builder: (context) => InfoDialog(
+                dialogTitle: appLocalizations.userEditDialogTitle,
+                dialogDescription: appLocalizations.userCoinChangeDescription
+                  .replaceFirst("{}", "$newBalance $coinType"),
+                confirmationText: appLocalizations.confirmation,
                 cancelText: appLocalizations.cancel,
                 onConfirmation: () => Navigator.pop(context, true),
                 onCancel: () => Navigator.pop(context, false),
@@ -88,6 +105,54 @@ Future<void> showErrorEmailVerifiactionCodeDialog(
       context: navigatorKey.currentContext!,
       builder: (context) => ErrorDialog(
             dialogTitle: appLocalizations.emailVerifiactionCode,
+            dialogDescription: error,
+            cancelText: appLocalizations.cancel,
+          ));
+}
+
+Future<void> showErrorBalanceCreationDialog(AppLocalizations appLocalizations,
+    String error, BalanceTypeMode balanceTypeMode) async {
+  await showDialog(
+      context: navigatorKey.currentContext!,
+      builder: (context) => ErrorDialog(
+            dialogTitle: balanceTypeMode == BalanceTypeMode.expense
+                ? appLocalizations.expenseCreateDialogTitle
+                : appLocalizations.revenueCreateDialogTitle,
+            dialogDescription: error,
+            cancelText: appLocalizations.cancel,
+          ));
+}
+
+Future<void> showErrorBalanceEditDialog(AppLocalizations appLocalizations,
+    String error, BalanceTypeMode balanceTypeMode) async {
+  await showDialog(
+      context: navigatorKey.currentContext!,
+      builder: (context) => ErrorDialog(
+            dialogTitle: balanceTypeMode == BalanceTypeMode.expense
+                ? appLocalizations.expenseEditDialogTitle
+                : appLocalizations.revenueEditDialogTitle,
+            dialogDescription: error,
+            cancelText: appLocalizations.cancel,
+          ));
+}
+
+Future<void> showErrorUserEditDialog(
+    AppLocalizations appLocalizations, String error) async {
+  await showDialog(
+      context: navigatorKey.currentContext!,
+      builder: (context) => ErrorDialog(
+            dialogTitle: appLocalizations.userEditDialogTitle,
+            dialogDescription: error,
+            cancelText: appLocalizations.cancel,
+          ));
+}
+
+Future<void> showErrorSettingsDialog(
+    AppLocalizations appLocalizations, String error) async {
+  await showDialog(
+      context: navigatorKey.currentContext!,
+      builder: (context) => ErrorDialog(
+            dialogTitle: appLocalizations.settingsDialogTitle,
             dialogDescription: error,
             cancelText: appLocalizations.cancel,
           ));

@@ -1,20 +1,25 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/platform_utils.dart';
+import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/logout_view.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/settings_view.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/user_edit_view.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomAppBar extends ConsumerWidget {
   const CustomAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(authControllerProvider).asData!.value;
+    final user = ref.watch(authControllerProvider).asData?.value;
     final appLocalizations = ref.watch(appLocalizationsProvider);
     return AppBar(
       automaticallyImplyLeading: false,
@@ -33,29 +38,30 @@ class CustomAppBar extends ConsumerWidget {
       title: (PlatformUtils().isLargeWindow(context) ||
               PlatformUtils().isMediumWindow(context))
           ? const AppTittle(fontSize: 30)
-          : _balanceBox(appLocalizations, user!),
+          : _balanceBox(appLocalizations, user),
       leading: (PlatformUtils().isLargeWindow(context) ||
               PlatformUtils().isMediumWindow(context))
-          ? _balanceBox(appLocalizations, user!)
+          ? _balanceBox(appLocalizations, user)
           : null,
       leadingWidth: (PlatformUtils().isLargeWindow(context) ||
               PlatformUtils().isMediumWindow(context))
           ? 250
           : 0,
-      actions: [_profileButton(user!)],
+      actions: [_profileButton(appLocalizations, user)],
     );
   }
 
   /// Returns a [Widget] that includes an account balance counter and
   /// the coint type setup in the account.
-  Widget _balanceBox(AppLocalizations appLocalizations, UserEntity user) {
+  Widget _balanceBox(AppLocalizations appLocalizations, UserEntity? user) {
     return Container(
         width: 400,
         height: 100,
         color: const Color.fromARGB(255, 12, 12, 12),
         child: Center(
           child: Text(
-            "${appLocalizations.balance}: ${user.balance} ${user.prefCoinType}",
+            "${appLocalizations.balance}: ${user == null ? 0 : user.balance} "
+            "${user == null ? "" : user.prefCoinType}",
             style: const TextStyle(color: Colors.white),
           ),
         ));
@@ -63,31 +69,61 @@ class CustomAppBar extends ConsumerWidget {
 
   /// Returns a [Widget] that includes a button with the image
   /// profile and name of the user account.
-  Widget _profileButton(UserEntity user) {
-    return ElevatedButton(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(
-            const Color.fromARGB(255, 80, 80, 80)),
-      ),
-      onPressed: () {},
+  Widget _profileButton(AppLocalizations appLocalizations, UserEntity? user) {
+    return PopupMenuButton(
+      color: const Color.fromARGB(255, 80, 80, 80),
+      onSelected: (value) {
+        if (value == 0) {
+          navigatorKey.currentContext!.goNamed(UserEditView.routeName);
+        } else if (value == 1) {
+          navigatorKey.currentContext!.goNamed(SettingsView.routeName);
+        } else if (value == 2) {
+          // It cannot call authController because it would change provider
+          // while changing the entire three and that leads to an error
+          navigatorKey.currentContext!.goNamed(LogoutView.routeName);
+        }
+      },
+      itemBuilder: (context) {
+        return [
+          PopupMenuItem<int>(
+            value: 0,
+            child: Text(appLocalizations.myAccount),
+          ),
+          PopupMenuItem<int>(
+            value: 1,
+            child: Text(appLocalizations.settings),
+          ),
+          PopupMenuItem<int>(
+            value: 2,
+            child: Text(appLocalizations.logout),
+          ),
+        ];
+      },
       child: Row(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(width: 1),
-            ),
-            margin: const EdgeInsets.all(4),
-            child: Image.network(user.image),
-          ),
-          if (!PlatformUtils().isMobile)
+          if (user != null)
             Container(
-              margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Text(
-                user.username,
-                style: const TextStyle(
-                    fontSize: 17, color: Color.fromARGB(255, 202, 202, 202)),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1),
               ),
-            )
+              margin: const EdgeInsets.all(4),
+              child: user.image == null
+                  ? const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                    )
+                  : Image.network(user.image!),
+            ),
+          if (user != null)
+            if (!PlatformUtils().isMobile)
+              Container(
+                margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Text(
+                  user.username,
+                  style: const TextStyle(
+                      fontSize: 17, color: Color.fromARGB(255, 202, 202, 202)),
+                ),
+              )
         ],
       ),
     );

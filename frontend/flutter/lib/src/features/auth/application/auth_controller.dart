@@ -26,7 +26,6 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
     trySignIn();
   }
 
-  @visibleForTesting
   Future<Either<Failure, bool>> trySignIn() async {
     state = const AsyncValue.loading();
     final res = await _repository.trySignIn();
@@ -154,6 +153,15 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
     });
   }
 
+  /// Delete current user data
+  Future<Either<Failure, bool>> deleteUser() async {
+    final res = await _repository.deleteUser();
+    if (res.isLeft()) return res;
+    state = const AsyncValue.data(null);
+    updateAuthState();
+    return right(true);
+  }
+
   /// Signs out user
   Future<Either<Failure, bool>> signOut() async {
     final res = await _repository.signOut();
@@ -161,6 +169,19 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
     state = const AsyncValue.data(null);
     updateAuthState();
     return right(true);
+  }
+
+  Future<Either<Failure, bool>> refreshUserData() async {
+    state = const AsyncValue.loading();
+    return await Future.delayed(const Duration(seconds: 2), () async {
+      final res = await _repository.getUser();
+      return res.fold((l) {
+        return left(l);
+      }, (r) {
+        state = AsyncValue.data(r);
+        return right(true);
+      });
+    });
   }
 
   @visibleForTesting

@@ -5,6 +5,7 @@ import 'package:balance_home_app/src/core/infrastructure/repositories/app_info_r
 import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
 import 'package:balance_home_app/src/core/presentation/states/app_localizations_state.dart';
 import 'package:balance_home_app/src/core/presentation/states/theme_mode_state.dart';
+import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,10 +36,14 @@ final appVersionController =
 
 final themeModeProvider =
     StateNotifierProvider<ThemeModeState, ThemeMode>((ref) {
-  return (SchedulerBinding.instance.window.platformBrightness ==
-          Brightness.light)
-      ? ThemeModeState(ThemeMode.light)
-      : ThemeModeState(ThemeMode.dark);
+  final settingsRepository = ref.read(settingsRepositoryProvider);
+  final theme = settingsRepository.getTheme().fold((l) {
+    return (SchedulerBinding.instance.window.platformBrightness ==
+            Brightness.light)
+        ? ThemeMode.light
+        : ThemeMode.dark;
+  }, (r) => r);
+  return ThemeModeState(theme);
 });
 
 final appLocalizationsProvider =

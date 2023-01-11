@@ -49,9 +49,9 @@ class BalanceBarChart extends ConsumerWidget {
     for (BalanceEntity balance in balances) {
       String key = balance.balanceType.name;
       if (dataMap.containsKey(key)) {
-        dataMap[key] = dataMap[key]! + balance.quantity;
+        dataMap[key] = dataMap[key]! + balance.converted_quantity!;
       } else {
-        dataMap[key] = balance.quantity;
+        dataMap[key] = balance.converted_quantity!;
       }
     }
     for (String balanceType in dataMap.keys) {
@@ -65,7 +65,7 @@ class BalanceBarChart extends ConsumerWidget {
   double getMax() {
     double max = 4;
     for (BalanceEntity balance in balances) {
-      if (balance.quantity > max) max = balance.quantity;
+      if (balance.converted_quantity! > max) max = balance.converted_quantity!;
     }
     return max.ceilToDouble();
   }

@@ -38,6 +38,9 @@ class ResetPasswordController
         if (error.startsWith("email") && error.contains("user not found")) {
           return left(Failure.unprocessableEntity(
               message: appLocalizations.emailNotValid));
+        } if (error.startsWith("count_pass_reset") && error.contains("only three codes")) {
+          return left(Failure.unprocessableEntity(
+              message: appLocalizations.resetPasswordTooManyTries));
         } else if (error.startsWith("code") &&
             error.contains("code has already been sent")) {
           return left(Failure.unprocessableEntity(

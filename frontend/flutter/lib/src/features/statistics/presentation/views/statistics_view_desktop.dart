@@ -1,7 +1,6 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_error_widget.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
+import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/models/statistics_data.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/statistics_balance_chart_container.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/currency/statistics_currency_chart_container.dart';
@@ -75,17 +74,10 @@ class StatisticsViewDesktop extends ConsumerWidget {
       );
       return cache;
     }, error: (error, stackTrace) {
-      debugPrint("[STATISTICS_DESKTOP] $error -> $stackTrace");
-      return Stack(alignment: AlignmentDirectional.centerStart, children: [
-        cache,
-        const CustomErrorWidget(),
-      ]);
+      return showError(error, stackTrace, cache: cache);
     }, loading: () {
       ref.read(statisticsControllerProvider.notifier).handle();
-      return Stack(alignment: AlignmentDirectional.centerStart, children: [
-        cache,
-        const LoadingWidget(color: Colors.grey),
-      ]);
+      return showLoading(cache: cache);
     });
   }
 }

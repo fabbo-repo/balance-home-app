@@ -76,6 +76,7 @@ class User(AbstractUser):
     email = models.EmailField(
         verbose_name=_("email address"),
         unique=True,
+        editable=False
     )
     language = models.CharField(
         verbose_name =_("language"),
@@ -153,9 +154,21 @@ class User(AbstractUser):
         blank = True,
         null = True
     )
+    # Number of requests for password reset code
+    count_pass_reset = models.IntegerField(
+        verbose_name = _("number of requests for password reset code"),
+        default=0
+    )
     pref_coin_type = models.ForeignKey(
         CoinType, on_delete = models.DO_NOTHING,
         verbose_name = _("preferred coin type"),
+        blank = True,
+        null = True
+    )
+    # Date of the last preferred coin type change.
+    # It is stored because this action requires time and compute power
+    date_coin_change = models.DateTimeField(
+        verbose_name = _("date of last preferred coin type change"),
         blank = True,
         null = True
     )

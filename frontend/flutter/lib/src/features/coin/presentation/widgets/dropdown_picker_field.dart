@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class DropdownPickerField extends StatefulWidget {
   final String name;
   final List<String> items;
+  final bool readOnly;
   final void Function(String?)? onChanged;
   String initialValue;
 
@@ -11,6 +12,7 @@ class DropdownPickerField extends StatefulWidget {
       {required this.name,
       required this.initialValue,
       required this.items,
+      this.readOnly = false,
       this.onChanged,
       super.key});
 
@@ -42,14 +44,16 @@ class _DropdownPickerFieldState extends State<DropdownPickerField> {
           ),
           DropdownButton<String>(
             value: widget.initialValue,
-            onChanged: (String? value) {
-              setState(() {
-                if (widget.onChanged != null) {
-                  widget.onChanged!(value);
-                }
-                widget.initialValue = value!;
-              });
-            },
+            onChanged: widget.readOnly
+                ? null
+                : (String? value) {
+                    if (widget.onChanged != null) {
+                      widget.onChanged!(value);
+                    }
+                    setState(() {
+                      widget.initialValue = value!;
+                    });
+                  },
             items: widget.items.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,

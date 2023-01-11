@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_type_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_repository_interface.dart';
@@ -7,6 +8,8 @@ import 'package:balance_home_app/src/features/balance/domain/values/balance_desc
 import 'package:balance_home_app/src/features/balance/domain/values/balance_name.dart';
 import 'package:balance_home_app/src/features/balance/domain/values/balance_quantity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BalanceCreateController
     extends StateNotifier<AsyncValue<BalanceEntity?>> {
@@ -16,39 +19,50 @@ class BalanceCreateController
   BalanceCreateController(this._repository, this._balanceTypeMode)
       : super(const AsyncValue.data(null));
 
-  Future<void> handle(
+  Future<Either<Failure, BalanceEntity>> handle(
       BalanceName name,
       BalanceDescription description,
       BalanceQuantity quantity,
       BalanceDate date,
       String coinType,
-      BalanceTypeEntity balanceType) async {
+      BalanceTypeEntity balanceType,
+      AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
-    state = await name.value
-        .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
-            (name) async {
-      return await description.value
-          .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
-              (description) async {
-        return await quantity.value
-            .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
-                (quantity) async {
-          return await date.value
-              .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
-                  (date) async {
+    return await name.value.fold((l) {
+      state = const AsyncValue.data(null);
+      return left(l);
+    }, (name) async {
+      return await description.value.fold((l) {
+        state = const AsyncValue.data(null);
+        return left(l);
+      }, (description) async {
+        return await quantity.value.fold((l) {
+          state = const AsyncValue.data(null);
+          return left(l);
+        }, (quantity) async {
+          return await date.value.fold((l) {
+            state = const AsyncValue.data(null);
+            return left(l);
+          }, (date) async {
             final res = await _repository.createBalance(
                 BalanceEntity(
                     id: null,
                     name: name,
                     description: description,
-                    quantity: quantity,
+                    real_quantity: quantity,
                     date: date,
                     coinType: coinType,
-                    balanceType: balanceType),
+                    balanceType: balanceType,
+                    converted_quantity: null),
                 _balanceTypeMode);
-            return res.fold(
-                (l) => AsyncValue.error(l.error, StackTrace.empty),
-                AsyncValue.data);
+            return res.fold((l) {
+              state = const AsyncValue.data(null);
+              return left(Failure.unprocessableEntity(
+                  message: appLocalizations.genericError));
+            }, (r) {
+              state = AsyncValue.data(r);
+              return right(r);
+            });
           });
         });
       });

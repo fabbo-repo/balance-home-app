@@ -22,6 +22,7 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework.response import Response
 from datetime import date
+from django.db import transaction
 
 
 class ExpenseTypeRetrieveView(generics.RetrieveAPIView):
@@ -71,99 +72,105 @@ class ExpenseView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         owner = self.request.user
-        # Change user balance according to quantity
-        if serializer.validated_data.get('quantity'):
-            coin_from = serializer.validated_data['coin_type']
+        with transaction.atomic():
+            # Change user balance according to real quantity
+            if serializer.validated_data.get('real_quantity'):
+                coin_from = serializer.validated_data['coin_type']
+                coin_to = owner.pref_coin_type
+                real_quantity = serializer.validated_data['real_quantity']
+                converted_quantity = convert_or_fetch(coin_from, coin_to, real_quantity)
+                serializer.validated_data['converted_quantity'] = converted_quantity
+                owner.balance -= converted_quantity
+                owner.balance = round(owner.balance, 2)
+                owner.save()
+                # Create AnnualBalance or update it
+                update_or_create_annual_balance(
+                    converted_quantity, owner,
+                    serializer.validated_data['date'].year, False
+                )
+                # Create MonthlyBalance or update it
+                update_or_create_monthly_balance(
+                    converted_quantity, owner,
+                    serializer.validated_data['date'].year,
+                    serializer.validated_data['date'].month, False
+                )
+            # Inject owner data to the serializer
+            serializer.save(owner=owner)
+
+    def perform_update(self, serializer):
+        owner = self.request.user
+        with transaction.atomic():
+        # In case there is a real quantity update
+            if serializer.validated_data.get('real_quantity'):
+                # In case coin_type is not changed, coin_from as the same
+                if not serializer.validated_data.get('coin_type'):
+                    coin_from = serializer.instance.coin_type
+                # In case coin_type is changed, coin_from is the new coin_type
+                else: coin_from = serializer.validated_data['coin_type']
+                coin_to = owner.pref_coin_type
+                real_quantity = serializer.validated_data['real_quantity']
+                converted_quantity = convert_or_fetch(
+                    coin_from, coin_to, real_quantity
+                )
+                serializer.validated_data['converted_quantity'] = converted_quantity
+                converted_old_quantity = convert_or_fetch(
+                    serializer.instance.coin_type, coin_to, 
+                    serializer.instance.real_quantity
+                )
+                owner.balance -= converted_quantity \
+                    - converted_old_quantity
+                owner.balance = round(owner.balance, 2)
+                owner.save()
+                # Create DateBalance or update it
+                check_dates_and_update_date_balances(
+                    serializer.instance, 
+                    converted_old_quantity,
+                    converted_quantity,
+                    serializer.validated_data.get('date')
+                )
+            # In case there is a change of date without quantity 
+            # month and year needs to be checked
+            elif serializer.validated_data.get('date'):
+                coin_from = serializer.validated_data['coin_type'] \
+                    if serializer.validated_data.get('coin_type') \
+                    else serializer.instance.coin_type
+                converted_quantity = convert_or_fetch(
+                    coin_from, owner.pref_coin_type, 
+                    serializer.instance.real_quantity
+                )
+                serializer.validated_data['converted_quantity'] = converted_quantity
+                # Create DateBalance or update it
+                check_dates_and_update_date_balances(
+                    serializer.instance, converted_quantity, None,
+                    serializer.validated_data['date']
+                )
+            # In case there is a coin_type update without a quantity update
+            # the quantity will remains the same as before, so it wont be
+            # converted
+            serializer.save()
+
+    def perform_destroy(self, instance):
+        owner = self.request.user
+        with transaction.atomic():
             coin_to = owner.pref_coin_type
-            amount = serializer.validated_data['quantity']
-            coverted_quantity = convert_or_fetch(coin_from, coin_to, amount)
-            owner.balance -= coverted_quantity
+            converted_quantity = convert_or_fetch(
+                instance.coin_type, coin_to, 
+                instance.real_quantity
+            )
+            owner.balance += converted_quantity
             owner.balance = round(owner.balance, 2)
             owner.save()
             # Create AnnualBalance or update it
             update_or_create_annual_balance(
-                coverted_quantity, owner,
-                serializer.validated_data['date'].year, False
+                - converted_quantity, owner, 
+                instance.date.year, False
             )
             # Create MonthlyBalance or update it
             update_or_create_monthly_balance(
-                coverted_quantity, owner,
-                serializer.validated_data['date'].year,
-                serializer.validated_data['date'].month, False
+                - converted_quantity, owner,
+                instance.date.year, instance.date.month, False
             )
-        # Inject owner data to the serializer
-        serializer.save(owner=owner)
-
-    def perform_update(self, serializer):
-        owner = self.request.user
-        # In case there is a quantity update
-        if serializer.validated_data.get('quantity'):
-            # In case coin_type is not changed, coin_from as the same
-            if not serializer.validated_data.get('coin_type'):
-                coin_from = serializer.instance.coin_type
-            # In case coin_type is changed, coin_from is the new coin_type
-            else: coin_from = serializer.validated_data['coin_type']
-            coin_to = owner.pref_coin_type
-            quantity = serializer.validated_data['quantity']
-            converted_new_quantity = convert_or_fetch(
-                coin_from, coin_to, quantity
-            )
-            converted_old_quantity = convert_or_fetch(
-                serializer.instance.coin_type, coin_to, 
-                serializer.instance.quantity
-            )
-            owner.balance -= converted_new_quantity \
-                - converted_old_quantity
-            owner.balance = round(owner.balance, 2)
-            owner.save()
-            # Create DateBalance or update it
-            check_dates_and_update_date_balances(
-                serializer.instance, 
-                converted_old_quantity,
-                converted_new_quantity,
-                serializer.validated_data.get('date')
-            )
-        # In case there is a change of date without quantity 
-        # month and year needs to be checked
-        elif serializer.validated_data.get('date'):
-            coin_from = serializer.validated_data['coin_type'] \
-                if serializer.validated_data.get('coin_type') \
-                else serializer.instance.coin_type
-            converted_quantity = convert_or_fetch(
-                coin_from, owner.pref_coin_type, 
-                serializer.instance.quantity
-            )
-            # Create DateBalance or update it
-            check_dates_and_update_date_balances(
-                serializer.instance, converted_quantity, None,
-                serializer.validated_data['date']
-            )
-        # In case there is a coin_type update without a quantity update
-        # the quantity will remains the same as before, so it wont be
-        # converted
-        serializer.save()
-
-    def perform_destroy(self, instance):
-        owner = self.request.user
-        coin_to = owner.pref_coin_type
-        converted_quantity = convert_or_fetch(
-            instance.coin_type, coin_to, 
-            instance.quantity
-        )
-        owner.balance += converted_quantity
-        owner.balance = round(owner.balance, 2)
-        owner.save()
-        # Create AnnualBalance or update it
-        update_or_create_annual_balance(
-            - converted_quantity, owner, 
-            instance.date.year, False
-        )
-        # Create MonthlyBalance or update it
-        update_or_create_monthly_balance(
-            - converted_quantity, owner,
-            instance.date.year, instance.date.month, False
-        )
-        instance.delete()
+            instance.delete()
 
 class EspenseYearsRetrieveView(APIView):
     permission_classes = (IsCurrentVerifiedUser,)

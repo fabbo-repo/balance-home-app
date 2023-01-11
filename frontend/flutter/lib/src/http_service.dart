@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
+// ignore: depend_on_referenced_packages
+import 'package:flutter/foundation.dart';
 import 'package:balance_home_app/config/environment.dart';
 import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
@@ -9,7 +10,8 @@ import 'package:balance_home_app/src/features/auth/domain/entities/jwt_entity.da
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages, implementation_imports
-import 'package:http_parser/src/media_type.dart';
+import 'package:http_parser/src/media_type.dart' as mt;
+import 'package:universal_io/io.dart' as io;
 
 /// Encapsulates the proccess of making authorized HTTP requests from the services.
 ///
@@ -36,7 +38,7 @@ class HttpService {
   /// Returns the necessary content and authentication headers for all server requests.
   Map<String, String> getHeaders() {
     Map<String, String> headers = {
-      "Content-Type": ContentType.json.toString(),
+      "Content-Type": io.ContentType.json.toString(),
       "Accept-Language": "en"
     };
     if (_jwtEntity != null) {
@@ -80,26 +82,31 @@ class HttpService {
     }
   }
 
-  /// Sends a `POST` multipart request to upload the image located at `filePath` to `baseUrl`/`subPath`.
-  Future<HttpResponse> sendPostImageRequest(
-      String subPath, String filePath, String type) async {
+  /// Sends a `PATCH` multipart request to upload the image located at `filePath` to `baseUrl`/`subPath`.
+  Future<HttpResponse> sendPatchImageRequest(
+      String subPath, Uint8List imageBytes, String imageType) async {
     try {
-      http.MultipartRequest request =
-          http.MultipartRequest('POST', Uri.parse("$baseUrl$subPath"));
-      List<int> bytes = await File(filePath).readAsBytes();
       http.MultipartFile httpImage = http.MultipartFile.fromBytes(
-          'upload_file', bytes,
-          contentType: MediaType.parse(type),
-          filename: 'upload_file_${filePath.hashCode}.$type');
+          'image', imageBytes,
+          contentType: mt.MediaType.parse(imageType),
+          filename: 'upload_image.${imageType.split("/").last}');
+      final request =
+          http.MultipartRequest('PATCH', Uri.parse("$baseUrl$subPath"));
+      request.files.add(httpImage);
       if (_jwtEntity != null) {
         request.headers["Authorization"] = "Bearer ${_jwtEntity!.access}";
       }
-      request.files.add(httpImage);
+      http.StreamedResponse res = (await _client.send(request));
+      Map<String, dynamic> content = {};
+      try {
+        content = json.decode(utf8.decode(await res.stream.toBytes()));
+      }
+      catch (_) {}
       HttpResponse response =
-          HttpResponse((await _client.send(request)).statusCode, {});
+          HttpResponse(res.statusCode, content);
       if (await _shouldRepeatResponse(response)) {
         // Recursive call
-        return await sendPostImageRequest(subPath, filePath, type);
+        return await sendPatchImageRequest(subPath, imageBytes, imageType);
       }
       return response;
     } catch (e) {
@@ -186,7 +193,7 @@ class HttpService {
               Uri.parse("$baseUrl${APIContract.jwtRefresh}"),
               headers: getHeaders(),
               body: jsonEncode({"refresh": refreshJwt})));
-          if (newResponse.statusCode == 401) {
+          if (newResponse.statusCode != 401 && newResponse.statusCode != 400) {
             setJwtEntity(JwtEntity(
                 access: newResponse.content["access"], refresh: refreshJwt));
             return true;
@@ -194,7 +201,7 @@ class HttpService {
         }
       }
       // If 401 is recived it should be tried with stored credentials
-      if (newResponse.statusCode == 401) {
+      if (newResponse.statusCode == 401 && newResponse.statusCode != 400) {
         setJwtEntity(null); // Current token is not valid
         String? email = await _secureStorage.read(key: "email");
         String? password = await _secureStorage.read(key: "password");
@@ -205,7 +212,7 @@ class HttpService {
               body: jsonEncode(
                   CredentialsEntity(email: email, password: password)
                       .toJson())));
-          if (newResponse.statusCode != 401) {
+          if (newResponse.statusCode != 401 && newResponse.statusCode != 400) {
             // Update current JWT
             setJwtEntity(JwtEntity.fromJson(newResponse.content));
             return true;

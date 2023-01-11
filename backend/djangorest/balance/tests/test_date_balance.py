@@ -80,7 +80,7 @@ class DateBalanceLoicTests(APITestCase):
         return {
             'name': 'Test name',
             'description': 'Test description',
-            'quantity': 2.0,
+            'real_quantity': 2.0,
             'coin_type': self.coin_type.code,
             'exp_type': exp_type.name,
             'date': str(now().date())
@@ -91,7 +91,7 @@ class DateBalanceLoicTests(APITestCase):
         return {
             'name': 'Test name',
             'description': 'Test description',
-            'quantity': 2.0,
+            'real_quantity': 2.0,
             'coin_type': self.coin_type.code,
             'rev_type': rev_type.name,
             'date': str(now().date())
@@ -112,11 +112,11 @@ class DateBalanceLoicTests(APITestCase):
         last_monthly_balance = MonthlyBalance.objects.last()
         self.assertEqual(now().date().year, last_monthly_balance.year)
         self.assertEqual(now().date().month, last_monthly_balance.month)
-        self.assertEqual(data['quantity'], last_monthly_balance.gross_quantity)
+        self.assertEqual(data['real_quantity'], last_monthly_balance.gross_quantity)
         self.assertEqual(10.0, last_monthly_balance.expected_quantity)
         last_annual_balance = AnnualBalance.objects.last()
         self.assertEqual(now().date().year, last_annual_balance.year)
-        self.assertEqual(data['quantity'], last_annual_balance.gross_quantity)
+        self.assertEqual(data['real_quantity'], last_annual_balance.gross_quantity)
         self.assertEqual(10.0, last_annual_balance.expected_quantity)
 
     def test_expense_post_date_balances(self):
@@ -133,11 +133,11 @@ class DateBalanceLoicTests(APITestCase):
         last_monthly_balance = MonthlyBalance.objects.last()
         self.assertEqual(now().date().year, last_monthly_balance.year)
         self.assertEqual(now().date().month, last_monthly_balance.month)
-        self.assertEqual(-data['quantity'], last_monthly_balance.gross_quantity)
+        self.assertEqual(-data['real_quantity'], last_monthly_balance.gross_quantity)
         self.assertEqual(10.0, last_monthly_balance.expected_quantity)
         last_annual_balance = AnnualBalance.objects.last()
         self.assertEqual(now().date().year, last_annual_balance.year)
-        self.assertEqual(-data['quantity'], last_annual_balance.gross_quantity)
+        self.assertEqual(-data['real_quantity'], last_annual_balance.gross_quantity)
         self.assertEqual(10.0, last_annual_balance.expected_quantity)
     
     def test_revenue_delete_date_balances(self):
@@ -213,15 +213,15 @@ class DateBalanceLoicTests(APITestCase):
         self.assertEqual(0, last_monthly_balance.gross_quantity)
         self.assertEqual(past_date.year, second_to_last_monthly_balance.year)
         self.assertEqual(past_date.month, second_to_last_monthly_balance.month)
-        self.assertEqual(data['quantity'], 
+        self.assertEqual(data['real_quantity'], 
             second_to_last_monthly_balance.gross_quantity)
-        last_annual_balance = AnnualBalance.objects.last()
-        self.assertEqual(now().date().year, last_annual_balance.year)
-        self.assertEqual(data['quantity'], last_annual_balance.gross_quantity)
+        last_annual_balance = AnnualBalance.objects.get(year=past_date.year)
+        self.assertEqual(past_date.year, last_annual_balance.year)
+        self.assertEqual(data['real_quantity'], last_annual_balance.gross_quantity)
         # Test update diferent quantity and date
         response = self.patch(self.revenue_url+'/'+str(rev.id), {
             'date': str(now().date()),
-            'quantity': 10.14
+            'real_quantity': 10.14
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         last_monthly_balance = MonthlyBalance.objects.last()
@@ -239,7 +239,7 @@ class DateBalanceLoicTests(APITestCase):
         self.assertEqual(10.14, last_annual_balance.gross_quantity)
         # Test update diferent quantity
         response = self.patch(self.revenue_url+'/'+str(rev.id), {
-            'quantity': 20.86
+            'real_quantity': 20.86
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         last_monthly_balance = MonthlyBalance.objects.last()
@@ -277,15 +277,15 @@ class DateBalanceLoicTests(APITestCase):
         self.assertEqual(0, last_monthly_balance.gross_quantity)
         self.assertEqual(past_date.year, second_to_last_monthly_balance.year)
         self.assertEqual(past_date.month, second_to_last_monthly_balance.month)
-        self.assertEqual(-data['quantity'], 
+        self.assertEqual(-data['real_quantity'], 
             second_to_last_monthly_balance.gross_quantity)
-        last_annual_balance = AnnualBalance.objects.last()
-        self.assertEqual(now().date().year, last_annual_balance.year)
-        self.assertEqual(-data['quantity'], last_annual_balance.gross_quantity)
+        last_annual_balance = AnnualBalance.objects.get(year=past_date.year)
+        self.assertEqual(past_date.year, last_annual_balance.year)
+        self.assertEqual(-data['real_quantity'], last_annual_balance.gross_quantity)
         # Test update diferent quantity and date
         response = self.patch(self.expense_url+'/'+str(exp.id), {
             'date': str(now().date()),
-            'quantity': 10.14
+            'real_quantity': 10.14
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         last_monthly_balance = MonthlyBalance.objects.last()
@@ -303,7 +303,7 @@ class DateBalanceLoicTests(APITestCase):
         self.assertEqual(-10.14, last_annual_balance.gross_quantity)
         # Test update diferent quantity
         response = self.patch(self.expense_url+'/'+str(exp.id), {
-            'quantity': 20.86
+            'real_quantity': 20.86
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         last_monthly_balance = MonthlyBalance.objects.last()

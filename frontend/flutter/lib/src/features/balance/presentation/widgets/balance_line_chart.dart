@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:balance_home_app/config/platform_utils.dart';
+import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/chart_indicator.dart';
 import 'package:balance_home_app/src/core/providers.dart';
@@ -24,7 +25,7 @@ class BalanceLineChart extends ConsumerWidget {
   SideTitles get bottomTitles => SideTitles(
         showTitles: true,
         reservedSize: 22,
-        interval: PlatformUtils().isSmallWindow() &&
+        interval: PlatformUtils().isSmallWindow(navigatorKey.currentContext!) &&
                 selectedDateMode == SelectedDateMode.month
             ? 2
             : 1,
@@ -171,9 +172,9 @@ class BalanceLineChart extends ConsumerWidget {
           ? balance.date.month
           : balance.date.day;
       if (spotsMap.containsKey(key)) {
-        spotsMap[key] = spotsMap[key]! + balance.quantity;
+        spotsMap[key] = spotsMap[key]! + balance.converted_quantity!;
       } else {
-        spotsMap[key] = balance.quantity;
+        spotsMap[key] = balance.converted_quantity!;
       }
     }
     if (selectedDateMode == SelectedDateMode.year) {
@@ -222,9 +223,9 @@ class BalanceLineChart extends ConsumerWidget {
             ? "${revenue.date.month}"
             : "${revenue.date.day}";
         if (quantityMap.containsKey(key)) {
-          quantityMap[key] = quantityMap[key]! + revenue.quantity;
+          quantityMap[key] = quantityMap[key]! + revenue.converted_quantity!;
         } else {
-          quantityMap[key] = revenue.quantity;
+          quantityMap[key] = revenue.converted_quantity!;
         }
       }
       if (revenues!.isNotEmpty) {
@@ -238,9 +239,9 @@ class BalanceLineChart extends ConsumerWidget {
             ? "${expense.date.month}"
             : "${expense.date.day}";
         if (quantityMap.containsKey(key)) {
-          quantityMap[key] = quantityMap[key]! + expense.quantity;
+          quantityMap[key] = quantityMap[key]! + expense.converted_quantity!;
         } else {
-          quantityMap[key] = expense.quantity;
+          quantityMap[key] = expense.converted_quantity!;
         }
       }
       if (expenses!.isNotEmpty && quantity < quantityMap.values.reduce(max)) {

@@ -35,6 +35,7 @@ class AnnualBalanceRepository implements AnnualBalanceRepositoryInterface {
     List<AnnualBalanceEntity> annualBalances =
         page.results.map((e) => AnnualBalanceEntity.fromJson(e)).toList();
     while (page.next != null) {
+      pageNumber++;
       HttpResponse response = await httpService
           .sendGetRequest('${APIContract.annualBalance}?page=$pageNumber');
       if (response.hasError) {
@@ -43,7 +44,6 @@ class AnnualBalanceRepository implements AnnualBalanceRepositoryInterface {
       page = PaginationEntity.fromJson(response.content);
       annualBalances +=
           page.results.map((e) => AnnualBalanceEntity.fromJson(e)).toList();
-      pageNumber++;
     }
     return right(annualBalances);
   }
@@ -62,6 +62,7 @@ class AnnualBalanceRepository implements AnnualBalanceRepositoryInterface {
     List<AnnualBalanceEntity> annualBalances =
         page.results.map((e) => AnnualBalanceEntity.fromJson(e)).toList();
     while (page.next != null && annualBalances.length < 8) {
+      pageNumber++;
       HttpResponse response = await httpService
           .sendGetRequest('${APIContract.annualBalance}?page=$pageNumber');
       if (response.hasError) {
@@ -70,7 +71,6 @@ class AnnualBalanceRepository implements AnnualBalanceRepositoryInterface {
       page = PaginationEntity.fromJson(response.content);
       annualBalances +=
           page.results.map((e) => AnnualBalanceEntity.fromJson(e)).toList();
-      pageNumber++;
     }
     return right(annualBalances.take(8).toList());
   }

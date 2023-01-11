@@ -6,6 +6,7 @@ from django.urls import reverse
 from custom_auth.models import InvitationCode, User
 import logging
 from django.conf import settings
+from django.utils.timezone import timedelta
 
 class PasswordResetTests(APITestCase):
     def setUp(self):
@@ -136,3 +137,47 @@ class PasswordResetTests(APITestCase):
         settings.EMAIL_CODE_VALID = 120
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['code'][0], 'Code is no longer valid')
+
+    def test_send_four_password_reset_same_day(self):
+        """
+        Checks that requesting a password reset code more than 3 times per day is not allowed
+        """
+        response = self.send_code(self.user_data["email"])
+        user=User.objects.get(email=self.user_data["email"])
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user.date_pass_reset = user.date_pass_reset - timedelta(minutes=10)
+        user.save()
+        response = self.send_code(self.user_data["email"])
+        user=User.objects.get(email=self.user_data["email"])
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user.date_pass_reset = user.date_pass_reset - timedelta(minutes=10)
+        user.save()
+        response = self.send_code(self.user_data["email"])
+        user=User.objects.get(email=self.user_data["email"])
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user.date_pass_reset = user.date_pass_reset - timedelta(minutes=10)
+        user.save()
+        response = self.send_code(self.user_data["email"])
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_send_four_password_reset_diferent_day(self):
+        """
+        Checks that requesting a password reset code more than 3 times in diferent day is allowed
+        """
+        response = self.send_code(self.user_data["email"])
+        user=User.objects.get(email=self.user_data["email"])
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user.date_pass_reset = user.date_pass_reset - timedelta(minutes=10)
+        user.save()
+        response = self.send_code(self.user_data["email"])
+        user=User.objects.get(email=self.user_data["email"])
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user.date_pass_reset = user.date_pass_reset - timedelta(minutes=10)
+        user.save()
+        response = self.send_code(self.user_data["email"])
+        user=User.objects.get(email=self.user_data["email"])
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user.date_pass_reset = user.date_pass_reset - timedelta(days=1)
+        user.save()
+        response = self.send_code(self.user_data["email"])
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

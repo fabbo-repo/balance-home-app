@@ -3,15 +3,15 @@ from revenue.models import Revenue
 
 
 class RevenueFilterSet(filters.FilterSet):
-    quantity_min = filters.NumberFilter(
-        field_name = "quantity",
+    converted_quantity_min = filters.NumberFilter(
+        field_name = "converted_quantity",
         lookup_expr = "gte",
-        label = "Min quantity"
+        label = "Min converted quantity"
     )
-    quantity_max = filters.NumberFilter(
-        field_name = "quantity",
+    converted_quantity_max = filters.NumberFilter(
+        field_name = "converted_quantity",
         lookup_expr = "lte",
-        label = "Max quantity"
+        label = "Max converted quantity"
     )
     date_from = filters.DateFilter(
         field_name = "date", lookup_expr = "gte",

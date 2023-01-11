@@ -5,7 +5,7 @@ description: Revenues and expenses management.
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 0.0.4+4
+version: 0.0.6+6
 
 environment:
   sdk: '>=2.18.2 <3.0.0'
@@ -29,12 +29,10 @@ dependencies:
   intl: ^0.17.0
   # Get version info
   package_info_plus: ^3.0.1
-  # Environment variables
-  flutter_dotenv: ^5.0.2
   # Http request for backend
   http: ^0.13.5
   # Routing
-  go_router: ^5.0.5
+  go_router: ^6.0.0
   # State management
   flutter_riverpod: ^2.0.2
   # Equals and hashCode override
@@ -42,11 +40,11 @@ dependencies:
   # Fix url in web
   url_strategy: ^0.2.0
   # Launcher icons
-  flutter_launcher_icons: ^0.10.0
+  flutter_launcher_icons: ^0.11.0
   # Shared preferences
   shared_preferences: ^2.0.15
   # Secure shared preferences
-  flutter_secure_storage: ^6.0.0
+  flutter_secure_storage: ^7.0.1
   # Data class generator
   freezed_annotation: ^2.0.3
   json_annotation: ^4.4.0
@@ -62,9 +60,11 @@ dependencies:
   fl_chart: ^0.55.2
   syncfusion_flutter_charts: ^20.3.61
   # Env code generation
-  envied: ^0.2.4
+  envied: ^0.3.0
   # Functional programing
   fpdart: ^0.4.0
+  # File picker (used for images)
+  file_picker: ^5.2.4
   
 
 dev_dependencies:
@@ -80,7 +80,7 @@ dev_dependencies:
   freezed: ^2.0.3
   json_serializable: ^6.5.3
   # Env code generator
-  envied_generator: ^0.2.3+1
+  envied_generator: ^0.3.0
   # Splash screen
   flutter_native_splash: ^2.2.15
 

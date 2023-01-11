@@ -1,14 +1,13 @@
-import 'package:balance_home_app/config/app_layout.dart';
 import 'package:balance_home_app/config/router.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/password_text_form_field.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/simple_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/simple_text_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/custom_text_form_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/text_check_box.dart';
 import 'package:balance_home_app/src/core/providers.dart';
+import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/login_password.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
-import 'package:balance_home_app/src/features/auth/presentation/views/utils.dart';
+import 'package:balance_home_app/src/core/utils/dialog_utils.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/views/statistics_view.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +62,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
-              SimpleTextFormField(
+              CustomTextFormField(
                 maxWidth: 400,
                 maxCharacters: 300,
                 title: appLocalizations.emailAddress,
@@ -72,7 +71,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                     _email = UserEmail(appLocalizations, value),
                 validator: (value) => _email?.validate,
               ),
-              space(),
+              verticalSpace(),
               PasswordTextFormField(
                 maxWidth: 400,
                 maxCharacters: 400,
@@ -82,7 +81,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                     _password = LoginPassword(appLocalizations, value),
                 validator: (value) => _password?.validate,
               ),
-              space(),
+              verticalSpace(),
               TextCheckBox(
                 title: appLocalizations.storeCredentials,
                 fillColor: const Color.fromARGB(255, 65, 65, 65),
@@ -90,11 +89,11 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                   storeCredentials = value!;
                 },
               ),
-              space(),
+              verticalSpace(),
               SizedBox(
                   height: 50,
                   width: 200,
-                  child: SimpleTextButton(
+                  child: CustomTextButton(
                       enabled: !isLoading,
                       onPressed: () async {
                         if (widget._formKey.currentState == null ||
@@ -129,7 +128,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                         });
                       },
                       text: appLocalizations.signIn)),
-              space(),
+              verticalSpace(),
               TextButton(
                 onPressed: () {
                   ref
@@ -149,17 +148,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       ),
     );
     return isLoading
-        ? Stack(children: [
-            cache,
-            const LoadingWidget(color: Colors.grey),
-          ])
+        ? showLoading(cache: cache, alignment: AlignmentDirectional.topStart)
         : cache;
-  }
-
-  @visibleForTesting
-  Widget space() {
-    return const SizedBox(
-      height: AppLayout.genericPadding,
-    );
   }
 }
