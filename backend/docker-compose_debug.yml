@@ -44,7 +44,7 @@ services:
         ipv4_address: 192.168.92.40
 
   redis:
-    image: redis:redis:7.0.7
+    image: redis:7.0.7
     restart: unless-stopped
     networks:
       balance_home_app_net:
@@ -62,6 +62,20 @@ services:
     networks:
       balance_home_app_net:
         ipv4_address: 192.168.92.20
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_containers
+    restart: always
+    ports:
+      - "5050:80"
+    env_file:
+      - ./pgadmin.env
+    volumes:
+      - ./pgadmin_data:/var/lib/pgadmin
+    networks:
+      balance_home_app_net:
+        ipv4_address: 192.168.92.21
 
   nginx:
     build: nginx
