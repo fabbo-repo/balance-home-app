@@ -39,7 +39,7 @@ services:
       /venv/bin/celery -A core worker -l INFO"
 
   redis:
-    image: redis:latest
+    image: redis:15.1
     restart: unless-stopped
 
   db:
