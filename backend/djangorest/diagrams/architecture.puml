@@ -2,62 +2,45 @@
 
 component User
 
+node Common {
+    component ViewPermission
+    component Models
+    component Scheduler
+    component Tasks
+}
+
+node API {
+    component ApiUrls
+    component ViewPermission
+    component ApiViews
+    component Serializers
+    component ApiFilters
+}
+
+node Frontend {
+    component Urls
+    component Views
+}
+
+Urls <-- Views
+ViewPermission --> Views
 User --> Urls
 User <-- Urls
 User --> ApiUrls
 User <-- ApiUrls
-
-node Urls {
-}
-
-
-node ViewPermission {
-}
-
-Urls --> Views
-Urls <-- Views
-ViewPermission --> Views
-
-node Views {
-}
-
-node ApiUrls {
-}
-
-ApiUrls --> ApiViews
 ApiUrls <-- ApiViews
 ViewPermission --> ApiViews
-
-node ApiViews {
-}
-
 Serializers --> ApiViews
 Serializers <-- ApiViews
 Serializers <-- Models
-
-node Serializers {
-}
-
+ApiFilters --> ApiViews
 ApiFilters <-- Models
-node ApiFilters {
-}
-
-Views --> Models
 Views <-- Models
-ApiViews --> Models
 ApiViews <-- Models
 ViewPermission <-- Models
-node Models {
-}
-
-ApiViews --> Scheduler
-node Scheduler {
-}
-
-ApiViews --> Tasks
-Models <-- Tasks
+ApiViews <-- Scheduler
+Scheduler <-- Tasks
+ApiViews <-- Tasks
 Models --> Tasks
-node Tasks {
-}
 
 @enduml
