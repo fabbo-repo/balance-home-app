@@ -44,7 +44,7 @@ services:
         ipv4_address: 192.168.92.40
 
   redis:
-    image: redis:redis:7.0.7
+    image: redis:7.0.7
     restart: unless-stopped
     networks:
       balance_home_app_net:
@@ -64,7 +64,7 @@ services:
         ipv4_address: 192.168.92.20
 
   nginx:
-    build: nginx
+    build: nginx:1.23
     ports: 
       - "8000:80"
     volumes:
