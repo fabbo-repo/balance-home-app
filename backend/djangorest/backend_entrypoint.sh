@@ -23,7 +23,7 @@ chmod 777 /var/backup
 python manage.py collectstatic --noinput
 
 # Execute database migrations
-if  python manage.py migrate --check; then
+if python manage.py migrate --check; then
     echo Migrations applied
 else
     echo Applying migrations
@@ -31,7 +31,7 @@ else
 fi
 
 # Create superuser
-if  python manage.py createsuperuser --no-input; then
+if python manage.py createsuperuser --no-input; then
     echo Superuser created
 else
     echo Superuser already created, skipping
@@ -62,4 +62,4 @@ $$$$$$$  |\$$$$$$$ |$$ |$$ |  $$ |\$$$$$$  |$$ | $$ | $$ |
 EOF
 
 APP_USER_UID=`id -u $APP_USER`
-exec uwsgi --uid=$APP_USER_UID --http-auto-chunked --http-keepalive --ini app.uwsgi.ini "$@"
+exec gunicorn --bind 0.0.0.0:8000 --user $APP_USER_UID --workers 1 --threads 8 --timeout 0 core.wsgi:application "$@"

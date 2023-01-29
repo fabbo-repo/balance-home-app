@@ -11,6 +11,8 @@ until psql $DATABASE_URL -c '\l'; do
 done
 >&2 echo "Postgres is up - continuing"
 
+export DJANGO_CONFIGURATION=Prod
+
 # Create log directory
 touch /var/log/balance_app/app.log
 chmod 777 /var/log/balance_app/app.log
