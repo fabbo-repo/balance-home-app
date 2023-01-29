@@ -93,9 +93,9 @@ djangorest/
 | APP_EMAIL_CODE_THRESHOLD  | Time to wait for a new email verification code generation  |
 | APP_EMAIL_CODE_VALID      | Email verification code validity duration                  |
 | APP_UNVERIFIED_USER_DAYS  | Days for a periodic deletion of unverified users           |
-| DJANGO_SUPERUSER_USERNAME | Admin backend user name                                    |
-| DJANGO_SUPERUSER_EMAIL    | Admin backend user email                                   |
-| DJANGO_SUPERUSER_PASSWORD | Admin backend user password                                |
+| APP_SUPERUSER_USERNAME    | Admin backend user name                                    |
+| APP_SUPERUSER_EMAIL       | Admin backend user email                                   |
+| APP_SUPERUSER_PASSWORD    | Admin backend user password                                |
 | DATABASE_URL              | Databse url                                                |
 | COIN_TYPE_CODES           | Coin type codes allowed (they have to be valid)            |
 | DBBACKUP_GPG_RECIPIENT    | GPG key to encrypt backup (optional)                       |

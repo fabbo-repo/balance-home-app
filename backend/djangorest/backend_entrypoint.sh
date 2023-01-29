@@ -31,7 +31,8 @@ else
 fi
 
 # Create superuser
-if python manage.py createsuperuser --no-input; then
+export DJANGO_SUPERUSER_PASSWORD=$APP_SUPERUSER_PASSWORD
+if python manage.py createsuperuser --email $APP_SUPERUSER_EMAIL --username $APP_SUPERUSER_USERNAME --no-input; then
     echo Superuser created
 else
     echo Superuser already created, skipping

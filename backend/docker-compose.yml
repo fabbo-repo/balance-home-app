@@ -64,7 +64,7 @@ services:
         ipv4_address: 192.168.92.20
 
   nginx:
-    build: nginx:1.23
+    build: nginx
     ports: 
       - "8000:80"
     volumes:
