@@ -46,7 +46,7 @@ EXPOSE 8000
 
 # Add any custom, static environment variables needed by Django or your settings file here:
 #ENV DJANGO_SETTINGS_MODULE=myapp.settings
-ENV DJANGO_CONFIGURATION=Prod
+ENV DJANGO_CONFIGURATION=OnPremise
 
 # Log directory:
 RUN mkdir -p /var/log/balance_app
