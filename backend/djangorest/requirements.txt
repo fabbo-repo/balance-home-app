@@ -1,25 +1,49 @@
 django==4.0.8
+# Rest framework
 djangorestframework==3.13.1
+# Environment variables library
+django-environ==0.9.0
+# More static types and type inference
 django-stubs==1.12.0
+# Multiple configurations inside one setting
 django-configurations[cache,database,email,search]==2.3.2
+# Filtering by url
 django-filter==22.1
+# Cors
 django-cors-headers==3.13.0
+# Swagger
 drf-yasg==1.21.3
+# Jwt Authentication
 djangorestframework-simplejwt==5.2.0
+# Jwt encription
 PyJWT==2.4.0
+# Image library
 Pillow==9.3.0
+# Celery driver
 celery==5.2.7
+# Celery task result models
 django-celery-results==2.4.0
+# Celery periodic task models
 django-celery-beat==2.3.0
+# Redis driver
 redis==4.3.4
+# Concurrent networking library for Celery
 eventlet==0.33.1
+# YAML parser
 pyyaml==6.0
+# Library to deal with URI
 uritemplate==4.1.1
+# Postgres driver
 psycopg2-binary==2.9.5
-dj-database-url==1.0.0
+# Testing coverage
 coverage==6.4.4
+# Web scrapping
 beautifulsoup4==4.11.1
+# Admin documentation
 docutils==0.19
+# Backup library
 django-dbbackup==4.0.2
+# Functionality provided by GPG
 python-gnupg==0.5.0
+# Web server
 gunicorn==20.1.0
