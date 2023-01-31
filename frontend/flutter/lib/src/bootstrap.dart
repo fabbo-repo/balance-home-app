@@ -26,8 +26,8 @@ class _Logger extends ProviderObserver {
     debugPrint(
       '''
       {
-      "provider": "${provider.name ?? provider.runtimeType}",
-      "newValue": "$newValue"
+        "provider": "${provider.name ?? provider.runtimeType}",
+        "newValue": "$newValue"
       }''',
     );
   }
