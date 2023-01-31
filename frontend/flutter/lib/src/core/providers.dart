@@ -20,7 +20,7 @@ import 'package:universal_io/io.dart';
 final appInfoRepositoryProvider = Provider<AppInfoRepositoryInterface>((ref) {
   return AppInfoRepository(
       appVersionRemoteDataSource:
-          AppVersionRemoteDataSource(ref.read(httpClientProvider)));
+          AppVersionRemoteDataSource(client: ref.read(httpClientProvider)));
 });
 
 ///

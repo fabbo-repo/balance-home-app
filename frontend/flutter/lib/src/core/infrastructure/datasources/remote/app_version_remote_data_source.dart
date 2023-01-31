@@ -8,7 +8,7 @@ class AppVersionRemoteDataSource {
   final HttpClient client;
 
   /// Default constructor for [AppVersionRemoteDataSource]
-  AppVersionRemoteDataSource(this.client);
+  AppVersionRemoteDataSource({required this.client});
 
   Future<Either<Failure, AppVersion>> get() async {
     HttpResponse response =
