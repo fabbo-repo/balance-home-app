@@ -126,6 +126,12 @@ python manage.py makemigrations
 python manage.py migrate
 ~~~
 
+* Check On Premise settings:
+
+~~~bash
+python manage.py check-on-premise
+~~~
+
 * Create folder for static files:
 
 ~~~bash

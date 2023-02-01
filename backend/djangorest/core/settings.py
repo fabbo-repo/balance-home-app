@@ -49,6 +49,7 @@ class Dev(Configuration):
         CORS_ALLOWED_ORIGINS = env('APP_CORS_HOSTS').split(',')
     else:
         CORS_ALLOW_ALL_ORIGINS = True
+    X_FRAME_OPTIONS = 'DENY'
 
     # Application definition
     INSTALLED_APPS = [
@@ -87,10 +88,10 @@ class Dev(Configuration):
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.locale.LocaleMiddleware',
         'django.middleware.common.CommonMiddleware',
-        # 'django.middleware.csrf.CsrfViewMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
-        # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
     ]
 
     ROOT_URLCONF = 'core.urls'
@@ -251,33 +252,45 @@ class Dev(Configuration):
 class OnPremise(Dev):
     DEBUG = False
 
+    # Security headers
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000 # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    
     # Backup
     DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
     DBBACKUP_STORAGE_OPTIONS = {'location': '/var/backup'}
     DBBACKUP_GPG_RECIPIENT = env('DBBACKUP_GPG_RECIPIENT')
     DBBACKUP_GPG_ALWAYS_TRUST = True
 
-    LOGGING = {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "formatters": {
-            "verbose": {
-                "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
-                "style": "{",
+    if os.path.exists('/var/log/balance_app/app.log'):
+        LOGGING = {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "formatters": {
+                "verbose": {
+                    "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+                    "style": "{",
+                },
             },
-        },
-        "handlers": {
-            "logfile": {
-                "class": "logging.FileHandler",
-                "filename": "/var/log/balance_app/app.log",
-                "formatter": "verbose",
+            "handlers": {
+                "logfile": {
+                    "class": "logging.FileHandler",
+                    "filename": "/var/log/balance_app/app.log",
+                    "formatter": "verbose",
+                },
             },
-        },
-        "root": {
-            "handlers": ["logfile"],
-            "level": "ERROR",
+            "root": {
+                "handlers": ["logfile"],
+                "level": "ERROR",
+            }
         }
-    }
+    else: 
+        LOGGING = Dev.LOGGING
+        LOGGING["root"]["level"] = "ERROR"
 
     SIMPLE_JWT = {
         "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),

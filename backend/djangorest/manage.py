@@ -6,9 +6,18 @@ import sys
 
 def main():
     """Run administrative tasks."""
+    
+    # Check On Premise configuration
+    if "check-on-premise" in sys.argv:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+        os.environ.setdefault("DJANGO_CONFIGURATION", "OnPremise")
+        from configurations.management import execute_from_command_line
+        execute_from_command_line(['manage.py', 'check', '--deploy'])
+        sys.exit()
+
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
     os.environ.setdefault("DJANGO_CONFIGURATION", "Dev")
-    
+
     # Customization: run coverage.py around tests automatically
     try:
         command = sys.argv[1]
