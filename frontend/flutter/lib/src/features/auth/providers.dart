@@ -13,6 +13,9 @@ import 'package:balance_home_app/src/features/auth/domain/repositories/settings_
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/credentials_local_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/jwt_local_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/theme_local_data_source.dart';
+import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/email_code_remote_data_source.dart';
+import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/reset_password_remote_data_source.dart';
+import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/user_remote_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/repositories/auth_repository.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/repositories/email_code_repository.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/repositories/reset_password_repository.dart';
@@ -25,33 +28,32 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Infrastructure dependencies
 ///
 final authRepositoryProvider = Provider<AuthRepositoryInterface>((ref) {
-  final httpService = ref.watch(httpServiceProvider);
-  final secureStorage = ref.watch(secureStorageProvider);
+  final secureStorage = ref.read(secureStorageProvider);
   return AuthRepository(
-    httpService: httpService,
-    credentialsLocalDataSource: CredentialsLocalDataSource(secureStorage),
-    jwtLocalDataSource: JwtLocalDataSource(secureStorage),
-  );
+      client: ref.read(httpClientProvider),
+      credentialsLocalDataSource: CredentialsLocalDataSource(secureStorage),
+      jwtLocalDataSource: JwtLocalDataSource(secureStorage),
+      userRemoteDataSource:
+          UserRemoteDataSource(client: ref.read(httpClientProvider)));
 });
 
 final resetPasswordRepositoryProvider =
     Provider<ResetPasswordRepositoryInterface>((ref) {
-  final httpService = ref.watch(httpServiceProvider);
   return ResetPasswordRepository(
-    httpService: httpService,
+    resetPasswordRemoteDataSource:
+        ResetPasswordRemoteDataSource(client: ref.read(httpClientProvider)),
   );
 });
 
 final emailCodeRepositoryProvider =
     Provider<EmailCodeRepositoryInterface>((ref) {
-  final httpService = ref.watch(httpServiceProvider);
   return EmailCodeRepository(
-    httpService: httpService,
+    emailCodeRemoteDataSource:
+        EmailCodeRemoteDataSource(client: ref.read(httpClientProvider)),
   );
 });
 
-final settingsRepositoryProvider =
-    Provider<SettingsRepositoryInterface>((ref) {
+final settingsRepositoryProvider = Provider<SettingsRepositoryInterface>((ref) {
   final sharedPreferences = ref.watch(sharedPreferencesProvider);
   return SettingsRepository(
     themeLocalDataSource: ThemeLocalDataSource(sharedPreferences.asData!.value),
