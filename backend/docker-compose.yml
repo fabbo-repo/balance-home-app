@@ -3,7 +3,9 @@ version: '2.1'
 services:
 
   backend:
-    build: djangorest
+    build:
+      context: djangorest
+      dockerfile: OnPremise.Dockerfile
     env_file:
       - ./backend_app.env
     links:
@@ -24,7 +26,9 @@ services:
         ipv4_address: 192.168.92.45
 
   celery:
-    build: djangorest
+    build:
+      context: djangorest
+      dockerfile: OnPremise.Dockerfile
     env_file:
       - ./backend_app.env
     links:
