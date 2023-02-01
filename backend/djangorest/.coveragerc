@@ -1,7 +1,0 @@
-[run]
-omit =
-   */node_modules/*
-   */manage.py
-   */migrations/*
-   */__init__.py
-   */tests/*
