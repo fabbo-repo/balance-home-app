@@ -1,5 +1,0 @@
-{{ month }} / {{ year }}:
-* Balance: {{ monthly_balance }}
-* Balance esperado: {{ expected_monthly_balance }}
-
-Resultado: {{ monthly_result }}
