@@ -1,4 +1,5 @@
-import 'package:balance_home_app/src/http_service.dart';
+import 'package:balance_home_app/config/environment.dart';
+import 'package:balance_home_app/src/http_client.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -15,10 +16,8 @@ final secureStorageProvider = Provider((ref) => const FlutterSecureStorage());
 final sharedPreferencesProvider =
     FutureProvider((ref) => SharedPreferences.getInstance());
 
-/// Exposes [HttpService] client
-final httpServiceProvider = Provider<HttpService>((ref) {
-  return HttpService(secureStorage: ref.read(secureStorageProvider));
-});
+/// Exposes [HttpClient] instance
+final httpClientProvider = Provider((ref) => HttpClient(Environment.apiUrl));
 
 /// Triggered from bootstrap() to complete futures
 Future<void> initializeProviders(ProviderContainer container) async {
@@ -26,6 +25,6 @@ Future<void> initializeProviders(ProviderContainer container) async {
 
   /// Core
   container.read(secureStorageProvider);
+  container.read(httpClientProvider);
   await container.read(sharedPreferencesProvider.future);
-  container.read(httpServiceProvider);
 }

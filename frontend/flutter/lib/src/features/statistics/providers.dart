@@ -8,6 +8,8 @@ import 'package:balance_home_app/src/features/coin/providers.dart';
 import 'package:balance_home_app/src/features/statistics/application/statistics_controller.dart';
 import 'package:balance_home_app/src/features/statistics/domain/repositories/annual_balance_repository_interface.dart';
 import 'package:balance_home_app/src/features/statistics/domain/repositories/monthly_balance_repository_interface.dart';
+import 'package:balance_home_app/src/features/statistics/infrastructure/datasources/remote/annual_balance_remote_data_source.dart';
+import 'package:balance_home_app/src/features/statistics/infrastructure/datasources/remote/monthly_balance_remote_data_source.dart';
 import 'package:balance_home_app/src/features/statistics/infrastructure/repositories/annual_balance_repository.dart';
 import 'package:balance_home_app/src/features/statistics/infrastructure/repositories/monthly_balance_repository.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/models/selected_exchange.dart';
@@ -21,13 +23,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Annual balance repository
 final annualBalanceRepositoryProvider =
-    Provider<AnnualBalanceRepositoryInterface>((ref) =>
-        AnnualBalanceRepository(httpService: ref.watch(httpServiceProvider)));
+    Provider<AnnualBalanceRepositoryInterface>((ref) => AnnualBalanceRepository(
+        annualBalanceRemoteDataSource: AnnualBalanceRemoteDataSource(
+            client: ref.read(httpClientProvider))));
 
 /// Monthly balance repository
 final monthlyBalanceRepositoryProvider =
     Provider<MonthlyBalanceRepositoryInterface>((ref) =>
-        MonthlyBalanceRepository(httpService: ref.watch(httpServiceProvider)));
+        MonthlyBalanceRepository(
+            monthlyBalanceRemoteDataSource: MonthlyBalanceRemoteDataSource(
+                client: ref.read(httpClientProvider))));
 
 ///
 /// Application dependencies

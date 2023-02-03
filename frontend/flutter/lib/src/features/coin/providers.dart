@@ -3,6 +3,8 @@ import 'package:balance_home_app/src/features/coin/application/coin_type_list_co
 import 'package:balance_home_app/src/features/coin/domain/entities/coin_type_entity.dart';
 import 'package:balance_home_app/src/features/coin/domain/repositories/coin_type_repository_interface.dart';
 import 'package:balance_home_app/src/features/coin/domain/repositories/exchange_repository_interface.dart';
+import 'package:balance_home_app/src/features/coin/infrastructure/datasources/remote/coin_type_remote_data_source.dart';
+import 'package:balance_home_app/src/features/coin/infrastructure/datasources/remote/exchange_remote_data_source.dart';
 import 'package:balance_home_app/src/features/coin/infrastructure/repositories/coin_type_repository.dart';
 import 'package:balance_home_app/src/features/coin/infrastructure/repositories/exchange_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,8 +25,12 @@ final coinTypeListsControllerProvider = StateNotifierProvider<
 
 /// Coin type repository
 final coinTypeRepositoryProvider = Provider<CoinTypeRepositoryInterface>(
-    (ref) => CoinTypeRepository(httpService: ref.watch(httpServiceProvider)));
+    (ref) => CoinTypeRepository(
+        coinTypeRemoteDataSource:
+            CoinTypeRemoteDataSource(client: ref.read(httpClientProvider))));
 
 /// Exchange repository
 final exchangeRepositoryProvider = Provider<ExchangeRepositoryInterface>(
-    (ref) => ExchangeRepository(httpService: ref.watch(httpServiceProvider)));
+    (ref) => ExchangeRepository(
+        exchangeRemoteDataSource:
+            ExchangeRemoteDataSource(client: ref.read(httpClientProvider))));

@@ -1,6 +1,7 @@
 import 'package:balance_home_app/config/providers.dart';
 import 'package:balance_home_app/src/core/application/app_version_controller.dart';
 import 'package:balance_home_app/src/core/domain/repositories/app_info_repository_interface.dart';
+import 'package:balance_home_app/src/core/infrastructure/datasources/remote/app_version_remote_data_source.dart';
 import 'package:balance_home_app/src/core/infrastructure/repositories/app_info_repository.dart';
 import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
 import 'package:balance_home_app/src/core/presentation/states/app_localizations_state.dart';
@@ -17,7 +18,9 @@ import 'package:universal_io/io.dart';
 ///
 
 final appInfoRepositoryProvider = Provider<AppInfoRepositoryInterface>((ref) {
-  return AppInfoRepository(httpService: ref.read(httpServiceProvider));
+  return AppInfoRepository(
+      appVersionRemoteDataSource:
+          AppVersionRemoteDataSource(client: ref.read(httpClientProvider)));
 });
 
 ///

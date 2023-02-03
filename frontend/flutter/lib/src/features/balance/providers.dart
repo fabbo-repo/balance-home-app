@@ -10,6 +10,8 @@ import 'package:balance_home_app/src/features/balance/domain/entities/balance_ty
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_repository_interface.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_respository_interface.dart';
+import 'package:balance_home_app/src/features/balance/infrastructure/datasources/remote/balance_remote_data_source.dart';
+import 'package:balance_home_app/src/features/balance/infrastructure/datasources/remote/balance_type_remote_data_source.dart';
 import 'package:balance_home_app/src/features/balance/infrastructure/repositories/balance_repository.dart';
 import 'package:balance_home_app/src/features/balance/infrastructure/repositories/balance_type_respository.dart';
 import 'package:balance_home_app/src/features/balance/presentation/models/balance_limit_type.dart';
@@ -25,11 +27,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Balance type repository
 final balanceTypeRepositoryProvider = Provider<BalanceTypeRepositoryInterface>(
-    (ref) => BalanceTypeRepository(httpService: ref.watch(httpServiceProvider)));
+    (ref) => BalanceTypeRepository(
+        balanceTypeRemoteDataSource:
+            BalanceTypeRemoteDataSource(client: ref.read(httpClientProvider))));
 
 /// Balance repository
-final balanceRepositoryProvider = Provider<BalanceRepositoryInterface>(
-    (ref) => BalanceRepository(httpService: ref.watch(httpServiceProvider)));
+final balanceRepositoryProvider = Provider<BalanceRepositoryInterface>((ref) =>
+    BalanceRepository(
+        balanceRemoteDataSource:
+            BalanceRemoteDataSource(client: ref.read(httpClientProvider))));
 
 ///
 /// Application dependencies
