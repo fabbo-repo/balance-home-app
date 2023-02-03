@@ -12,8 +12,8 @@ services:
       - db:db
       - redis:redis
     volumes:
-      - ./djangorest/media:/app/media
-      - ./djangorest/static:/app/static
+      - ./djangorest/src/media:/app/media
+      - ./djangorest/src/static:/app/static
       - ./logs/backend:/var/log/balance_app
     expose:
       - 8000
@@ -35,8 +35,8 @@ services:
       - db:db
       - redis:redis
     volumes:
-      - ./djangorest/media:/app/media
-      - ./djangorest/static:/app/static
+      - ./djangorest/src/media:/app/media
+      - ./djangorest/src/static:/app/static
       - ./logs/celery:/var/log/balance_app
     depends_on:
       - redis
@@ -70,13 +70,13 @@ services:
   nginx:
     build: nginx
     ports:
-      - "80:80"
-      - "443:443"
+      - "8000:80"
+      - "8001:443"
     volumes:
-      - ./djangorest/static:/app/static
-      - ./djangorest/media:/app/media
+      - ./djangorest/src/media:/app/media
+      - ./djangorest/src/static:/app/static
       - ./logs/nginx:/var/log/nginx
-      - ./nginx/ssl/:/etc/nginx/ssl/:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
     depends_on:
       - backend
     restart: unless-stopped
