@@ -76,7 +76,7 @@ services:
       - ./djangorest/src/media:/app/media
       - ./djangorest/src/static:/app/static
       - ./logs/nginx:/var/log/nginx
-      - ./nginx/ssl/:/etc/nginx/ssl/:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
     depends_on:
       - backend
     restart: unless-stopped
