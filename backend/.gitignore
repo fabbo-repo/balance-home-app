@@ -4,3 +4,4 @@ logs/
 database/
 *.crt
 *.key
+*.pem
