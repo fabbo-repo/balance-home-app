@@ -4,13 +4,12 @@ from django.utils.timezone import timedelta
 import os
 from django.utils.translation import gettext_lazy as _
 import environ
+from Crypto.PublicKey import RSA
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(
     APP_DEBUG=(bool, os.getenv("APP_DEBUG", default=True)),
-    APP_SECRET_KEY=(str, os.getenv("APP_SECRET_KEY",
-                                   default=os.urandom(34).hex())),
     APP_ALLOWED_HOSTS=(str, os.getenv("APP_ALLOWED_HOSTS", default='*')),
     APP_CORS_HOSTS=(str, os.getenv("APP_CORS_HOSTS")),
     DATABASE_URL=(str, os.getenv("DATABASE_URL",
@@ -18,7 +17,8 @@ env = environ.Env(
     APP_EMAIL_CODE_THRESHOLD=(int, os.getenv(
         "APP_EMAIL_CODE_THRESHOLD", default=120)),
     APP_EMAIL_CODE_VALID=(int, os.getenv("APP_EMAIL_CODE_VALID", default=120)),
-    APP_UNVERIFIED_USER_DAYS=(int, os.getenv("APP_UNVERIFIED_USER_DAYS", default=2)),
+    APP_UNVERIFIED_USER_DAYS=(int, os.getenv(
+        "APP_UNVERIFIED_USER_DAYS", default=2)),
     COIN_TYPE_CODES=(str, os.getenv("COIN_TYPE_CODES", default='EUR,USD')),
     DBBACKUP_GPG_RECIPIENT=(str, os.getenv("DBBACKUP_GPG_RECIPIENT")),
     APP_EMAIL_HOST=(str, os.getenv(
@@ -38,7 +38,24 @@ class Dev(Configuration):
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
     BASE_DIR = Path(__file__).resolve().parent.parent
 
-    SECRET_KEY = env('APP_SECRET_KEY')
+    private_key_file = os.path.join(BASE_DIR, 'private.key')
+    public_key_file = os.path.join(BASE_DIR, 'public.key')
+
+    if os.path.exists(private_key_file):
+        print("* Using SECRET key from file")
+        with open(private_key_file, 'rb') as reader:
+            RSAkey = RSA.importKey(reader.read())
+    else:
+        print("* Generating SECRET key")
+        RSAkey = RSA.generate(4096)
+        with open(private_key_file, 'wb') as writer:
+            print("* Generating PRIVATE key file")
+            writer.write(RSAkey.exportKey())
+        if not os.path.exists(public_key_file):
+            with open(public_key_file, 'wb') as writer:
+                print("* Generating PUBLIC key file")
+                writer.write(RSAkey.publickey().exportKey())
+    SECRET_KEY = RSAkey.exportKey()
 
     # True by default but have the option to set it false with an environment variable
     DEBUG = env('APP_DEBUG')
@@ -220,7 +237,11 @@ class Dev(Configuration):
     SIMPLE_JWT = {
         "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
         "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+        "ALGORITHM": 'RS256',
+        "SIGNING_KEY": SECRET_KEY,
+        "VERIFYING_KEY": RSAkey.publickey().exportKey()
     }
+    UPDATE_LAST_LOGIN = True
 
     SWAGGER_SETTINGS = {
         "SECURITY_DEFINITIONS": {
@@ -251,16 +272,17 @@ class Dev(Configuration):
 
 class OnPremise(Dev):
     DEBUG = False
+    WSGI_APPLICATION = 'core.on_premise_wsgi.application'
 
     # Security headers
     CSRF_COOKIE_SECURE = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SESSION_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 31536000 # 1 year
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
-    
+
     # Backup
     DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
     DBBACKUP_STORAGE_OPTIONS = {'location': '/var/backup'}
@@ -268,6 +290,7 @@ class OnPremise(Dev):
     DBBACKUP_GPG_ALWAYS_TRUST = True
 
     if os.path.exists('/var/log/balance_app/app.log'):
+        print("* Using file log")
         LOGGING = {
             "version": 1,
             "disable_existing_loggers": False,
@@ -289,13 +312,36 @@ class OnPremise(Dev):
                 "level": "ERROR",
             }
         }
-    else: 
-        LOGGING = Dev.LOGGING
-        LOGGING["root"]["level"] = "ERROR"
+    else:
+        print("* Using console log")
+        LOGGING = {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "formatters": {
+                "verbose": {
+                    "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+                    "style": "{",
+                },
+            },
+            "handlers": {
+                "console": {
+                    "class": "logging.StreamHandler",
+                    "stream": "ext://sys.stdout",
+                    "formatter": "verbose",
+                },
+            },
+            "root": {
+                "handlers": ["console"],
+                "level": "ERROR",
+            }
+        }
 
     SIMPLE_JWT = {
         "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
         "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+        "ALGORITHM": 'RS256',
+        "SIGNING_KEY": Dev.SECRET_KEY,
+        "VERIFYING_KEY": Dev.RSAkey.publickey().exportKey()
     }
 
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
