@@ -4,6 +4,7 @@ from balance.models import AnnualBalance, MonthlyBalance
 from balance.api.serializers import AnnualBalanceSerializer, MonthlyBalanceSerializer
 from core.permissions import IsCurrentVerifiedUser
 
+
 class AnnualBalanceView(viewsets.ModelViewSet):
     queryset = AnnualBalance.objects.all()
     serializer_class = AnnualBalanceSerializer

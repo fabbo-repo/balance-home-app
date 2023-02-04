@@ -13,10 +13,12 @@ class NoCoinExchangeException(Exception):
         self.message = _('No coin exchange')
         super().__init__(self.message)
 
+
 class OldExchangeException(Exception):
     def __init__(self, *args, **kwargs):
         self.message = _('Exchange data not updated in the past 24 hours')
         super().__init__(self.message)
+
 
 class UnsupportedExchangeException(Exception):
     def __init__(self, *args, **kwargs):
@@ -25,22 +27,24 @@ class UnsupportedExchangeException(Exception):
 
 
 def _convert(coin_from: CoinType, coin_to: CoinType, amount: float):
-    if coin_from.code == coin_to.code: return amount
-    
+    if coin_from.code == coin_to.code:
+        return amount
+
     last_coin_exchange = CoinExchange.objects.last()
-    if not last_coin_exchange: raise NoCoinExchangeException()
+    if not last_coin_exchange:
+        raise NoCoinExchangeException()
 
     # More than 24 hours:
     if last_coin_exchange.created < now() - timedelta(days=1):
         raise OldExchangeException()
-    
+
     data = dict(json.loads(last_coin_exchange.exchange_data))
-    if not data or not coin_from.code in data.keys(): 
+    if not data or not coin_from.code in data.keys():
         raise UnsupportedExchangeException()
 
     currency_converter = get_converter_from_settings()
     currency_data = currency_converter.get_currency_data_from_json(
-        { coin_from.code : data[coin_from.code] }
+        {coin_from.code: data[coin_from.code]}
     )
     return currency_data.convert(coin_from.code, coin_to.code, amount)
 
@@ -54,10 +58,11 @@ def convert_or_fetch(coin_from: CoinType, coin_to: CoinType, amount: float):
     try:
         return round(_convert(coin_from, coin_to, amount), 2)
     except Exception as e:
-        logger.error(str(e))
+        logger.warning(str(e))
         currency_converter = get_converter_from_settings()
         return round(currency_converter.make_conversion(
             coin_from.code, coin_to.code, amount), 2)
+
 
 def update_exchange_data():
     """
@@ -65,11 +70,11 @@ def update_exchange_data():
     """
     first_coin_exchange = CoinExchange.objects.first()
     currency_converter = get_converter_from_settings()
-    # A coin exchange for today should be created if there is no coin exchange 
+    # A coin exchange for today should be created if there is no coin exchange
     # or the newest one created has a date diferent compared to today
     if not first_coin_exchange \
-        or first_coin_exchange.created.date() != now().date():
+            or first_coin_exchange.created.date() != now().date():
         CoinExchange.objects.create(
-            exchange_data = json.dumps(
+            exchange_data=json.dumps(
                 dict(currency_converter.get_currency_data().data))
         )

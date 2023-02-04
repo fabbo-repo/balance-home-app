@@ -25,7 +25,8 @@ class CurrencyData:
         self.data = data
 
     def convert(self, currency_from, currency_to, amount: float):
-        if currency_from == currency_to: return amount
+        if currency_from == currency_to:
+            return amount
         return float(self.data[currency_from][currency_to]) * amount
 
 
@@ -35,35 +36,39 @@ class CurrencyConverterService:
 
     def make_conversions(self, reference_currency_code, ammount=1):
         res = {
-            reference_currency_code : ammount
+            reference_currency_code: ammount
         }
         for code in self.currency_codes:
             # Ignore reference_currency_code
-            if code == reference_currency_code: continue
-            res[code] = self.make_conversion(reference_currency_code, code, ammount)
+            if code == reference_currency_code:
+                continue
+            res[code] = self.make_conversion(
+                reference_currency_code, code, ammount)
         return res
-    
+
     def make_conversion(self, code_from, code_to, ammount=1):
         params = {}
         params["Amount"] = ammount
         params["From"] = code_from
         params["To"] = code_to
         resp = requests.get(CURRENCY_CONVERTER_URL, params=params)
-        try: resp.raise_for_status()
-        except: 
-            logger.error('[CURRENCY CONVERTER] currency converter connection error')
+        try:
+            resp.raise_for_status()
+        except:
+            logger.error(
+                '[CURRENCY CONVERTER] currency converter connection error')
             raise ConnectionError()
         html = resp.content
         return self._filter_html_response(html)
-    
+
     def _filter_html_response(self, html):
         soup = BeautifulSoup(html, 'html.parser')
-        try: 
+        try:
             return float(soup.body.find_all('p')[3].text.split(' ')[3])
         except:
             logger.error('[CURRENCY CONVERTER] html parser no longer valid')
             raise Exception('html parser no longer valid')
-    
+
     def get_currency_data(self):
         logger.info("[CURRENCY CONVERTER] Fetching currency data")
         res = {}
@@ -72,6 +77,6 @@ class CurrencyConverterService:
             data.pop(code)
             res[code] = data
         return CurrencyData(res)
-    
+
     def get_currency_data_from_json(self, data):
         return CurrencyData(data)
