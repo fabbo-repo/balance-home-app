@@ -25,7 +25,8 @@ class DevTestCase(TestCase):
         """
         Testing logging config in Debug mode
         """
-        logging_settings = settings.LOGGING
+        from core.settings import Dev
+        logging_settings = Dev.LOGGING
 
         self.assertEqual(logging_settings["version"], 1)
         self.assertEqual(logging_settings["disable_existing_loggers"], False)
