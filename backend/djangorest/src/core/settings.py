@@ -74,6 +74,7 @@ class Dev(Configuration):
         # Backup
         'dbbackup',
         # Custom apps:
+        'core',
         'custom_auth',
         'balance',
         'revenue',
@@ -95,6 +96,8 @@ class Dev(Configuration):
     ]
 
     ROOT_URLCONF = 'core.urls'
+    
+    CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
 
     TEMPLATES = [
         {
@@ -112,7 +115,7 @@ class Dev(Configuration):
         },
     ]
 
-    WSGI_APPLICATION = 'core.wsgi.application'
+    #WSGI_APPLICATION = 'core.wsgi.application'
 
     # Database
     # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -167,10 +170,10 @@ class Dev(Configuration):
     # https://docs.djangoproject.com/en/4.1/howto/static-files/
     STATIC_URL = 'static/'
     if not env("GS_BUCKET_NAME"):
-        STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+        STATIC_ROOT = BASE_DIR / "static"
     MEDIA_URL = 'media/'
     if not env("GS_BUCKET_NAME"):
-        MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+        MEDIA_ROOT = BASE_DIR / "media"
 
     # Default primary key field type
     # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
