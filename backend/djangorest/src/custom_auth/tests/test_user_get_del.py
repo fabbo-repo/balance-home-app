@@ -6,7 +6,7 @@ from custom_auth.models import User, InvitationCode
 import logging
 import json
 
-class UserPutTests(APITestCase):
+class UserGetDelTests(APITestCase):
     def setUp(self):
         # Avoid WARNING logs while testing wrong requests 
         logging.disable(logging.WARNING)
