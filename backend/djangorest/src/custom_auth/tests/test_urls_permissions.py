@@ -1,4 +1,3 @@
-import json
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
@@ -6,17 +5,21 @@ from coin.models import CoinType
 from custom_auth.models import InvitationCode, User
 import logging
 from django.conf import settings
+import core.tests.utils as test_utils
+from unittest import mock
 
 
 class UrlPermissionsTests(APITestCase):
     def setUp(self):
+        # Mock Celery tasks
+        settings.CELERY_TASK_ALWAYS_EAGER = True
+        mock.patch("custom_auth.tasks.notifications.send_email_code",
+                   return_value=None)
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
         # For testing, code threshold to 0 seconds
         settings.EMAIL_CODE_THRESHOLD = 0
 
-        self.jwt_obtain_url = reverse('jwt_obtain_pair')
-        self.jwt_refresh_url = reverse('jwt_refresh')
         self.user_post_url = reverse('user_post')
         self.user_put_get_del_url = reverse('user_put_get_del')
         self.change_password_url = reverse('change_password')
@@ -75,44 +78,24 @@ class UrlPermissionsTests(APITestCase):
         user.save()
         return super().setUp()
 
-    def get(self, url):
-        return self.client.get(url)
-
-    def post(self, url, data={}):
-        return self.client.post(
-            url, json.dumps(data),
-            content_type="application/json"
-        )
-
-    def patch(self, url, data={}):
-        return self.client.patch(
-            url, json.dumps(data),
-            content_type="application/json"
-        )
-
-    def delete(self, url):
-        return self.client.delete(url)
-
     def test_jwt_obtain_url(self):
         """
         Checks permissions with JWT obtain
         """
-        response = self.post(self.jwt_obtain_url, self.credentials1)
+        response = test_utils.authenticate_user(self.client, self.credentials1)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.post(self.jwt_obtain_url, self.credentials2)
+        response = test_utils.authenticate_user(self.client, self.credentials2)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_jwt_refresh_url(self):
         """
         Checks permissions with JWT refresh
         """
-        refresh = self.post(self.jwt_obtain_url,
-                            self.credentials1).data['refresh']
-        response = self.post(self.jwt_refresh_url, {'refresh': refresh})
+        refresh = test_utils.get_refresh_token(self.client, self.credentials1)
+        response = test_utils.refresh_token(self.client, refresh)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        refresh = self.post(self.jwt_obtain_url,
-                            self.credentials2).data['refresh']
-        response = self.post(self.jwt_refresh_url, {'refresh': refresh})
+        refresh = test_utils.get_refresh_token(self.client, self.credentials2)
+        response = test_utils.refresh_token(self.client, refresh)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_user_post_url(self):
@@ -122,7 +105,8 @@ class UrlPermissionsTests(APITestCase):
         user_data_aux = self.user_data1
         user_data_aux['email'] = 'test2@email.com'
         user_data_aux['username'] = 'test2'
-        response = self.post(self.user_post_url, user_data_aux)
+        response = test_utils.post(
+            self.client, self.user_post_url, user_data_aux)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_user_patch_url(self):
@@ -131,13 +115,14 @@ class UrlPermissionsTests(APITestCase):
         """
         # Try without authentication
         user_data_aux = {'username': 'test'}
-        response = self.patch(self.user_put_get_del_url, user_data_aux)
+        response = test_utils.patch(
+            self.client, self.user_put_get_del_url, user_data_aux)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        # Get jwt token
-        jwt = self.post(self.jwt_obtain_url, self.credentials1).data['access']
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
+        # Authenticate
+        test_utils.authenticate_user(self.client, self.credentials1)
         # Try with authentication
-        response = self.patch(self.user_put_get_del_url, user_data_aux)
+        response = test_utils.patch(
+            self.client, self.user_put_get_del_url, user_data_aux)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_user_get_url(self):
@@ -145,13 +130,12 @@ class UrlPermissionsTests(APITestCase):
         Checks permissions with User get
         """
         # Try without authentications
-        response = self.get(self.user_put_get_del_url)
+        response = test_utils.get(self.client, self.user_put_get_del_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        # Get jwt token
-        jwt = self.post(self.jwt_obtain_url, self.credentials1).data['access']
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
+        # Authenticate
+        test_utils.authenticate_user(self.client, self.credentials1)
         # Try with authentication
-        response = self.get(self.user_put_get_del_url)
+        response = test_utils.get(self.client, self.user_put_get_del_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_user_get_url(self):
@@ -159,13 +143,12 @@ class UrlPermissionsTests(APITestCase):
         Checks permissions with User del
         """
         # Try without authentications
-        response = self.delete(self.user_put_get_del_url)
+        response = test_utils.delete(self.client, self.user_put_get_del_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        # Get jwt token
-        jwt = self.post(self.jwt_obtain_url, self.credentials1).data['access']
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
+        # Authenticate
+        test_utils.authenticate_user(self.client, self.credentials1)
         # Try with authentication
-        response = self.delete(self.user_put_get_del_url)
+        response = test_utils.delete(self.client, self.user_put_get_del_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_email_code_send_url(self):
@@ -175,8 +158,8 @@ class UrlPermissionsTests(APITestCase):
         user = User.objects.get(email=self.user_data1['email'])
         user.verified = False
         user.save()
-        response = self.post(self.email_code_send_url, {
-                             'email': self.user_data1['email']})
+        response = test_utils.post(self.client, self.email_code_send_url, {
+            'email': self.user_data1['email']})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_email_code_verify_url(self):
@@ -187,10 +170,11 @@ class UrlPermissionsTests(APITestCase):
         user = User.objects.get(email=self.user_data1['email'])
         user.verified = False
         user.save()
-        self.post(self.email_code_send_url, {'email': self.user_data1['email']})
+        test_utils.post(self.client, self.email_code_send_url, {
+            'email': self.user_data1['email']})
         # Verify code
         user = User.objects.get(email=self.user_data1['email'])
-        response = self.post(self.email_code_send_url, {
+        response = test_utils.post(self.client, self.email_code_send_url, {
             'email': self.user_data1['email'],
             'code': user.code_sent
         })
@@ -205,13 +189,12 @@ class UrlPermissionsTests(APITestCase):
             'old_password': self.user_data1['password'],
             'new_password': 'pass@123ua3ss'
         }
-        response = self.post(self.change_password_url, data)
+        response = test_utils.post(self.client, self.change_password_url, data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        # Get jwt token
-        jwt = self.post(self.jwt_obtain_url, self.credentials1).data['access']
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
+        # Authenticate
+        test_utils.authenticate_user(self.client, self.credentials1)
         # Try with authentication
-        response = self.post(self.change_password_url, data)
+        response = test_utils.post(self.client, self.change_password_url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_reset_password_url(self):
@@ -219,16 +202,16 @@ class UrlPermissionsTests(APITestCase):
         Checks permissions with reset password
         """
         # Try without authentication
-        response = self.post(self.reset_password_start_url)
+        response = test_utils.post(self.client, self.reset_password_start_url, {})
         self.assertNotEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.post(self.reset_password_verify_url)
+        response = test_utils.post(self.client, self.reset_password_verify_url, {})
         self.assertNotEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         # Begin process
-        response = self.post(self.reset_password_start_url,
-                             {
-                                 "email": self.user_data1['email']
-                             }
-                             )
+        response = test_utils.post(self.client, self.reset_password_start_url,
+                                   {
+                                       "email": self.user_data1['email']
+                                   }
+                                   )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user = User.objects.get(email=self.user_data1['email'])
         data = {
@@ -236,5 +219,6 @@ class UrlPermissionsTests(APITestCase):
             'code': user.pass_reset,
             'new_password': 'pass@123ua3ss'
         }
-        response = self.post(self.reset_password_verify_url, data)
+        response = test_utils.post(
+            self.client, self.reset_password_verify_url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

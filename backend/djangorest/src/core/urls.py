@@ -23,7 +23,7 @@ if settings.DEBUG:
         path("api/v1/swagger/", include(swagger_urls)),
     ]
     urlpatterns += static(
-        settings.MEDIA_URL, 
+        settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT
     )
 

@@ -3,15 +3,16 @@ from custom_auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
+
 class UserTests(APITestCase):
     def setUp(self):
-        self.user_data={
-            'username':"username",
-            'email':"email@test.com",
+        self.user_data = {
+            'username': "username",
+            'email': "email@test.com",
             "password": "password1@212"
         }
         return super().setUp()
-    
+
     def create_user(self):
         user = User.objects.create_user(**self.user_data)
         user.set_password(self.user_data['password'])
@@ -23,7 +24,6 @@ class UserTests(APITestCase):
         user.set_password(self.user_data['password'])
         user.save()
         return user
-
 
     def test_creates_user(self):
         """
@@ -49,7 +49,7 @@ class UserTests(APITestCase):
         raises an Exception when it is created as super user
         """
         self.assertRaises(
-            ValueError, 
+            ValueError,
             User.objects.create_superuser,
             is_staff=False,
             **self.user_data
@@ -66,7 +66,7 @@ class UserTests(APITestCase):
         raises an Exception when it is created as super user
         """
         self.assertRaises(
-            ValueError, 
+            ValueError,
             User.objects.create_superuser,
             is_superuser=False,
             **self.user_data
@@ -76,15 +76,15 @@ class UserTests(APITestCase):
                 is_superuser=False,
                 **self.user_data
             )
-    
+
     def test_cant_create_user_without_username(self):
         """
         Checks that an User without username (same as empty or None)
         raises an Exception when it is created
         """
         self.assertRaises(
-            ValueError, 
-            User.objects.create_user, 
+            ValueError,
+            User.objects.create_user,
             email=self.user_data['email'],
             password=self.user_data['password'],
             username=""
@@ -102,7 +102,7 @@ class UserTests(APITestCase):
         raises an Exception when it is created
         """
         self.assertRaises(
-            ValueError, 
+            ValueError,
             User.objects.create_user,
             email='',
             password=self.user_data['password'],
@@ -114,14 +114,14 @@ class UserTests(APITestCase):
                 password=self.user_data['password'],
                 username=self.user_data['username']
             )
-    
+
     def test_cant_create_user_with_same_email_and_username(self):
         """
         Checks that an User with same email and username
         raises an Exception when it is checked
         """
         self.assertRaises(
-            ValueError, 
+            ValueError,
             User.objects.create,
             email=self.user_data['email'],
             password=self.user_data['password'],
@@ -133,14 +133,14 @@ class UserTests(APITestCase):
                 password=self.user_data['password'],
                 username=self.user_data['email']
             )
-    
+
     def test_cant_create_user_wrong_language(self):
         """
         Checks that an User with wrong languages
         raises an Exception when it is saved
         """
         self.assertRaises(
-            ValueError, 
+            ValueError,
             User.objects.create,
             email=self.user_data['email'],
             password=self.user_data['password'],

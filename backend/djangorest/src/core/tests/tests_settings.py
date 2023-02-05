@@ -11,7 +11,7 @@ class DevTestCase(TestCase):
         """
         from core.settings import Dev
         self.assertTrue(issubclass(Dev, Configuration))
-    
+
     def test_debug_settings(self):
         """
         Testing DEBUG const is setup correctly in Dev and OnPremise
@@ -20,7 +20,7 @@ class DevTestCase(TestCase):
         self.assertTrue(Dev.DEBUG)
         from core.settings import OnPremise
         self.assertFalse(OnPremise.DEBUG)
-    
+
     def test_logging_settings(self):
         """
         Testing logging config in Debug mode
@@ -30,9 +30,12 @@ class DevTestCase(TestCase):
 
         self.assertEqual(logging_settings["version"], 1)
         self.assertEqual(logging_settings["disable_existing_loggers"], False)
-        self.assertEqual(logging_settings["handlers"]["console"]["class"], "logging.StreamHandler")
-        self.assertEqual(logging_settings["handlers"]["console"]["stream"], "ext://sys.stdout")
+        self.assertEqual(
+            logging_settings["handlers"]["console"]["class"], "logging.StreamHandler")
+        self.assertEqual(
+            logging_settings["handlers"]["console"]["stream"], "ext://sys.stdout")
         if "formatter" in logging_settings["handlers"]["console"]:
-            self.assertIn(logging_settings["handlers"]["console"]["formatter"], logging_settings["formatters"])
+            self.assertIn(logging_settings["handlers"]["console"]
+                          ["formatter"], logging_settings["formatters"])
         self.assertIn("console", logging_settings["root"]["handlers"])
         self.assertEqual(logging_settings["root"]["level"], "DEBUG")

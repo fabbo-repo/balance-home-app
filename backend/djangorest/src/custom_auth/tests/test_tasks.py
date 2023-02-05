@@ -22,8 +22,7 @@ class CustomAuthTasksTests(TestCase):
         self.assertIsNotNone(send_email_code.delay)
         self.assertIsNotNone(send_password_code.delay)
 
-    @staticmethod
-    def test_shared_tasks_behaviour():
+    def test_shared_tasks_behaviour(self):
         """
         Checks that send_email_code and send_password_code are 
         shared tasks

@@ -40,6 +40,13 @@ def patch(client: APIClient, url: str, data: dict, content_type="application/jso
     )
 
 
+def patch_image(client: APIClient, url: str, data: dict):
+    return client.patch(
+        url,
+        data=data,
+    )
+
+
 def delete(client: APIClient, url: str, content_type="application/json"):
     return client.delete(
         url,
@@ -50,5 +57,24 @@ def delete(client: APIClient, url: str, content_type="application/json"):
 def authenticate_user(client: APIClient, credentials: dict):
     jwt_obtain_url = reverse('jwt_obtain_pair')
     # Get jwt token
-    jwt = post(client, jwt_obtain_url, credentials).data['access']
-    client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
+    response = post(client, jwt_obtain_url, credentials)
+    try:
+        jwt = response.data['access']
+        client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
+    except: pass
+    return response
+
+
+def get_access_token(client: APIClient, credentials: dict):
+    jwt_obtain_url = reverse('jwt_obtain_pair')
+    return post(client, jwt_obtain_url, credentials).data['access']
+
+
+def get_refresh_token(client: APIClient, credentials: dict):
+    jwt_obtain_url = reverse('jwt_obtain_pair')
+    return post(client, jwt_obtain_url, credentials).data['refresh']
+
+
+def refresh_token(client: APIClient, token: str):
+    jwt_refresh_url = reverse('jwt_refresh')
+    return post(client, jwt_refresh_url, {'refresh': token})

@@ -1,5 +1,4 @@
 import time
-import json
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
@@ -7,78 +6,81 @@ from coin.models import CoinType
 from custom_auth.models import InvitationCode, User
 import logging
 from django.conf import settings
+import core.tests.utils as test_utils
+from unittest import mock
+
 
 class JwtCodeTests(APITestCase):
     def setUp(self):
-        # Avoid WARNING logs while testing wrong requests 
+        # Mock Celery tasks
+        settings.CELERY_TASK_ALWAYS_EAGER = True
+        mock.patch("custom_auth.tasks.notifications.send_email_code",
+                   return_value=None)
+        # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
 
-        self.user_post_url=reverse('user_post')
-        self.jwt_obtain_url=reverse('jwt_obtain_pair')
-        self.jwt_refresh_url=reverse('jwt_refresh')
-        self.email_code_send_url=reverse('email_code_send')
-        self.email_code_verify_url=reverse('email_code_verify')
+        self.user_post_url = reverse('user_post')
+        self.email_code_send_url = reverse('email_code_send')
+        self.email_code_verify_url = reverse('email_code_verify')
 
         # Create InvitationCode
         inv_code = InvitationCode.objects.create()
+        # Create CoinType
+        coin_type = CoinType.objects.create(code='EUR')
         # Test user data
-        self.user_data={
-            'username':"username",
-            'email':"email@test.com",
+        self.user_data = {
+            'username': "username",
+            'email': "email@test.com",
             "password": "password1@212",
             "password2": "password1@212",
             'inv_code': str(inv_code.code),
-            'pref_coin_type': 
-                str(CoinType.objects.create(code='EUR').code),
+            'pref_coin_type': str(coin_type.code),
+            "expected_annual_balance": 10.0,
+            "expected_monthly_balance": 10.0,
             'language': 'en'
         }
         self.credentials = {
-            'email':"email@test.com",
+            'email': "email@test.com",
             "password": "password1@212"
         }
-        # user_post User:
-        self.user_post()
+        # User creation
+        user = User.objects.create(
+            username=self.user_data["username"],
+            email=self.user_data["email"],
+            inv_code=inv_code,
+            verified=False,
+            pref_coin_type=coin_type,
+            expected_annual_balance=self.user_data["expected_annual_balance"],
+            expected_monthly_balance=self.user_data["expected_monthly_balance"],
+            language=self.user_data["language"]
+        )
+        user.set_password(self.user_data['password'])
+        user.save()
         return super().setUp()
-    
-    def user_post(self, user_data=None) :
-        if user_data == None: user_data = self.user_data
-        return self.client.post(
-            self.user_post_url,
-            data=json.dumps(user_data),
-            content_type="application/json"
-        )
-    
-    def jwt_obtain(self, credentials=None) :
-        if credentials == None: credentials = self.credentials
-        return self.client.post(
-            self.jwt_obtain_url,
-            data=json.dumps(credentials),
-            content_type="application/json"
-        )
-    
-    def send_code(self, email=None) :
-        if email == None: email = self.user_data['email']
-        return self.client.post(
+
+    def send_code(self, email=None):
+        if email == None:
+            email = self.user_data['email']
+        return test_utils.post(
+            self.client,
             self.email_code_send_url,
-            data=json.dumps({'email': email}),
-            content_type="application/json"
+            data={'email': email}
         )
-    
-    def verify_code(self, code, email=None) :
-        if email == None: email = self.user_data['email']
-        return self.client.post(
+
+    def verify_code(self, code, email=None):
+        if email == None:
+            email = self.user_data['email']
+        return test_utils.post(
+            self.client,
             self.email_code_verify_url,
-            data=json.dumps({'email': email, 'code': code}),
-            content_type="application/json"
+            data={'email': email, 'code': code}
         )
-
-
 
     def test_jwt_obtain_unverified_user(self):
         """
         Checks that an unverified user should not be able to obtain jwt
         """
-        response=self.jwt_obtain()
+        response = test_utils.authenticate_user(self.client, self.credentials)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('verified', response.data)
 
@@ -86,50 +88,52 @@ class JwtCodeTests(APITestCase):
         """
         Checks that an inactive user should not be able to obtain jwt
         """
-        user=User.objects.get(email=self.user_data['email'])
-        user.is_active=False
+        user = User.objects.get(email=self.user_data['email'])
+        user.is_active = False
         user.save()
-        response=self.jwt_obtain()
+        response = test_utils.authenticate_user(self.client, self.credentials)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertEqual(response.data['detail'], 'No active account found with the given credentials')
+        self.assertEqual(
+            response.data['detail'], 'No active account found with the given credentials')
 
     def test_jwt_obtain_nonexistent_user(self):
         """
         Checks that an nonexistent user should not be able to obtain jwt
         """
         credentials2 = {
-            'email':"none@none.com",
+            'email': "none@none.com",
             "password": "password1@212"
         }
-        response=self.jwt_obtain(credentials2)
+        response = test_utils.authenticate_user(self.client, credentials2)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertEqual(response.data['detail'], 'No active account found with the given credentials')
+        self.assertEqual(
+            response.data['detail'], 'No active account found with the given credentials')
 
     def test_jwt_obtain_user_without_inv_code(self):
         """
         Checks that an user without inv_code should not be able to obtain jwt
         """
         user_data2 = {
-            'username':"username2",
-            'email':"email2@test.com",
+            'username': "username2",
+            'email': "email2@test.com",
             "password": "password1@212",
         }
         user = User.objects.create_user(**user_data2)
         user.set_password(user_data2['password'])
         user.save()
-        credentials2={
-            'email':"email2@test.com",
+        credentials2 = {
+            'email': "email2@test.com",
             "password": "password1@212",
         }
-        response=self.jwt_obtain(credentials2)
+        response = test_utils.authenticate_user(self.client, credentials2)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('inv_code', response.data)
-    
+
     def test_send_code_wrong_email(self):
         """
         Checks that a wrong user email should not be able to get a code
         """
-        response=self.send_code("email_false@test.com")
+        response = self.send_code("email_false@test.com")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('email', response.data)
 
@@ -137,7 +141,7 @@ class JwtCodeTests(APITestCase):
         """
         Checks that a right user email (unverified) should be able to get a code
         """
-        response=self.send_code()
+        response = self.send_code()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_send_code_too_many_times(self):
@@ -145,18 +149,18 @@ class JwtCodeTests(APITestCase):
         Checks that requesting a second code at same time should not be right
         """
         self.send_code()
-        response=self.send_code()
+        response = self.send_code()
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-    
+
     def test_send_wrong_code(self):
         """
         Checks that sending a wrong code should not modify the user as verified
         """
         # Code generation first:
         self.send_code()
-        response=self.verify_code('123')
+        response = self.verify_code('123')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        response=self.verify_code('123456')
+        response = self.verify_code('123456')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['code'][0], 'Invalid code')
 
@@ -167,8 +171,8 @@ class JwtCodeTests(APITestCase):
         # Code generation first:
         self.send_code()
         # Get enerated code
-        code=User.objects.get(email=self.user_data['email']).code_sent
-        response=self.verify_code(str(code))
+        code = User.objects.get(email=self.user_data['email']).code_sent
+        response = self.verify_code(str(code))
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_send_invalid_code(self):
@@ -180,11 +184,11 @@ class JwtCodeTests(APITestCase):
         # Set code validity to 1 second
         settings.EMAIL_CODE_VALID = 1
         # Get generated code
-        code=User.objects.get(email=self.user_data['email']).code_sent
+        code = User.objects.get(email=self.user_data['email']).code_sent
         # Sleep for 2 seconds
         time.sleep(2)
         # Verify invalid code
-        response=self.verify_code(str(code))
+        response = self.verify_code(str(code))
         # Undo changes
         settings.EMAIL_CODE_VALID = 120
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

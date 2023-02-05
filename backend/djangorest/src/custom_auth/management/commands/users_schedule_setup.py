@@ -9,7 +9,7 @@ class Command(BaseCommand):
     python manage.py users_schedule_setup
     ~~~
     """
-    
+
     help = "Run the users_schedule_setup function"
 
     def handle(self, *args, **options):
