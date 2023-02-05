@@ -5,14 +5,15 @@ from revenue.models import Revenue, RevenueType
 from custom_auth.models import InvitationCode, User
 from django.utils.translation import gettext_lazy as _
 
+
 class RevenueModelTests(APITestCase):
     def setUp(self):
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
         self.coin_type = CoinType.objects.create(code='EUR')
-        self.user_data={
-            'username':"username1",
-            'email':"email1@test.com",
+        self.user_data = {
+            'username': "username1",
+            'email': "email1@test.com",
             "password": "password1@212",
             "password2": "password1@212",
             'inv_code': str(self.inv_code.code),
@@ -20,7 +21,7 @@ class RevenueModelTests(APITestCase):
         }
         self.rev_type = RevenueType.objects.create(name="test")
         return super().setUp()
-    
+
     def get_revenue_data(self):
         return {
             'name': 'Test name',
@@ -31,7 +32,7 @@ class RevenueModelTests(APITestCase):
             'date': now().date(),
             'owner': self.create_user()
         }
-    
+
     def create_user(self):
         user = User.objects.create(
             username=self.user_data['username'],
@@ -42,7 +43,6 @@ class RevenueModelTests(APITestCase):
         user.set_password(self.user_data['password'])
         user.save()
         return user
-
 
     def test_creates_rev_type(self):
         """
@@ -61,7 +61,8 @@ class RevenueModelTests(APITestCase):
         self.assertEqual(revenue.name, data["name"])
         self.assertEqual(revenue.description, data["description"])
         self.assertEqual(revenue.real_quantity, data["real_quantity"])
-        self.assertEqual(revenue.converted_quantity, data["converted_quantity"])
+        self.assertEqual(revenue.converted_quantity,
+                         data["converted_quantity"])
         self.assertEqual(revenue.coin_type, data["coin_type"])
         self.assertEqual(revenue.rev_type, data["rev_type"])
         self.assertEqual(revenue.date, data["date"])

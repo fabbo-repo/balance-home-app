@@ -144,5 +144,4 @@ class DateBalancePermissionsTests(APITestCase):
         # Try with an specific expense
         response = test_utils.get(
             self.client, self.monthly_balance_list+'/'+str(id))
-        print(response)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

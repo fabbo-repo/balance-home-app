@@ -28,7 +28,6 @@ class ExchangeLogicTests(APITestCase):
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
 
-        self.jwt_obtain_url = reverse('jwt_obtain_pair')
         self.revenue_url = reverse('revenue-list')
         self.expense_url = reverse('expense-list')
         self.user_put_get_del_url = reverse('user_put_get_del')
