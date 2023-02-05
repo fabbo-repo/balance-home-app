@@ -112,6 +112,6 @@ class CoinPermissionsTests(APITestCase):
         response = test_utils.get(self.client, self.coin_exchange_code_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         # List coin exchange list with authentication
-        self.authenticate_user(self.credentials1)
+        test_utils.authenticate_user(self.client, self.credentials1)
         response = test_utils.get(self.client, self.coin_exchange_code_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
