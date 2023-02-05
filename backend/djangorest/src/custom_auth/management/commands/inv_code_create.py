@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand, CommandParser, DjangoHelpFormatter, os
+from django.core.management.base import BaseCommand
 from custom_auth.models import InvitationCode
 
 
@@ -9,7 +9,7 @@ class Command(BaseCommand):
     python manage.py inv_code_create
     ~~~
     """
-    
+
     help = "Run the inv_code_create function"
 
     def create_parser(self, prog_name, subcommand, **kwargs):
@@ -31,19 +31,20 @@ class Command(BaseCommand):
             ),
         )
         return parser
-    
+
     def init_inv_code(self):
         if not len(InvitationCode.objects.all()):
             print(
-                "Invitation Code: "+
+                "Invitation Code: " +
                 str(InvitationCode.objects.create().code.code)
             )
 
     def handle(self, *args, **options):
-        if options["init"] : self.init_inv_code()
+        if options["init"]:
+            self.init_inv_code()
         else:
             print(
-                "Invitation Code: "+
-                str(InvitationCode.objects.create(usage_left=options["usage"]).code)+
+                "Invitation Code: " +
+                str(InvitationCode.objects.create(usage_left=options["usage"]).code) +
                 "\nUsage: "+str(options["usage"])
             )

@@ -1,5 +1,4 @@
 from django.utils.timezone import now, timedelta
-import json
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from coin.models import CoinType
@@ -7,6 +6,7 @@ from custom_auth.models import InvitationCode, User
 import logging
 from revenue.models import RevenueType
 from rest_framework import status
+import core.tests.utils as test_utils
 
 
 class RevenueFilterTests(APITestCase):
@@ -14,7 +14,6 @@ class RevenueFilterTests(APITestCase):
         # Avoid WARNING logs while testing wrong requests 
         logging.disable(logging.WARNING)
 
-        self.jwt_obtain_url=reverse('jwt_obtain_pair')
         self.revenue_url=reverse('revenue-list')
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
@@ -34,20 +33,6 @@ class RevenueFilterTests(APITestCase):
         self.user = self.create_user()
         self.rev_type = RevenueType.objects.create(name="test")
         return super().setUp()
-    
-    def get(self, url) :
-        return self.client.get(url)
-    
-    def post(self, url, data={}) :
-        return self.client.post(
-            url, json.dumps(data),
-            content_type="application/json"
-        )
-    
-    def authenticate_user(self, credentials):
-        # Get jwt token
-        jwt=self.post(self.jwt_obtain_url, credentials).data['access']
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
     
     def get_revenue_data(self):
         return {
@@ -73,10 +58,10 @@ class RevenueFilterTests(APITestCase):
         return user
 
     def authenticate_add_revenue(self):
-        self.authenticate_user(self.credentials)
+        test_utils.authenticate_user(self.client, self.credentials)
         data = self.get_revenue_data()
         # Add new revenue
-        self.post(self.revenue_url, data)
+        test_utils.post(self.client, self.revenue_url, data)
     
 
     def test_revenue_filter_date(self):
@@ -86,7 +71,7 @@ class RevenueFilterTests(APITestCase):
         self.authenticate_add_revenue()
         # Get revenue data
         url = self.revenue_url+'?date='+str(now().date())
-        response = self.get(url)
+        response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
@@ -104,7 +89,7 @@ class RevenueFilterTests(APITestCase):
             +str(
                 now().date() + timedelta(days=1)
             )
-        response = self.get(url)
+        response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
@@ -116,7 +101,7 @@ class RevenueFilterTests(APITestCase):
         self.authenticate_add_revenue()
         # Get revenue data
         url = self.revenue_url+'?rev_type=test'
-        response = self.get(url)
+        response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
@@ -128,7 +113,7 @@ class RevenueFilterTests(APITestCase):
         self.authenticate_add_revenue()
         # Get revenue data
         url = self.revenue_url+'?coin_type=EUR'
-        response = self.get(url)
+        response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
@@ -140,13 +125,13 @@ class RevenueFilterTests(APITestCase):
         self.authenticate_add_revenue()
         # Get revenue data
         url = self.revenue_url+'?converted_quantity_min=1.0&converted_quantity_max=3.0'
-        response = self.get(url)
+        response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
         self.assertEqual(data['count'], 1)
         # Get revenue data
         url = self.revenue_url+'?converted_quantity_min=6.0&converted_quantity_max=8.0'
-        response = self.get(url)
+        response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
         self.assertEqual(data['count'], 0)

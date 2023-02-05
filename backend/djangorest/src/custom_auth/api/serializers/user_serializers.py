@@ -19,23 +19,23 @@ class UserCreationSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
     email = serializers.EmailField(
-        required=True, 
+        required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
     inv_code = serializers.SlugRelatedField(
-        required=True, 
+        required=True,
         slug_field="code",
         many=False,
         queryset=InvitationCode.objects.all()
     )
     password = serializers.CharField(
-        required=True, 
+        required=True,
         write_only=True,
         max_length=30,
         validators=[validate_password]
     )
     password2 = serializers.CharField(
-        required=True, 
+        required=True,
         write_only=True,
     )
 
@@ -44,8 +44,8 @@ class UserCreationSerializer(serializers.ModelSerializer):
         fields = [
             'username',
             'email',
-            'expected_annual_balance', # not required
-            'expected_monthly_balance', # not required
+            'expected_annual_balance',  # not required
+            'expected_monthly_balance',  # not required
             'language',
             'inv_code',
             'pref_coin_type',
@@ -68,8 +68,8 @@ class UserCreationSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
-        check_username_pass12(attrs['username'], attrs['email'], 
-            attrs['password'], attrs['password2'])
+        check_username_pass12(attrs['username'], attrs['email'],
+                              attrs['password'], attrs['password2'])
         if attrs['username'] == attrs['email']:
             raise ValidationError(
                 {'common_fields': _("Username and email can not be the same")})
@@ -92,7 +92,8 @@ class UserCreationSerializer(serializers.ModelSerializer):
         with transaction.atomic():
             for inv_code in inv_codes:
                 inv_code.usage_left = inv_code.usage_left - 1
-                if inv_code.usage_left <= 0: inv_code.is_active = False
+                if inv_code.usage_left <= 0:
+                    inv_code.is_active = False
                 inv_code.save()
         # Alternative:
         # inv_code.usage_left = F('usage_left') - 1
@@ -112,16 +113,16 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'username', 
-            'email', 
-            'receive_email_balance', 
+            'username',
+            'email',
+            'receive_email_balance',
             'balance',
-            'expected_annual_balance', 
-            'expected_monthly_balance', 
-            'receive_email_balance', 
+            'expected_annual_balance',
+            'expected_monthly_balance',
+            'receive_email_balance',
             'language',
             'pref_coin_type',
-            'image', 
+            'image',
             'last_login'
         ]
         read_only_fields = [

@@ -113,7 +113,7 @@ class Dev(Configuration):
     ]
 
     ROOT_URLCONF = 'core.urls'
-    
+
     CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
 
     TEMPLATES = [
@@ -132,7 +132,7 @@ class Dev(Configuration):
         },
     ]
 
-    #WSGI_APPLICATION = 'core.wsgi.application'
+    # WSGI_APPLICATION = 'core.wsgi.application'
 
     # Database
     # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

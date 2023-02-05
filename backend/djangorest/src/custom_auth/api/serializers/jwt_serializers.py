@@ -22,6 +22,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         return token
 
+
 class CustomTokenRefreshSerializer(TokenRefreshSerializer):
     """
     Inherit from `TokenRefreshSerializer` and touch the database
