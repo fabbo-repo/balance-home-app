@@ -1,7 +1,7 @@
 import os
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
-os.environ.setdefault("DJANGO_CONFIGURATION", "Dev")
+os.environ.setdefault("DJANGO_CONFIGURATION", "GCP")
 
 # Trying to import Django Configuration’s get_wsgi_application 
 # will fail if DJANGO_CONFIGURATION is not yet defined
