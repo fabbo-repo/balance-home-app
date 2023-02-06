@@ -69,4 +69,4 @@ $$$$$$$  |\$$$$$$$ |$$ |$$ |  $$ |\$$$$$$  |$$ | $$ | $$ |
 EOF
 
 APP_USER_UID=`id -u $APP_USER`
-exec gunicorn --bind 0.0.0.0:8000 --user $APP_USER_UID --workers 1 --threads 8 --timeout 0 core.on_premise_wsgi:application "$@"
+exec gunicorn --bind 0.0.0.0:8000 --user $APP_USER_UID --workers 1 --threads 8 --timeout 0 $WSGI_APLICATION "$@"
