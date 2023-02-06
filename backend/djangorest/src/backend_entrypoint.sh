@@ -39,11 +39,17 @@ else
 fi
 
 # App commands
+echo "# Executing balance schedule setup"
 python manage.py balance_schedule_setup
+echo "# Executing create balance models"
 python manage.py create_balance_models
+echo "# Executing coin schedule setup"
 python manage.py coin_schedule_setup
+echo "# Executing create coin models"
 python manage.py create_coin_models
+echo "# Executing users schedule setup"
 python manage.py users_schedule_setup
+echo "# Creting default invitation code"
 python manage.py inv_code_create --init
 
 # https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20
