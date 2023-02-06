@@ -9,7 +9,7 @@ def schedule_setup():
 
 def schedule_monthly_balance():
     schedule, _ = CrontabSchedule.objects.get_or_create(
-        minute="30", 
+        minute="30",
         hour="7",
         day_of_month="1",
         month_of_year="*"
@@ -25,7 +25,7 @@ def schedule_monthly_balance():
 
 def schedule_annual_balance():
     schedule, _ = CrontabSchedule.objects.get_or_create(
-        minute="30", 
+        minute="30",
         hour="7",
         day_of_month="1",
         month_of_year="1"
