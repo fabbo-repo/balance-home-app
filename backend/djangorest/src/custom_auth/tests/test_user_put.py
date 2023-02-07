@@ -9,6 +9,7 @@ import tempfile
 from PIL import Image
 import shutil
 import os
+from django.core.cache import cache
 import core.tests.utils as test_utils
 from unittest import mock
 
@@ -21,6 +22,8 @@ class UserPutTests(APITestCase):
                    return_value=None)
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
+        # Throttling is stored in cache
+        cache.clear()
 
         self.user_post_url = reverse('user_post')
         self.change_password_url = reverse('change_password')

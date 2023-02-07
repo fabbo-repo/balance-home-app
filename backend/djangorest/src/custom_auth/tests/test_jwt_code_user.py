@@ -6,6 +6,7 @@ from coin.models import CoinType
 from custom_auth.models import InvitationCode, User
 import logging
 from django.conf import settings
+from django.core.cache import cache
 import core.tests.utils as test_utils
 from unittest import mock
 
@@ -18,6 +19,8 @@ class JwtCodeTests(APITestCase):
                    return_value=None)
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
+        # Throttling is stored in cache
+        cache.clear()
 
         self.user_post_url = reverse('user_post')
         self.email_code_send_url = reverse('email_code_send')

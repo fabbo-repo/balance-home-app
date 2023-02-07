@@ -3,7 +3,7 @@ from django.test import TestCase
 from custom_auth.tasks import send_email_code, send_password_code
 
 
-class CustomAuthTasksTests(TestCase):
+class AuthTasksTests(TestCase):
 
     def test_shared_task_used(self):
         """

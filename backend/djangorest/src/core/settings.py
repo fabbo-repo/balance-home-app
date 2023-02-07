@@ -247,6 +247,16 @@ class Dev(Configuration):
         "DEFAULT_FILTER_BACKENDS": [
             "django_filters.rest_framework.DjangoFilterBackend",
         ],
+        "DEFAULT_THROTTLE_CLASSES": [
+            "rest_framework.throttling.AnonRateThrottle",
+            "rest_framework.throttling.UserRateThrottle"
+        ],
+        "DEFAULT_THROTTLE_RATES": {
+            "anon": "30/minute",
+            "user": "100/minute",
+            "jwt_obtain_pair": "50/minute",
+            "jwt_refresh": "100/minute",
+        },
     }
 
     SIMPLE_JWT = {
