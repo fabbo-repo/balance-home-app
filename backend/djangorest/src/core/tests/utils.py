@@ -61,7 +61,8 @@ def authenticate_user(client: APIClient, credentials: dict):
     try:
         jwt = response.data['access']
         client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
-    except: pass
+    except:
+        pass
     return response
 
 
@@ -73,6 +74,11 @@ def get_access_token(client: APIClient, credentials: dict):
 def get_refresh_token(client: APIClient, credentials: dict):
     jwt_obtain_url = reverse('jwt_obtain_pair')
     return post(client, jwt_obtain_url, credentials).data['refresh']
+
+
+def access_token(client: APIClient, credentials: dict):
+    jwt_obtain_url = reverse('jwt_obtain_pair')
+    return post(client, jwt_obtain_url, credentials)
 
 
 def refresh_token(client: APIClient, token: str):

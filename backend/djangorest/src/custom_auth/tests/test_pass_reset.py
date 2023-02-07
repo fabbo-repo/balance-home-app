@@ -6,6 +6,7 @@ from custom_auth.models import InvitationCode, User
 import logging
 from django.conf import settings
 from django.utils.timezone import timedelta
+from django.core.cache import cache
 import core.tests.utils as test_utils
 from unittest import mock
 
@@ -18,6 +19,8 @@ class PasswordResetTests(APITestCase):
                    return_value=None)
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
+        # Throttling is stored in cache
+        cache.clear()
 
         self.reset_password_start_url = reverse('reset_password_start')
         self.reset_password_verify_url = reverse('reset_password_verify')

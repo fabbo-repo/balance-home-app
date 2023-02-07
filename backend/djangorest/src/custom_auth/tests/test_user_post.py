@@ -1,6 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
+from django.core.cache import cache
 from coin.models import CoinType
 from custom_auth.models import User, InvitationCode
 import logging
@@ -11,6 +12,8 @@ class UserPostTests(APITestCase):
     def setUp(self):
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
+        # Throttling is stored in cache
+        cache.clear()
 
         self.user_post_url = reverse('user_post')
 
