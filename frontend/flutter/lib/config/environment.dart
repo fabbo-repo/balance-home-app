@@ -6,6 +6,6 @@ part 'environment.g.dart';
 @Envied(path: '.env')
 abstract class Environment {
   /// URL for API
-  @EnviedField(varName: "API_URL", obfuscate: true)
-  static final apiUrl = _Environment.apiUrl;
+  @EnviedField(varName: "API_URL")
+  static const apiUrl = _Environment.apiUrl;
 }

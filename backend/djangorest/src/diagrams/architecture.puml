@@ -1,0 +1,46 @@
+@startuml architecture
+
+component User
+
+node Common {
+    component ViewPermission
+    component Models
+    component Scheduler
+    component Tasks
+}
+
+node API {
+    component ApiUrls
+    component ViewPermission
+    component ApiViews
+    component Serializers
+    component ApiFilters
+}
+
+node Frontend {
+    component Urls
+    component Views
+}
+
+Urls <-- Views
+ViewPermission --> Views
+User --> Urls
+User <-- Urls
+User --> ApiUrls
+User <-- ApiUrls
+ApiUrls <-- ApiViews
+ViewPermission --> ApiViews
+Serializers --> ApiViews
+Serializers <-- ApiViews
+Serializers <-- Models
+ApiFilters --> ApiViews
+ApiFilters <-- Models
+Views <-- Models
+ApiViews <-- Models
+ViewPermission <-- Models
+ApiViews <-- Scheduler
+Scheduler <-- Tasks
+ApiViews <-- Tasks
+Models --> Tasks
+
+@enduml

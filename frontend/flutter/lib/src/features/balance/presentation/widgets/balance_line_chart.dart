@@ -31,7 +31,6 @@ class BalanceLineChart extends ConsumerWidget {
             : 1,
         getTitlesWidget: (double value, TitleMeta meta) {
           const style = TextStyle(
-            color: Colors.black,
             fontSize: 12,
           );
           String tittle = (selectedDateMode == SelectedDateMode.year)
@@ -48,7 +47,7 @@ class BalanceLineChart extends ConsumerWidget {
   SideTitles get leftTitles => SideTitles(
         getTitlesWidget: (double value, TitleMeta meta) {
           const style = TextStyle(
-            color: Color(0xff75729e),
+            //color: Color(0xff75729e),
             fontWeight: FontWeight.bold,
             fontSize: 12,
           );

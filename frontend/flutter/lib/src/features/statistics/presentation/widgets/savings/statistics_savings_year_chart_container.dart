@@ -53,7 +53,7 @@ class StatisticsSavingsYearChartContainer extends ConsumerWidget {
               color: const Color.fromARGB(255, 194, 56, 235),
               height: 45,
               width: (PlatformUtils().isSmallWindow(context))
-                  ? screenWidth * 0.80
+                  ? screenWidth * 0.70
                   : screenWidth * 0.35,
               child: Center(
                   child: Text(

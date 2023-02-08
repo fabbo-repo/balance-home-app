@@ -1,7 +1,8 @@
 import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/credentials_entity.dart';
-import 'package:balance_home_app/src/http_service.dart';
+import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/user_remote_data_source.dart';
+import 'package:balance_home_app/src/http_client.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/jwt_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/register_entity.dart';
@@ -13,7 +14,7 @@ import 'package:fpdart/fpdart.dart';
 
 /// Repository that handles authorization and persists session
 class AuthRepository implements AuthRepositoryInterface {
-  final HttpService httpService;
+  final HttpClient client;
 
   /// Local credentials storage provider
   final CredentialsLocalDataSource credentialsLocalDataSource;
@@ -21,82 +22,61 @@ class AuthRepository implements AuthRepositoryInterface {
   /// Local jwt storage provider
   final JwtLocalDataSource jwtLocalDataSource;
 
+  /// Remote user data provider
+  final UserRemoteDataSource userRemoteDataSource;
+
   /// Default constructor
   AuthRepository({
-    required this.httpService,
+    required this.client,
     required this.credentialsLocalDataSource,
     required this.jwtLocalDataSource,
+    required this.userRemoteDataSource,
   });
 
   @override
   Future<Either<Failure, bool>> createUser(RegisterEntity registration) async {
-    HttpResponse response = await httpService.sendPostRequest(
-        APIContract.userCreation, registration.toJson());
-    if (response.hasError) {
-      return left(Failure.badRequest(message: response.errorMessage));
-    }
-    return right(true);
+    return await userRemoteDataSource.create(registration);
   }
 
   @override
   Future<Either<Failure, UserEntity>> updateUser(UserEntity user) async {
-    HttpResponse response = await httpService.sendPutRequest(
-        APIContract.userProfile, user.toJson());
-    if (response.hasError) {
-      return left(Failure.badRequest(message: response.errorMessage));
-    }
-    return right(UserEntity.fromJson(response.content));
+    return await userRemoteDataSource.update(user);
   }
 
   @override
   Future<Either<Failure, bool>> updateUserImage(
       Uint8List imageBytes, String imageType) async {
-    HttpResponse response = await httpService.sendPatchImageRequest(
-        APIContract.userProfile, imageBytes, imageType);
-    if (response.hasError) {
-      return left(Failure.badRequest(message: response.errorMessage));
-    }
-    return right(true);
+    return await userRemoteDataSource.updateImage(imageBytes, imageType);
   }
 
   @override
   Future<Either<Failure, UserEntity>> getUser() async {
-    HttpResponse response =
-        await httpService.sendGetRequest(APIContract.userProfile);
-    if (response.hasError) {
-      return left(Failure.badRequest(message: response.errorMessage));
-    }
-    return right(UserEntity.fromJson(response.content));
+    return await userRemoteDataSource.get();
   }
 
   @override
   Future<Either<Failure, bool>> deleteUser() async {
-    HttpResponse response =
-        await httpService.sendDelRequest(APIContract.userProfile);
-    if (response.hasError) {
-      return left(Failure.badRequest(message: response.errorMessage));
-    }
-    return right(true);
+    return await userRemoteDataSource.delete();
   }
 
   @override
   Future<Either<Failure, bool>> trySignIn() async {
     final credentials = await credentialsLocalDataSource.get();
     // Clean jwt
-    httpService.setJwtEntity(null);
+    client.setJwtEntity(null);
     return await credentials.fold((l) async {
       // Clean wrong data
       await credentialsLocalDataSource.remove();
       await jwtLocalDataSource.remove();
       return left(l);
     }, (credentials) async {
-      HttpResponse response = await httpService.sendPostRequest(
+      HttpResponse response = await client.sendPostRequest(
           APIContract.jwtLogin, credentials.toJson());
       if (response.hasError) {
         return left(Failure.badRequest(message: response.errorMessage));
       }
       JwtEntity jwt = JwtEntity.fromJson(response.content);
-      httpService.setJwtEntity(jwt);
+      client.setJwtEntity(jwt);
       return right(true);
     });
   }
@@ -105,14 +85,14 @@ class AuthRepository implements AuthRepositoryInterface {
   Future<Either<Failure, bool>> signIn(CredentialsEntity credentials,
       {bool store = false}) async {
     // Clean jwt
-    httpService.setJwtEntity(null);
-    HttpResponse response = await httpService.sendPostRequest(
+    client.setJwtEntity(null);
+    HttpResponse response = await client.sendPostRequest(
         APIContract.jwtLogin, credentials.toJson());
     if (response.hasError) {
       return left(Failure.badRequest(message: response.errorMessage));
     }
     JwtEntity jwt = JwtEntity.fromJson(response.content);
-    httpService.setJwtEntity(jwt);
+    client.setJwtEntity(jwt);
     await jwtLocalDataSource.store(jwt);
     if (store) await credentialsLocalDataSource.store(credentials);
     return right(true);
@@ -124,7 +104,7 @@ class AuthRepository implements AuthRepositoryInterface {
     if (!await credentialsLocalDataSource.remove()) {
       return left(const Failure.empty());
     }
-    httpService.setJwtEntity(null);
+    client.setJwtEntity(null);
     return right(true);
   }
 }

@@ -71,6 +71,7 @@ class _SettingsWidgetState extends ConsumerState<SettingsWidget> {
             TextCheckBox(
                 title: appLocalizations.darkMode,
                 isChecked: theme == ThemeMode.dark,
+                fillColor: const Color.fromARGB(255, 70, 70, 70),
                 onChanged: (value) async {
                   themeStateNotifier.setThemeMode(value != null && value
                       ? ThemeMode.dark
@@ -84,6 +85,7 @@ class _SettingsWidgetState extends ConsumerState<SettingsWidget> {
             TextCheckBox(
                 title: appLocalizations.receiveEmailBalance,
                 isChecked: widget.user.receiveEmailBalance,
+                fillColor: const Color.fromARGB(255, 70, 70, 70),
                 onChanged: (value) async {
                   await settingsController.handleReceiveEmailBalance(
                       widget.user, value!, appLocalizations);

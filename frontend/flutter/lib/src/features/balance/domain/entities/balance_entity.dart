@@ -25,8 +25,11 @@ class BalanceEntity with _$BalanceEntity {
     required int? id,
     required String name,
     required String description,
+    // ignore: non_constant_identifier_names
     required double real_quantity,
+    // ignore: invalid_annotation_target
     @JsonKey(includeIfNull: false)
+    // ignore: non_constant_identifier_names
     required double? converted_quantity,
     required DateTime date,
     required String coinType,
