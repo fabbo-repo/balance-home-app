@@ -2,9 +2,11 @@ version: '2.1'
 
 services:
   balance_home_app_web_nginx:
-    image: nginx:latest
+    image: nginx:1.23.3
     ports:
-      - "80:80"
+      - "9000:80"
+      - "9001:443"
     volumes:
-      - ./nginx/:/etc/nginx/conf.d
+      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl:ro
       - ./flutter/build/web:/usr/share/nginx/html
