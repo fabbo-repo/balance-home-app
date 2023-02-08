@@ -17,7 +17,7 @@ drf-yasg==1.21.3
 djangorestframework-simplejwt==5.2.0
 # Jwt encription
 PyJWT==2.4.0
-cryptography==39.0.0
+cryptography==39.0.1
 # Image library
 Pillow==9.3.0
 # Celery driver
