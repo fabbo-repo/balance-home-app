@@ -1,6 +1,10 @@
+import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
+import 'package:balance_home_app/src/core/presentation/states/selected_date_state.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/custom_error_widget.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/error_dialog.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/responsive_layout.dart';
 import 'package:balance_home_app/src/core/providers.dart';
@@ -9,6 +13,7 @@ import 'package:balance_home_app/src/features/balance/domain/entities/balance_en
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_left_panel.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_right_panel.dart';
+import 'package:balance_home_app/src/features/balance/presentation/widgets/date_balance_dialog.dart';
 import 'package:balance_home_app/src/features/balance/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,22 +40,28 @@ class BalanceView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final balanceListController = balanceTypeMode == BalanceTypeMode.expense
+    final balanceList = balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseListControllerProvider)
         : ref.watch(revenueListControllerProvider);
+    final balanceListController = balanceTypeMode == BalanceTypeMode.expense
+        ? ref.watch(expenseListControllerProvider.notifier)
+        : ref.watch(revenueListControllerProvider.notifier);
     final selectedDate = balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseSelectedDateProvider)
         : ref.watch(revenueSelectedDateProvider);
     final appLocalizations = ref.watch(appLocalizationsProvider);
-    return balanceListController.when<Widget>(
-        data: (List<BalanceEntity> balances) {
+    final selectedDateState = balanceTypeMode == BalanceTypeMode.expense
+        ? ref.watch(expenseSelectedDateProvider.notifier)
+        : ref.watch(revenueSelectedDateProvider.notifier);
+    return balanceList.when<Widget>(data: (List<BalanceEntity> balances) {
+      final balanceYears = balanceListController.getAllBalanceYears();
       cache = ResponsiveLayout(
-          mobileChild:
-              shortPanel(context, appLocalizations, selectedDate, balances),
-          tabletChild:
-              shortPanel(context, appLocalizations, selectedDate, balances),
-          desktopChild:
-              widePanel(context, appLocalizations, selectedDate, balances));
+          mobileChild: shortPanel(context, appLocalizations, selectedDateState,
+              selectedDate, balances, balanceYears),
+          tabletChild: shortPanel(context, appLocalizations, selectedDateState,
+              selectedDate, balances, balanceYears),
+          desktopChild: widePanel(context, appLocalizations, selectedDateState,
+              selectedDate, balances, balanceYears));
       return cache;
     }, error: (Object o, StackTrace st) {
       debugPrint("[BALANCE_VIEW] $o -> $st");
@@ -63,8 +74,12 @@ class BalanceView extends ConsumerWidget {
     });
   }
 
-  Widget topContainer(BuildContext context, AppLocalizations appLocalizations,
-      SelectedDate selectedDate) {
+  Widget topContainer(
+      BuildContext context,
+      AppLocalizations appLocalizations,
+      SelectedDateState selectedDateState,
+      SelectedDate selectedDate,
+      Future<List<int>> balanceYears) {
     String monthText =
         DateUtil.getMonthList(appLocalizations)[selectedDate.month - 1];
     String dateText = (selectedDate.selectedDateMode == SelectedDateMode.year)
@@ -72,11 +87,18 @@ class BalanceView extends ConsumerWidget {
         : (selectedDate.selectedDateMode == SelectedDateMode.month)
             ? "$monthText ${selectedDate.year}"
             : "${selectedDate.day} $monthText ${selectedDate.year}";
-    return Container(
+    double screenWidth = MediaQuery.of(context).size.width;
+    Widget topContainer = Container(
       color: balanceTypeMode == BalanceTypeMode.expense
           ? const Color.fromARGB(255, 212, 112, 78)
           : const Color.fromARGB(255, 76, 122, 52),
-      constraints: const BoxConstraints.expand(height: 45),
+      constraints: BoxConstraints.tightFor(
+          height: 45,
+          width: screenWidth < 550
+              ? screenWidth
+              : screenWidth < 1024
+                  ? screenWidth - 100
+                  : screenWidth - 173),
       child: Center(
           child: Text(dateText,
               style: const TextStyle(
@@ -84,13 +106,64 @@ class BalanceView extends ConsumerWidget {
                   fontSize: 18,
                   fontWeight: FontWeight.bold))),
     );
+    Widget dateBtn = CustomTextButton(
+      text: appLocalizations.date,
+      backgroundColor: balanceTypeMode == BalanceTypeMode.expense
+          ? const Color.fromARGB(255, 160, 71, 41)
+          : const Color.fromARGB(255, 54, 90, 35),
+      onPressed: () async {
+        await showDateBalanceDialog(
+            appLocalizations, selectedDateState, selectedDate, balanceYears);
+      },
+      height: 45,
+      width: screenWidth < 550 ? screenWidth : 100,
+    );
+    return ResponsiveLayout(
+        mobileChild: Column(children: [dateBtn, topContainer]),
+        tabletChild: Row(children: [dateBtn, topContainer]),
+        desktopChild: Row(children: [dateBtn, topContainer]));
   }
 
-  Widget shortPanel(BuildContext context, AppLocalizations appLocalizations,
-      SelectedDate selectedDate, List<BalanceEntity> balances) {
+  Future<void> showDateBalanceDialog(
+      AppLocalizations appLocalizations,
+      SelectedDateState selectedDateState,
+      SelectedDate selectedDate,
+      Future<List<int>> balanceYears) async {
+    final years = await balanceYears;
+    if (years.isEmpty) {
+      await showDialog(
+          context: navigatorKey.currentContext!,
+          builder: (context) => ErrorDialog(
+                dialogTitle: appLocalizations.resetPassword,
+                dialogDescription: appLocalizations.genericError,
+                cancelText: appLocalizations.cancel,
+              ));
+    } else {
+      await showDialog(
+          context: navigatorKey.currentContext!,
+          builder: (context) => DateBalanceDialog(
+                selectedDate: selectedDate,
+                onPressed: (SelectedDate newDate) {
+                  // Pop current dialog
+                  Navigator.pop(context);
+                  selectedDateState.setSelectedDate(newDate);
+                },
+                years: years,
+              ));
+    }
+  }
+
+  Widget shortPanel(
+      BuildContext context,
+      AppLocalizations appLocalizations,
+      SelectedDateState selectedDateState,
+      SelectedDate selectedDate,
+      List<BalanceEntity> balances,
+      Future<List<int>> balanceYears) {
     return Column(
       children: [
-        topContainer(context, appLocalizations, selectedDate),
+        topContainer(context, appLocalizations, selectedDateState, selectedDate,
+            balanceYears),
         Expanded(
           child: BalanaceRightPanel(
               balances: balances, balanceTypeMode: balanceTypeMode),
@@ -100,12 +173,18 @@ class BalanceView extends ConsumerWidget {
   }
 
   @visibleForTesting
-  Widget widePanel(BuildContext context, AppLocalizations appLocalizations,
-      SelectedDate selectedDate, List<BalanceEntity> balances) {
+  Widget widePanel(
+      BuildContext context,
+      AppLocalizations appLocalizations,
+      SelectedDateState selectedDateState,
+      SelectedDate selectedDate,
+      List<BalanceEntity> balances,
+      Future<List<int>> balanceYears) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Column(
       children: [
-        topContainer(context, appLocalizations, selectedDate),
+        topContainer(context, appLocalizations, selectedDateState, selectedDate,
+            balanceYears),
         Expanded(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,

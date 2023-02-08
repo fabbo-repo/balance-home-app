@@ -2,7 +2,6 @@ import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
-import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/presentation/widgets/settings_widget.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
