@@ -29,7 +29,7 @@ class ExpenseModelTests(APITestCase):
             'real_quantity': 2.0,
             'coin_type': self.coin_type,
             'exp_type': self.exp_type,
-            'date': str(now().date()),
+            'date': now().date(),
             'owner': self.create_user()
         }
 

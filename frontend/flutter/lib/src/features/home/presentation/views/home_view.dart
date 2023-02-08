@@ -5,6 +5,7 @@ import 'package:balance_home_app/src/features/balance/presentation/views/balance
 import 'package:balance_home_app/src/features/home/presentation/views/home_tabs.dart';
 import 'package:balance_home_app/src/features/home/presentation/widgets/app_bar.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/views/statistics_view.dart';
+import 'package:balance_home_app/src/features/statistics/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -30,6 +31,7 @@ class HomeView extends ConsumerWidget {
       onDestinationSelected: (int index) {
         switch (HomeTab.values[index]) {
           case HomeTab.statistics:
+            ref.read(statisticsControllerProvider.notifier).handle();
             context.go("/${StatisticsView.routePath}");
             break;
           case HomeTab.revenues:
