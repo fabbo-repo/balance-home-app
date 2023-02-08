@@ -1,4 +1,3 @@
-import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/email_code_remote_data_source.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/email_code_entity.dart';

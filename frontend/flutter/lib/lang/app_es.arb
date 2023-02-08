@@ -44,6 +44,9 @@
     "name": "Nombre",
     "quantity": "Cantidad",
     "date": "Fecha",
+    "day": "Día",
+    "month": "Mes",
+    "year": "Año",
 
     "@_HOME":{},
     "statistics": "Estadísticas",
@@ -117,7 +120,7 @@
     "@_SETTINGS":{},
     "language": "Idioma",
     "darkMode": "Modo Oscuro",
-    "receiveEmailBalance": "Recibir correo de balance",
+    "receiveEmailBalance": "Recibir correo de balance al final de mes",
     "settingsDialogTitle": "Configuraciones",
 
     "@_STATISTICS":{},

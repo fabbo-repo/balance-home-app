@@ -44,6 +44,9 @@
     "name": "Nom",
     "quantity": "Quantité",
     "date": "Date",
+    "day": "Jour",
+    "month": "Mois",
+    "year": "Année",
 
     "@_HOME":{},
     "statistics": "Statistiques",
@@ -117,7 +120,7 @@
     "@_SETTINGS":{},
     "language": "Langue",
     "darkMode": "Mode sombre",
-    "receiveEmailBalance": "Recevoir le solde par e-mail",
+    "receiveEmailBalance": "Recevoir un e-mail de solde à la fin du mois",
     "settingsDialogTitle": "Paramètres",
 
     "@_STATISTICS":{},

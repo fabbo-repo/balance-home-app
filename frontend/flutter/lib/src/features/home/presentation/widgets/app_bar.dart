@@ -71,7 +71,6 @@ class CustomAppBar extends ConsumerWidget {
   /// profile and name of the user account.
   Widget _profileButton(AppLocalizations appLocalizations, UserEntity? user) {
     return PopupMenuButton(
-      color: const Color.fromARGB(255, 80, 80, 80),
       onSelected: (value) {
         if (value == 0) {
           navigatorKey.currentContext!.goNamed(UserEditView.routeName);
