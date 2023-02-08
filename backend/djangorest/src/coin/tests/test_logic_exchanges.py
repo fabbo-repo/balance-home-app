@@ -95,7 +95,6 @@ class ExchangeLogicTests(APITestCase):
             name='Test name',
             description='Test description',
             real_quantity=1.0,
-            converted_quantity=1.0,
             coin_type=coin_type,
             rev_type=rev_type,
             date=now(),
@@ -253,17 +252,29 @@ class ExchangeLogicTests(APITestCase):
         CoinExchange.objects.create(
             exchange_data=json.dumps(exchange)
         )
+        prev_balance = User.objects.get(email=self.user_data['email']).balance
         rev = self.get_create_revenue(self.coin_type2)
+        new_balance = User.objects.get(email=self.user_data['email']).balance
+        self.assertEqual(
+            new_balance,
+            round(
+                prev_balance +
+                (rev.real_quantity * 1.3),
+                2
+            )
+        )
+        prev_balance = User.objects.get(email=self.user_data['email']).balance
         resp = test_utils.patch(self.client, self.revenue_url+'/'+str(rev.id), {
             'real_quantity': 2,
             'coin_type': self.coin_type3.code
         })
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        new_balance = User.objects.get(email=self.user_data['email']).balance
         self.assertEqual(
-            User.objects.get(email=self.user_data['email']).balance,
+            new_balance,
             round(
-                self.user_data['balance'] +
-                (2 * 0.8) - (rev.converted_quantity * 1.3),
+                prev_balance +
+                (2 * 0.8) - (rev.real_quantity * 1.3),
                 2
             )
         )
@@ -284,16 +295,18 @@ class ExchangeLogicTests(APITestCase):
             exchange_data=json.dumps(exchange)
         )
         exp = self.get_create_expense(self.coin_type2)
+        prev_balance = User.objects.get(email=self.user_data['email']).balance
         resp = test_utils.patch(self.client, self.expense_url+'/'+str(exp.id), {
             'real_quantity': 2,
             'coin_type': self.coin_type3.code
         })
+        new_balance = User.objects.get(email=self.user_data['email']).balance
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(
-            User.objects.get(email=self.user_data['email']).balance,
+            new_balance,
             round(
-                self.user_data['balance'] -
-                ((2 * 0.8) - (exp.converted_quantity * 1.3)),
+                prev_balance -
+                ((2 * 0.8) - (exp.real_quantity * 1.3)),
                 2
             )
         )
@@ -313,12 +326,14 @@ class ExchangeLogicTests(APITestCase):
             exchange_data=json.dumps(exchange)
         )
         rev = self.get_create_revenue(self.coin_type2)
+        prev_balance = User.objects.get(email=self.user_data['email']).balance
         resp = test_utils.delete(self.client, self.revenue_url+'/'+str(rev.id))
+        new_balance = User.objects.get(email=self.user_data['email']).balance
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(
-            User.objects.get(email=self.user_data['email']).balance,
+            new_balance,
             round(
-                self.user_data['balance'] - (rev.converted_quantity * 1.3),
+                prev_balance - (rev.real_quantity * 1.3),
                 2
             )
         )
@@ -338,12 +353,14 @@ class ExchangeLogicTests(APITestCase):
             exchange_data=json.dumps(exchange)
         )
         exp = self.get_create_expense(self.coin_type2)
+        prev_balance = User.objects.get(email=self.user_data['email']).balance
         resp = test_utils.delete(self.client, self.expense_url+'/'+str(exp.id))
+        new_balance = User.objects.get(email=self.user_data['email']).balance
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(
-            User.objects.get(email=self.user_data['email']).balance,
+            new_balance,
             round(
-                self.user_data['balance'] + (exp.converted_quantity * 1.3),
+                prev_balance + (exp.real_quantity * 1.3),
                 2
             )
         )
