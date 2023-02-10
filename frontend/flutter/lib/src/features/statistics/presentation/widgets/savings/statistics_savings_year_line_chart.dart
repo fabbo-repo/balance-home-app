@@ -145,6 +145,8 @@ class StatisticsSavingsYearLineChart extends ConsumerWidget {
       } else {
         spotsMap[monthlyBalance.month] = monthlyBalance.grossQuantity;
       }
+      spotsMap[monthlyBalance.month] =
+          (spotsMap[monthlyBalance.month]! * 100).roundToDouble() / 100;
     }
     // Check unexistant months
     for (int month = 1; month <= 12; month++) {
@@ -182,6 +184,8 @@ class StatisticsSavingsYearLineChart extends ConsumerWidget {
       } else {
         spotsMap[monthlyBalance.month] = monthlyBalance.expectedQuantity;
       }
+      spotsMap[monthlyBalance.month] =
+          (spotsMap[monthlyBalance.month]! * 100).roundToDouble() / 100;
     }
     // Check unexistant months
     for (int month = 1; month <= 12; month++) {

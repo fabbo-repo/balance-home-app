@@ -140,6 +140,8 @@ class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
       } else {
         spotsMap[annualBalance.year] = annualBalance.grossQuantity;
       }
+      spotsMap[annualBalance.year] =
+          (spotsMap[annualBalance.year]! * 100).roundToDouble() / 100;
     }
     // Check unexistant years
     for (int year = DateTime.now().year - 7;
@@ -174,6 +176,8 @@ class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
     Map<int, double> spotsMap = {};
     for (AnnualBalanceEntity annualBalance in annualBalances) {
       spotsMap[annualBalance.year] = annualBalance.expectedQuantity;
+      spotsMap[annualBalance.year] =
+          (spotsMap[annualBalance.year]! * 100).roundToDouble() / 100;
     }
     // Check unexistant years
     for (int year = DateTime.now().year - 7;

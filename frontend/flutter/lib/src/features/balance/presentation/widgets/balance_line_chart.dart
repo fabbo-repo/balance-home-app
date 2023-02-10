@@ -175,6 +175,7 @@ class BalanceLineChart extends ConsumerWidget {
       } else {
         spotsMap[key] = balance.converted_quantity!;
       }
+      spotsMap[key] = (spotsMap[key]! * 100).roundToDouble() / 100;
     }
     if (selectedDateMode == SelectedDateMode.year) {
       // Check unexistant months
