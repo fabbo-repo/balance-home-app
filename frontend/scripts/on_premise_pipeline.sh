@@ -31,7 +31,7 @@ git clone https://github.com/fabbo-repo/BalanceHomeApp.git
 
 ###############################
 echo ENV DIR
-cp "$ENV_DIR/.env" ./BalanceHomeApp/frontend/
+cp "$ENV_DIR/.env" ./BalanceHomeApp/frontend/flutter/
 
 ###############################
 echo CERTS DIR
