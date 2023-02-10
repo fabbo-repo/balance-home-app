@@ -44,31 +44,34 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
     year ??= widget.selectedDate.year;
     return AlertDialog(
         title: Text(appLocalizations.date),
-        content: SizedBox(
-          height: 220,
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            dayRow(appLocalizations, theme),
-            verticalSpace(),
-            monthRow(appLocalizations, theme),
-            verticalSpace(),
-            yearRow(appLocalizations, theme),
-            verticalSpace(),
-            CustomTextButton(
-                text: appLocalizations.confirmation,
-                onPressed: () {
-                  SelectedDateMode selectedDateMode = isDay!
-                      ? SelectedDateMode.day
-                      : isMonth!
-                          ? SelectedDateMode.month
-                          : SelectedDateMode.year;
-                  SelectedDate newDate = SelectedDate(
-                      day: day!,
-                      month: month!,
-                      year: year!,
-                      selectedDateMode: selectedDateMode);
-                  widget.onPressed(newDate);
-                })
-          ]),
+        content: SingleChildScrollView(
+          child: SizedBox(
+            height: 250,
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              dayRow(appLocalizations, theme),
+              verticalSpace(),
+              monthRow(appLocalizations, theme),
+              verticalSpace(),
+              yearRow(appLocalizations, theme),
+              verticalSpace(),
+              verticalSpace(),
+              CustomTextButton(
+                  text: appLocalizations.confirmation,
+                  onPressed: () {
+                    SelectedDateMode selectedDateMode = isDay!
+                        ? SelectedDateMode.day
+                        : isMonth!
+                            ? SelectedDateMode.month
+                            : SelectedDateMode.year;
+                    SelectedDate newDate = SelectedDate(
+                        day: day!,
+                        month: month!,
+                        year: year!,
+                        selectedDateMode: selectedDateMode);
+                    widget.onPressed(newDate);
+                  })
+            ]),
+          ),
         ));
   }
 

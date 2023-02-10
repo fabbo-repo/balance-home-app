@@ -26,7 +26,6 @@ class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
         interval: 1,
         getTitlesWidget: (double value, TitleMeta meta) {
           const style = TextStyle(
-            color: Colors.black,
             fontSize: 12,
           );
           return SideTitleWidget(
@@ -40,9 +39,8 @@ class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
   SideTitles get leftTitles => SideTitles(
         getTitlesWidget: (double value, TitleMeta meta) {
           const style = TextStyle(
-            color: Color(0xff75729e),
             fontWeight: FontWeight.bold,
-            fontSize: 14,
+            fontSize: 12,
           );
           return Text("$value", style: style, textAlign: TextAlign.center);
         },

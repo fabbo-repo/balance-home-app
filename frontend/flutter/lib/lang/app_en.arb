@@ -116,6 +116,7 @@
     "userDelete": "Delete account",
     "userDeleteDialogTitle": "Delete account",
     "userDialogDescription": "Are you sure you want to delete the account?",
+    "lastLogin": "Last login",
 
     "@_SETTINGS":{},
     "language": "Language",
