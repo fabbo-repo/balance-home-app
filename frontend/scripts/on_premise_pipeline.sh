@@ -47,7 +47,7 @@ flutter pub run build_runner build --delete-conflicting-outputs
 flutter build web
 cd -
 mkdir -p ./BalanceHomeApp/frontend/web
-cp ./BalanceHomeApp/frontend/flutter/build/web/* ./BalanceHomeApp/frontend/web/
+cp -r ./BalanceHomeApp/frontend/flutter/build/web/* ./BalanceHomeApp/frontend/web/
 
 ###############################
 echo PACKAGE
