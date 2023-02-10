@@ -1,5 +1,6 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
+import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/models/statistics_data.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/statistics_balance_chart_container.dart';
@@ -18,13 +19,16 @@ class StatisticsViewDesktop extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeModeProvider);
     return ref.watch(statisticsControllerProvider).when<Widget>(
         data: (StatisticsData data) {
       cache = SingleChildScrollView(
         child: Column(
           children: [
             Container(
-              color: AppColors.balanceBackgroundColor,
+              color: theme == ThemeMode.light
+                  ? AppColors.balanceBackgroundColor
+                  : AppColors.balanceDarkBackgroundColor,
               foregroundDecoration: BoxDecoration(border: Border.all()),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -46,7 +50,9 @@ class StatisticsViewDesktop extends ConsumerWidget {
               ),
             ),
             Container(
-              color: AppColors.balanceBackgroundColor,
+              color: theme == ThemeMode.light
+                  ? AppColors.balanceBackgroundColor
+                  : AppColors.balanceDarkBackgroundColor,
               foregroundDecoration: BoxDecoration(border: Border.all()),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -63,7 +69,9 @@ class StatisticsViewDesktop extends ConsumerWidget {
               ),
             ),
             Container(
-                color: const Color.fromARGB(254, 201, 241, 253),
+                color: theme == ThemeMode.light
+                    ? const Color.fromARGB(254, 201, 241, 253)
+                    : const Color.fromARGB(253, 112, 157, 170),
                 foregroundDecoration: BoxDecoration(border: Border.all()),
                 child: StatisticsCurrencyChartContainer(
                   dateExchanges: data.dateExchanges,

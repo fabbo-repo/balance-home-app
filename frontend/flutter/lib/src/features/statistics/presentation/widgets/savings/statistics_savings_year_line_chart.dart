@@ -26,7 +26,6 @@ class StatisticsSavingsYearLineChart extends ConsumerWidget {
         interval: 1,
         getTitlesWidget: (double value, TitleMeta meta) {
           const style = TextStyle(
-            color: Colors.black,
             fontSize: 12,
           );
           String month = monthList[value.toInt() - 1];
@@ -41,9 +40,8 @@ class StatisticsSavingsYearLineChart extends ConsumerWidget {
   SideTitles get leftTitles => SideTitles(
         getTitlesWidget: (double value, TitleMeta meta) {
           const style = TextStyle(
-            color: Color(0xff75729e),
             fontWeight: FontWeight.bold,
-            fontSize: 14,
+            fontSize: 12,
           );
           return Text("$value", style: style, textAlign: TextAlign.center);
         },

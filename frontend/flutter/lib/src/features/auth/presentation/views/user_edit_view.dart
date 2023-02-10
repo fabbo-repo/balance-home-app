@@ -35,6 +35,11 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
     final user = ref.watch(authControllerProvider);
     final appLocalizations = ref.watch(appLocalizationsProvider);
     return user.when(data: (data) {
+      String lastLogin = data == null
+          ? "-"
+          : data.lastLogin == null
+              ? "-"
+              : "${data.lastLogin!.toLocal().day}/${data.lastLogin!.toLocal().month}/${data.lastLogin!.toLocal().year} - ${data.lastLogin!.toLocal().hour}:${data.lastLogin!.toLocal().minute}:${data.lastLogin!.toLocal().second}";
       cache = Scaffold(
           appBar: AppBar(
             title: const AppTittle(fontSize: 30),
@@ -74,6 +79,9 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
                       },
                       backgroundColor: const Color.fromARGB(220, 221, 65, 54),
                     ),
+                  verticalSpace(),
+                  if (!edit)
+                    Text("${appLocalizations.lastLogin}: $lastLogin"),
                   verticalSpace(),
                 ],
               ),

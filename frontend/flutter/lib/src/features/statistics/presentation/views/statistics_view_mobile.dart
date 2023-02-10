@@ -1,5 +1,6 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
+import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/models/statistics_data.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings/statistics_savings_year_chart_container.dart';
@@ -16,11 +17,14 @@ class StatisticsViewMobile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeModeProvider);
     return ref.watch(statisticsControllerProvider).when<Widget>(
         data: (StatisticsData data) {
       cache = SingleChildScrollView(
         child: Container(
-          color: AppColors.balanceBackgroundColor,
+          color: theme == ThemeMode.light
+              ? AppColors.balanceBackgroundColor
+              : AppColors.balanceDarkBackgroundColor,
           child: Column(
             children: [
               StatisticsSavingsYearChartContainer(
