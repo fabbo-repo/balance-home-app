@@ -42,6 +42,7 @@ cp "$CERTS_DIR/privkey.pem" ./BalanceHomeApp/frontend/certs/
 ###############################
 echo BUILD
 cd ./BalanceHomeApp/frontend/flutter
+flutter pub get
 flutter pub run build_runner build --delete-conflicting-outputs
 flutter build web
 cd -
