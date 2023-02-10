@@ -48,6 +48,8 @@ flutter build web
 cd -
 mkdir -p ./BalanceHomeApp/frontend/web
 cp -r ./BalanceHomeApp/frontend/flutter/build/web/* ./BalanceHomeApp/frontend/web/
+rm -rf ./BalanceHomeApp/frontend/flutter
+rm -rf ./BalanceHomeApp/frontend/scripts
 
 ###############################
 echo PACKAGE
