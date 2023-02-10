@@ -3,6 +3,7 @@ import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/info_dialog.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/providers.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/user_edit_view.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,9 @@ class UserDeleteView extends ConsumerWidget {
         if (value) {
           (await authController.deleteUser()).fold((l) {
             ErrorView.go();
-          }, (r) {});
+          }, (r) {
+            navigatorKey.currentContext!.goNamed(AuthView.routeName);
+          });
         } else {
           navigatorKey.currentContext!.goNamed(UserEditView.routeName);
         }
