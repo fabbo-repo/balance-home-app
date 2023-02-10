@@ -120,4 +120,4 @@ cd -
 ###############################
 echo PACKAGE
 tar -czf balhom-backend.tar.gz BalanceHomeApp/backend
-cd -
+rm -rf BalanceHomeApp
