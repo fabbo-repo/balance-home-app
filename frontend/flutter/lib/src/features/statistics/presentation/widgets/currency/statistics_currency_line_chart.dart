@@ -25,7 +25,6 @@ class StatisticsCurrencyLineChart extends StatelessWidget {
     getTitlesWidget: (double value, TitleMeta meta) {
       DateTime date = DateTime.now().subtract(Duration(days: 19-value.toInt()));
       const style = TextStyle(
-        color: Colors.black,
         fontSize: 12,
       );
       return SideTitleWidget(
@@ -39,9 +38,8 @@ class StatisticsCurrencyLineChart extends StatelessWidget {
   SideTitles get leftTitles => SideTitles(
     getTitlesWidget: (double value, TitleMeta meta) {
       const style = TextStyle(
-        color: Color(0xff75729e),
         fontWeight: FontWeight.bold,
-        fontSize: 14,
+        fontSize: 12,
       );
       return Text("$value", style: style, textAlign: TextAlign.center);
     },

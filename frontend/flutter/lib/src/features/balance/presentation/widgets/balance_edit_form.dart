@@ -15,6 +15,7 @@ import 'package:balance_home_app/src/features/balance/domain/values/balance_desc
 import 'package:balance_home_app/src/features/balance/domain/values/balance_name.dart';
 import 'package:balance_home_app/src/features/balance/domain/values/balance_quantity.dart';
 import 'package:balance_home_app/src/features/balance/presentation/views/balance_view.dart';
+import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_type_dropdown_picker.dart';
 import 'package:balance_home_app/src/features/balance/providers.dart';
 import 'package:balance_home_app/src/features/coin/presentation/widgets/dropdown_picker_field.dart';
 import 'package:balance_home_app/src/features/coin/providers.dart';
@@ -53,7 +54,8 @@ class BalanceEditForm extends ConsumerWidget {
     final authController = ref.read(authControllerProvider.notifier);
     _nameController.text = balance.name;
     _descriptionController.text = balance.description;
-    _quantityController.text = balance.real_quantity.toString().replaceAll(".", ",");
+    _quantityController.text =
+        balance.real_quantity.toString().replaceAll(".", ",");
     if (_dateController.text.isEmpty) {
       _dateController.text =
           "${balance.date.day}/${balance.date.month}/${balance.date.year}";
@@ -128,14 +130,33 @@ class BalanceEditForm extends ConsumerWidget {
                       controller: _descriptionController,
                     ),
                     verticalSpace(),
-                    CustomDoubleFormField(
-                      readOnly: !edit,
-                      onChanged: (value) =>
-                          _quantity = BalanceQuantity(appLocalizations, value),
-                      title: appLocalizations.balanceQuantity,
-                      validator: (value) => _quantity?.validate,
-                      maxWidth: 300,
-                      controller: _quantityController,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomDoubleFormField(
+                          readOnly: !edit,
+                          onChanged: (value) => _quantity =
+                              BalanceQuantity(appLocalizations, value),
+                          title: appLocalizations.balanceQuantity,
+                          validator: (value) => _quantity?.validate,
+                          maxWidth: 200,
+                          controller: _quantityController,
+                          align: TextAlign.end,
+                        ),
+                        (coinTypes.isNotEmpty)
+                            ? DropdownPickerField(
+                                readOnly: !edit,
+                                initialValue: _coinType!,
+                                items: coinTypes.map((e) => e.code).toList(),
+                                width: 100,
+                                onChanged: (value) {
+                                  _coinType = value;
+                                })
+                            : const Icon(
+                                Icons.error_outline,
+                                color: Colors.red,
+                              ),
+                      ],
                     ),
                     verticalSpace(),
                     CustomTextFormField(
@@ -155,38 +176,23 @@ class BalanceEditForm extends ConsumerWidget {
                                 "${newDate.day}/${newDate.month}/${newDate.year}";
                           }
                         },
+                        textAlign: TextAlign.center,
                         controller: _dateController,
                         title: appLocalizations.balanceDate,
                         validator: (value) => _date?.validate,
                         maxWidth: 200),
                     verticalSpace(),
                     (balanceTypes.isNotEmpty)
-                        ? DropdownPickerField(
+                        ? BalanceTypeDropdownPicker(
                             readOnly: !edit,
                             name: appLocalizations.balanceType,
-                            initialValue: TypeUtil.balanceTypeToString(
-                                _balanceTypeEntity!.name, appLocalizations),
-                            items: balanceTypes
-                                .map((e) => TypeUtil.balanceTypeToString(
-                                    e.name, appLocalizations))
-                                .toList(),
+                            initialValue: _balanceTypeEntity!,
+                            items: balanceTypes,
                             onChanged: (value) {
-                              _balanceTypeEntity = balanceTypes.firstWhere(
-                                  (element) =>
-                                      element.name ==
-                                      TypeUtil.stringToBalanceType(
-                                          value!, appLocalizations));
-                            })
-                        : Text(appLocalizations.genericError),
-                    (coinTypes.isNotEmpty)
-                        ? DropdownPickerField(
-                            readOnly: !edit,
-                            name: appLocalizations.coinType,
-                            initialValue: _coinType!,
-                            items: coinTypes.map((e) => e.code).toList(),
-                            onChanged: (value) {
-                              _coinType = value;
-                            })
+                              _balanceTypeEntity = value!;
+                            },
+                            appLocalizations: appLocalizations,
+                          )
                         : Text(appLocalizations.genericError),
                     verticalSpace(),
                     if (edit)

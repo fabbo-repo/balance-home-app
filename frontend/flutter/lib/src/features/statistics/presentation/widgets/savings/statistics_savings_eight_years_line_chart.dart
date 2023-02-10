@@ -26,7 +26,6 @@ class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
         interval: 1,
         getTitlesWidget: (double value, TitleMeta meta) {
           const style = TextStyle(
-            color: Colors.black,
             fontSize: 12,
           );
           return SideTitleWidget(
@@ -40,9 +39,8 @@ class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
   SideTitles get leftTitles => SideTitles(
         getTitlesWidget: (double value, TitleMeta meta) {
           const style = TextStyle(
-            color: Color(0xff75729e),
             fontWeight: FontWeight.bold,
-            fontSize: 14,
+            fontSize: 12,
           );
           return Text("$value", style: style, textAlign: TextAlign.center);
         },
@@ -140,6 +138,8 @@ class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
       } else {
         spotsMap[annualBalance.year] = annualBalance.grossQuantity;
       }
+      spotsMap[annualBalance.year] =
+          (spotsMap[annualBalance.year]! * 100).roundToDouble() / 100;
     }
     // Check unexistant years
     for (int year = DateTime.now().year - 7;
@@ -174,6 +174,8 @@ class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
     Map<int, double> spotsMap = {};
     for (AnnualBalanceEntity annualBalance in annualBalances) {
       spotsMap[annualBalance.year] = annualBalance.expectedQuantity;
+      spotsMap[annualBalance.year] =
+          (spotsMap[annualBalance.year]! * 100).roundToDouble() / 100;
     }
     // Check unexistant years
     for (int year = DateTime.now().year - 7;

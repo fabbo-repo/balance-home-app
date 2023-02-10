@@ -2,8 +2,11 @@
 
 # Balance Home App or *BalHom*
 
-[![Generic badge](https://img.shields.io/badge/BalHom-v.0.0.2-GREEN.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/BalHom-v.1.0.4-GREEN.svg)](https://shields.io/)
 [![Generic badge](https://img.shields.io/badge/os-android-GREEN.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/os-ios-GREEN.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/os-windows-GREEN.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/os-linux-GREEN.svg)](https://shields.io/)
 [![Generic badge](https://img.shields.io/badge/os-web-GREEN.svg)](https://shields.io/)
 
 ![Django](https://img.shields.io/badge/django-7B9D4B?style=for-the-badge&logo=django&logoColor=ffdd54)

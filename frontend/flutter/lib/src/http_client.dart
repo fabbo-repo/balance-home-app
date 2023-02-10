@@ -201,9 +201,10 @@ class HttpResponse {
 
   /// Response creation from `http` package
   factory HttpResponse.create(http.Response response) {
-    Map<String, dynamic> jsonResponse =
-        json.decode(const Utf8Decoder().convert(response.bodyBytes))
-            as Map<String, dynamic>;
+    Map<String, dynamic> jsonResponse = response.bodyBytes.isNotEmpty
+        ? json.decode(const Utf8Decoder().convert(response.bodyBytes))
+            as Map<String, dynamic>
+        : {};
     HttpResponse httpResponse = HttpResponse(response.statusCode, jsonResponse);
     return httpResponse;
   }

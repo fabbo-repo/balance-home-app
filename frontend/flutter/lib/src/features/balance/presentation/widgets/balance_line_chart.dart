@@ -47,7 +47,6 @@ class BalanceLineChart extends ConsumerWidget {
   SideTitles get leftTitles => SideTitles(
         getTitlesWidget: (double value, TitleMeta meta) {
           const style = TextStyle(
-            //color: Color(0xff75729e),
             fontWeight: FontWeight.bold,
             fontSize: 12,
           );
@@ -175,6 +174,7 @@ class BalanceLineChart extends ConsumerWidget {
       } else {
         spotsMap[key] = balance.converted_quantity!;
       }
+      spotsMap[key] = (spotsMap[key]! * 100).roundToDouble() / 100;
     }
     if (selectedDateMode == SelectedDateMode.year) {
       // Check unexistant months

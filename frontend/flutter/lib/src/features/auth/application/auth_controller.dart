@@ -157,9 +157,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
   Future<Either<Failure, bool>> deleteUser() async {
     final res = await _repository.deleteUser();
     if (res.isLeft()) return res;
-    state = const AsyncValue.data(null);
-    updateAuthState();
-    return right(true);
+    return await signOut();
   }
 
   /// Signs out user
