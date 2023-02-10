@@ -130,14 +130,33 @@ class BalanceEditForm extends ConsumerWidget {
                       controller: _descriptionController,
                     ),
                     verticalSpace(),
-                    CustomDoubleFormField(
-                      readOnly: !edit,
-                      onChanged: (value) =>
-                          _quantity = BalanceQuantity(appLocalizations, value),
-                      title: appLocalizations.balanceQuantity,
-                      validator: (value) => _quantity?.validate,
-                      maxWidth: 300,
-                      controller: _quantityController,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomDoubleFormField(
+                          readOnly: !edit,
+                          onChanged: (value) => _quantity =
+                              BalanceQuantity(appLocalizations, value),
+                          title: appLocalizations.balanceQuantity,
+                          validator: (value) => _quantity?.validate,
+                          maxWidth: 200,
+                          controller: _quantityController,
+                          align: TextAlign.end,
+                        ),
+                        (coinTypes.isNotEmpty)
+                            ? DropdownPickerField(
+                                readOnly: !edit,
+                                initialValue: _coinType!,
+                                items: coinTypes.map((e) => e.code).toList(),
+                                width: 100,
+                                onChanged: (value) {
+                                  _coinType = value;
+                                })
+                            : const Icon(
+                                Icons.error_outline,
+                                color: Colors.red,
+                              ),
+                      ],
                     ),
                     verticalSpace(),
                     CustomTextFormField(
@@ -157,6 +176,7 @@ class BalanceEditForm extends ConsumerWidget {
                                 "${newDate.day}/${newDate.month}/${newDate.year}";
                           }
                         },
+                        textAlign: TextAlign.center,
                         controller: _dateController,
                         title: appLocalizations.balanceDate,
                         validator: (value) => _date?.validate,
@@ -173,16 +193,6 @@ class BalanceEditForm extends ConsumerWidget {
                             },
                             appLocalizations: appLocalizations,
                           )
-                        : Text(appLocalizations.genericError),
-                    (coinTypes.isNotEmpty)
-                        ? DropdownPickerField(
-                            readOnly: !edit,
-                            name: appLocalizations.coinType,
-                            initialValue: _coinType!,
-                            items: coinTypes.map((e) => e.code).toList(),
-                            onChanged: (value) {
-                              _coinType = value;
-                            })
                         : Text(appLocalizations.genericError),
                     verticalSpace(),
                     if (edit)
