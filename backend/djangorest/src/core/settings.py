@@ -264,9 +264,9 @@ class Dev(Configuration):
         "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
         "ALGORITHM": 'RS256',
         "SIGNING_KEY": SECRET_KEY,
-        "VERIFYING_KEY": RSAkey.publickey().exportKey()
+        "VERIFYING_KEY": RSAkey.publickey().exportKey(),
+        'UPDATE_LAST_LOGIN': True,
     }
-    UPDATE_LAST_LOGIN = True
 
     SWAGGER_SETTINGS = {
         "SECURITY_DEFINITIONS": {
