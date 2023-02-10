@@ -8,6 +8,6 @@ services:
       - "9001:443"
     volumes:
       - ./nginx:/etc/nginx/conf.d
-      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./certs:/etc/nginx/ssl:ro
       - ./flutter/build/web:/usr/share/nginx/html
     restart: unless-stopped
