@@ -36,7 +36,7 @@ class Command(BaseCommand):
         if not len(InvitationCode.objects.all()):
             print(
                 "Invitation Code: " +
-                str(InvitationCode.objects.create().code.code)
+                str(InvitationCode.objects.create().code)
             )
 
     def handle(self, *args, **options):

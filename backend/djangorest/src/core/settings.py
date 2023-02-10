@@ -260,13 +260,13 @@ class Dev(Configuration):
     }
 
     SIMPLE_JWT = {
+        'UPDATE_LAST_LOGIN': True,
         "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
         "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
         "ALGORITHM": 'RS256',
         "SIGNING_KEY": SECRET_KEY,
-        "VERIFYING_KEY": RSAkey.publickey().exportKey()
+        "VERIFYING_KEY": RSAkey.publickey().exportKey(),
     }
-    UPDATE_LAST_LOGIN = True
 
     SWAGGER_SETTINGS = {
         "SECURITY_DEFINITIONS": {
@@ -362,6 +362,7 @@ class OnPremise(Dev):
         }
 
     SIMPLE_JWT = {
+        'UPDATE_LAST_LOGIN': True,
         "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
         "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
         "ALGORITHM": 'RS256',
@@ -446,6 +447,7 @@ class GCP(Dev):
     }
 
     SIMPLE_JWT = {
+        'UPDATE_LAST_LOGIN': True,
         "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
         "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
         "ALGORITHM": 'RS256',
