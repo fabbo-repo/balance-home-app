@@ -20,7 +20,7 @@ services:
       - redis
     restart: unless-stopped
     networks:
-      balance_home_app_net:
+      balance_home_app_net_external:
         ipv4_address: 192.168.92.45
 
   celery:
@@ -40,14 +40,14 @@ services:
     restart: unless-stopped
     entrypoint: /app/celery_entrypoint.sh
     networks:
-      balance_home_app_net:
+      balance_home_app_net_external:
         ipv4_address: 192.168.92.40
 
   redis:
     image: redis:7.0.7
     restart: unless-stopped
     networks:
-      balance_home_app_net:
+      balance_home_app_net_external:
         ipv4_address: 192.168.92.30
 
   nginx:
@@ -64,12 +64,10 @@ services:
       - backend
     restart: unless-stopped
     networks:
-      balance_home_app_net:
+      balance_home_app_net_external:
         ipv4_address: 192.168.92.10
 
 networks:
-  balance_home_app_net:
-    ipam:
-      driver: default
-      config:
-        - subnet: "192.168.92.0/24"
+  balance_home_app_net_external:
+    name: balance_home_app_net
+    external: true

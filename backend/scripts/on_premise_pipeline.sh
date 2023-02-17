@@ -39,7 +39,6 @@ sed -i 's/.\/djangorest\/src\/static/.\/static/g' ./BalanceHomeApp/backend/docke
 ###############################
 echo ENV DIR
 cp "$ENV_DIR/backend_app.env" ./BalanceHomeApp/backend/
-cp "$ENV_DIR/postgres_db.env" ./BalanceHomeApp/backend/
 
 ###############################
 echo CERTS DIR

@@ -11,6 +11,9 @@ services:
     restart: unless-stopped
     volumes:
       - ./database:/var/lib/postgresql/data
+    networks:
+      balance_home_app_net:
+        ipv4_address: 192.168.92.20
 
   pgadmin:
     image: dpage/pgadmin4:6.20
@@ -21,3 +24,14 @@ services:
     depends_on:
       - db
     restart: unless-stopped
+    networks:
+      balance_home_app_net:
+        ipv4_address: 192.168.92.25
+
+networks:
+  balance_home_app_net:
+    name: balance_home_app_net
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.92.0/24"
