@@ -55,13 +55,25 @@ class BalanceView extends ConsumerWidget {
         : ref.watch(revenueSelectedDateProvider.notifier);
     return balanceList.when<Widget>(data: (List<BalanceEntity> balances) {
       final balanceYears = balanceListController.getAllBalanceYears();
+      List<BalanceEntity> filteredBalances = [];
+      for (BalanceEntity e in balances) {
+        if (selectedDate.year != e.date.year) continue;
+        if (selectedDate.selectedDateMode == SelectedDateMode.month ||
+            selectedDate.selectedDateMode == SelectedDateMode.day) {
+          if (selectedDate.month != e.date.month) continue;
+          if (selectedDate.selectedDateMode == SelectedDateMode.day) {
+            if (selectedDate.day != e.date.day) continue;
+          }
+        }
+        filteredBalances.add(e);
+      }
       cache = ResponsiveLayout(
           mobileChild: shortPanel(context, appLocalizations, selectedDateState,
-              selectedDate, balances, balanceYears),
+              selectedDate, filteredBalances, balanceYears),
           tabletChild: shortPanel(context, appLocalizations, selectedDateState,
-              selectedDate, balances, balanceYears),
+              selectedDate, filteredBalances, balanceYears),
           desktopChild: widePanel(context, appLocalizations, selectedDateState,
-              selectedDate, balances, balanceYears));
+              selectedDate, filteredBalances, balanceYears));
       return cache;
     }, error: (Object o, StackTrace st) {
       debugPrint("[BALANCE_VIEW] $o -> $st");

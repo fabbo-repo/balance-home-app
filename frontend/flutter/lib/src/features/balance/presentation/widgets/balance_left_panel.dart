@@ -15,7 +15,8 @@ class BalanaceLeftPanel extends ConsumerWidget {
   final List<BalanceEntity> balances;
   final BalanceTypeMode balanceTypeMode;
 
-  const BalanaceLeftPanel({required this.balances, required this.balanceTypeMode, super.key});
+  const BalanaceLeftPanel(
+      {required this.balances, required this.balanceTypeMode, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,8 +50,7 @@ class BalanaceLeftPanel extends ConsumerWidget {
                   ? screenWidth * 0.95
                   : screenWidth * 0.45,
               child: BalanceBarChart(
-                  balances: balances,
-                  balanceType: balanceTypeMode),
+                  balances: balances, balanceType: balanceTypeMode),
             ),
             if (selectedDate.selectedDateMode != SelectedDateMode.day)
               SizedBox(
