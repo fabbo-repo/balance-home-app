@@ -9,7 +9,6 @@ services:
     env_file:
       - ./backend_app.env
     links:
-      - db:db
       - redis:redis
     volumes:
       - ./djangorest/src/media:/app/media
@@ -19,7 +18,6 @@ services:
       - 8000
     depends_on:
       - redis
-      - db
     restart: unless-stopped
     networks:
       balance_home_app_net:
@@ -32,7 +30,6 @@ services:
     env_file:
       - ./backend_app.env
     links:
-      - db:db
       - redis:redis
     volumes:
       - ./djangorest/src/media:/app/media
@@ -40,7 +37,6 @@ services:
       - ./logs/celery:/var/log/balance_app
     depends_on:
       - redis
-      - db
     restart: unless-stopped
     entrypoint: /app/celery_entrypoint.sh
     networks:
@@ -53,19 +49,6 @@ services:
     networks:
       balance_home_app_net:
         ipv4_address: 192.168.92.30
-
-  db:
-    image: postgres:15.1
-    env_file:
-      - ./postgres_db.env
-    expose:
-      - "5432"
-    restart: unless-stopped
-    volumes:
-      - ./database:/var/lib/postgresql/data
-    networks:
-      balance_home_app_net:
-        ipv4_address: 192.168.92.20
 
   nginx:
     build: nginx

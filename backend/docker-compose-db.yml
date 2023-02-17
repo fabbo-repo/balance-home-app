@@ -1,0 +1,23 @@
+version: '2.1'
+
+services:
+
+  db:
+    image: postgres:15.1
+    env_file:
+      - ./postgres_db.env
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    volumes:
+      - ./database:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:6.20
+    env_file:
+      - ./pgadmin.env
+    ports:
+      - "36050:80"
+    depends_on:
+      - db
+    restart: unless-stopped
