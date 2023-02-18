@@ -2,7 +2,7 @@
 
 set -e
 
-FLAGS=$(getopt -a --options h --long "env-dir:,certs-dir:,old-media-dir:,old-database-dir:" -- "$@")
+FLAGS=$(getopt -a --options h --long "env-dir:,certs-dir:,old-media-dir:" -- "$@")
 
 eval set -- "$FLAGS"
 
@@ -12,7 +12,6 @@ while true; do
         --env-dir )               ENV_DIR=$2; shift 2;;
         --certs-dir )             CERTS_DIR=$2; shift 2;;
         --old-media-dir )         MEDIA_DIR=$2; shift 2;;
-        --old-database-dir )      DATABASE_DIR=$2; shift 2;;
         --) shift; break;;
     esac
 done
@@ -48,16 +47,11 @@ cp "$CERTS_DIR/privkey.pem" ./BalanceHomeApp/backend/certs/
 
 ###############################
 echo OLD MEDIA DIR
+mkdir -p ./BalanceHomeApp/backend/media
 if [ ! -z "$MEDIA_DIR" ]; then
-    mkdir -p ./BalanceHomeApp/backend/media
     yes | cp -r $MEDIA_DIR/* ./BalanceHomeApp/backend/media/
-fi
-
-###############################
-echo OLD DATABASE DIR
-if [ ! -z "$DATABASE_DIR" ]; then
-    mkdir -p ./BalanceHomeApp/backend/database
-    yes | cp -r $DATABASE_DIR/* ./BalanceHomeApp/backend/database/
+else
+    cp -r ./BalanceHomeApp/backend/djangorest/src/media/* ./BalanceHomeApp/backend/media/
 fi
 
 ###############################
