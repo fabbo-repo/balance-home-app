@@ -2,7 +2,7 @@
 
 set -e
 
-FLAGS=$(getopt -a --options h --long "env-dir:,certs-dir:" -- "$@")
+FLAGS=$(getopt -a --options h --long "env-dir:" -- "$@")
 
 eval set -- "$FLAGS"
 
@@ -10,17 +10,12 @@ while true; do
     case "$1" in
         -h )                      exit;;
         --env-dir )               ENV_DIR=$2; shift 2;;
-        --certs-dir )             CERTS_DIR=$2; shift 2;;
         --) shift; break;;
     esac
 done
 
 if [ -z "$ENV_DIR" ]; then
     echo "ENV_DIR required"
-    exit -1
-fi
-if [ -z "$CERTS_DIR" ]; then
-    echo "CERTS_DIR required"
     exit -1
 fi
 
@@ -30,14 +25,12 @@ rm -rf BalanceHomeApp
 git clone -b fix-pipelines https://github.com/fabbo-repo/BalanceHomeApp.git
 
 ###############################
-echo ENV DIR
-cp "$ENV_DIR/.env" ./BalanceHomeApp/frontend/flutter/
+echo DOCKER COMPOSE
+sed -i 's/.\/flutter\//docker\/balhom\/volumes\/balhom-frontend\/web/g' ./BalanceHomeApp/frontend/docker-compose.yml
 
 ###############################
-echo CERTS DIR
-mkdir -p ./BalanceHomeApp/frontend/certs/
-cp "$CERTS_DIR/fullchain.pem" ./BalanceHomeApp/frontend/certs/
-cp "$CERTS_DIR/privkey.pem" ./BalanceHomeApp/frontend/certs/
+echo ENV DIR
+cp "$ENV_DIR/.env" ./BalanceHomeApp/frontend/flutter/
 
 ###############################
 echo BUILD
