@@ -34,6 +34,7 @@ git clone -b fix-pipelines https://github.com/fabbo-repo/BalanceHomeApp.git
 echo DOCKER COMPOSE
 sed -i 's/.\/djangorest\/src\/media/\/docker\/balhom\/volumes\/balhom-backend\/media/g' ./BalanceHomeApp/backend/docker-compose.yml
 sed -i 's/.\/djangorest\/src\/static/\/docker\/balhom\/volumes\/balhom-backend\/static/g' ./BalanceHomeApp/backend/docker-compose.yml
+sed -i 's/external: true/external: false/g' ./BalanceHomeApp/backend/docker-compose.yml
 
 ###############################
 echo ENV DIR
@@ -112,6 +113,7 @@ cd -
 
 ###############################
 echo PACKAGE
+sed -i 's/external: false/external: true/g' ./BalanceHomeApp/backend/docker-compose.yml
 rm -rf BalanceHomeApp/backend/certbot
 rm -rf BalanceHomeApp/backend/redis
 rm -rf BalanceHomeApp/backend/scripts
