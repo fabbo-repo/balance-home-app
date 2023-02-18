@@ -27,7 +27,7 @@ fi
 ###############################
 echo GIT CLONE
 rm -rf BalanceHomeApp
-git clone https://github.com/fabbo-repo/BalanceHomeApp.git
+git clone -b fix-pipelines https://github.com/fabbo-repo/BalanceHomeApp.git
 
 ###############################
 echo ENV DIR
