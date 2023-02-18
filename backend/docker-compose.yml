@@ -20,8 +20,7 @@ services:
       - redis
     restart: unless-stopped
     networks:
-      balance_home_app_net_external:
-        ipv4_address: 192.168.92.45
+      - balance_home_app_net_external
 
   celery:
     build:
@@ -40,15 +39,13 @@ services:
     restart: unless-stopped
     entrypoint: /app/celery_entrypoint.sh
     networks:
-      balance_home_app_net_external:
-        ipv4_address: 192.168.92.40
+      - balance_home_app_net_external
 
   redis:
     image: redis:7.0.7
     restart: unless-stopped
     networks:
-      balance_home_app_net_external:
-        ipv4_address: 192.168.92.30
+      - balance_home_app_net_external
 
   nginx:
     build: nginx
@@ -64,8 +61,7 @@ services:
       - backend
     restart: unless-stopped
     networks:
-      balance_home_app_net_external:
-        ipv4_address: 192.168.92.10
+      - balance_home_app_net_external
 
 networks:
   balance_home_app_net_external:
