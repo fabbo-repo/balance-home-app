@@ -26,12 +26,8 @@ git clone -b fix-pipelines https://github.com/fabbo-repo/BalanceHomeApp.git
 
 ###############################
 echo DOCKER COMPOSE
-sed -i 's/.\/djangorest\/src\/media/\/docker\/balhom\/volumes\/balhom-backend\/media/g' ./BalanceHomeApp/backend/docker-compose.yml
-sed -i 's/.\/djangorest\/src\/static/\/docker\/balhom\/volumes\/balhom-backend\/static/g' ./BalanceHomeApp/backend/docker-compose.yml
-sed -i 's/.\/logs\/backend/\/docker\/balhom\/volumes\/balhom-backend\/app_logs/g' ./BalanceHomeApp/backend/docker-compose.yml
-sed -i 's/.\/logs\/celery/\/docker\/balhom\/volumes\/balhom-backend\/celery_logs/g' ./BalanceHomeApp/backend/docker-compose.yml
-sed -i 's/.\/logs\/nginx/\/docker\/balhom\/volumes\/balhom-backend\/nginx_logs/g' ./BalanceHomeApp/backend/docker-compose.yml
-sed -i 's/.\/certs/\/docker\/balhom\/volumes\/balhom-backend\/certs/g' ./BalanceHomeApp/backend/docker-compose.yml
+sed -i 's/.\/djangorest\/src\/media/.\/media/g' ./BalanceHomeApp/backend/docker-compose.yml
+sed -i 's/.\/djangorest\/src\/static/.\/static/g' ./BalanceHomeApp/backend/docker-compose.yml
 sed -i 's/external: true/external: false/g' ./BalanceHomeApp/backend/docker-compose.yml
 
 ###############################
@@ -91,6 +87,13 @@ cd -
 
 ###############################
 echo PACKAGE
+echo DOCKER COMPOSE
+sed -i 's/.\/media/\/docker\/balhom\/volumes\/balhom-backend\/media/g' ./BalanceHomeApp/backend/docker-compose.yml
+sed -i 's/.\/static/\/docker\/balhom\/volumes\/balhom-backend\/static/g' ./BalanceHomeApp/backend/docker-compose.yml
+sed -i 's/.\/logs\/backend/\/docker\/balhom\/volumes\/balhom-backend\/app_logs/g' ./BalanceHomeApp/backend/docker-compose.yml
+sed -i 's/.\/logs\/celery/\/docker\/balhom\/volumes\/balhom-backend\/celery_logs/g' ./BalanceHomeApp/backend/docker-compose.yml
+sed -i 's/.\/logs\/nginx/\/docker\/balhom\/volumes\/balhom-backend\/nginx_logs/g' ./BalanceHomeApp/backend/docker-compose.yml
+sed -i 's/.\/certs/\/docker\/balhom\/volumes\/balhom-backend\/certs/g' ./BalanceHomeApp/backend/docker-compose.yml
 sed -i 's/external: false/external: true/g' ./BalanceHomeApp/backend/docker-compose.yml
 rm -rf BalanceHomeApp/backend/certbot
 rm -rf BalanceHomeApp/backend/redis
