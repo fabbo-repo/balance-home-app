@@ -112,5 +112,8 @@ cd -
 
 ###############################
 echo PACKAGE
+rm -rf BalanceHomeApp/backend/certbot
+rm -rf BalanceHomeApp/backend/redis
+rm -rf BalanceHomeApp/backend/scripts
 tar -czf balhom-backend.tar.gz BalanceHomeApp/backend
 rm -rf BalanceHomeApp
