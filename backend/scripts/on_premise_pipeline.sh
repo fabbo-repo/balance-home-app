@@ -2,7 +2,7 @@
 
 set -e
 
-FLAGS=$(getopt -a --options h --long "env-dir:,certs-dir:,old-media-dir:" -- "$@")
+FLAGS=$(getopt -a --options h --long "env-dir:" -- "$@")
 
 eval set -- "$FLAGS"
 
@@ -10,18 +10,12 @@ while true; do
     case "$1" in
         -h )                      exit;;
         --env-dir )               ENV_DIR=$2; shift 2;;
-        --certs-dir )             CERTS_DIR=$2; shift 2;;
-        --old-media-dir )         MEDIA_DIR=$2; shift 2;;
         --) shift; break;;
     esac
 done
 
 if [ -z "$ENV_DIR" ]; then
     echo "ENV_DIR required"
-    exit -1
-fi
-if [ -z "$CERTS_DIR" ]; then
-    echo "CERTS_DIR required"
     exit -1
 fi
 
@@ -34,6 +28,10 @@ git clone -b fix-pipelines https://github.com/fabbo-repo/BalanceHomeApp.git
 echo DOCKER COMPOSE
 sed -i 's/.\/djangorest\/src\/media/\/docker\/balhom\/volumes\/balhom-backend\/media/g' ./BalanceHomeApp/backend/docker-compose.yml
 sed -i 's/.\/djangorest\/src\/static/\/docker\/balhom\/volumes\/balhom-backend\/static/g' ./BalanceHomeApp/backend/docker-compose.yml
+sed -i 's/.\/logs\/backend/\/docker\/balhom\/volumes\/balhom-backend\/app_logs/g' ./BalanceHomeApp/backend/docker-compose.yml
+sed -i 's/.\/logs\/celery/\/docker\/balhom\/volumes\/balhom-backend\/celery_logs/g' ./BalanceHomeApp/backend/docker-compose.yml
+sed -i 's/.\/logs\/nginx/\/docker\/balhom\/volumes\/balhom-backend\/nginx_logs/g' ./BalanceHomeApp/backend/docker-compose.yml
+sed -i 's/.\/certs/\/docker\/balhom\/volumes\/balhom-backend\/certs/g' ./BalanceHomeApp/backend/docker-compose.yml
 sed -i 's/external: true/external: false/g' ./BalanceHomeApp/backend/docker-compose.yml
 
 ###############################
@@ -41,30 +39,10 @@ echo ENV DIR
 cp "$ENV_DIR/backend_app.env" ./BalanceHomeApp/backend/
 
 ###############################
-echo CERTS DIR
-mkdir -p ./BalanceHomeApp/backend/certs/
-cp "$CERTS_DIR/fullchain.pem" ./BalanceHomeApp/backend/certs/
-cp "$CERTS_DIR/privkey.pem" ./BalanceHomeApp/backend/certs/
-
-###############################
-echo OLD MEDIA DIR
-mkdir -p ./BalanceHomeApp/backend/media
-if [ ! -z "$MEDIA_DIR" ]; then
-    yes | cp -r $MEDIA_DIR/* ./BalanceHomeApp/backend/media/
-else
-    cp -r ./BalanceHomeApp/backend/djangorest/src/media/* ./BalanceHomeApp/backend/media/
-fi
-
-###############################
 echo TESTING
 cd ./BalanceHomeApp/backend/djangorest/src/
 python manage.py test
 cd -
-
-###############################
-echo MEDIA
-mkdir -p ./BalanceHomeApp/backend/media
-yes | cp -r ./BalanceHomeApp/backend/djangorest/src/media/* ./BalanceHomeApp/backend/media/
 
 ###############################
 echo STATIC
