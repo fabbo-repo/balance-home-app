@@ -5,3 +5,4 @@ omit =
    */migrations/*
    */__init__.py
    */tests/*
+   /usr/lib/*

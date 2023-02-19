@@ -7,7 +7,7 @@ set -e
 # Postgres checking
 until psql $DATABASE_URL -c '\l'; do
     >&2 echo "Postgres is unavailable - sleeping"
-    sleep 10
+    sleep 5
 done
 >&2 echo "Postgres is up - continuing"
 

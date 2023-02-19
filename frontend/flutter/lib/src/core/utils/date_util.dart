@@ -1,6 +1,19 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DateUtil {
+  static List<String> getDaysList(int month, int year) {
+    List<String> days = [];
+    for (int i = 1; i <= DateUtils.getDaysInMonth(year, month); i++) {
+      days.add(i.toString());
+
+      if (DateTime.now().month == month &&
+          DateTime.now().year == year &&
+          i == DateTime.now().day) break;
+    }
+    return days;
+  }
+
   static String monthNumToString(int month, AppLocalizations appLocalizations) {
     switch (month) {
       case 1:
@@ -47,20 +60,53 @@ class DateUtil {
     return -1;
   }
 
-  static List<String> getMonthList(AppLocalizations appLocalizations) {
-    return [
-      appLocalizations.january,
-      appLocalizations.february,
-      appLocalizations.march,
-      appLocalizations.april,
-      appLocalizations.may,
-      appLocalizations.june,
-      appLocalizations.july,
-      appLocalizations.august,
-      appLocalizations.september,
-      appLocalizations.october,
-      appLocalizations.november,
-      appLocalizations.december
-    ];
+  static List<String> getMonthList(
+      AppLocalizations appLocalizations, {int? year}) {
+    List<String> months = [];
+    for (int i = 1; i <= 12; i++) {
+      switch (i) {
+        case 1:
+          months.add(appLocalizations.january);
+          break;
+        case 2:
+          months.add(appLocalizations.february);
+          break;
+        case 3:
+          months.add(appLocalizations.march);
+          break;
+        case 4:
+          months.add(appLocalizations.april);
+          break;
+        case 5:
+          months.add(appLocalizations.may);
+          break;
+        case 6:
+          months.add(appLocalizations.june);
+          break;
+        case 7:
+          months.add(appLocalizations.july);
+          break;
+        case 8:
+          months.add(appLocalizations.august);
+          break;
+        case 9:
+          months.add(appLocalizations.september);
+          break;
+        case 10:
+          months.add(appLocalizations.october);
+          break;
+        case 11:
+          months.add(appLocalizations.november);
+          break;
+        case 12:
+          months.add(appLocalizations.december);
+          break;
+        default:
+      }
+      if (year == DateTime.now().year && i == DateTime.now().month) {
+        return months;
+      }
+    }
+    return months;
   }
 }

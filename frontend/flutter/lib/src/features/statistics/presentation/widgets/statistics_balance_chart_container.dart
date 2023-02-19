@@ -76,7 +76,7 @@ class StatisticsBalanceChartContainer extends ConsumerWidget {
             dateButton(
                 selectedMonth,
                 selectedYear,
-                months,
+                DateUtil.getMonthList(appLocalizations, year: selectedYear),
                 years.map((e) => e.toString()).toList(),
                 selectedDate,
                 selectedDateState,
@@ -132,7 +132,8 @@ class StatisticsBalanceChartContainer extends ConsumerWidget {
           }).toList(),
           onChanged: (value) {
             if (dateMode == SelectedDateMode.month) {
-              int newMonth = DateUtil.monthStringToNum(value!, appLocalizations);
+              int newMonth =
+                  DateUtil.monthStringToNum(value!, appLocalizations);
               if (newMonth == selectedDate.month) return;
               selectedDateState.setMonth(newMonth);
             } else if (dateMode == SelectedDateMode.year) {

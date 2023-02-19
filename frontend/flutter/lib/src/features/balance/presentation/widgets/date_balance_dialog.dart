@@ -47,7 +47,8 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
         content: SingleChildScrollView(
           child: SizedBox(
             height: 250,
-            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               dayRow(appLocalizations, theme),
               verticalSpace(),
               monthRow(appLocalizations, theme),
@@ -76,10 +77,7 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
   }
 
   Widget dayRow(AppLocalizations appLocalizations, ThemeMode theme) {
-    List<String> days = [
-      for (int i = 1; i <= DateUtils.getDaysInMonth(year!, month!); i++)
-        i.toString()
-    ];
+    List<String> days = DateUtil.getDaysList(month!, year!);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -119,7 +117,7 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
   }
 
   Widget monthRow(AppLocalizations appLocalizations, ThemeMode theme) {
-    List<String> months = DateUtil.getMonthList(appLocalizations);
+    List<String> months = DateUtil.getMonthList(appLocalizations, year: year!);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -150,6 +148,8 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
               ? (value) {
                   setState(() {
                     month = DateUtil.monthStringToNum(value!, appLocalizations);
+                    isDay = false;
+                    day = 1;
                   });
                 }
               : null,
@@ -175,6 +175,13 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
           onChanged: (value) {
             setState(() {
               year = int.parse(value!);
+              isDay = false;
+              day = 1;
+              if (year == DateTime.now().year &&
+                  month! > DateTime.now().month) {
+                isMonth = false;
+                month = DateTime.now().month;
+              }
             });
           },
         )
