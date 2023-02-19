@@ -65,11 +65,11 @@ class Dev(Configuration):
     public_key_file = os.path.join(BASE_DIR, 'public.key')
 
     if os.path.exists(private_key_file):
-        print("* Using SECRET key from file")
+        print("* Using RSA key from file")
         with open(private_key_file, 'rb') as reader:
             RSAkey = RSA.importKey(reader.read())
     else:
-        print("* Generating SECRET key")
+        print("* Generating RSA key")
         RSAkey = RSA.generate(4096)
         with open(private_key_file, 'wb') as writer:
             print("* Generating PRIVATE key file")
