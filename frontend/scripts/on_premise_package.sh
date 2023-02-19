@@ -3,6 +3,10 @@
 set -e
 
 ###############################
+echo DOCKER COMPOSE
+sed -i 's/.\/flutter\/build\/web/docker\/balhom\/volumes\/balhom-frontend\/web/g' frontend/docker-compose.yml
+
+###############################
 echo PACKAGE
 cd frontend/flutter
 flutter build web

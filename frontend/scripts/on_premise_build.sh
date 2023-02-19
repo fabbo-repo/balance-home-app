@@ -24,10 +24,6 @@ echo ENV DIR
 cp "$ENV_DIR/.env" frontend/flutter/
 
 ###############################
-echo DOCKER COMPOSE
-sed -i 's/.\/flutter\/build\/web/docker\/balhom\/volumes\/balhom-frontend\/web/g' frontend/docker-compose.yml
-
-###############################
 echo BUILD
 cd frontend/flutter
 flutter pub get
