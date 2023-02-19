@@ -5,10 +5,9 @@ import os
 from django.utils.translation import gettext_lazy as _
 import environ
 from Crypto.PublicKey import RSA
-import google.auth
-from google.cloud import secretmanager as goole_secretmanager
-from google.cloud import logging as google_logging
 import io
+from django.core.management.utils import get_random_secret_key
+import google.auth
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -48,6 +47,7 @@ except google.auth.exceptions.DefaultCredentialsError:
 # If a Proxy is used, then the secret manager service won't be used
 if os.getenv("GOOGLE_CLOUD_PROJECT", None) and not env("USE_CLOUD_SQL_AUTH_PROXY"):
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+    from google.cloud import secretmanager as goole_secretmanager
     client = goole_secretmanager.SecretManagerServiceClient()
     settings_name = os.getenv("SECRET_SETTINGS_NAME", "django_app_settings")
     name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
@@ -78,7 +78,7 @@ class Dev(Configuration):
             with open(public_key_file, 'wb') as writer:
                 print("* Generating PUBLIC key file")
                 writer.write(RSAkey.publickey().exportKey())
-    SECRET_KEY = RSAkey.exportKey()
+    SECRET_KEY = get_random_secret_key()
 
     # True by default but have the option to set it false with an environment variable
     DEBUG = env('APP_DEBUG')
@@ -264,7 +264,7 @@ class Dev(Configuration):
         "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
         "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
         "ALGORITHM": 'RS256',
-        "SIGNING_KEY": SECRET_KEY,
+        "SIGNING_KEY": RSAkey.exportKey(),
         "VERIFYING_KEY": RSAkey.publickey().exportKey(),
     }
 
@@ -366,7 +366,7 @@ class OnPremise(Dev):
         "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
         "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
         "ALGORITHM": 'RS256',
-        "SIGNING_KEY": Dev.SECRET_KEY,
+        "SIGNING_KEY": Dev.RSAkey.exportKey(),
         "VERIFYING_KEY": Dev.RSAkey.publickey().exportKey()
     }
 
@@ -423,6 +423,7 @@ class GCP(Dev):
     if env('USE_STACKDRIVER'):
         # StackDriver setup
         # Logs Writer role needed (roles/logging.logWriter)
+        from google.cloud import logging as google_logging
         google_logging_client = google_logging.Client()
         # Connects the logger to the root logging handler
         google_logging_client.setup_logging()
@@ -451,7 +452,7 @@ class GCP(Dev):
         "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
         "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
         "ALGORITHM": 'RS256',
-        "SIGNING_KEY": Dev.SECRET_KEY,
+        "SIGNING_KEY": Dev.RSAkey.exportKey(),
         "VERIFYING_KEY": Dev.RSAkey.publickey().exportKey()
     }
 
