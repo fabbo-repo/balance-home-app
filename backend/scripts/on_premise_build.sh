@@ -33,4 +33,4 @@ cd backend/djangorest/src
 pip install -r requirements.txt
 python manage.py collectstatic --noinput
 cd -
-mv backend/djangorest/src/static static
+mv backend/djangorest/src/static backend/static
