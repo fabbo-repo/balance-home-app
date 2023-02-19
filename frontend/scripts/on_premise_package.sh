@@ -16,4 +16,4 @@ cp -r frontend/flutter/build/web/* frontend/web/
 rm -rf frontend/flutter
 rm -rf frontend/scripts
 mv frontend balhom-frontend
-tar -czf balhom-frontend.tar.gz frontend
+tar -czf balhom-frontend.tar.gz balhom-frontend
