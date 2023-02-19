@@ -16,15 +16,16 @@ cd -
 echo APP COMMANDS
 cd backend/
 echo "# Executing balance schedule setup"
-docker-compose run --no-deps --rm --entrypoint="" backend python manage.py balance_schedule_setup
+docker-compose run --rm --entrypoint="" backend python manage.py balance_schedule_setup
 echo "# Executing create balance models"
-docker-compose run --no-deps --rm --entrypoint="" backend python manage.py create_balance_models
+docker-compose run --rm --entrypoint="" backend python manage.py create_balance_models
 echo "# Executing coin schedule setup"
-docker-compose run --no-deps --rm --entrypoint="" backend python manage.py coin_schedule_setup
+docker-compose run --rm --entrypoint="" backend python manage.py coin_schedule_setup
 echo "# Executing create coin models"
-docker-compose run --no-deps --rm --entrypoint="" backend python manage.py create_coin_models
+docker-compose run --rm --entrypoint="" backend python manage.py create_coin_models
 echo "# Executing users schedule setup"
-docker-compose run --no-deps --rm --entrypoint="" backend python manage.py users_schedule_setup
+docker-compose run --rm --entrypoint="" backend python manage.py users_schedule_setup
 echo "# Creting default invitation code"
-docker-compose run --no-deps --rm --entrypoint="" backend python manage.py inv_code_create --init
+docker-compose run --rm --entrypoint="" backend python manage.py inv_code_create --init
+docker-compose down
 cd -
