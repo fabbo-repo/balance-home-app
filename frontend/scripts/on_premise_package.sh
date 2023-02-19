@@ -4,7 +4,8 @@ set -e
 
 ###############################
 echo DOCKER COMPOSE
-sed -i 's/.\/flutter\/build\/web/docker\/balhom\/volumes\/balhom-frontend\/web/g' frontend/docker-compose.yml
+sed -i 's/.\/flutter\/build\/web/\/docker\/balhom\/volumes\/balhom-frontend\/web/g' frontend/docker-compose.yml
+sed -i 's/.\/certs/\/docker\/balhom\/volumes\/balhom-frontend\/certs/g' frontend/docker-compose.yml
 
 ###############################
 echo PACKAGE
