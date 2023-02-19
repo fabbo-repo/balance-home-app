@@ -1,4 +1,4 @@
-django==4.0.9
+django==4.1.7
 # Rest framework
 djangorestframework==3.13.1
 # Environment variables library
@@ -25,7 +25,7 @@ celery==5.2.7
 # Celery task result models
 django-celery-results==2.4.0
 # Celery periodic task models
-django-celery-beat==2.3.0
+django-celery-beat==2.4.0
 # Redis driver
 redis==4.3.4
 # Concurrent networking library for Celery

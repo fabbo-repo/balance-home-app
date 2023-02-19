@@ -9,7 +9,6 @@ services:
     env_file:
       - ./backend_app.env
     links:
-      - db:db
       - redis:redis
     volumes:
       - ./djangorest/src/media:/app/media
@@ -19,11 +18,10 @@ services:
       - 8000
     depends_on:
       - redis
-      - db
+      - celery
     restart: unless-stopped
     networks:
-      balance_home_app_net:
-        ipv4_address: 192.168.92.45
+      - balance_home_app_net_external
 
   celery:
     build:
@@ -32,7 +30,6 @@ services:
     env_file:
       - ./backend_app.env
     links:
-      - db:db
       - redis:redis
     volumes:
       - ./djangorest/src/media:/app/media
@@ -40,32 +37,16 @@ services:
       - ./logs/celery:/var/log/balance_app
     depends_on:
       - redis
-      - db
     restart: unless-stopped
     entrypoint: /app/celery_entrypoint.sh
     networks:
-      balance_home_app_net:
-        ipv4_address: 192.168.92.40
+      - balance_home_app_net_external
 
   redis:
     image: redis:7.0.7
     restart: unless-stopped
     networks:
-      balance_home_app_net:
-        ipv4_address: 192.168.92.30
-
-  db:
-    image: postgres:15.1
-    env_file:
-      - ./postgres_db.env
-    expose:
-      - "5432"
-    restart: unless-stopped
-    volumes:
-      - ./database:/var/lib/postgresql/data
-    networks:
-      balance_home_app_net:
-        ipv4_address: 192.168.92.20
+      - balance_home_app_net_external
 
   nginx:
     build: nginx
@@ -81,12 +62,9 @@ services:
       - backend
     restart: unless-stopped
     networks:
-      balance_home_app_net:
-        ipv4_address: 192.168.92.10
+      - balance_home_app_net_external
 
 networks:
-  balance_home_app_net:
-    ipam:
-      driver: default
-      config:
-        - subnet: "192.168.92.0/24"
+  balance_home_app_net_external:
+    name: balance_home_app_net
+    external: true
