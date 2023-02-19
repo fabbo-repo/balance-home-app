@@ -22,7 +22,7 @@ fi
 ###############################
 echo GIT CLONE
 rm -rf BalanceHomeApp
-git clone -b fix-pipelines https://github.com/fabbo-repo/BalanceHomeApp.git
+git clone https://github.com/fabbo-repo/BalanceHomeApp.git
 
 ###############################
 echo DOCKER COMPOSE
@@ -37,31 +37,32 @@ cp "$ENV_DIR/backend_app.env" ./BalanceHomeApp/backend/
 ###############################
 echo TESTING
 cd ./BalanceHomeApp/backend/djangorest/src/
+pip install -r requirements.txt
 python manage.py test
 cd -
 
 ###############################
 echo STATIC
 cd ./BalanceHomeApp/backend/
-docker-compose run --build --rm --entrypoint="" backend python manage.py collectstatic --noinput
+docker-compose build
+docker-compose run --no-deps --rm --entrypoint="" backend python manage.py collectstatic --noinput
 cd -
 
 ###############################
 echo MIGRATIONS
 cd ./BalanceHomeApp/backend/
-if docker-compose run --build --rm --entrypoint="" backend python manage.py migrate --check; then
+if docker-compose run --no-deps --rm --entrypoint="" backend python manage.py migrate --check; then
     echo Migrations applied
 else
     echo Applying migrations
-    docker-compose run --build --rm --entrypoint="" backend python manage.py migrate --noinput
+    docker-compose run --no-deps --rm --entrypoint="" backend python manage.py migrate --noinput
 fi
-docker-compose down
 cd -
 
 ###############################
 echo SUPER USER
 cd ./BalanceHomeApp/backend/
-if docker-compose run --build --rm --entrypoint="" backend sh -c 'python manage.py createsuperuser --email $APP_SUPERUSER_EMAIL --username $APP_SUPERUSER_USERNAME --no-input'; then
+if docker-compose run --no-deps --rm --entrypoint="" backend sh -c 'python manage.py createsuperuser --email $APP_SUPERUSER_EMAIL --username $APP_SUPERUSER_USERNAME --no-input'; then
     echo Superuser created
 else
     echo Superuser already created, skipping
@@ -72,17 +73,17 @@ cd -
 echo APP COMMANDS
 cd ./BalanceHomeApp/backend/
 echo "# Executing balance schedule setup"
-docker-compose run --build --rm --entrypoint="" backend python manage.py balance_schedule_setup
+docker-compose run --no-deps --rm --entrypoint="" backend python manage.py balance_schedule_setup
 echo "# Executing create balance models"
-docker-compose run --build --rm --entrypoint="" backend python manage.py create_balance_models
+docker-compose run --no-deps --rm --entrypoint="" backend python manage.py create_balance_models
 echo "# Executing coin schedule setup"
-docker-compose run --build --rm --entrypoint="" backend python manage.py coin_schedule_setup
+docker-compose run --no-deps --rm --entrypoint="" backend python manage.py coin_schedule_setup
 echo "# Executing create coin models"
-docker-compose run --build --rm --entrypoint="" backend python manage.py create_coin_models
+docker-compose run --no-deps --rm --entrypoint="" backend python manage.py create_coin_models
 echo "# Executing users schedule setup"
-docker-compose run --build --rm --entrypoint="" backend python manage.py users_schedule_setup
+docker-compose run --no-deps --rm --entrypoint="" backend python manage.py users_schedule_setup
 echo "# Creting default invitation code"
-docker-compose run --build --rm --entrypoint="" backend python manage.py inv_code_create --init
+docker-compose run --no-deps --rm --entrypoint="" backend python manage.py inv_code_create --init
 cd -
 
 ###############################
