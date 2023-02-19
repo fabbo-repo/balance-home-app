@@ -10,7 +10,7 @@ sed -i 's/.\/certs/\/docker\/balhom\/volumes\/balhom-frontend\/certs/g' frontend
 ###############################
 echo PACKAGE
 cd frontend/flutter
-flutter build web
+flutter build web --web-renderer html
 cd -
 mkdir -p frontend/web
 cp -r frontend/flutter/build/web/* frontend/web/
