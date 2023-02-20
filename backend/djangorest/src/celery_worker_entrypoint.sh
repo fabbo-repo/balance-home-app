@@ -18,5 +18,4 @@ touch /var/log/balance_app/app.log
 chmod 777 /var/log/balance_app/app.log
 
 APP_USER_UID=`id -u $APP_USER`
-exec celery -A core worker -l INFO --uid=$APP_USER_UID \
-    --scheduler django_celery_beat.schedulers:DatabaseScheduler "$@"
+exec celery -A core worker -l INFO --uid=$APP_USER_UID "$@"
