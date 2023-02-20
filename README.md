@@ -2,7 +2,7 @@
 
 # Balance Home App or *BalHom*
 
-[![Generic badge](https://img.shields.io/badge/BalHom-v.1.0.4-GREEN.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/BalHom-v.1.0.7-GREEN.svg)](https://shields.io/)
 [![Generic badge](https://img.shields.io/badge/os-android-GREEN.svg)](https://shields.io/)
 [![Generic badge](https://img.shields.io/badge/os-ios-GREEN.svg)](https://shields.io/)
 [![Generic badge](https://img.shields.io/badge/os-windows-GREEN.svg)](https://shields.io/)

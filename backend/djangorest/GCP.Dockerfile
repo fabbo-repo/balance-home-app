@@ -63,6 +63,7 @@ RUN django-admin compilemessages --ignore=env
 
 # Entrypoint permissions
 RUN chmod a+x /app/backend_entrypoint.sh
-RUN chmod a+x /app/celery_entrypoint.sh
+RUN chmod a+x /app/celery_worker_entrypoint.sh
+RUN chmod a+x /app/celery_beat_entrypoint.sh
 
 ENTRYPOINT ["/app/backend_entrypoint.sh"]

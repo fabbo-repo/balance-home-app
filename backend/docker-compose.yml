@@ -18,12 +18,13 @@ services:
       - 8000
     depends_on:
       - redis
-      - celery
+      - celery_worker
+      - celery_beat
     restart: unless-stopped
     networks:
       - balance_home_app_net_external
 
-  celery:
+  celery_worker:
     build:
       context: djangorest
       dockerfile: OnPremise.Dockerfile
@@ -34,11 +35,30 @@ services:
     volumes:
       - ./djangorest/src/media:/app/media
       - ./djangorest/src/static:/app/static
-      - ./logs/celery:/var/log/balance_app
+      - ./logs/celery_worker:/var/log/balance_app
     depends_on:
       - redis
     restart: unless-stopped
-    entrypoint: /app/celery_entrypoint.sh
+    entrypoint: /app/celery_worker_entrypoint.sh
+    networks:
+      - balance_home_app_net_external
+      
+  celery_beat:
+    build:
+      context: djangorest
+      dockerfile: OnPremise.Dockerfile
+    env_file:
+      - ./backend_app.env
+    links:
+      - redis:redis
+    volumes:
+      - ./djangorest/src/media:/app/media
+      - ./djangorest/src/static:/app/static
+      - ./logs/celery_beat:/var/log/balance_app
+    depends_on:
+      - redis
+    restart: unless-stopped
+    entrypoint: /app/celery_beat_entrypoint.sh
     networks:
       - balance_home_app_net_external
 
