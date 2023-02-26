@@ -5,7 +5,7 @@ set -e
 ###############################
 echo SUPER USER
 cd backend/
-if docker-compose run --no-deps --rm --entrypoint="" backend sh -c 'python manage.py createsuperuser --email $APP_SUPERUSER_EMAIL --username $APP_SUPERUSER_USERNAME --no-input'; then
+if docker-compose run --no-deps --rm --entrypoint="" backend sh -c 'export DJANGO_SUPERUSER_PASSWORD=$APP_SUPERUSER_PASSWORD; python manage.py createsuperuser --email $APP_SUPERUSER_EMAIL --username $APP_SUPERUSER_USERNAME --no-input'; then
     echo Superuser created
 else
     echo Superuser already created, skipping
