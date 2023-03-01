@@ -7,17 +7,19 @@ from balance import notifications
 
 
 @shared_task
-def send_monthly_balance(user, month, year):
+def send_monthly_balance(user_email, month, year):
+    user = User.objects.get(email=user_email)
     monthly_balance, created = MonthlyBalance.objects.get_or_create(
-        owner = user,
-        year = year
+        owner=user,
+        year=year,
+        month=month
     )
     monthly_balance.coin_type = user.pref_coin_type
-    # If an monthly_balance already existed, its gross_quantity 
+    # If an monthly_balance already existed, its gross_quantity
     # must be converted
     if not created:
         monthly_balance.gross_quantity = convert_or_fetch(
-            monthly_balance.coin_type, 
+            monthly_balance.coin_type,
             user.pref_coin_type,
             monthly_balance.gross_quantity
         )
@@ -34,18 +36,20 @@ def send_monthly_balance(user, month, year):
         user.language
     )
 
+
 @shared_task
-def send_annual_balance(user, year):
+def send_annual_balance(user_email, year):
+    user = User.objects.get(email=user_email)
     annual_balance, created = AnnualBalance.objects.get_or_create(
-        owner = user,
-        year = year
+        owner=user,
+        year=year
     )
     annual_balance.coin_type = user.pref_coin_type
-    # If an annual_balance already existed, its gross_quantity 
+    # If an annual_balance already existed, its gross_quantity
     # must be converted
     if not created:
         annual_balance.gross_quantity = convert_or_fetch(
-            annual_balance.coin_type, 
+            annual_balance.coin_type,
             user.pref_coin_type,
             annual_balance.gross_quantity
         )
@@ -68,9 +72,9 @@ def periodic_monthly_balance():
     yesterday = now().date() - timedelta(days=1)
     month = yesterday.month
     year = yesterday.year
-    for user in User.objects:
-        if user.verified and user.receive_email_balance:
-            send_monthly_balance(user, month, year).delay()
+    for user in User.objects.all():
+        if user.verified and user.is_active and user.receive_email_balance:
+            send_monthly_balance.delay(user.email, month, year)
 
 
 @shared_task
@@ -78,6 +82,6 @@ def periodic_annual_balance():
     # Yesterday is last day of year
     yesterday = now().date() - timedelta(days=1)
     year = yesterday.year
-    for user in User.objects:
-        if user.verified and user.receive_email_balance:
-            send_annual_balance(user, year).delay()
+    for user in User.objects.all():
+        if user.verified and user.is_active and user.receive_email_balance:
+            send_annual_balance.delay(user.email, year)
