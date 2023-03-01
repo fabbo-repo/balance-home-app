@@ -8,9 +8,32 @@ from balance.tasks import (
 )
 from balance.schedule_setup import schedule_setup
 from django_celery_beat.models import CrontabSchedule
+from custom_auth.models import InvitationCode, User
+from balance.models import CoinType
+import logging
+from balance.tasks import periodic_monthly_balance, periodic_annual_balance
+from django.conf import settings
 
 
 class BalanceTasksTests(TestCase):
+    def setUp(self):
+        # Avoid WARNING logs while testing wrong requests
+        logging.disable(logging.WARNING)
+
+        # Create InvitationCodes
+        self.inv_code1 = InvitationCode.objects.create()
+        self.inv_code2 = InvitationCode.objects.create()
+        self.coin_type = CoinType.objects.create(code='EUR')
+        # User creation
+        self.user = User.objects.create(
+            username="username1",
+            email="email1@test.com",
+            inv_code=self.inv_code1,
+            verified=True
+        )
+        self.user.set_password("password1@212")
+        self.user.save()
+        return super().setUp()
 
     def test_shared_task_used(self):
         """
@@ -52,3 +75,27 @@ class BalanceTasksTests(TestCase):
         self.assertEqual(annual_crontab_schedule.day_of_week, "*")
         self.assertEqual(annual_crontab_schedule.day_of_month, "1")
         self.assertEqual(annual_crontab_schedule.month_of_year, "1")
+
+    def test_send_monthly_balance(self):
+        """
+        Checks that send_monthly_balance is called
+        """
+        settings.CELERY_TASK_ALWAYS_EAGER = True
+        # Mock Celery tasks
+        with mock.patch(
+            "balance.notifications.send_monthly_balance"
+        ) as send_monthly_balance:
+            periodic_monthly_balance()
+            send_monthly_balance.assert_called_once()
+
+    def test_send_annual_balance(self):
+        """
+        Checks that send_annual_balance is called
+        """
+        settings.CELERY_TASK_ALWAYS_EAGER = True
+        # Mock Celery tasks
+        with mock.patch(
+            "balance.notifications.send_annual_balance"
+        ) as send_annual_balance:
+            periodic_annual_balance()
+            send_annual_balance.assert_called_once()

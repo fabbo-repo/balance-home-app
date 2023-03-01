@@ -1,13 +1,8 @@
 from rest_framework import viewsets
-from balance.utils import (
-    check_dates_and_update_date_balances, 
-    update_or_create_annual_balance, 
-    update_or_create_monthly_balance
-)
 from revenue.models import Revenue, RevenueType
 from revenue.api.serializers import (
     RevenueTypeSerializer,
-    RevenuePostPutDelSerializer, 
+    RevenuePostPutDelSerializer,
     RevenueListDetailSerializer
 )
 from core.permissions import IsCurrentVerifiedUser
@@ -29,7 +24,7 @@ class RevenueTypeRetrieveView(generics.RetrieveAPIView):
     queryset = RevenueType.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = RevenueTypeSerializer
-    
+
     @method_decorator(cache_page(12 * 60 * 60))
     @method_decorator(vary_on_headers("Authorization"))
     def get(self, request, *args, **kwargs):
@@ -38,11 +33,12 @@ class RevenueTypeRetrieveView(generics.RetrieveAPIView):
         """
         return super(RevenueTypeRetrieveView, self).get(request, *args, **kwargs)
 
+
 class RevenueTypeListView(generics.ListAPIView):
     queryset = RevenueType.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = RevenueTypeSerializer
-    
+
     @method_decorator(cache_page(12 * 60 * 60))
     @method_decorator(vary_on_headers("Authorization"))
     def get(self, request, *args, **kwargs):
@@ -64,7 +60,7 @@ class RevenueView(viewsets.ModelViewSet):
         if getattr(self, 'swagger_fake_view', False):
             return Revenue.objects.none()  # return empty queryset
         return Revenue.objects.filter(owner=self.request.user)
-    
+
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return RevenueListDetailSerializer
@@ -84,9 +80,10 @@ class RevenueView(viewsets.ModelViewSet):
         with transaction.atomic():
             instance.delete()
 
+
 class RevenueYearsRetrieveView(APIView):
     permission_classes = (IsCurrentVerifiedUser,)
-    
+
     @method_decorator(cache_page(60))
     @method_decorator(vary_on_headers("Authorization"))
     def get(self, request, format=None):
