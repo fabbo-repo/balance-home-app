@@ -3,7 +3,7 @@ version: '2.1'
 services:
 
   nginx:
-    build: certbot/nginx
+    build: nginx
     ports:
       - "8000:80"
       - "8001:443"
