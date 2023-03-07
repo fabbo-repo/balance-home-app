@@ -1,0 +1,93 @@
+version: '2.1'
+
+services:
+
+  backend:
+    build:
+      context: djangorest
+      dockerfile: OnPremise.Dockerfile
+    env_file:
+      - ./backend_app.env
+    links:
+      - redis:redis
+    volumes:
+      - ./djangorest/src/media:/app/media
+      - ./djangorest/src/static:/app/static
+      - ./logs/backend:/var/log/balance_app
+    expose:
+      - 8000
+    depends_on:
+      - redis
+      - celery_worker
+      - celery_beat
+    restart: unless-stopped
+    networks:
+      - balhom_backend_net
+
+  celery_worker:
+    build:
+      context: djangorest
+      dockerfile: OnPremise.Dockerfile
+    env_file:
+      - ./backend_app.env
+    links:
+      - redis:redis
+    volumes:
+      - ./djangorest/src/media:/app/media
+      - ./djangorest/src/static:/app/static
+      - ./logs/celery_worker:/var/log/balance_app
+    depends_on:
+      - redis
+    restart: unless-stopped
+    entrypoint: /app/celery_worker_entrypoint.sh
+    networks:
+      - balhom_backend_net
+      
+  celery_beat:
+    build:
+      context: djangorest
+      dockerfile: OnPremise.Dockerfile
+    env_file:
+      - ./backend_app.env
+    links:
+      - redis:redis
+    volumes:
+      - ./djangorest/src/media:/app/media
+      - ./djangorest/src/static:/app/static
+      - ./logs/celery_beat:/var/log/balance_app
+    depends_on:
+      - redis
+    restart: unless-stopped
+    entrypoint: /app/celery_beat_entrypoint.sh
+    networks:
+      - balhom_backend_net
+
+  redis:
+    image: redis:7.0.7
+    restart: unless-stopped
+    networks:
+      - balhom_backend_net
+
+  nginx:
+    build: nginx
+    ports:
+      - "8000:80"
+      - "8001:443"
+    volumes:
+      - ./djangorest/src/media:/app/media
+      - ./djangorest/src/static:/app/static
+      - ./logs/nginx:/var/log/nginx
+      - ./certs:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - balhom_backend_net
+
+networks:
+  balhom_backend_net:
+    name: balhom_backend_net
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.93.0/24"

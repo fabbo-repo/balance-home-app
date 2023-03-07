@@ -1,0 +1,23 @@
+version: '2.1'
+
+services:
+  balance_home_app_web_nginx:
+    image: nginx:1.23.3
+    ports:
+      - "9000:80"
+      - "9001:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./certs:/etc/nginx/ssl:ro
+      - ./flutter/build/web:/usr/share/nginx/html
+    restart: unless-stopped
+    networks:
+      - balhom_frontend_net
+
+networks:
+  balhom_frontend_net:
+    name: balhom_frontend_net
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.94.0/24"

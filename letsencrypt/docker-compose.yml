@@ -1,0 +1,20 @@
+version: '2.1'
+
+services:
+
+  nginx:
+    build: nginx
+    ports:
+      - "8000:80"
+      - "8001:443"
+    volumes:
+      - ./nginx/acme_challenge:/var/www/certbot
+    restart: unless-stopped
+
+  certbot:
+    build: certbot
+    env_file:
+      - ./certbot.env
+    volumes:
+      - ./nginx/letsencrypt:/etc/letsencrypt
+      - ./nginx/acme_challenge:/var/www/certbot
