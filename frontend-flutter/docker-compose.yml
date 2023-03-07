@@ -11,3 +11,13 @@ services:
       - ./certs:/etc/nginx/ssl:ro
       - ./flutter/build/web:/usr/share/nginx/html
     restart: unless-stopped
+    networks:
+      - balhom_frontend_net
+
+networks:
+  balhom_frontend_net:
+    name: balhom_frontend_net
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.94.0/24"

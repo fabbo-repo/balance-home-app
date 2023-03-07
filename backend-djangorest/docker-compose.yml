@@ -22,7 +22,7 @@ services:
       - celery_beat
     restart: unless-stopped
     networks:
-      - balance_home_app_net_external
+      - balhom_backend_net
 
   celery_worker:
     build:
@@ -41,7 +41,7 @@ services:
     restart: unless-stopped
     entrypoint: /app/celery_worker_entrypoint.sh
     networks:
-      - balance_home_app_net_external
+      - balhom_backend_net
       
   celery_beat:
     build:
@@ -60,13 +60,13 @@ services:
     restart: unless-stopped
     entrypoint: /app/celery_beat_entrypoint.sh
     networks:
-      - balance_home_app_net_external
+      - balhom_backend_net
 
   redis:
     image: redis:7.0.7
     restart: unless-stopped
     networks:
-      - balance_home_app_net_external
+      - balhom_backend_net
 
   nginx:
     build: nginx
@@ -82,9 +82,12 @@ services:
       - backend
     restart: unless-stopped
     networks:
-      - balance_home_app_net_external
+      - balhom_backend_net
 
 networks:
-  balance_home_app_net_external:
-    name: balance_home_app_net
-    external: true
+  balhom_backend_net:
+    name: balhom_backend_net
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.93.0/24"

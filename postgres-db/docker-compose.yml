@@ -12,7 +12,7 @@ services:
     volumes:
       - ./database:/var/lib/postgresql/data
     networks:
-      balance_home_app_net:
+      balhom_db_net:
         ipv4_address: 192.168.92.20
 
   pgadmin:
@@ -25,12 +25,12 @@ services:
       - db
     restart: unless-stopped
     networks:
-      balance_home_app_net:
+      balhom_db_net:
         ipv4_address: 192.168.92.25
 
 networks:
-  balance_home_app_net:
-    name: balance_home_app_net
+  balhom_db_net:
+    name: balhom_db_net
     ipam:
       driver: default
       config:
