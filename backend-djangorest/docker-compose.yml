@@ -5,7 +5,7 @@ services:
   backend:
     build:
       context: djangorest
-      dockerfile: OnPremise.Dockerfile
+      dockerfile: Dockerfile
     env_file:
       - ./backend_app.env
     links:
@@ -27,7 +27,7 @@ services:
   celery_worker:
     build:
       context: djangorest
-      dockerfile: OnPremise.Dockerfile
+      dockerfile: Dockerfile
     env_file:
       - ./backend_app.env
     links:
@@ -46,7 +46,7 @@ services:
   celery_beat:
     build:
       context: djangorest
-      dockerfile: OnPremise.Dockerfile
+      dockerfile: Dockerfile
     env_file:
       - ./backend_app.env
     links:

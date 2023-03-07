@@ -5,9 +5,7 @@ import os
 from django.utils.translation import gettext_lazy as _
 import environ
 from Crypto.PublicKey import RSA
-import io
 from django.core.management.utils import get_random_secret_key
-import google.auth
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -34,27 +32,7 @@ env = environ.Env(
         "APP_EMAIL_HOST_PASSWORD", default='password')),
     APP_CELERY_BROKER_URL=(str, os.getenv(
         "APP_CELERY_BROKER_URL", default="redis://localhost:6379/0")),
-    GS_BUCKET_NAME=(str, os.getenv("GS_BUCKET_NAME")),
-    USE_CLOUD_SQL_AUTH_PROXY=(bool, os.getenv(
-        "USE_CLOUD_SQL_AUTH_PROXY", default=False)),
-    USE_STACKDRIVER=(bool, os.getenv("USE_STACKDRIVER", default=False)),
 )
-# Attempt to load the Project ID into the environment, safely failing on error.
-try:
-    _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
-except google.auth.exceptions.DefaultCredentialsError:
-    pass
-# If a Proxy is used, then the secret manager service won't be used
-if os.getenv("GOOGLE_CLOUD_PROJECT", None) and not env("USE_CLOUD_SQL_AUTH_PROXY"):
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
-    from google.cloud import secretmanager as goole_secretmanager
-    client = goole_secretmanager.SecretManagerServiceClient()
-    settings_name = os.getenv("SECRET_SETTINGS_NAME", "django_app_settings")
-    name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
-    payload = client.access_secret_version(name=name).payload.data.decode(
-        "UTF-8"
-    )
-    env.read_env(io.StringIO(payload))
 
 
 class Dev(Configuration):
@@ -360,92 +338,6 @@ class OnPremise(Dev):
                 "level": "ERROR",
             }
         }
-
-    SIMPLE_JWT = {
-        'UPDATE_LAST_LOGIN': True,
-        "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
-        "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-        "ALGORITHM": 'RS256',
-        "SIGNING_KEY": Dev.RSAkey.exportKey(),
-        "VERIFYING_KEY": Dev.RSAkey.publickey().exportKey()
-    }
-
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    # It is setup for gmail
-    EMAIL_HOST = env('APP_EMAIL_HOST')
-    EMAIL_USE_TLS = True
-    EMAIL_PORT = env('APP_EMAIL_PORT')
-    EMAIL_HOST_USER = env('APP_EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = env('APP_EMAIL_HOST_PASSWORD')
-
-
-class GCP(Dev):
-    # Note:
-    # GOOGLE_APPLICATION_CREDENTIALS env is needed
-    DEBUG = False
-    WSGI_APPLICATION = 'core.gcp_wsgi.application'
-
-    # Security headers
-    CSRF_COOKIE_SECURE = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SESSION_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-
-    # Cloud SQL Database
-    DATABASES = {"default": env.db()}
-    # If the flag as been set, configure to use proxy
-    if env("USE_CLOUD_SQL_AUTH_PROXY"):
-        DATABASES["default"]["HOST"] = "cloudsql-proxy"
-        DATABASES["default"]["PORT"] = 5432
-
-    # Storage setup
-    STATIC_ROOT = None
-    MEDIA_ROOT = None
-    STATICFILES_DIRS = []
-    GS_BUCKET_NAME = env("GS_BUCKET_NAME")
-    DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-    # Allow django-admin collectstatic to automatically put static files in GC bucket
-    STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-    # "publicRead" to return a public url, non-expiring url. All other files return a signed (expiring) url.
-    GS_DEFAULT_ACL = "publicRead"
-
-    # Logging
-    handlers = {
-        "console": {
-            "class": "logging.StreamHandler",
-            "stream": "ext://sys.stdout",
-            "formatter": "verbose",
-        }
-    }
-    if env('USE_STACKDRIVER'):
-        # StackDriver setup
-        # Logs Writer role needed (roles/logging.logWriter)
-        from google.cloud import logging as google_logging
-        google_logging_client = google_logging.Client()
-        # Connects the logger to the root logging handler
-        google_logging_client.setup_logging()
-        handlers["stackdriver"] = {
-            'class': 'google.cloud.logging.handlers.CloudLoggingHandler',
-            'client': google_logging_client
-        }
-    LOGGING = {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "formatters": {
-            "verbose": {
-                "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
-                "style": "{",
-            },
-        },
-        "handlers": handlers,
-        "root": {
-            "handlers": list(handlers.keys()),
-            "level": "ERROR",
-        }
-    }
 
     SIMPLE_JWT = {
         'UPDATE_LAST_LOGIN': True,
