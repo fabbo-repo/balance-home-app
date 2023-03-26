@@ -18,13 +18,12 @@ RUN set -ex \
 #ENV PATH="/etc/poetry:${PATH}"
 
 # Copy dependency files
+# To generate poetry files:
+# cat requirements.txt | xargs -I % sh -c 'poetry add "%"'
 #COPY pyproject.toml /
 #COPY poetry.lock /
 COPY src/requirements.txt /
 
-# Add dependencies from requirements
-#RUN cat requirements.txt | xargs poetry add
-#RUN poetry lock
 # Install dependencies
 #RUN poetry install
 RUN python -m venv /py && \

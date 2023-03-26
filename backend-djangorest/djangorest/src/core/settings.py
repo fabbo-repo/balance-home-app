@@ -275,7 +275,7 @@ class Dev(Configuration):
 
 class OnPremise(Dev):
     DEBUG = False
-    WSGI_APPLICATION = 'core.on_premise_wsgi.application'
+    WSGI_APPLICATION = 'core.wsgi.application'
 
     # Security headers
     CSRF_COOKIE_SECURE = True

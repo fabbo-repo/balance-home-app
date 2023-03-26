@@ -6,7 +6,7 @@
 
 ## Directory tree example
 
-~~~bash
+~~~
 djangorest/
     ├── app_1/
     │   ├── management/
@@ -98,12 +98,6 @@ djangorest/
 | DATABASE_URL              | Databse url                                                |
 | COIN_TYPE_CODES           | Coin type codes allowed (they have to be valid)            |
 | DBBACKUP_GPG_RECIPIENT    | GPG key to encrypt backup (optional, only for OnPremise)   |
-| GOOGLE_CLOUD_PROJECT      | Google cloud project ID (only for GCP)                     |
-| USE_CLOUD_SQL_AUTH_PROXY  | Whether a cloud sql proxy is used (optional, only for GCP) |
-| USE_STACKDRIVER           | Use StackDriver logging service (optional, only for GCP)   |
-| SECRET_SETTINGS_NAME      | Secret manager environment instance name (ignored if USE_CLOUD_SQL_AUTH_PROXY is set to True, only for GCP) |
-| GS_BUCKET_NAME            | Google cloud storage bucket name for static and media files (only for GCP) |
-| GOOGLE_APPLICATION_CREDENTIALS | Path for google credentials file (only for GCP) |
 
 ## Useful commands
 

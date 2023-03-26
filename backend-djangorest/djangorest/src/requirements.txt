@@ -50,7 +50,5 @@ python-gnupg==0.5.0
 gunicorn==20.1.0
 # Cryptographic library
 pycryptodome==3.17
-# Google cloud dependencies
-google-cloud-secret-manager==2.15.1
-google-cloud-logging==3.5.0
-django-storages[google]==1.13.2
+# Storage services drivers (media and static files)
+django-storages==1.13.2
