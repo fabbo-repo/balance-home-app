@@ -27,7 +27,7 @@ django-celery-results==2.4.0
 # Celery periodic task models
 django-celery-beat==2.4.0
 # Redis driver
-redis==4.3.4
+redis==4.4.4
 # Concurrent networking library for Celery
 eventlet==0.33.1
 # YAML parser
