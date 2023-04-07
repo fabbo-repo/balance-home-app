@@ -32,16 +32,16 @@ env = environ.Env(
         "APP_EMAIL_HOST_PASSWORD", default='password')),
     APP_CELERY_BROKER_URL=(str, os.getenv(
         "APP_CELERY_BROKER_URL", default="redis://localhost:6379/0")),
-    APP_MINIO_HOST=(str, os.getenv(
-        "APP_MINIO_HOST", default="localhost")),
+    APP_MINIO_ENDPOINT=(str, os.getenv(
+        "APP_MINIO_ENDPOINT", default="localhost")),
     APP_MINIO_ACCESS_KEY=(str, os.getenv(
         "APP_MINIO_ACCESS_KEY", default="")),
     APP_MINIO_SECRET_KEY=(str, os.getenv(
         "APP_MINIO_SECRET_KEY", default="")),
-    APP_MINIO_BUCKET_NAME=(str, os.getenv(
-        "APP_MINIO_MEDIA_BUCKET_NAME", default="")),
-    APP_MINIO_BUCKET_NAME=(str, os.getenv(
-        "APP_MINIO_STATIC_BUCKET_NAME", default="")),
+    APP_MINIO_MEDIA_BUCKET_NAME=(str, os.getenv(
+        "APP_MINIO_MEDIA_BUCKET_NAME", default="media")),
+    APP_MINIO_STATIC_BUCKET_NAME=(str, os.getenv(
+        "APP_MINIO_STATIC_BUCKET_NAME", default="static")),
 )
 
 
@@ -371,7 +371,7 @@ class OnPremise(Dev):
     DEFAULT_FILE_STORAGE = 'minio_storage.storage.MinioMediaStorage'
     STATICFILES_STORAGE = 'minio_storage.storage.MinioMediaStorage'
 
-    MINIO_STORAGE_ENDPOINT = env('APP_EMAIL_HOST_PASSWORD')
+    MINIO_STORAGE_ENDPOINT = env('APP_MINIO_ENDPOINT')
     MINIO_STORAGE_ACCESS_KEY = env('APP_MINIO_ACCESS_KEY')
     MINIO_STORAGE_SECRET_KEY = env('APP_MINIO_SECRET_KEY')
     MINIO_STORAGE_MEDIA_BUCKET_NAME = env('APP_MINIO_MEDIA_BUCKET_NAME')
@@ -380,3 +380,4 @@ class OnPremise(Dev):
     MINIO_STORAGE_MEIDA_URL_EXPIRY = 3600
     MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
     MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
+    MINIO_STORAGE_USE_HTTPS = True

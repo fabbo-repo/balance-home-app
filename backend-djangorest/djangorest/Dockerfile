@@ -43,6 +43,9 @@ ADD src /app/
 # uWSGI will listen on this port
 EXPOSE 8000
 
+# Make migrations
+RUN python manage.py makemigrations
+
 # Add any custom, static environment variables needed by Django or your settings file here:
 #ENV DJANGO_SETTINGS_MODULE=myapp.settings
 ENV DJANGO_CONFIGURATION=OnPremise
@@ -50,9 +53,6 @@ ENV WSGI_APLICATION="core.wsgi:application"
 
 # Log directory:
 RUN mkdir -p /var/log/balance_app
-
-# Make migrations
-RUN python manage.py makemigrations
 
 # Compile translations
 RUN django-admin compilemessages --ignore=env
