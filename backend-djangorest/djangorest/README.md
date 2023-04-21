@@ -1,8 +1,23 @@
 # DRF Backend
 
-## Architecture diagram
+## Environment Variables
 
-![Alt text](./diagrams/architecture.png?raw=true "")
+| NAME                      | DESCRIPTION                                                |
+| ------------------------- | ---------------------------------------------------------- |
+| APP_DEBUG                 | Debug mode enabled (true|false)                            |
+| APP_ALLOWED_HOSTS         | List of strings representing the allowed host/domain names |
+| APP_CORS_HOSTS            | CORS allowed host/domain names                             |
+| APP_EMAIL_HOST            | Email service host name                                    |
+| APP_EMAIL_PORT            | Email service port                                         |
+| APP_EMAIL_HOST_USER       | Email service authentication user                          |
+| APP_EMAIL_HOST_PASSWORD   | Email service authentication password                      |
+| APP_CELERY_BROKER_URL     | Celery url                                                 |
+| APP_EMAIL_CODE_THRESHOLD  | Time to wait for a new email verification code generation  |
+| APP_EMAIL_CODE_VALID      | Email verification code validity duration                  |
+| APP_UNVERIFIED_USER_DAYS  | Days for a periodic deletion of unverified users           |
+| DATABASE_URL              | Databse url                                                |
+| COIN_TYPE_CODES           | Coin type codes allowed (they have to be valid)            |
+| DBBACKUP_GPG_RECIPIENT    | GPG key to encrypt backup (optional, only for OnPremise)   |
 
 ## Directory tree example
 
@@ -76,28 +91,6 @@ djangorest/
     ├── manage.py
     └── db.sqlite3
 ~~~
-
-## Environment Variables
-
-| NAME                      | DESCRIPTION                                                |
-| ------------------------- | ---------------------------------------------------------- |
-| APP_DEBUG                 | Debug mode enabled (true|false)                            |
-| APP_ALLOWED_HOSTS         | List of strings representing the allowed host/domain names |
-| APP_CORS_HOSTS            | CORS allowed host/domain names                             |
-| APP_EMAIL_HOST            | Email service host name                                    |
-| APP_EMAIL_PORT            | Email service port                                         |
-| APP_EMAIL_HOST_USER       | Email service authentication user                          |
-| APP_EMAIL_HOST_PASSWORD   | Email service authentication password                      |
-| APP_CELERY_BROKER_URL     | Celery url                                                 |
-| APP_EMAIL_CODE_THRESHOLD  | Time to wait for a new email verification code generation  |
-| APP_EMAIL_CODE_VALID      | Email verification code validity duration                  |
-| APP_UNVERIFIED_USER_DAYS  | Days for a periodic deletion of unverified users           |
-| APP_SUPERUSER_USERNAME    | Admin backend user name                                    |
-| APP_SUPERUSER_EMAIL       | Admin backend user email                                   |
-| APP_SUPERUSER_PASSWORD    | Admin backend user password                                |
-| DATABASE_URL              | Databse url                                                |
-| COIN_TYPE_CODES           | Coin type codes allowed (they have to be valid)            |
-| DBBACKUP_GPG_RECIPIENT    | GPG key to encrypt backup (optional, only for OnPremise)   |
 
 ## Useful commands
 
