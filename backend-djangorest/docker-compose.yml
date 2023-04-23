@@ -11,11 +11,10 @@ services:
     links:
       - redis:redis
     volumes:
-      - ./djangorest/src/media:/app/media
-      - ./djangorest/src/static:/app/static
-      - ./logs/backend:/var/log/balance_app
-    expose:
-      - 8000
+      - ./logs/api:/var/log/api
+      - ./certs:/certs:ro
+    ports:
+      - "8001:443"
     depends_on:
       - redis
       - celery_worker
@@ -33,8 +32,6 @@ services:
     links:
       - redis:redis
     volumes:
-      - ./djangorest/src/media:/app/media
-      - ./djangorest/src/static:/app/static
       - ./logs/celery_worker:/var/log/balance_app
     depends_on:
       - redis
@@ -52,8 +49,6 @@ services:
     links:
       - redis:redis
     volumes:
-      - ./djangorest/src/media:/app/media
-      - ./djangorest/src/static:/app/static
       - ./logs/celery_beat:/var/log/balance_app
     depends_on:
       - redis
@@ -64,22 +59,6 @@ services:
 
   redis:
     image: redis:7.0.7
-    restart: unless-stopped
-    networks:
-      - balhom_backend_net
-
-  nginx:
-    build: nginx
-    ports:
-      - "8000:80"
-      - "8001:443"
-    volumes:
-      - ./djangorest/src/media:/app/media
-      - ./djangorest/src/static:/app/static
-      - ./logs/nginx:/var/log/nginx
-      - ./certs:/etc/nginx/ssl:ro
-    depends_on:
-      - backend
     restart: unless-stopped
     networks:
       - balhom_backend_net

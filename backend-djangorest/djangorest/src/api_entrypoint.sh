@@ -12,11 +12,8 @@ done
 >&2 echo "Postgres is up - continuing"
 
 # Create log directory
-touch /var/log/balance_app/app.log
-chmod 777 /var/log/balance_app/app.log
-
-# Give permissions to media directory
-chmod -R 777 /app/media
+touch /var/log/api/app.log
+chmod 777 /var/log/api/app.log
 
 # Create backup directory
 mkdir -p /var/backup
@@ -39,4 +36,6 @@ $$$$$$$  |\$$$$$$$ |$$ |$$ |  $$ |\$$$$$$  |$$ | $$ | $$ |
 EOF
 
 APP_USER_UID=`id -u $APP_USER`
-exec gunicorn --bind 0.0.0.0:8000 --user $APP_USER_UID --workers 1 --threads 8 --timeout 0 $WSGI_APLICATION "$@"
+
+exec gunicorn --certfile=/certs/fullchain.pem --keyfile=/certs/privkey.pem --bind 0.0.0.0:443 --user $APP_USER_UID \
+    --workers 1 --threads 4 --timeout 0 $WSGI_APLICATION "$@"

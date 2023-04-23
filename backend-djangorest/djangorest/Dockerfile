@@ -52,7 +52,7 @@ ENV DJANGO_CONFIGURATION=OnPremise
 ENV WSGI_APLICATION="core.wsgi:application"
 
 # Log directory:
-RUN mkdir -p /var/log/balance_app
+RUN mkdir -p /var/log/api
 
 # Compile translations
 RUN django-admin compilemessages --ignore=env
@@ -61,8 +61,8 @@ RUN django-admin compilemessages --ignore=env
 #USER ${APP_USER}:${APP_USER}
 
 # Entrypoint permissions
-RUN chmod a+x /app/backend_entrypoint.sh
+RUN chmod a+x /app/api_entrypoint.sh
 RUN chmod a+x /app/celery_worker_entrypoint.sh
 RUN chmod a+x /app/celery_beat_entrypoint.sh
 
-ENTRYPOINT ["/app/backend_entrypoint.sh"]
+ENTRYPOINT ["/app/api_entrypoint.sh"]

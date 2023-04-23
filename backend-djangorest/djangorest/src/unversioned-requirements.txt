@@ -1,28 +1,53 @@
 django
+# Rest framework
 djangorestframework
+# Environment variables library
 django-environ
+# More static types and type inference
 django-stubs
+# Multiple configurations inside one setting
 django-configurations
+# Filtering by url
 django-filter
+# Cors
 django-cors-headers
 drf-yasg
+# Swagger
 djangorestframework-simplejwt
+# Jwt Authentication
 PyJWT
 cryptography
+# Image library
 Pillow
+# Celery driver
 celery
+# Celery task result models
 django-celery-results
+# Celery periodic task models
 django-celery-beat
+# Redis driver
 redis
+# Concurrent networking library for Celery
 eventlet
+# YAML parser
 pyyaml
+# Library to deal with URI
 uritemplate
+# Postgres driver
 psycopg2-binary
+# Testing coverage
 coverage
+# Web scrapping
 beautifulsoup4
+# Admin documentation
 docutils
+# Backup library
 django-dbbackup
+# Functionality provided by GPG
 python-gnupg
+# Web server
 gunicorn
+# Cryptographic library
 pycryptodome
+# Minio driver
 django-minio-storage

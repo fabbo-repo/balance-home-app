@@ -39,9 +39,9 @@ env = environ.Env(
     APP_MINIO_SECRET_KEY=(str, os.getenv(
         "APP_MINIO_SECRET_KEY", default="")),
     APP_MINIO_MEDIA_BUCKET_NAME=(str, os.getenv(
-        "APP_MINIO_MEDIA_BUCKET_NAME", default="media")),
+        "APP_MINIO_BUCKET_NAME", default="bucket")),
     APP_MINIO_STATIC_BUCKET_NAME=(str, os.getenv(
-        "APP_MINIO_STATIC_BUCKET_NAME", default="static")),
+        "APP_MINIO_BUCKET_NAME", default="bucket")),
 )
 
 
@@ -304,7 +304,7 @@ class OnPremise(Dev):
     DBBACKUP_GPG_RECIPIENT = env('DBBACKUP_GPG_RECIPIENT')
     DBBACKUP_GPG_ALWAYS_TRUST = True
 
-    if os.path.exists('/var/log/balance_app/app.log'):
+    if os.path.exists('/var/log/api/app.log'):
         print("* Using file log")
         LOGGING = {
             "version": 1,
@@ -318,7 +318,7 @@ class OnPremise(Dev):
             "handlers": {
                 "logfile": {
                     "class": "logging.FileHandler",
-                    "filename": "/var/log/balance_app/app.log",
+                    "filename": "/var/log/api/app.log",
                     "formatter": "verbose",
                 },
             },
@@ -374,10 +374,16 @@ class OnPremise(Dev):
     MINIO_STORAGE_ENDPOINT = env('APP_MINIO_ENDPOINT')
     MINIO_STORAGE_ACCESS_KEY = env('APP_MINIO_ACCESS_KEY')
     MINIO_STORAGE_SECRET_KEY = env('APP_MINIO_SECRET_KEY')
+    MINIO_STORAGE_USE_HTTPS = True
+
     MINIO_STORAGE_MEDIA_BUCKET_NAME = env('APP_MINIO_MEDIA_BUCKET_NAME')
-    MINIO_STORAGE_STATIC_BUCKET_NAME = env('APP_MINIO_STATIC_BUCKET_NAME')
+    MINIO_STORAGE_AUTO_CREATE_MEDIA_POLICY = 'READ_WRITE'
     MINIO_STORAGE_MEIDA_USE_PRESIGNED = True
     MINIO_STORAGE_MEIDA_URL_EXPIRY = 3600
     MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+    
+    MINIO_STORAGE_STATIC_BUCKET_NAME = env('APP_MINIO_STATIC_BUCKET_NAME')
     MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
-    MINIO_STORAGE_USE_HTTPS = True
+    MINIO_STORAGE_AUTO_CREATE_STATIC_POLICY = 'READ_WRITE'
+    MINIO_STORAGE_STATIC_USE_PRESIGNED = False
+    
