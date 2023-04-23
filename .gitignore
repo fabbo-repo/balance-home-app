@@ -2,3 +2,5 @@
 *.crt
 *.key
 *.pem
+*.log
+*.log.*
