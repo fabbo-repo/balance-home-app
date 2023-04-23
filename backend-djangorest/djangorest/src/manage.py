@@ -14,13 +14,6 @@ def main():
         from configurations.management import execute_from_command_line
         execute_from_command_line(['manage.py', 'check', '--deploy'])
         sys.exit()
-    
-    # Upload to minio default media files
-    if "collectmedia" in sys.argv:
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
-        os.environ.setdefault("DJANGO_CONFIGURATION", "OnPremise")
-        # TODO
-        sys.exit()
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
     os.environ.setdefault("DJANGO_CONFIGURATION", "Dev")

@@ -51,3 +51,4 @@ gunicorn
 pycryptodome
 # Minio driver
 django-minio-storage
+minio
