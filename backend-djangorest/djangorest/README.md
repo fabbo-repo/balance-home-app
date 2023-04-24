@@ -1,12 +1,26 @@
 # DRF Backend
 
-## Architecture diagram
+## Environment Variables
 
-![Alt text](./diagrams/architecture.png?raw=true "")
+| NAME                      | DESCRIPTION                                                |
+| ------------------------- | ---------------------------------------------------------- |
+| APP_DEBUG                 | Debug mode enabled (true|false)                            |
+| APP_ALLOWED_HOSTS         | List of strings representing the allowed host/domain names |
+| APP_CORS_HOSTS            | CORS allowed host/domain names                             |
+| APP_EMAIL_HOST            | Email service host name                                    |
+| APP_EMAIL_PORT            | Email service port                                         |
+| APP_EMAIL_HOST_USER       | Email service authentication user                          |
+| APP_EMAIL_HOST_PASSWORD   | Email service authentication password                      |
+| APP_CELERY_BROKER_URL     | Celery url                                                 |
+| APP_EMAIL_CODE_THRESHOLD  | Time to wait for a new email verification code generation  |
+| APP_EMAIL_CODE_VALID      | Email verification code validity duration                  |
+| APP_UNVERIFIED_USER_DAYS  | Days for a periodic deletion of unverified users           |
+| DATABASE_URL              | Databse url                                                |
+| COIN_TYPE_CODES           | Coin type codes allowed (they have to be valid)            |
 
 ## Directory tree example
 
-~~~bash
+~~~
 djangorest/
     ├── app_1/
     │   ├── management/
@@ -77,34 +91,6 @@ djangorest/
     └── db.sqlite3
 ~~~
 
-## Environment Variables
-
-| NAME                      | DESCRIPTION                                                |
-| ------------------------- | ---------------------------------------------------------- |
-| APP_DEBUG                 | Debug mode enabled (true|false)                            |
-| APP_ALLOWED_HOSTS         | List of strings representing the allowed host/domain names |
-| APP_CORS_HOSTS            | CORS allowed host/domain names                             |
-| APP_EMAIL_HOST            | Email service host name                                    |
-| APP_EMAIL_PORT            | Email service port                                         |
-| APP_EMAIL_HOST_USER       | Email service authentication user                          |
-| APP_EMAIL_HOST_PASSWORD   | Email service authentication password                      |
-| APP_CELERY_BROKER_URL     | Celery url                                                 |
-| APP_EMAIL_CODE_THRESHOLD  | Time to wait for a new email verification code generation  |
-| APP_EMAIL_CODE_VALID      | Email verification code validity duration                  |
-| APP_UNVERIFIED_USER_DAYS  | Days for a periodic deletion of unverified users           |
-| APP_SUPERUSER_USERNAME    | Admin backend user name                                    |
-| APP_SUPERUSER_EMAIL       | Admin backend user email                                   |
-| APP_SUPERUSER_PASSWORD    | Admin backend user password                                |
-| DATABASE_URL              | Databse url                                                |
-| COIN_TYPE_CODES           | Coin type codes allowed (they have to be valid)            |
-| DBBACKUP_GPG_RECIPIENT    | GPG key to encrypt backup (optional, only for OnPremise)   |
-| GOOGLE_CLOUD_PROJECT      | Google cloud project ID (only for GCP)                     |
-| USE_CLOUD_SQL_AUTH_PROXY  | Whether a cloud sql proxy is used (optional, only for GCP) |
-| USE_STACKDRIVER           | Use StackDriver logging service (optional, only for GCP)   |
-| SECRET_SETTINGS_NAME      | Secret manager environment instance name (ignored if USE_CLOUD_SQL_AUTH_PROXY is set to True, only for GCP) |
-| GS_BUCKET_NAME            | Google cloud storage bucket name for static and media files (only for GCP) |
-| GOOGLE_APPLICATION_CREDENTIALS | Path for google credentials file (only for GCP) |
-
 ## Useful commands
 
 * Install project requirements:
@@ -135,12 +121,6 @@ python manage.py migrate
 
 ~~~bash
 python manage.py check-on-premise
-~~~
-
-* Create folder for static files:
-
-~~~bash
-python manage.py collectstatic
 ~~~
 
 * Create an app:
@@ -189,6 +169,18 @@ python manage.py test
 
 ~~~bash
 coverage html
+~~~
+
+* Create static files:
+
+~~~bash
+python manage.py collectstatic
+~~~
+
+* Upload default media files to minio:
+
+~~~bash
+python manage.py collectstatic
 ~~~
 
 * Launch celery for development:

@@ -19,17 +19,16 @@ until nc -z nginx 80; do
   sleep 5s & wait ${!}
 done
 
-mkdir -p "/var/www/certbot"
-
-email_arg="--email $EMAIL"
+email_arg="-m $EMAIL"
 echo "Obtaining the certificate for $DOMAIN with email $EMAIL"
 
 certbot certonly \
     --webroot \
+    --preferred-challenges=http \
     -w "/var/www/certbot" \
     -d "$DOMAIN" -d "www.$DOMAIN" \
     $email_arg \
     --rsa-key-size "4096" \
+    --no-eff-email \
     --agree-tos \
-    --noninteractive \
-    --verbose || true
+    -n || true

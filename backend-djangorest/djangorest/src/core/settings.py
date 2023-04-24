@@ -5,9 +5,7 @@ import os
 from django.utils.translation import gettext_lazy as _
 import environ
 from Crypto.PublicKey import RSA
-import io
 from django.core.management.utils import get_random_secret_key
-import google.auth
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,7 +22,6 @@ env = environ.Env(
     APP_UNVERIFIED_USER_DAYS=(int, os.getenv(
         "APP_UNVERIFIED_USER_DAYS", default=2)),
     COIN_TYPE_CODES=(str, os.getenv("COIN_TYPE_CODES", default='EUR,USD')),
-    DBBACKUP_GPG_RECIPIENT=(str, os.getenv("DBBACKUP_GPG_RECIPIENT")),
     APP_EMAIL_HOST=(str, os.getenv(
         "APP_EMAIL_HOST", default='smtp.gmail.com')),
     APP_EMAIL_PORT=(int, os.getenv("APP_EMAIL_PORT", default=587)),
@@ -34,33 +31,21 @@ env = environ.Env(
         "APP_EMAIL_HOST_PASSWORD", default='password')),
     APP_CELERY_BROKER_URL=(str, os.getenv(
         "APP_CELERY_BROKER_URL", default="redis://localhost:6379/0")),
-    GS_BUCKET_NAME=(str, os.getenv("GS_BUCKET_NAME")),
-    USE_CLOUD_SQL_AUTH_PROXY=(bool, os.getenv(
-        "USE_CLOUD_SQL_AUTH_PROXY", default=False)),
-    USE_STACKDRIVER=(bool, os.getenv("USE_STACKDRIVER", default=False)),
+    APP_MINIO_ENDPOINT=(str, os.getenv(
+        "APP_MINIO_ENDPOINT", default="localhost")),
+    APP_MINIO_ACCESS_KEY=(str, os.getenv(
+        "APP_MINIO_ACCESS_KEY", default="")),
+    APP_MINIO_SECRET_KEY=(str, os.getenv(
+        "APP_MINIO_SECRET_KEY", default="")),
+    APP_MINIO_MEDIA_BUCKET_NAME=(str, os.getenv(
+        "APP_MINIO_BUCKET_NAME", default="bucket")),
+    APP_MINIO_STATIC_BUCKET_NAME=(str, os.getenv(
+        "APP_MINIO_BUCKET_NAME", default="bucket")),
 )
-# Attempt to load the Project ID into the environment, safely failing on error.
-try:
-    _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
-except google.auth.exceptions.DefaultCredentialsError:
-    pass
-# If a Proxy is used, then the secret manager service won't be used
-if os.getenv("GOOGLE_CLOUD_PROJECT", None) and not env("USE_CLOUD_SQL_AUTH_PROXY"):
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
-    from google.cloud import secretmanager as goole_secretmanager
-    client = goole_secretmanager.SecretManagerServiceClient()
-    settings_name = os.getenv("SECRET_SETTINGS_NAME", "django_app_settings")
-    name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
-    payload = client.access_secret_version(name=name).payload.data.decode(
-        "UTF-8"
-    )
-    env.read_env(io.StringIO(payload))
 
 
 class Dev(Configuration):
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
-    BASE_DIR = Path(__file__).resolve().parent.parent
-
     private_key_file = os.path.join(BASE_DIR, 'private.key')
     public_key_file = os.path.join(BASE_DIR, 'public.key')
 
@@ -111,8 +96,8 @@ class Dev(Configuration):
         # Task schedulling:
         'django_celery_results',
         'django_celery_beat',
-        # Backup
-        'dbbackup',
+        # Minio
+        'minio_storage',
         # Custom apps:
         'core',
         'custom_auth',
@@ -297,7 +282,7 @@ class Dev(Configuration):
 
 class OnPremise(Dev):
     DEBUG = False
-    WSGI_APPLICATION = 'core.on_premise_wsgi.application'
+    WSGI_APPLICATION = 'core.wsgi.application'
 
     # Security headers
     CSRF_COOKIE_SECURE = True
@@ -308,13 +293,7 @@ class OnPremise(Dev):
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
 
-    # Backup
-    DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
-    DBBACKUP_STORAGE_OPTIONS = {'location': '/var/backup'}
-    DBBACKUP_GPG_RECIPIENT = env('DBBACKUP_GPG_RECIPIENT')
-    DBBACKUP_GPG_ALWAYS_TRUST = True
-
-    if os.path.exists('/var/log/balance_app/app.log'):
+    if os.path.exists('/var/log/api/app.log'):
         print("* Using file log")
         LOGGING = {
             "version": 1,
@@ -328,7 +307,7 @@ class OnPremise(Dev):
             "handlers": {
                 "logfile": {
                     "class": "logging.FileHandler",
-                    "filename": "/var/log/balance_app/app.log",
+                    "filename": "/var/log/api/app.log",
                     "formatter": "verbose",
                 },
             },
@@ -378,88 +357,22 @@ class OnPremise(Dev):
     EMAIL_HOST_USER = env('APP_EMAIL_HOST_USER')
     EMAIL_HOST_PASSWORD = env('APP_EMAIL_HOST_PASSWORD')
 
+    DEFAULT_FILE_STORAGE = 'minio_storage.storage.MinioMediaStorage'
+    STATICFILES_STORAGE = 'minio_storage.storage.MinioMediaStorage'
 
-class GCP(Dev):
-    # Note:
-    # GOOGLE_APPLICATION_CREDENTIALS env is needed
-    DEBUG = False
-    WSGI_APPLICATION = 'core.gcp_wsgi.application'
+    MINIO_STORAGE_ENDPOINT = env('APP_MINIO_ENDPOINT')
+    MINIO_STORAGE_ACCESS_KEY = env('APP_MINIO_ACCESS_KEY')
+    MINIO_STORAGE_SECRET_KEY = env('APP_MINIO_SECRET_KEY')
+    MINIO_STORAGE_USE_HTTPS = True
 
-    # Security headers
-    CSRF_COOKIE_SECURE = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SESSION_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-
-    # Cloud SQL Database
-    DATABASES = {"default": env.db()}
-    # If the flag as been set, configure to use proxy
-    if env("USE_CLOUD_SQL_AUTH_PROXY"):
-        DATABASES["default"]["HOST"] = "cloudsql-proxy"
-        DATABASES["default"]["PORT"] = 5432
-
-    # Storage setup
-    STATIC_ROOT = None
-    MEDIA_ROOT = None
-    STATICFILES_DIRS = []
-    GS_BUCKET_NAME = env("GS_BUCKET_NAME")
-    DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-    # Allow django-admin collectstatic to automatically put static files in GC bucket
-    STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-    # "publicRead" to return a public url, non-expiring url. All other files return a signed (expiring) url.
-    GS_DEFAULT_ACL = "publicRead"
-
-    # Logging
-    handlers = {
-        "console": {
-            "class": "logging.StreamHandler",
-            "stream": "ext://sys.stdout",
-            "formatter": "verbose",
-        }
-    }
-    if env('USE_STACKDRIVER'):
-        # StackDriver setup
-        # Logs Writer role needed (roles/logging.logWriter)
-        from google.cloud import logging as google_logging
-        google_logging_client = google_logging.Client()
-        # Connects the logger to the root logging handler
-        google_logging_client.setup_logging()
-        handlers["stackdriver"] = {
-            'class': 'google.cloud.logging.handlers.CloudLoggingHandler',
-            'client': google_logging_client
-        }
-    LOGGING = {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "formatters": {
-            "verbose": {
-                "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
-                "style": "{",
-            },
-        },
-        "handlers": handlers,
-        "root": {
-            "handlers": list(handlers.keys()),
-            "level": "ERROR",
-        }
-    }
-
-    SIMPLE_JWT = {
-        'UPDATE_LAST_LOGIN': True,
-        "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
-        "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-        "ALGORITHM": 'RS256',
-        "SIGNING_KEY": Dev.RSAkey.exportKey(),
-        "VERIFYING_KEY": Dev.RSAkey.publickey().exportKey()
-    }
-
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    # It is setup for gmail
-    EMAIL_HOST = env('APP_EMAIL_HOST')
-    EMAIL_USE_TLS = True
-    EMAIL_PORT = env('APP_EMAIL_PORT')
-    EMAIL_HOST_USER = env('APP_EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = env('APP_EMAIL_HOST_PASSWORD')
+    MINIO_STORAGE_MEDIA_BUCKET_NAME = env('APP_MINIO_MEDIA_BUCKET_NAME')
+    MINIO_STORAGE_AUTO_CREATE_MEDIA_POLICY = 'READ_WRITE'
+    MINIO_STORAGE_MEIDA_USE_PRESIGNED = True
+    MINIO_STORAGE_MEIDA_URL_EXPIRY = 3600
+    MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+    
+    MINIO_STORAGE_STATIC_BUCKET_NAME = env('APP_MINIO_STATIC_BUCKET_NAME')
+    MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
+    MINIO_STORAGE_AUTO_CREATE_STATIC_POLICY = 'READ_WRITE'
+    MINIO_STORAGE_STATIC_USE_PRESIGNED = False
+    

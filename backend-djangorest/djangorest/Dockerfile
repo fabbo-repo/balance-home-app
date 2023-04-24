@@ -18,13 +18,12 @@ RUN set -ex \
 #ENV PATH="/etc/poetry:${PATH}"
 
 # Copy dependency files
+# To generate poetry files:
+# cat requirements.txt | xargs -I % sh -c 'poetry add "%"'
 #COPY pyproject.toml /
 #COPY poetry.lock /
 COPY src/requirements.txt /
 
-# Add dependencies from requirements
-#RUN cat requirements.txt | xargs poetry add
-#RUN poetry lock
 # Install dependencies
 #RUN poetry install
 RUN python -m venv /py && \
@@ -44,16 +43,16 @@ ADD src /app/
 # uWSGI will listen on this port
 EXPOSE 8000
 
-# Add any custom, static environment variables needed by Django or your settings file here:
-#ENV DJANGO_SETTINGS_MODULE=myapp.settings
-ENV DJANGO_CONFIGURATION=GCP
-ENV WSGI_APLICATION="core.gcp_wsgi:application"
-
-# Log directory:
-RUN mkdir -p /var/log/balance_app
-
 # Make migrations
 RUN python manage.py makemigrations
+
+# Add any custom, static environment variables needed by Django or your settings file here:
+#ENV DJANGO_SETTINGS_MODULE=myapp.settings
+ENV DJANGO_CONFIGURATION=OnPremise
+ENV WSGI_APLICATION="core.wsgi:application"
+
+# Log directory:
+RUN mkdir -p /var/log/api
 
 # Compile translations
 RUN django-admin compilemessages --ignore=env
@@ -62,8 +61,8 @@ RUN django-admin compilemessages --ignore=env
 #USER ${APP_USER}:${APP_USER}
 
 # Entrypoint permissions
-RUN chmod a+x /app/backend_entrypoint.sh
+RUN chmod a+x /app/api_entrypoint.sh
 RUN chmod a+x /app/celery_worker_entrypoint.sh
 RUN chmod a+x /app/celery_beat_entrypoint.sh
 
-ENTRYPOINT ["/app/backend_entrypoint.sh"]
+ENTRYPOINT ["/app/api_entrypoint.sh"]

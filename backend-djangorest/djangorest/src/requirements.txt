@@ -6,7 +6,7 @@ django-environ==0.9.0
 # More static types and type inference
 django-stubs==1.12.0
 # Multiple configurations inside one setting
-django-configurations[cache,database,email,search]==2.3.2
+django-configurations==2.3.2
 # Filtering by url
 django-filter==22.1
 # Cors
@@ -27,7 +27,7 @@ django-celery-results==2.4.0
 # Celery periodic task models
 django-celery-beat==2.4.0
 # Redis driver
-redis==4.3.4
+redis==4.5.4
 # Concurrent networking library for Celery
 eventlet==0.33.1
 # YAML parser
@@ -42,15 +42,10 @@ coverage==6.4.4
 beautifulsoup4==4.11.1
 # Admin documentation
 docutils==0.19
-# Backup library
-django-dbbackup==4.0.2
-# Functionality provided by GPG
-python-gnupg==0.5.0
 # Web server
 gunicorn==20.1.0
 # Cryptographic library
 pycryptodome==3.17
-# Google cloud dependencies
-google-cloud-secret-manager==2.15.1
-google-cloud-logging==3.5.0
-django-storages[google]==1.13.2
+# Minio driver
+django-minio-storage==0.5.0
+minio==7.1.14
