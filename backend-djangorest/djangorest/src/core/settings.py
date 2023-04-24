@@ -22,6 +22,8 @@ env = environ.Env(
     APP_UNVERIFIED_USER_DAYS=(int, os.getenv(
         "APP_UNVERIFIED_USER_DAYS", default=2)),
     COIN_TYPE_CODES=(str, os.getenv("COIN_TYPE_CODES", default='EUR,USD')),
+    APP_FRONTEND_VERSION=(str, os.getenv(
+        "APP_FRONTEND_VERSION", default="1.0.8")),
     APP_EMAIL_HOST=(str, os.getenv(
         "APP_EMAIL_HOST", default='smtp.gmail.com')),
     APP_EMAIL_PORT=(int, os.getenv("APP_EMAIL_PORT", default=587)),
@@ -279,6 +281,8 @@ class Dev(Configuration):
 
     COIN_TYPE_CODES = env('COIN_TYPE_CODES').split(',')
 
+    APP_FRONTEND_VERSION = env('APP_FRONTEND_VERSION')
+
 
 class OnPremise(Dev):
     DEBUG = False
@@ -370,9 +374,8 @@ class OnPremise(Dev):
     MINIO_STORAGE_MEIDA_USE_PRESIGNED = True
     MINIO_STORAGE_MEIDA_URL_EXPIRY = 3600
     MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
-    
+
     MINIO_STORAGE_STATIC_BUCKET_NAME = env('APP_MINIO_STATIC_BUCKET_NAME')
     MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
     MINIO_STORAGE_AUTO_CREATE_STATIC_POLICY = 'READ_WRITE'
     MINIO_STORAGE_STATIC_USE_PRESIGNED = False
-    
