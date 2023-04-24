@@ -46,5 +46,5 @@ gunicorn
 # Cryptographic library
 pycryptodome
 # Minio driver
-django-minio-storage
 minio
+django-minio-storage
