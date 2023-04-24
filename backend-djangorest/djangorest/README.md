@@ -17,6 +17,7 @@
 | APP_UNVERIFIED_USER_DAYS  | Days for a periodic deletion of unverified users           |
 | DATABASE_URL              | Databse url                                                |
 | COIN_TYPE_CODES           | Coin type codes allowed (they have to be valid)            |
+| APP_FRONTEND_VERSION      | Minimum supported frontend version. Optional               |
 
 ## Directory tree example
 
