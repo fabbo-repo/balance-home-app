@@ -84,21 +84,21 @@ class Dev(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
-        # Cors:
+        # Cors
         "corsheaders",
-        # Admin documentation:
+        # Admin documentation
         'django.contrib.admindocs',
-        # Rest framework:
+        # Rest framework
         'rest_framework',
         'django_filters',
-        # Swager:
+        # Swager
         'drf_yasg',
-        # Task schedulling:
+        # Task schedulling
         'django_celery_results',
         'django_celery_beat',
         # Minio
         'minio_storage',
-        # Custom apps:
+        # Custom apps
         'core',
         'custom_auth',
         'balance',
