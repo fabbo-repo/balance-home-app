@@ -191,46 +191,10 @@ celery -A core worker -l INFO -P eventlet --scheduler django_celery_beat.schedul
 
 > ***redis*** must be launched too
 
-* Schedule balance periodic tasks:
-
-~~~bash
-python manage.py balance_schedule_setup
-~~~
-
-* Create default revenue types and expense types:
-
-~~~bash
-python manage.py create_balance_models
-~~~
-
-* Schedule coin periodic tasks:
-
-~~~bash
-python manage.py coin_schedule_setup
-~~~
-
-* Create defined coin types:
-
-~~~bash
-python manage.py create_coin_models
-~~~
-
-* Schedule a task to delete all unverified users:
-
-~~~bash
-python manage.py users_schedule_setup
-~~~
-
-* Create **new** invitation code with 1 usage:
-
-~~~bash
-python manage.py inv_code_create --init
-~~~
-
 * Create invitation code with X usage:
 
 ~~~bash
-python manage.py inv_code_create --usage X
+python manage.py inv_code --usage X
 ~~~
 
 * Generate locale messages files
@@ -245,34 +209,4 @@ django-admin makemessages --all --ignore=en
 
 ~~~bash
 django-admin compilemessages --ignore=env
-~~~
-
-### [For simple backup](https://django-dbbackup.readthedocs.io/en/master/installation.html)
-
-* Do backup
-
-~~~bash
-python manage.py dbbackup
-~~~
-
-* Restore backup
-
-~~~bash
-python manage.py dbrestore
-~~~
-
-### For encrypted backup
-
-A GPG key must be generated first (use the command ```gpg --default-new-key-algo rsa4096 --gen-key```) and should be added as an environment variable with the name DBBACKUP_GPG_RECIPIENT.
-
-* Do backup using GPG encryption
-
-~~~bash
-python manage.py dbbackup --encrypt
-~~~
-
-* Restore backup using GPG encryption
-
-~~~bash
-python manage.py dbrestore --decrypt
 ~~~
