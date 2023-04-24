@@ -191,18 +191,6 @@ celery -A core worker -l INFO -P eventlet --scheduler django_celery_beat.schedul
 
 > ***redis*** must be launched too
 
-* Schedule coin periodic tasks:
-
-~~~bash
-python manage.py coin_schedule_setup
-~~~
-
-* Create defined coin types:
-
-~~~bash
-python manage.py create_coin_models
-~~~
-
 * Schedule a task to delete all unverified users:
 
 ~~~bash
