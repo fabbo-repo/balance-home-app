@@ -17,7 +17,6 @@
 | APP_UNVERIFIED_USER_DAYS  | Days for a periodic deletion of unverified users           |
 | DATABASE_URL              | Databse url                                                |
 | COIN_TYPE_CODES           | Coin type codes allowed (they have to be valid)            |
-| DBBACKUP_GPG_RECIPIENT    | GPG key to encrypt backup (optional, only for OnPremise)   |
 
 ## Directory tree example
 
@@ -124,12 +123,6 @@ python manage.py migrate
 python manage.py check-on-premise
 ~~~
 
-* Create folder for static files:
-
-~~~bash
-python manage.py collectstatic
-~~~
-
 * Create an app:
 
 ~~~bash
@@ -176,6 +169,18 @@ python manage.py test
 
 ~~~bash
 coverage html
+~~~
+
+* Create static files:
+
+~~~bash
+python manage.py collectstatic
+~~~
+
+* Upload default media files to minio:
+
+~~~bash
+python manage.py collectstatic
 ~~~
 
 * Launch celery for development:

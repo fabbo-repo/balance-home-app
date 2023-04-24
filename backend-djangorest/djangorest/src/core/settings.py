@@ -22,7 +22,6 @@ env = environ.Env(
     APP_UNVERIFIED_USER_DAYS=(int, os.getenv(
         "APP_UNVERIFIED_USER_DAYS", default=2)),
     COIN_TYPE_CODES=(str, os.getenv("COIN_TYPE_CODES", default='EUR,USD')),
-    DBBACKUP_GPG_RECIPIENT=(str, os.getenv("DBBACKUP_GPG_RECIPIENT")),
     APP_EMAIL_HOST=(str, os.getenv(
         "APP_EMAIL_HOST", default='smtp.gmail.com')),
     APP_EMAIL_PORT=(int, os.getenv("APP_EMAIL_PORT", default=587)),
@@ -97,8 +96,6 @@ class Dev(Configuration):
         # Task schedulling:
         'django_celery_results',
         'django_celery_beat',
-        # Backup
-        'dbbackup',
         # Minio
         'minio_storage',
         # Custom apps:
@@ -295,12 +292,6 @@ class OnPremise(Dev):
     SECURE_HSTS_SECONDS = 31536000  # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
-
-    # Backup
-    DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
-    DBBACKUP_STORAGE_OPTIONS = {'location': '/var/backup'}
-    DBBACKUP_GPG_RECIPIENT = env('DBBACKUP_GPG_RECIPIENT')
-    DBBACKUP_GPG_ALWAYS_TRUST = True
 
     if os.path.exists('/var/log/api/app.log'):
         print("* Using file log")

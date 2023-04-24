@@ -42,10 +42,6 @@ coverage==6.4.4
 beautifulsoup4==4.11.1
 # Admin documentation
 docutils==0.19
-# Backup library
-django-dbbackup==4.0.2
-# Functionality provided by GPG
-python-gnupg==0.5.0
 # Web server
 gunicorn==20.1.0
 # Cryptographic library

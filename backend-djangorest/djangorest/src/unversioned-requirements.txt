@@ -41,10 +41,6 @@ coverage
 beautifulsoup4
 # Admin documentation
 docutils
-# Backup library
-django-dbbackup
-# Functionality provided by GPG
-python-gnupg
 # Web server
 gunicorn
 # Cryptographic library

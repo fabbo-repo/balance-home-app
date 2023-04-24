@@ -15,10 +15,6 @@ done
 touch /var/log/api/app.log
 chmod 777 /var/log/api/app.log
 
-# Create backup directory
-mkdir -p /var/backup
-chmod 777 /var/backup
-
 # https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20
 cat << "EOF"
 
