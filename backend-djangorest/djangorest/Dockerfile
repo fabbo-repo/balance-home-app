@@ -13,16 +13,18 @@ RUN set -ex \
     && apt-get update && apt-get install -y --no-install-recommends $BUILD_DEPS \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Poetry
-#RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/etc/poetry python3 -
-#ENV PATH="/etc/poetry:${PATH}"
+# Install poetry
+RUN pip install --upgrade pip && pip install poetry
 
 # Copy dependency files
 # To generate poetry files:
 # cat requirements.txt | xargs -I % sh -c 'poetry add "%"'
-#COPY pyproject.toml /
-#COPY poetry.lock /
-COPY src/requirements.txt /
+COPY src/pyproject.toml /
+COPY src/poetry.lock /
+#COPY src/requirements.txt /
+
+# Create requirements.txt file
+RUN poetry export -f requirements.txt --output /requirements.txt
 
 # Install dependencies
 #RUN poetry install
@@ -43,19 +45,16 @@ ADD src /app/
 # uWSGI will listen on this port
 EXPOSE 8000
 
-# Make migrations
-RUN python manage.py makemigrations
-
-# Add any custom, static environment variables needed by Django or your settings file here:
-#ENV DJANGO_SETTINGS_MODULE=myapp.settings
-ENV DJANGO_CONFIGURATION=OnPremise
-ENV WSGI_APLICATION="core.wsgi:application"
-
 # Log directory:
 RUN mkdir -p /var/log/api
 
 # Compile translations
 RUN django-admin compilemessages --ignore=env
+
+# Add any custom, static environment variables needed by Django or your settings file here:
+#ENV DJANGO_SETTINGS_MODULE=myapp.settings
+ENV DJANGO_CONFIGURATION=OnPremise
+ENV WSGI_APLICATION="core.wsgi:application"
 
 # Change to a non-root user
 #USER ${APP_USER}:${APP_USER}
