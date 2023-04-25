@@ -30,6 +30,11 @@ jobs:
           poetry run python manage.py test
         working-directory: ./backend-djangorest/api/src
       
+      - name: Check deploy
+        run: |
+          poetry run python manage.py check --deploy
+        working-directory: ./backend-djangorest/api/src
+      
       - name: Make migrations
         run: |
           poetry run python manage.py makemigrations

@@ -3,9 +3,10 @@ version: '3'
 services:
 
   api:
-    image: fabbo/balhom-backend-djangorest:latest
+    image: fabbo/balhom-api-djangorest:latest
+    container_name: balhom-api-djangorest
     env_file:
-      - ./backend_app.env
+      - ./api.env
     links:
       - redis:redis
     volumes:
@@ -19,47 +20,49 @@ services:
       - celery_beat
     restart: unless-stopped
     networks:
-      - balhom_backend_net
+      - balhom_api_net
 
   celery_worker:
-    image: fabbo/balhom-backend-djangorest:latest
+    image: fabbo/balhom-api-djangorest:latest
+    container_name: balhom-api-djangorest
     env_file:
-      - ./backend_app.env
+      - ./api.env
     links:
       - redis:redis
     volumes:
-      - ./logs/celery_worker:/var/log/balance_app
+      - ./logs/celery_worker:/var/log/api
     depends_on:
       - redis
     restart: unless-stopped
     entrypoint: /app/celery_worker_entrypoint.sh
     networks:
-      - balhom_backend_net
+      - balhom_api_net
       
   celery_beat:
-    image: fabbo/balhom-backend-djangorest:latest
+    image: fabbo/balhom-api-djangorest:latest
+    container_name: balhom-api-djangorest
     env_file:
-      - ./backend_app.env
+      - ./api.env
     links:
       - redis:redis
     volumes:
-      - ./logs/celery_beat:/var/log/balance_app
+      - ./logs/celery_beat:/var/log/api
     depends_on:
       - redis
     restart: unless-stopped
     entrypoint: /app/celery_beat_entrypoint.sh
     networks:
-      - balhom_backend_net
+      - balhom_api_net
 
   redis:
-    image: redis:7.0.7
+    image: redis:7.0.11
     restart: unless-stopped
     networks:
-      - balhom_backend_net
+      - balhom_api_net
 
 networks:
-  balhom_backend_net:
-    name: balhom_backend_net
+  balhom_api_net:
+    name: balhom_api_net
     ipam:
       driver: default
       config:
