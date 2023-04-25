@@ -8,7 +8,7 @@ def main():
     """Run administrative tasks."""
     
     # Check On Premise configuration
-    if "check-on-premise" in sys.argv:
+    if "check" in sys.argv and "--deploy" in sys.argv:
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
         os.environ.setdefault("DJANGO_CONFIGURATION", "OnPremise")
         from configurations.management import execute_from_command_line

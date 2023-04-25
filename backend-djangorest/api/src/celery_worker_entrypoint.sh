@@ -14,8 +14,8 @@ done
 export DJANGO_CONFIGURATION=OnPremise
 
 # Create log directory
-touch /var/log/balance_app/app.log
-chmod 777 /var/log/balance_app/app.log
+touch /var/log/api/app.log
+chmod 777 /var/log/api/app.log
 
 APP_USER_UID=`id -u $APP_USER`
 exec celery -A core worker -l INFO --uid=$APP_USER_UID "$@"

@@ -58,6 +58,7 @@ djangorest/
     │   ├── filters.py
     │   ├── notifications.py
     │   ├── apps.py
+    │   ├── exceptions.py
     │   └── admin.py
     ├── ...
     ├── app_2/
@@ -81,6 +82,7 @@ djangorest/
     │   ├── settings.py
     │   ├── urls.py
     │   ├── api_urls.py
+    │   ├── exceptions.py
     │   └── wsgi.py
     ├── templates/
     │   └── ... (This is optional)
@@ -116,12 +118,6 @@ python manage.py makemigrations
 
 ~~~bash
 python manage.py migrate
-~~~
-
-* Check On Premise settings:
-
-~~~bash
-python manage.py check-on-premise
 ~~~
 
 * Create an app:
