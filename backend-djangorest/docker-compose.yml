@@ -2,10 +2,8 @@ version: '3'
 
 services:
 
-  backend:
-    build:
-      context: djangorest
-      dockerfile: Dockerfile
+  api:
+    image: fabbo/balhom-backend-djangorest:latest
     env_file:
       - ./backend_app.env
     links:
@@ -24,9 +22,7 @@ services:
       - balhom_backend_net
 
   celery_worker:
-    build:
-      context: djangorest
-      dockerfile: Dockerfile
+    image: fabbo/balhom-backend-djangorest:latest
     env_file:
       - ./backend_app.env
     links:
@@ -41,9 +37,7 @@ services:
       - balhom_backend_net
       
   celery_beat:
-    build:
-      context: djangorest
-      dockerfile: Dockerfile
+    image: fabbo/balhom-backend-djangorest:latest
     env_file:
       - ./backend_app.env
     links:
