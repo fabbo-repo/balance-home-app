@@ -1,0 +1,36 @@
+name: Django Rest App Build and Test
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build-test-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install poetry
+          poetry install
+        working-directory: ./backend-djangorest/api/src
+
+      - name: Run tests
+        run: |
+          poetry run python manage.py test
+        working-directory: ./backend-djangorest/api/src
+      
+      - name: Make migrations
+        run: |
+          poetry run python manage.py makemigrations
+        working-directory: ./backend-djangorest/api/src
