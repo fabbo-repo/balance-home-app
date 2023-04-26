@@ -39,3 +39,13 @@ jobs:
         run: |
           poetry run python manage.py makemigrations
         working-directory: ./backend-djangorest/api/src
+        
+      - name: Check build Docker Image
+        run: |
+          export APP_VERSION=$(grep -m 1 version src/pyproject.toml | tr -d '=' | cut -d' ' -f3 | tr -d '"' | tr -d '\n' | tr -d '\r')
+          echo "Using version ${APP_VERSION}"
+          IMAGE_TAG="${DJANGOREST_DOCKER_REPO_NAME}:${APP_VERSION}"
+          docker build . -t ${IMAGE_TAG}
+        env:
+          DJANGOREST_DOCKER_REPO_NAME: ${{ secrets.DJANGOREST_DOCKER_REPO_NAME }}
+        working-directory: ./backend-djangorest/api

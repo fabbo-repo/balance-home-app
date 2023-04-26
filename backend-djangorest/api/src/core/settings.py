@@ -11,7 +11,6 @@ from django.core.management.utils import get_random_secret_key
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(
-    APP_DEBUG=(bool, os.getenv("APP_DEBUG", default=True)),
     APP_ALLOWED_HOSTS=(str, os.getenv("APP_ALLOWED_HOSTS", default='*')),
     APP_CORS_HOSTS=(str, os.getenv("APP_CORS_HOSTS")),
     DATABASE_URL=(str, os.getenv("DATABASE_URL",
@@ -33,16 +32,13 @@ env = environ.Env(
         "APP_EMAIL_HOST_PASSWORD", default='password')),
     APP_CELERY_BROKER_URL=(str, os.getenv(
         "APP_CELERY_BROKER_URL", default="redis://localhost:6379/0")),
-    APP_MINIO_ENDPOINT=(str, os.getenv(
-        "APP_MINIO_ENDPOINT", default="localhost")),
-    APP_MINIO_ACCESS_KEY=(str, os.getenv(
-        "APP_MINIO_ACCESS_KEY", default="")),
-    APP_MINIO_SECRET_KEY=(str, os.getenv(
-        "APP_MINIO_SECRET_KEY", default="")),
+    APP_MINIO_ENDPOINT=(str, os.getenv("APP_MINIO_ENDPOINT")),
+    APP_MINIO_ACCESS_KEY=(str, os.getenv("APP_MINIO_ACCESS_KEY")),
+    APP_MINIO_SECRET_KEY=(str, os.getenv("APP_MINIO_SECRET_KEY")),
     APP_MINIO_MEDIA_BUCKET_NAME=(str, os.getenv(
-        "APP_MINIO_BUCKET_NAME", default="bucket")),
+        "APP_MINIO_BUCKET_NAME", default="balhom-bucket")),
     APP_MINIO_STATIC_BUCKET_NAME=(str, os.getenv(
-        "APP_MINIO_BUCKET_NAME", default="bucket")),
+        "APP_MINIO_BUCKET_NAME", default="balhom-bucket")),
 )
 
 
@@ -67,8 +63,7 @@ class Dev(Configuration):
                 writer.write(RSAkey.publickey().exportKey())
     SECRET_KEY = get_random_secret_key()
 
-    # True by default but have the option to set it false with an environment variable
-    DEBUG = env('APP_DEBUG')
+    DEBUG = True
 
     ALLOWED_HOSTS = env('APP_ALLOWED_HOSTS').split(',')
     if env('APP_CORS_HOSTS'):
@@ -361,21 +356,22 @@ class OnPremise(Dev):
     EMAIL_HOST_USER = env('APP_EMAIL_HOST_USER')
     EMAIL_HOST_PASSWORD = env('APP_EMAIL_HOST_PASSWORD')
 
-    DEFAULT_FILE_STORAGE = 'minio_storage.storage.MinioMediaStorage'
-    STATICFILES_STORAGE = 'minio_storage.storage.MinioMediaStorage'
+    if env('APP_MINIO_ENDPOINT'):
+        DEFAULT_FILE_STORAGE = 'minio_storage.storage.MinioMediaStorage'
+        STATICFILES_STORAGE = 'minio_storage.storage.MinioMediaStorage'
 
-    MINIO_STORAGE_ENDPOINT = env('APP_MINIO_ENDPOINT')
-    MINIO_STORAGE_ACCESS_KEY = env('APP_MINIO_ACCESS_KEY')
-    MINIO_STORAGE_SECRET_KEY = env('APP_MINIO_SECRET_KEY')
-    MINIO_STORAGE_USE_HTTPS = True
+        MINIO_STORAGE_ENDPOINT = env('APP_MINIO_ENDPOINT')
+        MINIO_STORAGE_ACCESS_KEY = env('APP_MINIO_ACCESS_KEY')
+        MINIO_STORAGE_SECRET_KEY = env('APP_MINIO_SECRET_KEY')
+        MINIO_STORAGE_USE_HTTPS = True
 
-    MINIO_STORAGE_MEDIA_BUCKET_NAME = env('APP_MINIO_MEDIA_BUCKET_NAME')
-    MINIO_STORAGE_AUTO_CREATE_MEDIA_POLICY = 'READ_WRITE'
-    MINIO_STORAGE_MEIDA_USE_PRESIGNED = True
-    MINIO_STORAGE_MEIDA_URL_EXPIRY = 3600
-    MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+        MINIO_STORAGE_MEDIA_BUCKET_NAME = env('APP_MINIO_MEDIA_BUCKET_NAME')
+        MINIO_STORAGE_AUTO_CREATE_MEDIA_POLICY = 'READ_WRITE'
+        MINIO_STORAGE_MEIDA_USE_PRESIGNED = True
+        MINIO_STORAGE_MEIDA_URL_EXPIRY = 3600
+        MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
 
-    MINIO_STORAGE_STATIC_BUCKET_NAME = env('APP_MINIO_STATIC_BUCKET_NAME')
-    MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
-    MINIO_STORAGE_AUTO_CREATE_STATIC_POLICY = 'READ_WRITE'
-    MINIO_STORAGE_STATIC_USE_PRESIGNED = False
+        MINIO_STORAGE_STATIC_BUCKET_NAME = env('APP_MINIO_STATIC_BUCKET_NAME')
+        MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
+        MINIO_STORAGE_AUTO_CREATE_STATIC_POLICY = 'READ_WRITE'
+        MINIO_STORAGE_STATIC_USE_PRESIGNED = False
