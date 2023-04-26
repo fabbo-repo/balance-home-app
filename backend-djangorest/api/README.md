@@ -4,7 +4,6 @@
 
 | NAME                      | DESCRIPTION                                                |
 | ------------------------- | ---------------------------------------------------------- |
-| APP_DEBUG                 | Debug mode enabled (true|false)                            |
 | APP_ALLOWED_HOSTS         | List of strings representing the allowed host/domain names |
 | APP_CORS_HOSTS            | CORS allowed host/domain names                             |
 | APP_EMAIL_HOST            | Email service host name                                    |
@@ -18,6 +17,10 @@
 | DATABASE_URL              | Databse url                                                |
 | COIN_TYPE_CODES           | Coin type codes allowed (they have to be valid)            |
 | APP_FRONTEND_VERSION      | Minimum supported frontend version. Optional               |
+| APP_MINIO_ENDPOINT        | Minio api endpoint                                         |
+| APP_MINIO_ACCESS_KEY      | Minio access key                                           |
+| APP_MINIO_SECRET_KEY      | Minio secret key                                           |
+| APP_MINIO_BUCKET_NAME     | Minio bucket name. Default: ***balhom-bucket***            |
 
 ## Directory tree example
 
