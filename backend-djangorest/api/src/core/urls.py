@@ -27,8 +27,12 @@ if settings.DEBUG:
         document_root=settings.MEDIA_ROOT
     )
 
+if not settings.APP_DISABLE_ADMIN_PANEL:
+    urlpatterns += [
+        path('general/admin/', admin.site.urls),
+    ]
+
 urlpatterns += [
-    path('general/admin/', admin.site.urls),
     path("api/v1/", include(api_urls)),
     path(
         "favicon.ico",

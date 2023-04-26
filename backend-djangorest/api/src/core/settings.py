@@ -23,6 +23,8 @@ env = environ.Env(
     COIN_TYPE_CODES=(str, os.getenv("COIN_TYPE_CODES", default='EUR,USD')),
     APP_FRONTEND_VERSION=(str, os.getenv(
         "APP_FRONTEND_VERSION", default="1.0.8")),
+    APP_DISABLE_ADMIN_PANEL=(bool, os.getenv(
+        "APP_DISABLE_ADMIN_PANEL", default=False)),
     APP_EMAIL_HOST=(str, os.getenv(
         "APP_EMAIL_HOST", default='smtp.gmail.com')),
     APP_EMAIL_PORT=(int, os.getenv("APP_EMAIL_PORT", default=587)),
@@ -277,6 +279,8 @@ class Dev(Configuration):
     COIN_TYPE_CODES = env('COIN_TYPE_CODES').split(',')
 
     APP_FRONTEND_VERSION = env('APP_FRONTEND_VERSION')
+
+    APP_DISABLE_ADMIN_PANEL = env('APP_DISABLE_ADMIN_PANEL')
 
 
 class OnPremise(Dev):
