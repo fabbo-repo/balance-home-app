@@ -1,4 +1,5 @@
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/settings_repository_interface.dart';
@@ -33,7 +34,7 @@ class SettingsController extends StateNotifier<AsyncValue<void>> {
     return res.fold((l) {
       state = const AsyncValue.data(null);
       return left(
-          Failure.unprocessableEntity(message: appLocalizations.genericError));
+          UnprocessableEntityFailure(message: appLocalizations.genericError));
     }, (r) {
       state = const AsyncValue.data(null);
       return right(r);
@@ -61,7 +62,7 @@ class SettingsController extends StateNotifier<AsyncValue<void>> {
     return res.fold((l) {
       state = const AsyncValue.data(null);
       return left(
-          Failure.unprocessableEntity(message: appLocalizations.genericError));
+          UnprocessableEntityFailure(message: appLocalizations.genericError));
     }, (r) {
       state = const AsyncValue.data(null);
       return right(r);
@@ -75,7 +76,7 @@ class SettingsController extends StateNotifier<AsyncValue<void>> {
     return res.fold((l) {
       state = const AsyncValue.data(null);
       return left(
-          Failure.unprocessableEntity(message: appLocalizations.genericError));
+          UnprocessableEntityFailure(message: appLocalizations.genericError));
     }, (r) {
       state = const AsyncValue.data(null);
       return right(r);

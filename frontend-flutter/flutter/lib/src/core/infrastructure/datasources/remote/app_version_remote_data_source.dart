@@ -1,4 +1,5 @@
 import 'package:balance_home_app/config/api_contract.dart';
+import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
 import 'package:balance_home_app/src/http_client.dart';
@@ -14,7 +15,7 @@ class AppVersionRemoteDataSource {
     HttpResponse response =
         await client.sendGetRequest(APIContract.frontendVersion);
     if (response.hasError) {
-      return left(Failure.badRequest(message: response.errorMessage));
+      return left(BadRequestFailure.fromJson(response.content));
     }
     List<String> version = response.content["version"].split(".");
     return right(AppVersion(

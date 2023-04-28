@@ -1,4 +1,5 @@
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/core/presentation/states/app_localizations_state.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/credentials_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/register_entity.dart';
@@ -89,21 +90,21 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
                 String error = l.error.toLowerCase();
                 if (error.startsWith("password") &&
                     error.contains("too common")) {
-                  return left(Failure.unprocessableEntity(
+                  return left(UnprocessableEntityFailure(
                       message: appLocalizations.tooCommonPassword));
                 } else if (error.startsWith("inv_code")) {
-                  return left(Failure.unprocessableEntity(
+                  return left(UnprocessableEntityFailure(
                       message: appLocalizations.invitationCodeNotValid));
                 } else if (error.startsWith("email") &&
                     error.contains("unique")) {
-                  return left(Failure.unprocessableEntity(
+                  return left(UnprocessableEntityFailure(
                       message: appLocalizations.emailUsed));
                 } else if (error.startsWith("username") &&
                     error.contains("unique")) {
-                  return left(Failure.unprocessableEntity(
+                  return left(UnprocessableEntityFailure(
                       message: appLocalizations.usernameUsed));
                 }
-                return left(Failure.unprocessableEntity(
+                return left(UnprocessableEntityFailure(
                     message: appLocalizations.genericError));
               }, (r) => right(r));
             });
@@ -132,13 +133,13 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
           state = const AsyncValue.data(null);
           String error = l.error.toLowerCase();
           if (error.contains("no active account")) {
-            return left(Failure.unprocessableEntity(
+            return left(UnprocessableEntityFailure(
                 message: appLocalizations.wrongCredentials));
           } else if (error.contains("unverified email")) {
-            return left(Failure.unprocessableEntity(
+            return left(UnprocessableEntityFailure(
                 message: appLocalizations.emailNotVerified));
           }
-          return left(Failure.unprocessableEntity(
+          return left(UnprocessableEntityFailure(
               message: appLocalizations.genericError));
         }, (r) async {
           final res = await _repository.getUser();

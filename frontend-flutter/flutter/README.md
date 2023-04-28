@@ -4,9 +4,7 @@ Multiplatform frontend of Balance Home App, ```riverpod``` is used for state man
 
 ## Architecture diagram
 
-> Based on [flutter clean architecture with riverpod](https://otakoyi.software/blog/flutter-clean-architecture-with-riverpod-and-supabase)
-
-![Alt text](./diagrams/architecture.png?raw=true "")
+Based on [flutter clean architecture with riverpod](https://otakoyi.software/blog/flutter-clean-architecture-with-riverpod-and-supabase)
 
 ## Directory tree example
 

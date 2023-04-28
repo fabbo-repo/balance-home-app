@@ -1,4 +1,5 @@
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/reset_password_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/reset_password_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
@@ -36,18 +37,18 @@ class ResetPasswordController
             : const AsyncValue.data(ResetPasswordProgress.started);
         String error = l.error.toLowerCase();
         if (error.startsWith("email") && error.contains("user not found")) {
-          return left(Failure.unprocessableEntity(
+          return left(UnprocessableEntityFailure(
               message: appLocalizations.emailNotValid));
         } if (error.startsWith("count_pass_reset") && error.contains("only three codes")) {
-          return left(Failure.unprocessableEntity(
+          return left(UnprocessableEntityFailure(
               message: appLocalizations.resetPasswordTooManyTries));
         } else if (error.startsWith("code") &&
             error.contains("code has already been sent")) {
-          return left(Failure.unprocessableEntity(
+          return left(UnprocessableEntityFailure(
               message: appLocalizations.errorSendingCodeTime
                   .replaceFirst("{}", error.split(" ")[8].split(".")[0])));
         }
-        return left(Failure.unprocessableEntity(
+        return left(UnprocessableEntityFailure(
             message: appLocalizations.errorSendingCode));
       }, (r) {
         state = const AsyncValue.data(ResetPasswordProgress.started);
@@ -80,18 +81,18 @@ class ResetPasswordController
             state = const AsyncValue.data(ResetPasswordProgress.started);
             String error = l.error.toLowerCase();
             if (error.startsWith("code") && error.contains("invalid code")) {
-              return left(Failure.unprocessableEntity(
+              return left(UnprocessableEntityFailure(
                   message: appLocalizations.invalidCode));
             } else if (error.startsWith("code") &&
                 error.contains("code is no longer valid")) {
-              return left(Failure.unprocessableEntity(
+              return left(UnprocessableEntityFailure(
                   message: appLocalizations.noLongerValidCode));
             } else if (error.startsWith("new_password") &&
                 error.contains("too common")) {
-              return left(Failure.unprocessableEntity(
+              return left(UnprocessableEntityFailure(
                   message: appLocalizations.tooCommonPassword));
             }
-            return left(Failure.unprocessableEntity(
+            return left(UnprocessableEntityFailure(
                 message: appLocalizations.errorVerifyingCode));
           }, (r) {
             state = const AsyncValue.data(ResetPasswordProgress.verified);

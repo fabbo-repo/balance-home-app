@@ -1,4 +1,5 @@
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
@@ -61,14 +62,14 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
               String error = l.error.toLowerCase();
               if (error.startsWith("pref_coin_type") &&
                   error.contains("24 hours")) {
-                return left(Failure.unprocessableEntity(
+                return left(UnprocessableEntityFailure(
                     message: appLocalizations.userEditPrefCoinTypeError));
               } else if (error.startsWith("username") &&
                   error.contains("unique")) {
-                return left(Failure.unprocessableEntity(
+                return left(UnprocessableEntityFailure(
                     message: appLocalizations.usernameUsed));
               }
-              return left(Failure.unprocessableEntity(
+              return left(UnprocessableEntityFailure(
                   message: appLocalizations.genericError));
             }, (r) {
               state = const AsyncValue.data(null);
@@ -86,7 +87,7 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
     final res = await _authRepository.updateUserImage(imageBytes, imageType);
     return res.fold((l) {
       state = const AsyncValue.data(null);
-      return left(Failure.unprocessableEntity(
+      return left(UnprocessableEntityFailure(
           message: appLocalizations.userEditImageError));
     }, (r) {
       state = const AsyncValue.data(null);
@@ -105,7 +106,7 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
         }
       }
       return left(
-          Failure.unprocessableEntity(message: appLocalizations.genericError));
+          UnprocessableEntityFailure(message: appLocalizations.genericError));
     });
   }
 }
