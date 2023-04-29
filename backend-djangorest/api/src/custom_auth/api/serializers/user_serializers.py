@@ -5,7 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import check_for_language
-from django.core.exceptions import ValidationError
+from rest_framework.serializers import ValidationError
 from custom_auth.api.serializers.utils import check_username_pass12, check_inv_code
 
 
@@ -59,7 +59,7 @@ class UserCreationSerializer(serializers.ModelSerializer):
 
     def validate_language(self, value):
         if not check_for_language(value):
-            raise serializers.ValidationError(
+            raise ValidationError(
                 _("Language not supported"))
         return value
 

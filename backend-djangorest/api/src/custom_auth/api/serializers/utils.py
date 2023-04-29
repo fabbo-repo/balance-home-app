@@ -1,7 +1,7 @@
-from rest_framework import serializers
 from custom_auth.models import User
 from django.utils.translation import gettext_lazy as _
 from custom_auth.models import InvitationCode
+from rest_framework.serializers import ValidationError
 
 
 def check_user_with_email(email):
@@ -12,10 +12,10 @@ def check_user_with_email(email):
     try:
         user = User.objects.get(email=email)
     except:
-        raise serializers.ValidationError(
+        raise ValidationError(
             {"email": _("User not found")})
     if user.verified:
-        raise serializers.ValidationError(
+        raise ValidationError(
             {"email": _("User already verified")})
 
 
@@ -24,7 +24,7 @@ def check_username_newpass(username, email, new_password):
     Checks if new password is different to username and email
     """
     if username == new_password or email == new_password:
-        raise serializers.ValidationError(
+        raise ValidationError(
             {"new_password": _("New password cannot match other profile data")})
 
 
@@ -34,10 +34,10 @@ def check_username_pass12(username, email, password1, password2):
     are different to the passwords
     """
     if password1 != password2:
-        raise serializers.ValidationError(
+        raise ValidationError(
             {"password": _("Password fields do not match")})
     if username == password1 or email == password1:
-        raise serializers.ValidationError(
+        raise ValidationError(
             {"password": _("Password cannot match other profile data")})
 
 
@@ -49,6 +49,6 @@ def check_inv_code(code):
     try:
         inv_code = InvitationCode.objects.get(code=code)
     except:
-        raise serializers.ValidationError(_("Invitation code not found"))
+        raise ValidationError(_("Invitation code not found"))
     if not inv_code.is_active:
-        raise serializers.ValidationError(_("Invalid invitation code"))
+        raise ValidationError(_("Invalid invitation code"))

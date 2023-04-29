@@ -1,6 +1,6 @@
 from rest_framework.test import APITestCase
 from custom_auth.models import User
-from django.core.exceptions import ValidationError
+from rest_framework.serializers import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 
