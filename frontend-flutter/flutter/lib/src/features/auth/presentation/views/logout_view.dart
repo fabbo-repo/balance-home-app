@@ -20,9 +20,9 @@ class LogoutView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authController = ref.read(authControllerProvider.notifier);
     authController.signOut().then((value) {
-      value.fold((l) {
+      value.fold((_) {
         ErrorView.go();
-      }, (r) {
+      }, (_) {
         navigatorKey.currentContext!.goNamed(AuthView.routeName);
       });
     });

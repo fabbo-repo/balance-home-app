@@ -30,16 +30,16 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
   Future<Either<Failure, bool>> trySignIn() async {
     state = const AsyncValue.loading();
     final res = await _repository.trySignIn();
-    return res.fold((l) {
+    return res.fold((failure) {
       state = const AsyncValue.data(null);
-      return left(l);
-    }, (r) async {
+      return left(failure);
+    }, (_) async {
       final res = await _repository.getUser();
-      return res.fold((l) {
+      return res.fold((failure) {
         state = const AsyncValue.data(null);
-        return left(l);
-      }, (r) {
-        state = AsyncValue.data(r);
+        return left(failure);
+      }, (value) {
+        state = AsyncValue.data(value);
         updateAuthState();
         updateAppLocaalizationsState();
         return right(true);
@@ -57,25 +57,25 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
       UserRepeatPassword password2,
       AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
-    return await username.value.fold((l) {
+    return await username.value.fold((failure) {
       state = const AsyncValue.data(null);
-      return left(l);
+      return left(failure);
     }, (username) async {
-      return await email.value.fold((l) {
+      return await email.value.fold((failure) {
         state = const AsyncValue.data(null);
-        return left(l);
+        return left(failure);
       }, (email) async {
-        return await invCode.value.fold((l) {
+        return await invCode.value.fold((failure) {
           state = const AsyncValue.data(null);
-          return left(l);
+          return left(failure);
         }, (invCode) async {
-          return await password.value.fold((l) {
+          return await password.value.fold((failure) {
             state = const AsyncValue.data(null);
-            return left(l);
+            return left(failure);
           }, (password) async {
-            return await password2.value.fold((l) {
+            return await password2.value.fold((failure) {
               state = const AsyncValue.data(null);
-              return left(l);
+              return left(failure);
             }, (password2) async {
               final res = await _repository.createUser(RegisterEntity(
                   username: username,
@@ -86,8 +86,8 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
                   password: password,
                   password2: password2));
               state = const AsyncValue.data(null);
-              return res.fold((l) {
-                String error = l.error.toLowerCase();
+              return res.fold((failure) {
+                String error = failure.error.toLowerCase();
                 if (error.startsWith("password") &&
                     error.contains("too common")) {
                   return left(UnprocessableEntityFailure(
@@ -106,7 +106,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
                 }
                 return left(UnprocessableEntityFailure(
                     message: appLocalizations.genericError));
-              }, (r) => right(r));
+              }, (value) => right(value));
             });
           });
         });
@@ -118,20 +118,20 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
       AppLocalizations appLocalizations,
       {bool store = false}) async {
     state = const AsyncValue.loading();
-    return email.value.fold((l) {
+    return email.value.fold((failure) {
       state = const AsyncValue.data(null);
-      return left(l);
+      return left(failure);
     }, (email) async {
-      return password.value.fold((l) {
+      return password.value.fold((failure) {
         state = const AsyncValue.data(null);
-        return left(l);
+        return left(failure);
       }, (password) async {
         final res = await _repository.signIn(
             CredentialsEntity(email: email, password: password),
             store: store);
-        return res.fold((l) {
+        return res.fold((failure) {
           state = const AsyncValue.data(null);
-          String error = l.error.toLowerCase();
+          String error = failure.error.toLowerCase();
           if (error.contains("no active account")) {
             return left(UnprocessableEntityFailure(
                 message: appLocalizations.wrongCredentials));
@@ -141,10 +141,10 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
           }
           return left(UnprocessableEntityFailure(
               message: appLocalizations.genericError));
-        }, (r) async {
+        }, (_) async {
           final res = await _repository.getUser();
-          return res.fold((l) => left(l), (r) {
-            state = AsyncValue.data(r);
+          return res.fold((failure) => left(failure), (value) {
+            state = AsyncValue.data(value);
             updateAuthState();
             updateAppLocaalizationsState();
             return right(true);
@@ -155,29 +155,29 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
   }
 
   /// Delete current user data
-  Future<Either<Failure, bool>> deleteUser() async {
+  Future<Either<Failure, void>> deleteUser() async {
     final res = await _repository.deleteUser();
     if (res.isLeft()) return res;
     return await signOut();
   }
 
   /// Signs out user
-  Future<Either<Failure, bool>> signOut() async {
+  Future<Either<Failure, void>> signOut() async {
     final res = await _repository.signOut();
     if (res.isLeft()) return res;
     state = const AsyncValue.data(null);
     updateAuthState();
-    return right(true);
+    return right(null);
   }
 
   Future<Either<Failure, bool>> refreshUserData() async {
     state = const AsyncValue.loading();
     return await Future.delayed(const Duration(seconds: 2), () async {
       final res = await _repository.getUser();
-      return res.fold((l) {
-        return left(l);
-      }, (r) {
-        state = AsyncValue.data(r);
+      return res.fold((failure) {
+        return left(failure);
+      }, (value) {
+        state = AsyncValue.data(value);
         return right(true);
       });
     });

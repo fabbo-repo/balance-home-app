@@ -8,5 +8,5 @@ abstract class ResetPasswordRepositoryInterface {
   Future<Either<Failure, void>> requestCode(String email);
 
   /// Request forgot password code verification.
-  Future<Either<Failure, bool>> verifyCode(ResetPasswordEntity entity);
+  Future<Either<Failure, void>> verifyCode(ResetPasswordEntity entity);
 }

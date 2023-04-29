@@ -4,7 +4,6 @@ import 'package:balance_home_app/src/core/presentation/widgets/custom_text_butto
 import 'package:balance_home_app/src/core/presentation/widgets/custom_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/dialog_utils.dart';
-import 'package:balance_home_app/src/core/utils/type_util.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_type_entity.dart';
@@ -204,9 +203,9 @@ class BalanceCreateForm extends ConsumerWidget {
                                   _coinType!,
                                   _balanceTypeEntity!,
                                   appLocalizations))
-                              .fold((l) {
+                              .fold((failure) {
                             showErrorBalanceCreationDialog(
-                                appLocalizations, l.error, balanceTypeMode);
+                                appLocalizations, failure.error, balanceTypeMode);
                           }, (entity) {
                             navigatorKey.currentContext!.go(
                                 balanceTypeMode == BalanceTypeMode.expense

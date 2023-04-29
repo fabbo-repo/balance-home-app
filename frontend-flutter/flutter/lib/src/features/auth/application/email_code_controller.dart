@@ -16,21 +16,21 @@ class EmailCodeController extends StateNotifier<AsyncValue<void>> {
   Future<Either<Failure, bool>> requestCode(
       UserEmail email, AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
-    return await email.value.fold((l) {
-      state = AsyncValue.error(l.error, StackTrace.empty);
-      return left(l);
+    return await email.value.fold((failure) {
+      state = AsyncValue.error(failure.error, StackTrace.empty);
+      return left(failure);
     }, (email) async {
       final res = await _repository.requestCode(email);
-      return res.fold((l) {
-        state = AsyncValue.error(l.error, StackTrace.empty);
-        String error = l.error.toLowerCase();
+      return res.fold((failure) {
+        state = AsyncValue.error(failure.error, StackTrace.empty);
+        String error = failure.error.toLowerCase();
         if (error.startsWith("email") && error.contains("user not found")) {
           return left(UnprocessableEntityFailure(
               message: appLocalizations.emailNotValid));
         }
         return left(UnprocessableEntityFailure(
             message: appLocalizations.errorSendingEmailCode));
-      }, (r) {
+      }, (_) {
         state = const AsyncValue.data(null);
         return right(true);
       });
@@ -40,19 +40,19 @@ class EmailCodeController extends StateNotifier<AsyncValue<void>> {
   Future<Either<Failure, bool>> verifyCode(UserEmail email,
       VerificationCode code, AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
-    return await email.value.fold((l) {
-      state = AsyncValue.error(l.error, StackTrace.empty);
-      return left(l);
+    return await email.value.fold((failure) {
+      state = AsyncValue.error(failure.error, StackTrace.empty);
+      return left(failure);
     }, (email) async {
-      return await code.value.fold((l) {
-        state = AsyncValue.error(l.error, StackTrace.empty);
-        return left(l);
+      return await code.value.fold((failure) {
+        state = AsyncValue.error(failure.error, StackTrace.empty);
+        return left(failure);
       }, (code) async {
         final res = await _repository
             .verifyCode(EmailCodeEntity(email: email, code: code));
-        return res.fold((l) {
-          state = AsyncValue.error(l.error, StackTrace.empty);
-          String error = l.error.toLowerCase();
+        return res.fold((failure) {
+          state = AsyncValue.error(failure.error, StackTrace.empty);
+          String error = failure.error.toLowerCase();
           if (error.startsWith("code") && error.contains("invalid code")) {
             return left(UnprocessableEntityFailure(
                 message: appLocalizations.invalidEmailCode));
@@ -63,7 +63,7 @@ class EmailCodeController extends StateNotifier<AsyncValue<void>> {
           }
           return left(UnprocessableEntityFailure(
               message: appLocalizations.errorVerifyingEmailCode));
-        }, (r) {
+        }, (_) {
           state = const AsyncValue.data(null);
           return right(true);
         });

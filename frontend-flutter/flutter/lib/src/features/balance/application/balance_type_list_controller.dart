@@ -17,7 +17,8 @@ class BalanceTypeListController
   @visibleForTesting
   Future<void> handle() async {
     final res = await _balanceTypeRepository.getBalanceTypes(_balanceTypeMode);
-    state = res.fold((l) => AsyncValue.error(l.error, StackTrace.empty),
-        (r) => AsyncData(r));
+    state = res.fold(
+        (failure) => AsyncValue.error(failure.error, StackTrace.empty),
+        (value) => AsyncData(value));
   }
 }

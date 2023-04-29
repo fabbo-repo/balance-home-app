@@ -20,7 +20,8 @@ class BalanceListController
     final res = await _repository.getBalances(_balanceTypeMode,
         dateFrom: _selectedDate.dateFrom, dateTo: _selectedDate.dateTo);
     state = res.fold(
-        (l) => AsyncValue.error(l.error, StackTrace.empty), AsyncValue.data);
+        (failure) => AsyncValue.error(failure.error, StackTrace.empty),
+        AsyncValue.data);
   }
 
   /// Add an entity to list
@@ -56,6 +57,6 @@ class BalanceListController
   /// Get a list of years of stored balances
   Future<List<int>> getAllBalanceYears() async {
     final res = await _repository.getBalanceYears(_balanceTypeMode);
-    return res.fold((l) => [], (r) => r);
+    return res.fold((_) => [], (value) => value);
   }
 }

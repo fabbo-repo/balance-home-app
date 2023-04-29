@@ -118,9 +118,10 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                   (await resetPasswordController.requestCode(
                           _email!, appLocalizations,
                           retry: progress == ResetPasswordProgress.started))
-                      .fold((l) {
-                    showErrorResetPasswordCodeDialog(appLocalizations, l.error);
-                  }, (r) {});
+                      .fold((failure) {
+                    showErrorResetPasswordCodeDialog(
+                        appLocalizations, failure.error);
+                  }, (_) {});
                 },
                 text: progress == ResetPasswordProgress.none
                     ? appLocalizations.sendCode
@@ -142,9 +143,10 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                   if (_code == null) return;
                   (await resetPasswordController.verifyCode(
                           _email!, _code!, _password!, appLocalizations))
-                      .fold((l) {
-                    showErrorResetPasswordCodeDialog(appLocalizations, l.error);
-                  }, (r) {
+                      .fold((failure) {
+                    showErrorResetPasswordCodeDialog(
+                        appLocalizations, failure.error);
+                  }, (_) {
                     context.go("/${AuthView.routePath}");
                   });
                 },

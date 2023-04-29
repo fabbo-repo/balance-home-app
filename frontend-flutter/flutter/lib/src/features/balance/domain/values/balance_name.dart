@@ -1,4 +1,5 @@
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/core/domain/values/value_abstract.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -29,7 +30,7 @@ Either<Failure, String> _validate(
       ? appLocalizations.balanceNameRequired
       : appLocalizations.balanceNameMaxLength;
   return left(
-    Failure.unprocessableEntity(
+    UnprocessableEntityFailure(
       message: message,
     ),
   );

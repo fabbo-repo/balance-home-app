@@ -17,7 +17,7 @@ class ResetPasswordRepository implements ResetPasswordRepositoryInterface {
 
   /// Request reset password code verification.
   @override
-  Future<Either<Failure, bool>> verifyCode(ResetPasswordEntity entity) async {
+  Future<Either<Failure, void>> verifyCode(ResetPasswordEntity entity) async {
     return await resetPasswordRemoteDataSource.verify(entity);
   }
 }

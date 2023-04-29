@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/settings_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/theme_local_data_source.dart';
@@ -21,7 +22,7 @@ class SettingsRepository extends SettingsRepositoryInterface {
   @override
   Either<Failure, ThemeMode> getTheme() {
     final theme = themeLocalDataSource.get();
-    if (theme == null) return left(const Failure.empty()); 
+    if (theme == null) return left(const EmptyFailure()); 
     return right(theme);
   }
 }

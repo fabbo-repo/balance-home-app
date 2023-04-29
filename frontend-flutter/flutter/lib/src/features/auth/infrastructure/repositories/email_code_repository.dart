@@ -17,7 +17,7 @@ class EmailCodeRepository implements EmailCodeRepositoryInterface {
 
   /// Request email code verification.
   @override
-  Future<Either<Failure, bool>> verifyCode(EmailCodeEntity entity) async {
+  Future<Either<Failure, void>> verifyCode(EmailCodeEntity entity) async {
     return await emailCodeRemoteDataSource.verify(entity);
   }
 }

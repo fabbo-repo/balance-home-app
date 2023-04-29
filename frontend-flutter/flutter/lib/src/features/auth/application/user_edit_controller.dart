@@ -28,21 +28,21 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
       String prefCoinType,
       AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
-    return await username.value.fold((l) {
+    return await username.value.fold((failure) {
       state = const AsyncValue.data(null);
-      return left(l);
+      return left(failure);
     }, (username) async {
-      return await email.value.fold((l) {
+      return await email.value.fold((failure) {
         state = const AsyncValue.data(null);
-        return left(l);
+        return left(failure);
       }, (email) async {
-        return await expectedMonthlyBalance.value.fold((l) {
+        return await expectedMonthlyBalance.value.fold((failure) {
           state = const AsyncValue.data(null);
-          return left(l);
+          return left(failure);
         }, (expectedMonthlyBalance) async {
-          return await expectedAnnualBalance.value.fold((l) {
+          return await expectedAnnualBalance.value.fold((failure) {
             state = const AsyncValue.data(null);
-            return left(l);
+            return left(failure);
           }, (expectedAnnualBalance) async {
             final res = await _authRepository.updateUser(
               UserEntity(
@@ -57,9 +57,9 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
                   lastLogin: null,
                   image: null),
             );
-            return res.fold((l) {
+            return res.fold((failure) {
               state = const AsyncValue.data(null);
-              String error = l.error.toLowerCase();
+              String error = failure.error.toLowerCase();
               if (error.startsWith("pref_coin_type") &&
                   error.contains("24 hours")) {
                 return left(UnprocessableEntityFailure(
@@ -71,9 +71,9 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
               }
               return left(UnprocessableEntityFailure(
                   message: appLocalizations.genericError));
-            }, (r) {
+            }, (value) {
               state = const AsyncValue.data(null);
-              return right(r);
+              return right(value);
             });
           });
         });
@@ -81,25 +81,25 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
     });
   }
 
-  Future<Either<Failure, bool>> handleImage(Uint8List imageBytes,
+  Future<Either<Failure, void>> handleImage(Uint8List imageBytes,
       String imageType, AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
     final res = await _authRepository.updateUserImage(imageBytes, imageType);
-    return res.fold((l) {
+    return res.fold((_) {
       state = const AsyncValue.data(null);
       return left(UnprocessableEntityFailure(
           message: appLocalizations.userEditImageError));
-    }, (r) {
+    }, (value) {
       state = const AsyncValue.data(null);
-      return right(r);
+      return right(value);
     });
   }
 
   Future<Either<Failure, double>> getExchange(double quantity, String coinFrom,
       String coinTo, AppLocalizations appLocalizations) async {
     return (await _exchangeRepository.getExchanges(coinFrom))
-        .fold((l) => left(l), (r) {
-      for (ExchangeEntity exchange in r.exchanges) {
+        .fold((failure) => left(failure), (value) {
+      for (ExchangeEntity exchange in value.exchanges) {
         if (exchange.code == coinTo) {
           return right(
               ((quantity * exchange.value) * 100).roundToDouble() / 100.0);

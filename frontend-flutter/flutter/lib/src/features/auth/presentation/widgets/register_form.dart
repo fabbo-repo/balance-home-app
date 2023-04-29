@@ -165,18 +165,19 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                 _password!,
                                 _repeatPassword!,
                                 appLocalizations))
-                            .fold((l) {
-                          showErrorRegisterDialog(appLocalizations, l.error);
-                        }, (r) async {
+                            .fold((failure) {
+                          showErrorRegisterDialog(
+                              appLocalizations, failure.error);
+                        }, (_) async {
                           bool sendCode =
                               await showCodeAdviceDialog(appLocalizations);
                           if (sendCode) {
                             (await emailCodeController.requestCode(
                                     _email!, appLocalizations))
-                                .fold((l) {
+                                .fold((failure) {
                               showErrorEmailSendCodeDialog(
-                                  appLocalizations, l.error);
-                            }, (r) {
+                                  appLocalizations, failure.error);
+                            }, (_) {
                               showCodeSendDialog(widget.emailController.text);
                             });
                           }

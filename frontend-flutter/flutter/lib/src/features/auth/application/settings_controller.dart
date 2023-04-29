@@ -31,13 +31,13 @@ class SettingsController extends StateNotifier<AsyncValue<void>> {
           lastLogin: null,
           image: null),
     );
-    return res.fold((l) {
+    return res.fold((_) {
       state = const AsyncValue.data(null);
       return left(
           UnprocessableEntityFailure(message: appLocalizations.genericError));
-    }, (r) {
+    }, (value) {
       state = const AsyncValue.data(null);
-      return right(r);
+      return right(value);
     });
   }
 
@@ -59,13 +59,13 @@ class SettingsController extends StateNotifier<AsyncValue<void>> {
           lastLogin: null,
           image: null),
     );
-    return res.fold((l) {
+    return res.fold((_) {
       state = const AsyncValue.data(null);
       return left(
           UnprocessableEntityFailure(message: appLocalizations.genericError));
-    }, (r) {
+    }, (value) {
       state = const AsyncValue.data(null);
-      return right(r);
+      return right(value);
     });
   }
 
@@ -73,13 +73,13 @@ class SettingsController extends StateNotifier<AsyncValue<void>> {
       ThemeMode theme, AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
     final res = await _settingsRepository.saveTheme(theme);
-    return res.fold((l) {
+    return res.fold((_) {
       state = const AsyncValue.data(null);
       return left(
           UnprocessableEntityFailure(message: appLocalizations.genericError));
-    }, (r) {
+    }, (value) {
       state = const AsyncValue.data(null);
-      return right(r);
+      return right(value);
     });
   }
 }

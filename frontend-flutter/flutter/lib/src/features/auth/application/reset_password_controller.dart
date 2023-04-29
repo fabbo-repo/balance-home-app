@@ -24,33 +24,35 @@ class ResetPasswordController
       UserEmail email, AppLocalizations appLocalizations,
       {bool retry = false}) async {
     state = const AsyncValue.loading();
-    return await email.value.fold((l) {
+    return await email.value.fold((failure) {
       state = !retry
           ? const AsyncValue.data(ResetPasswordProgress.none)
           : const AsyncValue.data(ResetPasswordProgress.started);
-      return left(l);
+      return left(failure);
     }, (email) async {
       final res = await _repository.requestCode(email);
-      return res.fold((l) {
+      return res.fold((failure) {
         state = !retry
             ? const AsyncValue.data(ResetPasswordProgress.none)
             : const AsyncValue.data(ResetPasswordProgress.started);
-        String error = l.error.toLowerCase();
+        String error = failure.error.toLowerCase();
         if (error.startsWith("email") && error.contains("user not found")) {
           return left(UnprocessableEntityFailure(
               message: appLocalizations.emailNotValid));
-        } if (error.startsWith("count_pass_reset") && error.contains("only three codes")) {
+        }
+        if (error.startsWith("count_pass_reset") &&
+            error.contains("only three codes")) {
           return left(UnprocessableEntityFailure(
               message: appLocalizations.resetPasswordTooManyTries));
         } else if (error.startsWith("code") &&
             error.contains("code has already been sent")) {
           return left(UnprocessableEntityFailure(
               message: appLocalizations.errorSendingCodeTime
-                  .replaceFirst("{}", error.split(" ")[8].split(".")[0])));
+                  .replaceFirst("%%", error.split(" ")[8].split(".")[0])));
         }
         return left(UnprocessableEntityFailure(
             message: appLocalizations.errorSendingCode));
-      }, (r) {
+      }, (_) {
         state = const AsyncValue.data(ResetPasswordProgress.started);
         return right(true);
       });
@@ -63,23 +65,23 @@ class ResetPasswordController
       UserPassword password,
       AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
-    return await email.value.fold((l) {
+    return await email.value.fold((failure) {
       state = const AsyncValue.data(ResetPasswordProgress.started);
-      return left(l);
+      return left(failure);
     }, (email) async {
-      return await code.value.fold((l) {
+      return await code.value.fold((failure) {
         state = const AsyncValue.data(ResetPasswordProgress.started);
-        return left(l);
+        return left(failure);
       }, (code) async {
-        return await password.value.fold((l) {
+        return await password.value.fold((failure) {
           state = const AsyncValue.data(ResetPasswordProgress.started);
-          return left(l);
+          return left(failure);
         }, (password) async {
           final res = await _repository.verifyCode(ResetPasswordEntity(
               email: email, newPassword: password, code: code));
-          return res.fold((l) {
+          return res.fold((failure) {
             state = const AsyncValue.data(ResetPasswordProgress.started);
-            String error = l.error.toLowerCase();
+            String error = failure.error.toLowerCase();
             if (error.startsWith("code") && error.contains("invalid code")) {
               return left(UnprocessableEntityFailure(
                   message: appLocalizations.invalidCode));
@@ -94,7 +96,7 @@ class ResetPasswordController
             }
             return left(UnprocessableEntityFailure(
                 message: appLocalizations.errorVerifyingCode));
-          }, (r) {
+          }, (_) {
             state = const AsyncValue.data(ResetPasswordProgress.verified);
             return right(true);
           });

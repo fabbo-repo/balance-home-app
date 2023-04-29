@@ -28,9 +28,9 @@ class UserDeleteView extends ConsumerWidget {
       showDeleteAdviceDialog(navigatorKey.currentContext!, appLocalizations)
           .then((value) async {
         if (value) {
-          (await authController.deleteUser()).fold((l) {
+          (await authController.deleteUser()).fold((_) {
             ErrorView.go();
-          }, (r) {
+          }, (_) {
             navigatorKey.currentContext!.goNamed(AuthView.routeName);
           });
         } else {

@@ -105,24 +105,26 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                         (await authController.signIn(
                                 _email!, _password!, appLocalizations,
                                 store: storeCredentials))
-                            .fold((l) async {
-                          if (l.error == appLocalizations.emailNotVerified) {
+                            .fold((failure) async {
+                          if (failure.error ==
+                              appLocalizations.emailNotVerified) {
                             bool sendCode =
                                 await showCodeAdviceDialog(appLocalizations);
                             if (sendCode) {
                               (await emailCodeController.requestCode(
                                       _email!, appLocalizations))
-                                  .fold((l) {
+                                  .fold((failure) {
                                 showErrorEmailSendCodeDialog(
-                                    appLocalizations, l.error);
-                              }, (r) {
+                                    appLocalizations, failure.error);
+                              }, (_) {
                                 showCodeSendDialog(widget.emailController.text);
                               });
                             }
                           } else {
-                            showErrorLoginDialog(appLocalizations, l.error);
+                            showErrorLoginDialog(
+                                appLocalizations, failure.error);
                           }
-                        }, (r) {
+                        }, (_) {
                           navigatorKey.currentContext!
                               .go("/${StatisticsView.routePath}");
                         });

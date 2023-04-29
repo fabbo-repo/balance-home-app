@@ -72,7 +72,7 @@ class EmailCodeDialog extends ConsumerWidget {
             if (_code == null) return;
             final res = await emailCodeController.verifyCode(
                 UserEmail(appLocalizations, email), _code!, appLocalizations);
-            res.fold((l) {}, (r) {
+            res.fold((_) {}, (_) {
               context.go("/");
             });
           },

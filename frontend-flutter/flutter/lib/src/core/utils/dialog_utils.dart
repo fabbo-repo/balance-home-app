@@ -29,7 +29,7 @@ Future<bool> showCoinChangeAdviceDialog(
           builder: (context) => InfoDialog(
                 dialogTitle: appLocalizations.userEditDialogTitle,
                 dialogDescription: appLocalizations.userCoinChangeDescription
-                  .replaceFirst("{}", "$newBalance $coinType"),
+                  .replaceFirst("%%", "$newBalance $coinType"),
                 confirmationText: appLocalizations.confirmation,
                 cancelText: appLocalizations.cancel,
                 onConfirmation: () => Navigator.pop(context, true),

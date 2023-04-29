@@ -167,11 +167,12 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                                   widget.user.prefCoinType,
                                   value,
                                   appLocalizations))
-                              .fold((l) {
+                              .fold((failure) {
                             setState(() {
                               _prefCoinType = widget.user.prefCoinType;
                             });
-                            showErrorUserEditDialog(appLocalizations, l.error);
+                            showErrorUserEditDialog(
+                                appLocalizations, failure.error);
                           }, (newBalance) async {
                             if (await showCoinChangeAdviceDialog(
                                 appLocalizations, newBalance, value)) {
@@ -203,10 +204,11 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                         bool isImageOk = true;
                         (await userEditController.handleImage(
                                 _imageBytes!, _imageType!, appLocalizations))
-                            .fold((l) {
+                            .fold((failure) {
                           isImageOk = false;
-                          showErrorUserEditDialog(appLocalizations, l.error);
-                        }, (r) => null);
+                          showErrorUserEditDialog(
+                              appLocalizations, failure.error);
+                        }, (_) => null);
                         if (!isImageOk) return;
                       }
                       (await userEditController.handle(
@@ -217,8 +219,9 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                               _expectedAnnualBalance!,
                               _prefCoinType!,
                               appLocalizations))
-                          .fold((l) {
-                        showErrorUserEditDialog(appLocalizations, l.error);
+                          .fold((failure) {
+                        showErrorUserEditDialog(
+                            appLocalizations, failure.error);
                       }, (entity) {
                         authController.refreshUserData();
                       });

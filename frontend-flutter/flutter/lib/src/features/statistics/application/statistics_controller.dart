@@ -36,51 +36,53 @@ class StatisticsController extends StateNotifier<AsyncValue<StatisticsData>> {
         dateFrom: balanceDate.dateFrom,
         dateTo: balanceDate.dateTo);
     state = await revenues
-        .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
+        .fold((failure) => AsyncValue.error(failure.error, StackTrace.empty),
             (revenues) async {
       // Revenues years
       final revenueYears =
           await _balanceRepository.getBalanceYears(BalanceTypeMode.revenue);
       return await revenueYears
-          .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
+          .fold((failure) => AsyncValue.error(failure.error, StackTrace.empty),
               (revenueYears) async {
         // Expenses
         final expenses = await _balanceRepository.getBalances(
             BalanceTypeMode.expense,
             dateFrom: balanceDate.dateFrom,
             dateTo: balanceDate.dateTo);
-        return await expenses
-            .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
-                (expenses) async {
+        return await expenses.fold(
+            (failure) => AsyncValue.error(failure.error, StackTrace.empty),
+            (expenses) async {
           // Expense years
           final expenseYears =
               await _balanceRepository.getBalanceYears(BalanceTypeMode.expense);
-          return await expenseYears
-              .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
-                  (expenseYears) async {
+          return await expenseYears.fold(
+              (failure) => AsyncValue.error(failure.error, StackTrace.empty),
+              (expenseYears) async {
             // Monthly balances
             final monthlyBalances = await _monthlyBalanceRepository
                 .getMonthlyBalances(year: _selectedSavingsDate.year);
             return await monthlyBalances.fold(
-                (l) => AsyncValue.error(l.error, StackTrace.empty),
+                (failure) => AsyncValue.error(failure.error, StackTrace.empty),
                 (monthlyBalances) async {
               // Annual balances
               final annualBalances =
                   await _annualBalanceRepository.getAnnualBalances();
               return await annualBalances.fold(
-                  (l) => AsyncValue.error(l.error, StackTrace.empty),
+                  (failure) =>
+                      AsyncValue.error(failure.error, StackTrace.empty),
                   (annualBalances) async {
                 // Coin types
                 final coinTypes = await _coinTypeRepository.getCoinTypes();
                 return await coinTypes.fold(
-                    (l) => AsyncValue.error(l.error, StackTrace.empty),
+                    (failure) =>
+                        AsyncValue.error(failure.error, StackTrace.empty),
                     (coinTypes) async {
                   // Date exchanges
                   final dateExchanges =
                       await _exchangeRepository.getLastDateExchanges(days: 20);
                   return await dateExchanges.fold(
-                      (l) =>
-                          AsyncValue.error(l.error, StackTrace.empty),
+                      (failure) =>
+                          AsyncValue.error(failure.error, StackTrace.empty),
                       (dateExchanges) async {
                     return AsyncValue.data(StatisticsData(
                       revenues: revenues,

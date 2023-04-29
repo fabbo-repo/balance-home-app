@@ -7,20 +7,21 @@ import 'package:fpdart/fpdart.dart';
 
 /// Authentication Repository Interface.
 abstract class AuthRepositoryInterface {
-  Future<Either<Failure, bool>> createUser(RegisterEntity registration);
-  
+  Future<Either<Failure, void>> createUser(RegisterEntity registration);
+
   Future<Either<Failure, UserEntity>> updateUser(UserEntity user);
-  
-  Future<Either<Failure, bool>> updateUserImage(Uint8List imageBytes, String imageType);
+
+  Future<Either<Failure, void>> updateUserImage(
+      Uint8List imageBytes, String imageType);
 
   Future<Either<Failure, UserEntity>> getUser();
 
-  Future<Either<Failure, bool>> deleteUser();
+  Future<Either<Failure, void>> deleteUser();
 
-  Future<Either<Failure, bool>> trySignIn();
+  Future<Either<Failure, void>> trySignIn();
 
-  Future<Either<Failure, bool>> signIn(CredentialsEntity credentials,
+  Future<Either<Failure, void>> signIn(CredentialsEntity credentials,
       {bool store = false});
 
-  Future<Either<Failure, bool>> signOut();
+  Future<Either<Failure, void>> signOut();
 }
