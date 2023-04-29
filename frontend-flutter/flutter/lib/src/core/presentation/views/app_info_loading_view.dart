@@ -36,11 +36,6 @@ class AppInfoLoadingView extends ConsumerWidget {
               "${appVersion.x}.${appVersion.y}.${appVersion.z}",
         );
       }
-      if (appVersion != null &&
-          ((appVersion.isLower != null && appVersion.isLower!) ||
-              appVersion.isLower == null)) {
-        return const LoadingWidget(color: Colors.grey);
-      }
       return AppErrorWidget(
         color: Colors.red,
         text: appLocalizations.wrongVersion,
