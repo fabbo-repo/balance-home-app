@@ -241,6 +241,7 @@ class Dev(Configuration):
             "jwt_obtain_pair": "50/minute",
             "jwt_refresh": "100/minute",
         },
+        'EXCEPTION_HANDLER': 'core.exceptions.app_exception_handler'
     }
 
     SIMPLE_JWT = {
