@@ -6,7 +6,10 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import check_for_language
 from rest_framework.serializers import ValidationError
-from custom_auth.api.serializers.utils import check_username_pass12, check_inv_code
+from custom_auth.api.serializers.utils import check_username_pass12
+from custom_auth.exceptions import (
+    SameUsernameEmailException,
+)
 
 
 class UserCreationSerializer(serializers.ModelSerializer):
@@ -57,22 +60,26 @@ class UserCreationSerializer(serializers.ModelSerializer):
             "language": {"required": True}
         }
 
-    def validate_language(self, value):
-        if not check_for_language(value):
-            raise ValidationError(
-                _("Language not supported"))
-        return value
+    def validate_language(self, lang):
+        if not check_for_language(lang):
+            raise ValidationError(_("Language not supported"))
+        return lang
 
-    def validate_inv_code(self, value):
-        check_inv_code(value.code)
-        return value
+    def validate_inv_code(self, code):
+        try:
+            inv_code = InvitationCode.objects.get(code=str(code))
+        except Exception as ex:
+            print(ex)
+            raise ValidationError(_("Invitation code not found"))
+        if not inv_code.is_active:
+            raise ValidationError(_("Invalid invitation code"))
+        return code
 
     def validate(self, attrs):
         check_username_pass12(attrs['username'], attrs['email'],
                               attrs['password'], attrs['password2'])
         if attrs['username'] == attrs['email']:
-            raise ValidationError(
-                {'common_fields': _("Username and email can not be the same")})
+            raise SameUsernameEmailException()
         return attrs
 
     def create(self, validated_data):

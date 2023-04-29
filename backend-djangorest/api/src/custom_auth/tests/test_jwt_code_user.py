@@ -9,6 +9,12 @@ from django.conf import settings
 from django.core.cache import cache
 import core.tests.utils as test_utils
 from unittest import mock
+from custom_auth.exceptions import (
+    NO_INV_CODE_ERROR,
+    NO_LONGER_VALID_CODE_ERROR,
+    INVALID_CODE_ERROR,
+    UNVERIFIED_EMAIL_ERROR,
+)
 
 
 class JwtCodeTests(APITestCase):
@@ -85,7 +91,7 @@ class JwtCodeTests(APITestCase):
         """
         response = test_utils.authenticate_user(self.client, self.credentials)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('verified', response.data)
+        self.assertEqual(UNVERIFIED_EMAIL_ERROR, response.data["error_code"])
 
     def test_jwt_obtain_inactive_user(self):
         """
@@ -130,7 +136,7 @@ class JwtCodeTests(APITestCase):
         }
         response = test_utils.authenticate_user(self.client, credentials2)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('inv_code', response.data)
+        self.assertEqual(NO_INV_CODE_ERROR, response.data["error_code"])
 
     def test_send_code_wrong_email(self):
         """
@@ -138,7 +144,8 @@ class JwtCodeTests(APITestCase):
         """
         response = self.send_code("email_false@test.com")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('email', response.data)
+        self.assertIn('email', [field["name"]
+                      for field in response.data["fields"]])
 
     def test_send_code_right_email(self):
         """
@@ -165,7 +172,7 @@ class JwtCodeTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         response = self.verify_code('123456')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['code'][0], 'Invalid code')
+        self.assertEqual(INVALID_CODE_ERROR, response.data["error_code"])
 
     def test_send_right_code(self):
         """
@@ -195,4 +202,5 @@ class JwtCodeTests(APITestCase):
         # Undo changes
         settings.EMAIL_CODE_VALID = 120
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['code'][0], 'Code is no longer valid')
+        self.assertEqual(NO_LONGER_VALID_CODE_ERROR,
+                         response.data["error_code"])

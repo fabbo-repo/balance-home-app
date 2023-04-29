@@ -8,9 +8,17 @@ from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import gettext_lazy as _
 from custom_auth.tasks import send_email_code
 import os
-from custom_auth.api.serializers.utils import check_username_newpass
 from rest_framework.serializers import ValidationError
 from django.db import transaction
+from custom_auth.exceptions import (
+    CodeSentException,
+    NoCodeSentException,
+    NoLongerValidCodeException,
+    InvalidCodeException,
+    ResetPasswordRetriesException,
+    NewOldPasswordException,
+    NewPasswordUserDataException,
+)
 
 
 class CodeSerializer(serializers.Serializer):
@@ -18,9 +26,9 @@ class CodeSerializer(serializers.Serializer):
         required=True
     )
 
-    def validate_email(self, value):
-        check_user_with_email(value)
-        return value
+    def validate_email(self, email):
+        check_user_with_email(email)
+        return email
 
     def validate(self, data):
         user = User.objects.get(email=data.get('email'))
@@ -28,9 +36,7 @@ class CodeSerializer(serializers.Serializer):
             if user.date_code_sent:
                 duration_s = (now() - user.date_code_sent).total_seconds()
                 if duration_s < settings.EMAIL_CODE_THRESHOLD:
-                    raise ValidationError(
-                        {"code": _("Code has already been sent, wait {} seconds")
-                            .format(str(settings.EMAIL_CODE_THRESHOLD-duration_s))})
+                    raise CodeSentException(duration_s=duration_s)
         return data
 
     def create(self, validated_data):
@@ -63,14 +69,13 @@ class CodeVerificationSerializer(serializers.Serializer):
         user = User.objects.get(email=data.get('email'))
         with transaction.atomic():
             if not user.date_code_sent:
-                raise ValidationError({"code": _("No code sent")})
+                raise NoCodeSentException()
             if user.date_code_sent:
                 duration_s = (now() - user.date_code_sent).total_seconds()
                 if duration_s > settings.EMAIL_CODE_VALID:
-                    raise ValidationError(
-                        {"code": _("Code is no longer valid")})
+                    raise NoLongerValidCodeException()
             if user.code_sent != data.get('code'):
-                raise ValidationError({"code": _("Invalid code")})
+                raise InvalidCodeException()
         return data
 
     def create(self, validated_data):
@@ -101,13 +106,9 @@ class ResetPasswordStartSerializer(serializers.Serializer):
             if user.date_pass_reset:
                 duration_s = (now() - user.date_pass_reset).total_seconds()
                 if duration_s <= 24 * 60 * 60 and user.count_pass_reset > 3:
-                    raise ValidationError(
-                        {"count_pass_reset": _("Only three codes can be sent per day")
-                            .format(str(settings.EMAIL_CODE_THRESHOLD-duration_s))})
+                    raise ResetPasswordRetriesException()
                 if duration_s < settings.EMAIL_CODE_THRESHOLD:
-                    raise ValidationError(
-                        {"code": _("Code has already been sent, wait {} seconds")
-                            .format(str(settings.EMAIL_CODE_THRESHOLD-duration_s))})
+                    raise CodeSentException(duration_s)
                 if duration_s > 24 * 60 * 60:
                     user.count_pass_reset = 1
             user.save()
@@ -140,15 +141,13 @@ class ResetPasswordVerifySerializer(serializers.Serializer):
         code = data["code"]
         with transaction.atomic():
             if not user.date_pass_reset:
-                raise ValidationError({"code", _("No code sent")})
+                raise NoCodeSentException()
             if user.date_pass_reset:
                 duration_s = (now() - user.date_pass_reset).total_seconds()
                 if duration_s > settings.EMAIL_CODE_VALID:
-                    raise ValidationError(
-                        {"code": _("Code is no longer valid")})
+                    raise NoLongerValidCodeException()
             if user.pass_reset != code:
-                raise ValidationError(
-                    {"code": _("Invalid code")})
+                raise InvalidCodeException()
         return data
 
 
@@ -165,15 +164,18 @@ class ChangePasswordSerializer(serializers.Serializer):
         required=True,
         validators=[validate_password]
     )
+    
+    def validate_old_password(self, old_password):
+        user = self.context["request"].user
+        if not user.check_password(old_password):
+            raise ValidationError(_("Invalid old password"))
+        return old_password
 
     def validate(self, attrs):
-        user = self.context["request"].user
         if attrs['old_password'] == attrs['new_password']:
-            raise ValidationError(
-                {'new_password': _("New password must be different from old password")})
-        if not user.check_password(attrs['old_password']):
-            raise ValidationError(
-                {'old_password': _("Invalid old password")})
-        check_username_newpass(user.username, user.email,
-                               attrs['new_password'])
+            raise NewOldPasswordException()
+        user = self.context["request"].user
+        if user.username == attrs['new_password'] \
+            or user.email == attrs['new_password']:
+            raise NewPasswordUserDataException()
         return attrs

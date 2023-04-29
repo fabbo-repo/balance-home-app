@@ -76,7 +76,8 @@ class RevenueLogicTests(APITestCase):
         data['real_quantity'] = -10.0
         response = test_utils.post(self.client, self.revenue_url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('real_quantity', response.data)
+        self.assertIn('real_quantity', [field["name"]
+                      for field in response.data["fields"]])
 
     def test_revenue_patch(self):
         """

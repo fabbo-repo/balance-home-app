@@ -76,7 +76,8 @@ class ExpenseLogicTests(APITestCase):
         data['real_quantity'] = -10.0
         response = test_utils.post(self.client, self.expense_url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('real_quantity', response.data)
+        self.assertIn('real_quantity', [field["name"]
+                      for field in response.data["fields"]])
 
     def test_expense_patch(self):
         """
@@ -88,7 +89,7 @@ class ExpenseLogicTests(APITestCase):
         expense = Expense.objects.get(name='Test name')
         # Patch method
         test_utils.patch(self.client, self.expense_url+'/'+str(expense.id),
-                   {'real_quantity': 5.0})
+                         {'real_quantity': 5.0})
         user = User.objects.get(email=self.user_data['email'])
         self.assertEqual(user.balance, 5)
 

@@ -14,10 +14,11 @@ def app_exception_handler(exc: Exception, context):
     elif isinstance(exc, ValidationError):
         fields = []
         for field_name in exc.detail:
-            fields.append({
-                "name": field_name,
-                "detail": exc.detail[field_name]
-            })
+            for detail in exc.detail[field_name]:
+                fields.append({
+                    "name": field_name,
+                    "detail": detail
+                })
         response.data = {
             'fields': fields,
             "detail": exc.default_detail
