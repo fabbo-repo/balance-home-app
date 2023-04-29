@@ -17,7 +17,7 @@ class AppVersionController extends StateNotifier<AsyncValue<AppVersion>> {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     final res = await _repository.getVersion();
     state = res
-        .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
+        .fold((failure) => AsyncValue.error(failure.error, StackTrace.empty),
             (remoteVersion) {
       AppVersion localVersion = AppVersion.fromPackageInfo(packageInfo);
       if (localVersion.x != remoteVersion.x) {

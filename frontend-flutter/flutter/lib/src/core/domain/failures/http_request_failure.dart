@@ -1,7 +1,7 @@
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 
 /// Represents Http request error
-abstract class HttpRequestFailure extends Failure {
+class HttpRequestFailure extends Failure {
   final int statusCode;
   final String detail;
 
