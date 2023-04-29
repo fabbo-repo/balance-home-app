@@ -1,4 +1,5 @@
-import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/input_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/reset_password_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/reset_password_repository_interface.dart';
@@ -20,7 +21,7 @@ class ResetPasswordController
     state = const AsyncValue.data(ResetPasswordProgress.none);
   }
 
-  Future<Either<Failure, bool>> requestCode(
+  Future<Either<UnprocessableEntityFailure, bool>> requestCode(
       UserEmail email, AppLocalizations appLocalizations,
       {bool retry = false}) async {
     state = const AsyncValue.loading();
@@ -35,20 +36,24 @@ class ResetPasswordController
         state = !retry
             ? const AsyncValue.data(ResetPasswordProgress.none)
             : const AsyncValue.data(ResetPasswordProgress.started);
-        String error = failure.error.toLowerCase();
-        if (error.startsWith("email") && error.contains("user not found")) {
-          return left(UnprocessableEntityFailure(
-              message: appLocalizations.emailNotValid));
-        }
-        if (error.startsWith("count_pass_reset") &&
-            error.contains("only three codes")) {
-          return left(UnprocessableEntityFailure(
-              message: appLocalizations.resetPasswordTooManyTries));
-        } else if (error.startsWith("code") &&
-            error.contains("code has already been sent")) {
-          return left(UnprocessableEntityFailure(
-              message: appLocalizations.errorSendingCodeTime
-                  .replaceFirst("%%", error.split(" ")[8].split(".")[0])));
+        if (failure is BadRequestFailure) {
+          // TODO only three codes error_code appLocalizations.resetPasswordTooManyTries
+          // TODO code has already been sent error_code appLocalizations.errorSendingCodeTime.replaceFirst("%%", error.split(" ")[8].split(".")[0])
+          return left(UnprocessableEntityFailure(message: failure.detail));
+        } else if (failure is InputBadRequestFailure) {
+          if (failure.containsFieldName("email")) {
+            return left(UnprocessableEntityFailure(
+                message: appLocalizations.emailNotValid));
+          } else if (failure.containsFieldName("inv_code")) {
+            return left(UnprocessableEntityFailure(
+                message: appLocalizations.invitationCodeNotValid));
+          } else if (failure.containsFieldName("email")) {
+            return left(UnprocessableEntityFailure(
+                message: appLocalizations.emailUsed));
+          } else if (failure.containsFieldName("username")) {
+            return left(UnprocessableEntityFailure(
+                message: appLocalizations.usernameUsed));
+          }
         }
         return left(UnprocessableEntityFailure(
             message: appLocalizations.errorSendingCode));
@@ -59,7 +64,7 @@ class ResetPasswordController
     });
   }
 
-  Future<Either<Failure, bool>> verifyCode(
+  Future<Either<UnprocessableEntityFailure, bool>> verifyCode(
       UserEmail email,
       VerificationCode code,
       UserPassword password,
@@ -81,21 +86,20 @@ class ResetPasswordController
               email: email, newPassword: password, code: code));
           return res.fold((failure) {
             state = const AsyncValue.data(ResetPasswordProgress.started);
-            String error = failure.error.toLowerCase();
-            if (error.startsWith("code") && error.contains("invalid code")) {
-              return left(UnprocessableEntityFailure(
-                  message: appLocalizations.invalidCode));
-            } else if (error.startsWith("code") &&
-                error.contains("code is no longer valid")) {
-              return left(UnprocessableEntityFailure(
-                  message: appLocalizations.noLongerValidCode));
-            } else if (error.startsWith("new_password") &&
-                error.contains("too common")) {
-              return left(UnprocessableEntityFailure(
-                  message: appLocalizations.tooCommonPassword));
+
+            if (failure is BadRequestFailure) {
+              return left(UnprocessableEntityFailure(message: failure.detail));
+            } else if (failure is InputBadRequestFailure) {
+              if (failure.containsFieldName("new_password")) {
+                return left(UnprocessableEntityFailure(
+                    message: failure.getFieldDetail("new_password")));
+              } else if (failure.containsFieldName("code")) {
+                return left(UnprocessableEntityFailure(
+                    message: failure.getFieldDetail("code")));
+              }
             }
             return left(UnprocessableEntityFailure(
-                message: appLocalizations.errorVerifyingCode));
+                message: appLocalizations.genericError));
           }, (_) {
             state = const AsyncValue.data(ResetPasswordProgress.verified);
             return right(true);

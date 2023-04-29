@@ -60,7 +60,7 @@ class _SettingsWidgetState extends ConsumerState<SettingsWidget> {
                               widget.user, locale, appLocalizations))
                           .fold((failure) {
                         showErrorSettingsDialog(
-                            appLocalizations, failure.error);
+                            appLocalizations, failure.message);
                       }, (_) {
                         authController.refreshUserData();
                       });

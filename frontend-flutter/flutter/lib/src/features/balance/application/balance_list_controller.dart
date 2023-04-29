@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_repository_interface.dart';
@@ -20,7 +21,9 @@ class BalanceListController
     final res = await _repository.getBalances(_balanceTypeMode,
         dateFrom: _selectedDate.dateFrom, dateTo: _selectedDate.dateTo);
     state = res.fold(
-        (failure) => AsyncValue.error(failure.error, StackTrace.empty),
+        (failure) => AsyncValue.error(
+            failure is BadRequestFailure ? failure.detail : "",
+            StackTrace.empty),
         AsyncValue.data);
   }
 

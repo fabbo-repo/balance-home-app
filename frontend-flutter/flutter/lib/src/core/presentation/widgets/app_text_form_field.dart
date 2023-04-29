@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class AppTextFormField extends StatelessWidget {
   final String title;
   final TextEditingController controller;
   final double? maxWidth;
@@ -16,7 +16,7 @@ class CustomTextFormField extends StatelessWidget {
   final Function()? onTap;
   final String? Function(String?)? validator;
 
-  const CustomTextFormField(
+  const AppTextFormField(
       {required this.title,
       required this.controller,
       this.maxWidth,

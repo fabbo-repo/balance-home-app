@@ -19,7 +19,7 @@ class BalanceEditController extends StateNotifier<AsyncValue<BalanceEntity?>> {
   BalanceEditController(this._repository, this._balanceTypeMode)
       : super(const AsyncValue.data(null));
 
-  Future<Either<Failure, BalanceEntity>> handle(
+  Future<Either<UnprocessableEntityFailure, BalanceEntity>> handle(
       int id,
       BalanceName name,
       BalanceDescription description,

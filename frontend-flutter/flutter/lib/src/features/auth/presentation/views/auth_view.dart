@@ -2,7 +2,7 @@ import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/app_layout.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_error_widget.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_error_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/language_picker_dropdown.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/providers.dart';
@@ -112,7 +112,7 @@ class AuthView extends ConsumerWidget {
           debugPrint("[RESET_PASSWORD_FORM] $error -> $stackTrace");
           return Stack(alignment: AlignmentDirectional.centerStart, children: [
             cache,
-            const CustomErrorWidget(),
+            const AppErrorWidget(),
           ]);
         }, loading: () {
           return Stack(alignment: AlignmentDirectional.centerStart, children: [

@@ -1,6 +1,6 @@
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/password_text_form_field.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/application/reset_password_controller.dart';
@@ -62,7 +62,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
           child: Column(
             children: [
               verticalSpace(),
-              CustomTextFormField(
+              AppTextFormField(
                 onChanged: (value) =>
                     _email = UserEmail(appLocalizations, value),
                 title: appLocalizations.emailAddress,
@@ -94,7 +94,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                 controller: widget._repeatPasswordController,
               ),
               verticalSpace(),
-              CustomTextFormField(
+              AppTextFormField(
                 onChanged: (value) =>
                     _code = VerificationCode(appLocalizations, value),
                 title: appLocalizations.code,
@@ -106,7 +106,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                 textAlign: TextAlign.center,
               ),
               verticalSpace(),
-              CustomTextButton(
+              AppTextButton(
                 width: 200,
                 height: 50,
                 onPressed: () async {
@@ -120,7 +120,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                           retry: progress == ResetPasswordProgress.started))
                       .fold((failure) {
                     showErrorResetPasswordCodeDialog(
-                        appLocalizations, failure.error);
+                        appLocalizations, failure.message);
                   }, (_) {});
                 },
                 text: progress == ResetPasswordProgress.none
@@ -128,7 +128,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                     : appLocalizations.reSendCode,
               ),
               verticalSpace(),
-              CustomTextButton(
+              AppTextButton(
                 width: 200,
                 height: 50,
                 enabled: progress == ResetPasswordProgress.started,
@@ -145,7 +145,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                           _email!, _code!, _password!, appLocalizations))
                       .fold((failure) {
                     showErrorResetPasswordCodeDialog(
-                        appLocalizations, failure.error);
+                        appLocalizations, failure.message);
                   }, (_) {
                     context.go("/${AuthView.routePath}");
                   });

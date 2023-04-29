@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/repositories/app_info_repository_interface.dart';
 import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,9 +17,12 @@ class AppVersionController extends StateNotifier<AsyncValue<AppVersion>> {
   Future<void> handle() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     final res = await _repository.getVersion();
-    state = res
-        .fold((failure) => AsyncValue.error(failure.error, StackTrace.empty),
-            (remoteVersion) {
+    state = res.fold((failure) {
+      if (failure is BadRequestFailure) {
+        return AsyncValue.error(failure.detail, StackTrace.empty);
+      }
+      return const AsyncValue.error("", StackTrace.empty);
+    }, (remoteVersion) {
       AppVersion localVersion = AppVersion.fromPackageInfo(packageInfo);
       if (localVersion.x != remoteVersion.x) {
         localVersion =

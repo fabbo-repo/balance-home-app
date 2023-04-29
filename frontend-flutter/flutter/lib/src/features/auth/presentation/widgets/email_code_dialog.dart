@@ -1,5 +1,5 @@
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/verification_code.dart';
@@ -44,7 +44,7 @@ class EmailCodeDialog extends ConsumerWidget {
               children: [
                 Text(appLocalizations.emailVerifiactionSent,
                     overflow: TextOverflow.ellipsis),
-                CustomTextFormField(
+                AppTextFormField(
                   onChanged: (value) =>
                       _code = VerificationCode(appLocalizations, value),
                   textAlign: TextAlign.center,
@@ -60,7 +60,7 @@ class EmailCodeDialog extends ConsumerWidget {
         ),
       ),
       actions: <Widget>[
-        CustomTextButton(
+        AppTextButton(
           enabled: !isLoading,
           loading: isLoading,
           text: appLocalizations.verifyCode,

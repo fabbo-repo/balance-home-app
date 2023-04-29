@@ -1,4 +1,6 @@
+import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/input_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/core/presentation/states/app_localizations_state.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/credentials_entity.dart';
@@ -47,7 +49,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
     });
   }
 
-  Future<Either<Failure, bool>> createUser(
+  Future<Either<UnprocessableEntityFailure, void>> createUser(
       UserName username,
       UserEmail email,
       String language,
@@ -87,22 +89,23 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
                   password2: password2));
               state = const AsyncValue.data(null);
               return res.fold((failure) {
-                String error = failure.error.toLowerCase();
-                if (error.startsWith("password") &&
-                    error.contains("too common")) {
-                  return left(UnprocessableEntityFailure(
-                      message: appLocalizations.tooCommonPassword));
-                } else if (error.startsWith("inv_code")) {
-                  return left(UnprocessableEntityFailure(
-                      message: appLocalizations.invitationCodeNotValid));
-                } else if (error.startsWith("email") &&
-                    error.contains("unique")) {
-                  return left(UnprocessableEntityFailure(
-                      message: appLocalizations.emailUsed));
-                } else if (error.startsWith("username") &&
-                    error.contains("unique")) {
-                  return left(UnprocessableEntityFailure(
-                      message: appLocalizations.usernameUsed));
+                if (failure is BadRequestFailure) {
+                  return left(
+                      UnprocessableEntityFailure(message: failure.detail));
+                } else if (failure is InputBadRequestFailure) {
+                  if (failure.containsFieldName("password")) {
+                    return left(UnprocessableEntityFailure(
+                        message: failure.getFieldDetail("password")));
+                  } else if (failure.containsFieldName("inv_code")) {
+                    return left(UnprocessableEntityFailure(
+                        message: appLocalizations.invitationCodeNotValid));
+                  } else if (failure.containsFieldName("email")) {
+                    return left(UnprocessableEntityFailure(
+                        message: appLocalizations.emailUsed));
+                  } else if (failure.containsFieldName("username")) {
+                    return left(UnprocessableEntityFailure(
+                        message: appLocalizations.usernameUsed));
+                  }
                 }
                 return left(UnprocessableEntityFailure(
                     message: appLocalizations.genericError));
@@ -114,8 +117,8 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
     });
   }
 
-  Future<Either<Failure, bool>> signIn(UserEmail email, LoginPassword password,
-      AppLocalizations appLocalizations,
+  Future<Either<UnprocessableEntityFailure, bool>> signIn(UserEmail email,
+      LoginPassword password, AppLocalizations appLocalizations,
       {bool store = false}) async {
     state = const AsyncValue.loading();
     return email.value.fold((failure) {
@@ -131,19 +134,23 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
             store: store);
         return res.fold((failure) {
           state = const AsyncValue.data(null);
-          String error = failure.error.toLowerCase();
-          if (error.contains("no active account")) {
-            return left(UnprocessableEntityFailure(
-                message: appLocalizations.wrongCredentials));
-          } else if (error.contains("unverified email")) {
-            return left(UnprocessableEntityFailure(
-                message: appLocalizations.emailNotVerified));
+          if (failure is BadRequestFailure) {
+            // TODO no active account error_code
+            // TODO unverified email error_code
+            return left(UnprocessableEntityFailure(message: failure.detail));
+          } else if (failure is InputBadRequestFailure) {
+            if (failure.containsFieldName("email")) {
+              return left(UnprocessableEntityFailure(
+                  message: appLocalizations.emailNotValid));
+            }
           }
           return left(UnprocessableEntityFailure(
               message: appLocalizations.genericError));
         }, (_) async {
           final res = await _repository.getUser();
-          return res.fold((failure) => left(failure), (value) {
+          return res.fold(
+              (failure) => left(UnprocessableEntityFailure(
+                  message: appLocalizations.genericError)), (value) {
             state = AsyncValue.data(value);
             updateAuthState();
             updateAppLocaalizationsState();

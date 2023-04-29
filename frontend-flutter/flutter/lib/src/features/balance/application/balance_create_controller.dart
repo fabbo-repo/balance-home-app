@@ -20,7 +20,7 @@ class BalanceCreateController
   BalanceCreateController(this._repository, this._balanceTypeMode)
       : super(const AsyncValue.data(null));
 
-  Future<Either<Failure, BalanceEntity>> handle(
+  Future<Either<UnprocessableEntityFailure, BalanceEntity>> handle(
       BalanceName name,
       BalanceDescription description,
       BalanceQuantity quantity,

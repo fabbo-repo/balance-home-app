@@ -1,7 +1,7 @@
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/password_text_form_field.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_form_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/text_check_box.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
@@ -62,7 +62,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
-              CustomTextFormField(
+              AppTextFormField(
                 maxWidth: 400,
                 maxCharacters: 300,
                 title: appLocalizations.emailAddress,
@@ -93,7 +93,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               SizedBox(
                   height: 50,
                   width: 200,
-                  child: CustomTextButton(
+                  child: AppTextButton(
                       enabled: !isLoading,
                       onPressed: () async {
                         if (widget._formKey.currentState == null ||
@@ -106,7 +106,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                 _email!, _password!, appLocalizations,
                                 store: storeCredentials))
                             .fold((failure) async {
-                          if (failure.error ==
+                          if (failure.message ==
                               appLocalizations.emailNotVerified) {
                             bool sendCode =
                                 await showCodeAdviceDialog(appLocalizations);
@@ -115,14 +115,14 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                       _email!, appLocalizations))
                                   .fold((failure) {
                                 showErrorEmailSendCodeDialog(
-                                    appLocalizations, failure.error);
+                                    appLocalizations, failure.message);
                               }, (_) {
                                 showCodeSendDialog(widget.emailController.text);
                               });
                             }
                           } else {
                             showErrorLoginDialog(
-                                appLocalizations, failure.error);
+                                appLocalizations, failure.message);
                           }
                         }, (_) {
                           navigatorKey.currentContext!

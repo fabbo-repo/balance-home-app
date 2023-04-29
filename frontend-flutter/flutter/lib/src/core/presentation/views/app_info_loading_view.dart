@@ -1,5 +1,5 @@
 import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_error_widget.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_error_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
@@ -41,7 +41,7 @@ class AppInfoLoadingView extends ConsumerWidget {
               appVersion.isLower == null)) {
         return const LoadingWidget(color: Colors.grey);
       }
-      return CustomErrorWidget(
+      return AppErrorWidget(
         color: Colors.red,
         text: appLocalizations.wrongVersion,
       );

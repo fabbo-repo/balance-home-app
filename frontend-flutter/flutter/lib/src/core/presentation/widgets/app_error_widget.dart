@@ -1,12 +1,12 @@
 import 'package:balance_home_app/config/app_layout.dart';
 import 'package:flutter/material.dart';
 
-class CustomErrorWidget extends StatelessWidget {
+class AppErrorWidget extends StatelessWidget {
   final Color color;
   final String? text;
   final double? strokeWidth;
 
-  const CustomErrorWidget(
+  const AppErrorWidget(
       {this.color = const Color.fromARGB(255, 211, 33, 33),
       this.text,
       this.strokeWidth,

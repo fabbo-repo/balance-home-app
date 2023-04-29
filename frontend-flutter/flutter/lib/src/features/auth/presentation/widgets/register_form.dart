@@ -1,6 +1,6 @@
 import 'package:balance_home_app/src/core/presentation/widgets/password_text_form_field.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/invitation_code.dart';
@@ -79,7 +79,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
-              CustomTextFormField(
+              AppTextFormField(
                 maxCharacters: 15,
                 maxWidth: 400,
                 title: appLocalizations.username,
@@ -89,7 +89,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 validator: (value) => _username?.validate,
               ),
               verticalSpace(),
-              CustomTextFormField(
+              AppTextFormField(
                 title: appLocalizations.emailAddress,
                 maxWidth: 400,
                 maxCharacters: 300,
@@ -119,7 +119,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 validator: (value) => _repeatPassword?.validate,
               ),
               verticalSpace(),
-              CustomTextFormField(
+              AppTextFormField(
                 title: appLocalizations.invitationCode,
                 maxWidth: 400,
                 maxCharacters: 36,
@@ -142,7 +142,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
               SizedBox(
                   height: 50,
                   width: 240,
-                  child: CustomTextButton(
+                  child: AppTextButton(
                       enabled: !isLoading,
                       onPressed: () async {
                         if (widget._formKey.currentState == null ||
@@ -167,7 +167,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                 appLocalizations))
                             .fold((failure) {
                           showErrorRegisterDialog(
-                              appLocalizations, failure.error);
+                              appLocalizations, failure.message);
                         }, (_) async {
                           bool sendCode =
                               await showCodeAdviceDialog(appLocalizations);
@@ -176,7 +176,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                     _email!, appLocalizations))
                                 .fold((failure) {
                               showErrorEmailSendCodeDialog(
-                                  appLocalizations, failure.error);
+                                  appLocalizations, failure.message);
                             }, (_) {
                               showCodeSendDialog(widget.emailController.text);
                             });

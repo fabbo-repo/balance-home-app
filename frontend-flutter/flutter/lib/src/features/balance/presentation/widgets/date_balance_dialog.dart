@@ -1,6 +1,6 @@
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/text_check_box.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/date_util.dart';
@@ -56,7 +56,7 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
               yearRow(appLocalizations, theme),
               verticalSpace(),
               verticalSpace(),
-              CustomTextButton(
+              AppTextButton(
                   text: appLocalizations.confirmation,
                   onPressed: () {
                     SelectedDateMode selectedDateMode = isDay!
