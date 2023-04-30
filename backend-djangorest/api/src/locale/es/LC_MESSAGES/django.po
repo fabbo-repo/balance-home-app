@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-09 17:50+0100\n"
+"POT-Creation-Date: 2023-04-30 13:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -106,11 +106,11 @@ msgstr "No hay datos de intercambio, intentalo más tarde"
 msgid "No coin exchange"
 msgstr "No hay intercambio de moneda"
 
-#: .\coin\currency_converter_integration.py:18
+#: .\coin\currency_converter_integration.py:19
 msgid "Exchange data not updated in the past 24 hours"
 msgstr "Los datos de intercambio no han sido actualizados en 24 horas"
 
-#: .\coin\currency_converter_integration.py:23
+#: .\coin\currency_converter_integration.py:25
 msgid "No exchange data for the given coin type"
 msgstr "No hay datos de intercambio para el tipo de moneda dado"
 
@@ -142,105 +142,104 @@ msgstr "Intercambio de moneda"
 msgid "Coin exchanges"
 msgstr "Intercambio de monedas"
 
-#: .\core\settings.py:156
+#: .\core\settings.py:172
 msgid "English"
 msgstr "Inglés"
 
-#: .\core\settings.py:157
+#: .\core\settings.py:173
 msgid "Spanish"
 msgstr "Español"
 
-#: .\custom_auth\api\serializers\code_serializers.py:32
-#: .\custom_auth\api\serializers\code_serializers.py:108
-msgid "Code has already been sent, wait {} seconds"
-msgstr "El código se ha enviado, espere {} segundos"
+#: .\core\settings.py:174
+msgid "French"
+msgstr "Francés"
 
-#: .\custom_auth\api\serializers\code_serializers.py:66
-#: .\custom_auth\api\serializers\code_serializers.py:141
-msgid "No code sent"
-msgstr "Ningún código enviado"
-
-#: .\custom_auth\api\serializers\code_serializers.py:71
-#: .\custom_auth\api\serializers\code_serializers.py:146
-msgid "Code is no longer valid"
-msgstr "El código ya no es válido"
-
-#: .\custom_auth\api\serializers\code_serializers.py:73
-#: .\custom_auth\api\serializers\code_serializers.py:149
-msgid "Invalid code"
-msgstr "Código invalido"
-
-#: .\custom_auth\api\serializers\code_serializers.py:93
-#: .\custom_auth\api\serializers\code_serializers.py:133
-#: .\custom_auth\api\serializers\utils.py:13
+#: .\custom_auth\api\serializers\code_serializers.py:99
+#: .\custom_auth\api\serializers\code_serializers.py:136
+#: .\custom_auth\api\serializers\utils.py:16
 msgid "User not found"
 msgstr "Usuario no encontrado"
 
-#: .\custom_auth\api\serializers\code_serializers.py:104
-msgid "Only three codes can be sent per day"
-msgstr "Solo se pueden enviar tres códigos por día"
-
-#: .\custom_auth\api\serializers\code_serializers.py:170
-msgid "New password must be different from old password"
-msgstr "La contraseña nueva debe ser distinta que la antigua"
-
-#: .\custom_auth\api\serializers\code_serializers.py:173
+#: .\custom_auth\api\serializers\code_serializers.py:171
 msgid "Invalid old password"
 msgstr "Contraseña antigua inválida"
 
-#: .\custom_auth\api\serializers\jwt_serializers.py:15
-msgid "No invitation code stored"
-msgstr "No hay código de invitación almacenado"
-
-#: .\custom_auth\api\serializers\jwt_serializers.py:18
-msgid "Unverified email"
-msgstr "Correo no verificado"
-
-#: .\custom_auth\api\serializers\jwt_serializers.py:32
-msgid "No active account found with the given credentials"
-msgstr "No se encontró ninguna cuenta activa con las credenciales dadas"
-
-#: .\custom_auth\api\serializers\jwt_serializers.py:39
-msgid "Invalid refresh token"
-msgstr "Token de actualización no válido"
-
-#: .\custom_auth\api\serializers\user_serializers.py:63
+#: .\custom_auth\api\serializers\user_serializers.py:65
 #: .\custom_auth\models.py:185
 msgid "Language not supported"
 msgstr "Lenguaje no soportado"
 
-#: .\custom_auth\api\serializers\user_serializers.py:75
-#: .\custom_auth\models.py:191
-msgid "Username and email can not be the same"
-msgstr "Nombre de usuario y correo electrónico no pueden contener lo mismo"
-
-#: .\custom_auth\api\serializers\utils.py:16
-msgid "User already verified"
-msgstr "Usuario ya verificado"
-
-#: .\custom_auth\api\serializers\utils.py:24
-msgid "New password cannot match other profile data"
-msgstr "La contraseña nueva no puede coincidir con otro dato del perfil"
-
-#: .\custom_auth\api\serializers\utils.py:33
-msgid "Password fields do not match"
-msgstr "Los campos de contraseña no coinciden"
-
-#: .\custom_auth\api\serializers\utils.py:36 .\custom_auth\models.py:188
-msgid "Password cannot match other profile data"
-msgstr "La contraseña no puede coincidir con otro dato del perfil"
-
-#: .\custom_auth\api\serializers\utils.py:44
+#: .\custom_auth\api\serializers\user_serializers.py:73
 msgid "Invitation code not found"
 msgstr "Código de invitación no encontrado"
 
-#: .\custom_auth\api\serializers\utils.py:46
+#: .\custom_auth\api\serializers\user_serializers.py:75
 msgid "Invalid invitation code"
 msgstr "Código de invitación no válido"
 
-#: .\custom_auth\api\views\user_views.py:52
+#: .\custom_auth\api\serializers\utils.py:19
+msgid "User already verified"
+msgstr "Usuario ya verificado"
+
+#: .\custom_auth\api\serializers\utils.py:29
+msgid "Password fields do not match"
+msgstr "Los campos de contraseña no coinciden"
+
+#: .\custom_auth\api\serializers\utils.py:32 .\custom_auth\models.py:188
+msgid "Password cannot match other profile data"
+msgstr "La contraseña no puede coincidir con otro dato del perfil"
+
+#: .\custom_auth\api\views\user_views.py:55
 msgid "Coin type has already been changed in the las 24 hours"
 msgstr "El tipo de moneda ya se ha cambiado en las últimas 24 horas"
+
+#: .\custom_auth\exceptions.py:22
+msgid "No invitation code stored"
+msgstr "No hay código de invitación almacenado"
+
+#: .\custom_auth\exceptions.py:28
+msgid "Unverified email"
+msgstr "Correo no verificado"
+
+#: .\custom_auth\exceptions.py:34
+msgid "Invalid refresh token"
+msgstr "Token de actualización no válido"
+
+#: .\custom_auth\exceptions.py:40
+msgid "No active account found for specified refresh token"
+msgstr "No se encontró ninguna cuenta activa para el token de actualización dado"
+
+#: .\custom_auth\exceptions.py:46 .\custom_auth\models.py:191
+msgid "Username and email can not be the same"
+msgstr "Nombre de usuario y correo electrónico no pueden contener lo mismo"
+
+#: .\custom_auth\exceptions.py:52
+msgid "Code has already been sent, wait {} seconds"
+msgstr "El código se ha enviado, espere {} segundos"
+
+#: .\custom_auth\exceptions.py:59
+msgid "No code sent"
+msgstr "Ningún código enviado"
+
+#: .\custom_auth\exceptions.py:65
+msgid "Code is no longer valid"
+msgstr "El código ya no es válido"
+
+#: .\custom_auth\exceptions.py:71
+msgid "Invalid code"
+msgstr "Código invalido"
+
+#: .\custom_auth\exceptions.py:77
+msgid "Only three codes can be sent per day"
+msgstr "Solo se pueden enviar tres códigos por día"
+
+#: .\custom_auth\exceptions.py:83
+msgid "New password must be different from old password"
+msgstr "La contraseña nueva debe ser distinta que la antigua"
+
+#: .\custom_auth\exceptions.py:89
+msgid "New password cannot match other profile data"
+msgstr "La contraseña nueva no puede coincidir con otro dato del perfil"
 
 #: .\custom_auth\models.py:12
 msgid "uuid code"
@@ -365,18 +364,6 @@ msgstr "Gasto"
 #: .\expense\models.py:35
 msgid "Expenses"
 msgstr "Gastos"
-
-#: .\frontend_version\models.py:7
-msgid "version"
-msgstr "version"
-
-#: .\frontend_version\models.py:14
-msgid "Frontend version"
-msgstr "Version de frontend"
-
-#: .\frontend_version\models.py:15
-msgid "Frontend versions"
-msgstr "Versiones del frontend"
 
 #: .\revenue\models.py:19
 msgid "Revenue type"

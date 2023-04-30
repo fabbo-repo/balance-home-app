@@ -20,7 +20,7 @@ if settings.DEBUG:
         # Documentation:
         path('general/admin/doc/', include('django.contrib.admindocs.urls')),
         # Swagger:
-        path("api/v1/swagger/", include(swagger_urls)),
+        path("api/v2/swagger/", include(swagger_urls)),
     ]
     urlpatterns += static(
         settings.MEDIA_URL,
@@ -33,7 +33,7 @@ if not settings.APP_DISABLE_ADMIN_PANEL:
     ]
 
 urlpatterns += [
-    path("api/v1/", include(api_urls)),
+    path("api/v2/", include(api_urls)),
     path(
         "favicon.ico",
         RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),

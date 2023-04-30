@@ -6,6 +6,7 @@ from coin.models import CoinType
 from custom_auth.models import User, InvitationCode
 import logging
 import core.tests.utils as test_utils
+from custom_auth.exceptions import SAME_USERNAME_EMAIL_ERROR
 
 
 class UserPostTests(APITestCase):
@@ -61,8 +62,10 @@ class UserPostTests(APITestCase):
         user_data2['email'] = 'email2@test.com'
         response = test_utils.post(self.client, self.user_post_url, user_data2)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['username']
-                         [0], 'This field must be unique.')
+        self.assertIn('username', [field["name"]
+                      for field in response.data["fields"]])
+        self.assertIn("This field must be unique.", [field["detail"]
+                      for field in response.data["fields"]])
 
     def test_two_user_with_email(self):
         """
@@ -76,8 +79,10 @@ class UserPostTests(APITestCase):
         user_data2['username'] = 'username2'
         response = test_utils.post(self.client, self.user_post_url, user_data2)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['email']
-                         [0], 'This field must be unique.')
+        self.assertIn('email', [field["name"]
+                      for field in response.data["fields"]])
+        self.assertIn("This field must be unique.", [field["detail"]
+                      for field in response.data["fields"]])
 
     def test_empty_user(self):
         """
@@ -85,13 +90,20 @@ class UserPostTests(APITestCase):
         """
         response = test_utils.post(self.client, self.user_post_url, {})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('email', response.data)
-        self.assertIn('username', response.data)
-        self.assertIn('password', response.data)
-        self.assertIn('password2', response.data)
-        self.assertIn('inv_code', response.data)
-        self.assertIn('pref_coin_type', response.data)
-        self.assertIn('language', response.data)
+        self.assertIn('email', [field["name"]
+                      for field in response.data["fields"]])
+        self.assertIn('username', [field["name"]
+                      for field in response.data["fields"]])
+        self.assertIn('password', [field["name"]
+                      for field in response.data["fields"]])
+        self.assertIn('password2', [field["name"]
+                      for field in response.data["fields"]])
+        self.assertIn('inv_code', [field["name"]
+                      for field in response.data["fields"]])
+        self.assertIn('pref_coin_type', [field["name"]
+                      for field in response.data["fields"]])
+        self.assertIn('language', [field["name"]
+                      for field in response.data["fields"]])
 
     def test_none_email(self):
         """
@@ -108,7 +120,8 @@ class UserPostTests(APITestCase):
             }
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('email', response.data)
+        self.assertIn('email', [field["name"]
+                      for field in response.data["fields"]])
 
     def test_none_username(self):
         """
@@ -125,7 +138,8 @@ class UserPostTests(APITestCase):
             }
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('username', response.data)
+        self.assertIn('username', [field["name"]
+                      for field in response.data["fields"]])
 
     def test_different_passwords(self):
         """
@@ -135,8 +149,10 @@ class UserPostTests(APITestCase):
         data["password2"] = 'pass12'
         response = test_utils.post(self.client, self.user_post_url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['password']
-                         [0], "Password fields do not match")
+        self.assertIn('password', [field["name"]
+                      for field in response.data["fields"]])
+        self.assertIn("Password fields do not match", [field["detail"]
+                      for field in response.data["fields"]])
 
     def test_short_password(self):
         """
@@ -147,7 +163,8 @@ class UserPostTests(APITestCase):
         data["password2"] = 'admin'
         response = test_utils.post(self.client, self.user_post_url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('password', response.data)
+        self.assertIn('password', [field["name"]
+                      for field in response.data["fields"]])
 
     def test_common_password(self):
         """
@@ -158,7 +175,8 @@ class UserPostTests(APITestCase):
         data["password2"] = 'admin1234'
         response = test_utils.post(self.client, self.user_post_url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('password', response.data)
+        self.assertIn('password', [field["name"]
+                      for field in response.data["fields"]])
 
     def test_only_username_user_post(self):
         """
@@ -170,7 +188,8 @@ class UserPostTests(APITestCase):
         data["password2"] = 'username@1L24'
         response = test_utils.post(self.client, self.user_post_url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('password', response.data)
+        self.assertIn('password', [field["name"]
+                      for field in response.data["fields"]])
 
     def test_only_username_user_post(self):
         """
@@ -181,7 +200,8 @@ class UserPostTests(APITestCase):
         data["password2"] = '12345678'
         response = test_utils.post(self.client, self.user_post_url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('password', response.data)
+        self.assertIn('password', [field["name"]
+                      for field in response.data["fields"]])
 
     def test_same_email_username(self):
         """
@@ -191,7 +211,8 @@ class UserPostTests(APITestCase):
         data["username"] = self.user_data['email']
         response = test_utils.post(self.client, self.user_post_url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('common_fields', response.data)
+        self.assertEqual(
+            response.data["error_code"], SAME_USERNAME_EMAIL_ERROR)
 
     def test_wrong_language(self):
         """
@@ -201,4 +222,5 @@ class UserPostTests(APITestCase):
         data["language"] = "lm"
         response = test_utils.post(self.client, self.user_post_url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('language', response.data)
+        self.assertIn('language', [field["name"]
+                      for field in response.data["fields"]])

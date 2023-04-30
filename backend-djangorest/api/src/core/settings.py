@@ -22,7 +22,7 @@ env = environ.Env(
         "APP_UNVERIFIED_USER_DAYS", default=2)),
     COIN_TYPE_CODES=(str, os.getenv("COIN_TYPE_CODES", default='EUR,USD')),
     APP_FRONTEND_VERSION=(str, os.getenv(
-        "APP_FRONTEND_VERSION", default="1.0.8")),
+        "APP_FRONTEND_VERSION", default="1.1.0")),
     APP_DISABLE_ADMIN_PANEL=(bool, os.getenv(
         "APP_DISABLE_ADMIN_PANEL", default=False)),
     APP_EMAIL_HOST=(str, os.getenv(
@@ -171,6 +171,7 @@ class Dev(Configuration):
     LANGUAGES = (
         ('en', _('English')),
         ('es', _('Spanish')),
+        ('fr', _('French')),
     )
 
     TIME_ZONE = "UTC"
@@ -241,6 +242,7 @@ class Dev(Configuration):
             "jwt_obtain_pair": "50/minute",
             "jwt_refresh": "100/minute",
         },
+        'EXCEPTION_HANDLER': 'core.exceptions.app_exception_handler'
     }
 
     SIMPLE_JWT = {

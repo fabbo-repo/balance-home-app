@@ -69,7 +69,8 @@ class InvitationCodeTests(APITestCase):
 
         response = self.user_post(user_data2)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('inv_code', response.data)
+        self.assertIn('inv_code', [field["name"]
+                      for field in response.data["fields"]])
 
     def test_wrong_inv_code(self):
         """
@@ -85,7 +86,8 @@ class InvitationCodeTests(APITestCase):
             }
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('inv_code', response.data)
+        self.assertIn('inv_code', [field["name"]
+                      for field in response.data["fields"]])
 
     def test_none_inv_code(self):
         """
@@ -100,4 +102,5 @@ class InvitationCodeTests(APITestCase):
             }
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('inv_code', response.data)
+        self.assertIn('inv_code', [field["name"]
+                      for field in response.data["fields"]])

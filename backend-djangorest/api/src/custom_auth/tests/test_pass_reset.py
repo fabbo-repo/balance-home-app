@@ -9,6 +9,10 @@ from django.utils.timezone import timedelta
 from django.core.cache import cache
 import core.tests.utils as test_utils
 from unittest import mock
+from custom_auth.exceptions import (
+    INVALID_CODE_ERROR,
+    NO_LONGER_VALID_CODE_ERROR,
+)
 
 
 class PasswordResetTests(APITestCase):
@@ -117,7 +121,7 @@ class PasswordResetTests(APITestCase):
         response = self.verify_code_password(
             self.user_data["email"], '123456', "user123name456&")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['code'][0], 'Invalid code')
+        self.assertEqual(INVALID_CODE_ERROR, response.data['error_code'])
 
     def test_send_invalid_code(self):
         """
@@ -137,7 +141,8 @@ class PasswordResetTests(APITestCase):
         # Undo changes
         settings.EMAIL_CODE_VALID = 120
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['code'][0], 'Code is no longer valid')
+        self.assertEqual(NO_LONGER_VALID_CODE_ERROR,
+                         response.data['error_code'])
 
     def test_send_four_password_reset_same_day(self):
         """
