@@ -9,7 +9,6 @@ from core.permissions import IsCurrentVerifiedUser
 from rest_framework.permissions import IsAuthenticated
 from revenue.api.filters import RevenueFilterSet
 from rest_framework import generics
-from coin.currency_converter_integration import convert_or_fetch
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers

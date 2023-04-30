@@ -33,8 +33,6 @@ class CustomTokenRefreshSerializer(TokenRefreshSerializer):
     exists and is active.
     """
 
-    error_msg = _('No active account found with the given credentials')
-
     def validate(self, attrs):
         try:
             token_payload = token_backend.decode(attrs['refresh'])

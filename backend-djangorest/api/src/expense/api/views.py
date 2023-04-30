@@ -1,9 +1,4 @@
 from rest_framework import viewsets
-from balance.utils import (
-    check_dates_and_update_date_balances, 
-    update_or_create_annual_balance, 
-    update_or_create_monthly_balance
-)
 from expense.models import Expense, ExpenseType
 from expense.api.serializers import (
     ExpenseTypeSerializer,

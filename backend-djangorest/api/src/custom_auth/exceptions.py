@@ -37,7 +37,7 @@ class InvalidRefreshTokenException(AppBadRequestException):
 
 class InvalidCredentialsException(AppBadRequestException):
     def __init__(self):
-        detail = _('No active account found with the given credentials')
+        detail = _('No active account found for specified refresh token')
         super().__init__(detail, INVALID_CREDENTIALS_ERROR)
 
 
