@@ -1,11 +1,13 @@
-import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/input_bad_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/unauthorized_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/core/presentation/states/app_localizations_state.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/credentials_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/register_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
+import 'package:balance_home_app/src/features/auth/domain/failures/failure_constants.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/invitation_code.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/login_password.dart';
@@ -89,7 +91,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
                   password2: password2));
               state = const AsyncValue.data(null);
               return res.fold((failure) {
-                if (failure is BadRequestFailure) {
+                if (failure is ApiBadRequestFailure) {
                   return left(
                       UnprocessableEntityFailure(message: failure.detail));
                 } else if (failure is InputBadRequestFailure) {
@@ -134,15 +136,23 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
             store: store);
         return res.fold((failure) {
           state = const AsyncValue.data(null);
-          if (failure is BadRequestFailure) {
-            // TODO no active account error_code
-            // TODO unverified email error_code
+          if (failure is ApiBadRequestFailure) {
+            if (failure.errorCode == noInvCodeFailure) {
+              return left(UnprocessableEntityFailure(
+                  message: appLocalizations.wrongCredentials));
+            } else if (failure.errorCode == unverifiedEmailFailure) {
+              return left(UnprocessableEntityFailure(
+                  message: appLocalizations.emailNotVerified));
+            }
             return left(UnprocessableEntityFailure(message: failure.detail));
           } else if (failure is InputBadRequestFailure) {
             if (failure.containsFieldName("email")) {
               return left(UnprocessableEntityFailure(
                   message: appLocalizations.emailNotValid));
             }
+          } else if (failure is UnauthorizedRequestFailure) {
+            return left(UnprocessableEntityFailure(
+                message: appLocalizations.wrongCredentials));
           }
           return left(UnprocessableEntityFailure(
               message: appLocalizations.genericError));

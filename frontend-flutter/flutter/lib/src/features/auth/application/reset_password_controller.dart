@@ -1,7 +1,9 @@
+import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/input_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/reset_password_entity.dart';
+import 'package:balance_home_app/src/features/auth/domain/failures/failure_constants.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/reset_password_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_password.dart';
@@ -36,9 +38,11 @@ class ResetPasswordController
         state = !retry
             ? const AsyncValue.data(ResetPasswordProgress.none)
             : const AsyncValue.data(ResetPasswordProgress.started);
-        if (failure is BadRequestFailure) {
-          // TODO only three codes error_code appLocalizations.resetPasswordTooManyTries
-          // TODO code has already been sent error_code appLocalizations.errorSendingCodeTime.replaceFirst("%%", error.split(" ")[8].split(".")[0])
+        if (failure is ApiBadRequestFailure) {
+          if (failure.errorCode == resetPasswordRetriesFailure) {
+            return left(UnprocessableEntityFailure(
+                message: appLocalizations.resetPasswordTooManyTries));
+          }
           return left(UnprocessableEntityFailure(message: failure.detail));
         } else if (failure is InputBadRequestFailure) {
           if (failure.containsFieldName("email")) {
@@ -86,8 +90,7 @@ class ResetPasswordController
               email: email, newPassword: password, code: code));
           return res.fold((failure) {
             state = const AsyncValue.data(ResetPasswordProgress.started);
-
-            if (failure is BadRequestFailure) {
+            if (failure is ApiBadRequestFailure) {
               return left(UnprocessableEntityFailure(message: failure.detail));
             } else if (failure is InputBadRequestFailure) {
               if (failure.containsFieldName("new_password")) {
@@ -99,7 +102,7 @@ class ResetPasswordController
               }
             }
             return left(UnprocessableEntityFailure(
-                message: appLocalizations.genericError));
+                message: appLocalizations.errorVerifyingCode));
           }, (_) {
             state = const AsyncValue.data(ResetPasswordProgress.verified);
             return right(true);

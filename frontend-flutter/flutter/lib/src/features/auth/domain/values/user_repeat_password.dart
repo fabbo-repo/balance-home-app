@@ -28,7 +28,7 @@ Either<UnprocessableEntityFailure, String> _validate(
   }
   String message = input2.isEmpty
       ? appLocalizations.needRepeatedPassword
-      : appLocalizations.needRepeatedPassword;
+      : appLocalizations.passwordNotMatch;
   return left(
     UnprocessableEntityFailure(
       message: message,

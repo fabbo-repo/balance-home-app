@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/input_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
@@ -60,9 +61,7 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
             );
             return res.fold((failure) {
               state = const AsyncValue.data(null);
-              if (failure is BadRequestFailure) {
-                // TODO no active account error_code
-                // TODO unverified email error_code
+              if (failure is ApiBadRequestFailure) {
                 return left(
                     UnprocessableEntityFailure(message: failure.detail));
               } else if (failure is InputBadRequestFailure) {

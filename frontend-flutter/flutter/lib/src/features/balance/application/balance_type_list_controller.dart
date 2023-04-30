@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_type_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
@@ -20,7 +21,7 @@ class BalanceTypeListController
     final res = await _balanceTypeRepository.getBalanceTypes(_balanceTypeMode);
     state = res.fold(
         (failure) => AsyncValue.error(
-            failure is BadRequestFailure ? failure.detail : "",
+            failure is ApiBadRequestFailure ? failure.detail : "",
             StackTrace.empty),
         (value) => AsyncData(value));
   }

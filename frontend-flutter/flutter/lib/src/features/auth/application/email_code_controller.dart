@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/input_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
@@ -23,7 +24,7 @@ class EmailCodeController extends StateNotifier<AsyncValue<void>> {
     }, (email) async {
       final res = await _repository.requestCode(email);
       return res.fold((failure) {
-        if (failure is BadRequestFailure) {
+        if (failure is ApiBadRequestFailure) {
           state = AsyncValue.error(failure.detail, StackTrace.empty);
           return left(UnprocessableEntityFailure(message: failure.detail));
         } else if (failure is InputBadRequestFailure &&
@@ -58,7 +59,7 @@ class EmailCodeController extends StateNotifier<AsyncValue<void>> {
         final res = await _repository
             .verifyCode(EmailCodeEntity(email: email, code: code));
         return res.fold((failure) {
-          if (failure is BadRequestFailure) {
+          if (failure is ApiBadRequestFailure) {
             state = AsyncValue.error(failure.detail, StackTrace.empty);
             return left(UnprocessableEntityFailure(message: failure.detail));
           } else if (failure is InputBadRequestFailure &&

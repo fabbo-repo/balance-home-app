@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
@@ -38,14 +39,14 @@ class StatisticsController extends StateNotifier<AsyncValue<StatisticsData>> {
         dateTo: balanceDate.dateTo);
     state = await revenues.fold(
         (failure) => AsyncValue.error(
-            failure is BadRequestFailure ? failure.detail : "",
+            failure is ApiBadRequestFailure ? failure.detail : "",
             StackTrace.empty), (revenues) async {
       // Revenues years
       final revenueYears =
           await _balanceRepository.getBalanceYears(BalanceTypeMode.revenue);
       return await revenueYears.fold(
           (failure) => AsyncValue.error(
-              failure is BadRequestFailure ? failure.detail : "",
+              failure is ApiBadRequestFailure ? failure.detail : "",
               StackTrace.empty), (revenueYears) async {
         // Expenses
         final expenses = await _balanceRepository.getBalances(
@@ -54,41 +55,41 @@ class StatisticsController extends StateNotifier<AsyncValue<StatisticsData>> {
             dateTo: balanceDate.dateTo);
         return await expenses.fold(
             (failure) => AsyncValue.error(
-                failure is BadRequestFailure ? failure.detail : "",
+                failure is ApiBadRequestFailure ? failure.detail : "",
                 StackTrace.empty), (expenses) async {
           // Expense years
           final expenseYears =
               await _balanceRepository.getBalanceYears(BalanceTypeMode.expense);
           return await expenseYears.fold(
               (failure) => AsyncValue.error(
-                  failure is BadRequestFailure ? failure.detail : "",
+                  failure is ApiBadRequestFailure ? failure.detail : "",
                   StackTrace.empty), (expenseYears) async {
             // Monthly balances
             final monthlyBalances = await _monthlyBalanceRepository
                 .getMonthlyBalances(year: _selectedSavingsDate.year);
             return await monthlyBalances.fold(
                 (failure) => AsyncValue.error(
-                    failure is BadRequestFailure ? failure.detail : "",
+                    failure is ApiBadRequestFailure ? failure.detail : "",
                     StackTrace.empty), (monthlyBalances) async {
               // Annual balances
               final annualBalances =
                   await _annualBalanceRepository.getAnnualBalances();
               return await annualBalances.fold(
                   (failure) => AsyncValue.error(
-                      failure is BadRequestFailure ? failure.detail : "",
+                      failure is ApiBadRequestFailure ? failure.detail : "",
                       StackTrace.empty), (annualBalances) async {
                 // Coin types
                 final coinTypes = await _coinTypeRepository.getCoinTypes();
                 return await coinTypes.fold(
                     (failure) => AsyncValue.error(
-                        failure is BadRequestFailure ? failure.detail : "",
+                        failure is ApiBadRequestFailure ? failure.detail : "",
                         StackTrace.empty), (coinTypes) async {
                   // Date exchanges
                   final dateExchanges =
                       await _exchangeRepository.getLastDateExchanges(days: 20);
                   return await dateExchanges.fold(
                       (failure) => AsyncValue.error(
-                          failure is BadRequestFailure ? failure.detail : "",
+                          failure is ApiBadRequestFailure ? failure.detail : "",
                           StackTrace.empty), (dateExchanges) async {
                     return AsyncValue.data(StatisticsData(
                       revenues: revenues,
