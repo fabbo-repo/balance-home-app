@@ -1,3 +1,5 @@
+import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_repository_interface.dart';
@@ -20,7 +22,10 @@ class BalanceListController
     final res = await _repository.getBalances(_balanceTypeMode,
         dateFrom: _selectedDate.dateFrom, dateTo: _selectedDate.dateTo);
     state = res.fold(
-        (l) => AsyncValue.error(l.error, StackTrace.empty), AsyncValue.data);
+        (failure) => AsyncValue.error(
+            failure is ApiBadRequestFailure ? failure.detail : "",
+            StackTrace.empty),
+        AsyncValue.data);
   }
 
   /// Add an entity to list
@@ -56,6 +61,6 @@ class BalanceListController
   /// Get a list of years of stored balances
   Future<List<int>> getAllBalanceYears() async {
     final res = await _repository.getBalanceYears(_balanceTypeMode);
-    return res.fold((l) => [], (r) => r);
+    return res.fold((_) => [], (value) => value);
   }
 }

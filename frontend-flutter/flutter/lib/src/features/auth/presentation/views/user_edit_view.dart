@@ -2,7 +2,7 @@ import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/user_delete_view.dart';
@@ -70,7 +70,7 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
                 children: [
                   UserEditForm(edit: edit, user: data!),
                   if (!edit)
-                    CustomTextButton(
+                    AppTextButton(
                       text: appLocalizations.userDelete,
                       height: 40,
                       onPressed: () async {

@@ -1,7 +1,7 @@
 import 'package:balance_home_app/config/app_colors.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_double_form_field.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/double_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/dialog_utils.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
@@ -112,7 +112,7 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                               },
                             ))),
                 verticalSpace(),
-                CustomTextFormField(
+                AppTextFormField(
                   readOnly: !widget.edit,
                   onChanged: (value) =>
                       _username = UserName(appLocalizations, value),
@@ -123,7 +123,7 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                   controller: widget._usernameController,
                 ),
                 verticalSpace(),
-                CustomTextFormField(
+                AppTextFormField(
                   readOnly: true,
                   onChanged: (value) =>
                       _email = UserEmail(appLocalizations, value),
@@ -134,7 +134,7 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                   controller: widget._emailController,
                 ),
                 verticalSpace(),
-                CustomDoubleFormField(
+                DoubleFormField(
                   readOnly: !widget.edit,
                   onChanged: (value) => _expectedMonthlyBalance =
                       BalanceQuantity(appLocalizations, value),
@@ -144,7 +144,7 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                   controller: widget._expectedMonthlyBalanceController,
                 ),
                 verticalSpace(),
-                CustomDoubleFormField(
+                DoubleFormField(
                   readOnly: !widget.edit,
                   onChanged: (value) => _expectedAnnualBalance =
                       BalanceQuantity(appLocalizations, value),
@@ -167,11 +167,12 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                                   widget.user.prefCoinType,
                                   value,
                                   appLocalizations))
-                              .fold((l) {
+                              .fold((failure) {
                             setState(() {
                               _prefCoinType = widget.user.prefCoinType;
                             });
-                            showErrorUserEditDialog(appLocalizations, l.error);
+                            showErrorUserEditDialog(
+                                appLocalizations, failure.message);
                           }, (newBalance) async {
                             if (await showCoinChangeAdviceDialog(
                                 appLocalizations, newBalance, value)) {
@@ -186,7 +187,7 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                     : Text(appLocalizations.genericError),
                 verticalSpace(),
                 if (widget.edit)
-                  CustomTextButton(
+                  AppTextButton(
                     text: appLocalizations.confirmation,
                     width: 160,
                     height: 50,
@@ -203,10 +204,11 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                         bool isImageOk = true;
                         (await userEditController.handleImage(
                                 _imageBytes!, _imageType!, appLocalizations))
-                            .fold((l) {
+                            .fold((failure) {
                           isImageOk = false;
-                          showErrorUserEditDialog(appLocalizations, l.error);
-                        }, (r) => null);
+                          showErrorUserEditDialog(
+                              appLocalizations, failure.message);
+                        }, (_) => null);
                         if (!isImageOk) return;
                       }
                       (await userEditController.handle(
@@ -217,8 +219,9 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                               _expectedAnnualBalance!,
                               _prefCoinType!,
                               appLocalizations))
-                          .fold((l) {
-                        showErrorUserEditDialog(appLocalizations, l.error);
+                          .fold((failure) {
+                        showErrorUserEditDialog(
+                            appLocalizations, failure.message);
                       }, (entity) {
                         authController.refreshUserData();
                       });

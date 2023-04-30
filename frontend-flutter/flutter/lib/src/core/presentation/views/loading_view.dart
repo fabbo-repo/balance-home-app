@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class LoadingView extends StatelessWidget {
@@ -17,16 +18,7 @@ class LoadingView extends StatelessWidget {
   Widget build(BuildContext context) {
     if (func != null) func!(context);
     return const Scaffold(
-      body: Center(
-        child: SizedBox(
-          width: 50,
-          height: 50,
-          child: CircularProgressIndicator.adaptive(
-            valueColor:  AlwaysStoppedAnimation<Color>(Colors.green),
-            strokeWidth: 6.0,
-          ),
-        ),
-      ),
+      body: LoadingWidget()
     );
   }
 }

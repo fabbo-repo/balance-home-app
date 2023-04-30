@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/credentials_entity.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -15,7 +16,7 @@ class CredentialsLocalDataSource {
     final email = await _storage.read(key: "email");
     final password = await _storage.read(key: "password");
     if (email == null || password == null) {
-      return left(const Failure.empty());
+      return left(const EmptyFailure());
     }
     return right(CredentialsEntity(email: email, password: password));
   }

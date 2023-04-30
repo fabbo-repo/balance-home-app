@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CustomDoubleFormField extends StatelessWidget {
+class DoubleFormField extends StatelessWidget {
   final String title;
   final TextEditingController controller;
   final double? maxWidth;
@@ -12,7 +12,7 @@ class CustomDoubleFormField extends StatelessWidget {
   final Function()? onTap;
   final String? Function(String?)? validator;
 
-  const CustomDoubleFormField(
+  const DoubleFormField(
       {required this.title,
       required this.controller,
       this.maxWidth,

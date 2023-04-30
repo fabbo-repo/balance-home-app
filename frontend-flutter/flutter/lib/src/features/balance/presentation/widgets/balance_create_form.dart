@@ -1,10 +1,9 @@
 import 'package:balance_home_app/config/router.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_double_form_field.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/double_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/dialog_utils.dart';
-import 'package:balance_home_app/src/core/utils/type_util.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_type_entity.dart';
@@ -99,7 +98,7 @@ class BalanceCreateForm extends ConsumerWidget {
                   child: Column(
                     children: [
                       verticalSpace(),
-                      CustomTextFormField(
+                      AppTextFormField(
                         onChanged: (value) =>
                             _name = BalanceName(appLocalizations, value),
                         title: appLocalizations.balanceName,
@@ -109,7 +108,7 @@ class BalanceCreateForm extends ConsumerWidget {
                         controller: _nameController,
                       ),
                       verticalSpace(),
-                      CustomTextFormField(
+                      AppTextFormField(
                         onChanged: (value) => _description =
                             BalanceDescription(appLocalizations, value),
                         title: appLocalizations.balanceDescription,
@@ -126,7 +125,7 @@ class BalanceCreateForm extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CustomDoubleFormField(
+                          DoubleFormField(
                             onChanged: (value) => _quantity =
                                 BalanceQuantity(appLocalizations, value),
                             title: appLocalizations.balanceQuantity,
@@ -150,7 +149,7 @@ class BalanceCreateForm extends ConsumerWidget {
                         ],
                       ),
                       verticalSpace(),
-                      CustomTextFormField(
+                      AppTextFormField(
                           onTap: () async {
                             // Below line stops keyboard from appearing
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -184,7 +183,7 @@ class BalanceCreateForm extends ConsumerWidget {
                             )
                           : Text(appLocalizations.genericError),
                       verticalSpace(),
-                      CustomTextButton(
+                      AppTextButton(
                         width: 140,
                         height: 50,
                         onPressed: () async {
@@ -204,9 +203,9 @@ class BalanceCreateForm extends ConsumerWidget {
                                   _coinType!,
                                   _balanceTypeEntity!,
                                   appLocalizations))
-                              .fold((l) {
-                            showErrorBalanceCreationDialog(
-                                appLocalizations, l.error, balanceTypeMode);
+                              .fold((failure) {
+                            showErrorBalanceCreationDialog(appLocalizations,
+                                failure.message, balanceTypeMode);
                           }, (entity) {
                             navigatorKey.currentContext!.go(
                                 balanceTypeMode == BalanceTypeMode.expense

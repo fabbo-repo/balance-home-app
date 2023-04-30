@@ -1,10 +1,9 @@
 import 'package:balance_home_app/config/router.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_double_form_field.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/double_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/dialog_utils.dart';
-import 'package:balance_home_app/src/core/utils/type_util.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
@@ -104,7 +103,7 @@ class BalanceEditForm extends ConsumerWidget {
                 child: Column(
                   children: [
                     verticalSpace(),
-                    CustomTextFormField(
+                    AppTextFormField(
                       readOnly: !edit,
                       onChanged: (value) =>
                           _name = BalanceName(appLocalizations, value),
@@ -115,7 +114,7 @@ class BalanceEditForm extends ConsumerWidget {
                       controller: _nameController,
                     ),
                     verticalSpace(),
-                    CustomTextFormField(
+                    AppTextFormField(
                       readOnly: !edit,
                       onChanged: (value) => _description =
                           BalanceDescription(appLocalizations, value),
@@ -133,7 +132,7 @@ class BalanceEditForm extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CustomDoubleFormField(
+                        DoubleFormField(
                           readOnly: !edit,
                           onChanged: (value) => _quantity =
                               BalanceQuantity(appLocalizations, value),
@@ -159,7 +158,7 @@ class BalanceEditForm extends ConsumerWidget {
                       ],
                     ),
                     verticalSpace(),
-                    CustomTextFormField(
+                    AppTextFormField(
                         readOnly: !edit,
                         onTap: () async {
                           // Below line stops keyboard from appearing
@@ -196,7 +195,7 @@ class BalanceEditForm extends ConsumerWidget {
                         : Text(appLocalizations.genericError),
                     verticalSpace(),
                     if (edit)
-                      CustomTextButton(
+                      AppTextButton(
                         text: appLocalizations.confirmation,
                         width: 160,
                         height: 50,
@@ -218,9 +217,9 @@ class BalanceEditForm extends ConsumerWidget {
                                   _coinType!,
                                   _balanceTypeEntity!,
                                   appLocalizations))
-                              .fold((l) {
-                            showErrorBalanceEditDialog(
-                                appLocalizations, l.error, balanceTypeMode);
+                              .fold((failure) {
+                            showErrorBalanceEditDialog(appLocalizations,
+                                failure.message, balanceTypeMode);
                           }, (entity) {
                             navigatorKey.currentContext!.go(
                                 balanceTypeMode == BalanceTypeMode.expense

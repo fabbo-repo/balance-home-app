@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/jwt_entity.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -15,7 +16,7 @@ class JwtLocalDataSource {
     final refresh = await _storage.read(key: "refresh_jwt");
     final access = await _storage.read(key: "access_jwt");
     if (refresh == null) {
-      return left(const Failure.empty());
+      return left(const EmptyFailure());
     }
     return right(JwtEntity(access: access ?? '', refresh: refresh));
   }

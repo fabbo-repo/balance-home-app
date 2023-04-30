@@ -1,3 +1,5 @@
+import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/features/coin/domain/entities/coin_type_entity.dart';
 import 'package:balance_home_app/src/features/coin/domain/repositories/coin_type_repository_interface.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,13 +11,16 @@ class CoinTypeListController
 
   CoinTypeListController(this._coinTypeRepository)
       : super(const AsyncValue.loading()) {
-        handle();
-      }
+    handle();
+  }
 
   @visibleForTesting
   Future<void> handle() async {
     final res = await _coinTypeRepository.getCoinTypes();
-    state = res.fold((l) => AsyncValue.error(l.error, StackTrace.empty),
-        (r) => AsyncData(r));
+    state = res.fold(
+        (failure) => AsyncValue.error(
+            failure is ApiBadRequestFailure ? failure.detail : "",
+            StackTrace.empty),
+        (value) => AsyncData(value));
   }
 }

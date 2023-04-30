@@ -58,8 +58,9 @@ class _SettingsWidgetState extends ConsumerState<SettingsWidget> {
                       appLocalizationStateNotifier.setLocale(locale);
                       (await settingsController.handleLanguage(
                               widget.user, locale, appLocalizations))
-                          .fold((l) {
-                        showErrorSettingsDialog(appLocalizations, l.error);
+                          .fold((failure) {
+                        showErrorSettingsDialog(
+                            appLocalizations, failure.message);
                       }, (_) {
                         authController.refreshUserData();
                       });

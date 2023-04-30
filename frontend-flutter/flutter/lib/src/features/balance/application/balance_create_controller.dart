@@ -1,4 +1,5 @@
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_type_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_repository_interface.dart';
@@ -19,7 +20,7 @@ class BalanceCreateController
   BalanceCreateController(this._repository, this._balanceTypeMode)
       : super(const AsyncValue.data(null));
 
-  Future<Either<Failure, BalanceEntity>> handle(
+  Future<Either<UnprocessableEntityFailure, BalanceEntity>> handle(
       BalanceName name,
       BalanceDescription description,
       BalanceQuantity quantity,
@@ -28,21 +29,21 @@ class BalanceCreateController
       BalanceTypeEntity balanceType,
       AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
-    return await name.value.fold((l) {
+    return await name.value.fold((failure) {
       state = const AsyncValue.data(null);
-      return left(l);
+      return left(failure);
     }, (name) async {
-      return await description.value.fold((l) {
+      return await description.value.fold((failure) {
         state = const AsyncValue.data(null);
-        return left(l);
+        return left(failure);
       }, (description) async {
-        return await quantity.value.fold((l) {
+        return await quantity.value.fold((failure) {
           state = const AsyncValue.data(null);
-          return left(l);
+          return left(failure);
         }, (quantity) async {
-          return await date.value.fold((l) {
+          return await date.value.fold((failure) {
             state = const AsyncValue.data(null);
-            return left(l);
+            return left(failure);
           }, (date) async {
             final res = await _repository.createBalance(
                 BalanceEntity(
@@ -55,13 +56,13 @@ class BalanceCreateController
                     balanceType: balanceType,
                     converted_quantity: null),
                 _balanceTypeMode);
-            return res.fold((l) {
+            return res.fold((failure) {
               state = const AsyncValue.data(null);
-              return left(Failure.unprocessableEntity(
+              return left(UnprocessableEntityFailure(
                   message: appLocalizations.genericError));
-            }, (r) {
-              state = AsyncValue.data(r);
-              return right(r);
+            }, (value) {
+              state = AsyncValue.data(value);
+              return right(value);
             });
           });
         });

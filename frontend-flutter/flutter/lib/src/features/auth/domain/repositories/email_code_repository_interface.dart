@@ -8,5 +8,5 @@ abstract class EmailCodeRepositoryInterface {
   Future<Either<Failure, void>> requestCode(String email);
 
   /// Request email code verification.
-  Future<Either<Failure, bool>> verifyCode(EmailCodeEntity entity);
+  Future<Either<Failure, void>> verifyCode(EmailCodeEntity entity);
 }

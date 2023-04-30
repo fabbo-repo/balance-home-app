@@ -1,8 +1,13 @@
+import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/input_bad_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/unauthorized_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/core/presentation/states/app_localizations_state.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/credentials_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/register_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
+import 'package:balance_home_app/src/features/auth/domain/failures/failure_constants.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/invitation_code.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/login_password.dart';
@@ -29,16 +34,16 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
   Future<Either<Failure, bool>> trySignIn() async {
     state = const AsyncValue.loading();
     final res = await _repository.trySignIn();
-    return res.fold((l) {
+    return res.fold((failure) {
       state = const AsyncValue.data(null);
-      return left(l);
-    }, (r) async {
+      return left(failure);
+    }, (_) async {
       final res = await _repository.getUser();
-      return res.fold((l) {
+      return res.fold((failure) {
         state = const AsyncValue.data(null);
-        return left(l);
-      }, (r) {
-        state = AsyncValue.data(r);
+        return left(failure);
+      }, (value) {
+        state = AsyncValue.data(value);
         updateAuthState();
         updateAppLocaalizationsState();
         return right(true);
@@ -46,7 +51,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
     });
   }
 
-  Future<Either<Failure, bool>> createUser(
+  Future<Either<UnprocessableEntityFailure, void>> createUser(
       UserName username,
       UserEmail email,
       String language,
@@ -56,25 +61,25 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
       UserRepeatPassword password2,
       AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
-    return await username.value.fold((l) {
+    return await username.value.fold((failure) {
       state = const AsyncValue.data(null);
-      return left(l);
+      return left(failure);
     }, (username) async {
-      return await email.value.fold((l) {
+      return await email.value.fold((failure) {
         state = const AsyncValue.data(null);
-        return left(l);
+        return left(failure);
       }, (email) async {
-        return await invCode.value.fold((l) {
+        return await invCode.value.fold((failure) {
           state = const AsyncValue.data(null);
-          return left(l);
+          return left(failure);
         }, (invCode) async {
-          return await password.value.fold((l) {
+          return await password.value.fold((failure) {
             state = const AsyncValue.data(null);
-            return left(l);
+            return left(failure);
           }, (password) async {
-            return await password2.value.fold((l) {
+            return await password2.value.fold((failure) {
               state = const AsyncValue.data(null);
-              return left(l);
+              return left(failure);
             }, (password2) async {
               final res = await _repository.createUser(RegisterEntity(
                   username: username,
@@ -85,27 +90,28 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
                   password: password,
                   password2: password2));
               state = const AsyncValue.data(null);
-              return res.fold((l) {
-                String error = l.error.toLowerCase();
-                if (error.startsWith("password") &&
-                    error.contains("too common")) {
-                  return left(Failure.unprocessableEntity(
-                      message: appLocalizations.tooCommonPassword));
-                } else if (error.startsWith("inv_code")) {
-                  return left(Failure.unprocessableEntity(
-                      message: appLocalizations.invitationCodeNotValid));
-                } else if (error.startsWith("email") &&
-                    error.contains("unique")) {
-                  return left(Failure.unprocessableEntity(
-                      message: appLocalizations.emailUsed));
-                } else if (error.startsWith("username") &&
-                    error.contains("unique")) {
-                  return left(Failure.unprocessableEntity(
-                      message: appLocalizations.usernameUsed));
+              return res.fold((failure) {
+                if (failure is ApiBadRequestFailure) {
+                  return left(
+                      UnprocessableEntityFailure(message: failure.detail));
+                } else if (failure is InputBadRequestFailure) {
+                  if (failure.containsFieldName("password")) {
+                    return left(UnprocessableEntityFailure(
+                        message: failure.getFieldDetail("password")));
+                  } else if (failure.containsFieldName("inv_code")) {
+                    return left(UnprocessableEntityFailure(
+                        message: appLocalizations.invitationCodeNotValid));
+                  } else if (failure.containsFieldName("email")) {
+                    return left(UnprocessableEntityFailure(
+                        message: appLocalizations.emailUsed));
+                  } else if (failure.containsFieldName("username")) {
+                    return left(UnprocessableEntityFailure(
+                        message: appLocalizations.usernameUsed));
+                  }
                 }
-                return left(Failure.unprocessableEntity(
+                return left(UnprocessableEntityFailure(
                     message: appLocalizations.genericError));
-              }, (r) => right(r));
+              }, (value) => right(value));
             });
           });
         });
@@ -113,37 +119,49 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
     });
   }
 
-  Future<Either<Failure, bool>> signIn(UserEmail email, LoginPassword password,
-      AppLocalizations appLocalizations,
+  Future<Either<UnprocessableEntityFailure, bool>> signIn(UserEmail email,
+      LoginPassword password, AppLocalizations appLocalizations,
       {bool store = false}) async {
     state = const AsyncValue.loading();
-    return email.value.fold((l) {
+    return email.value.fold((failure) {
       state = const AsyncValue.data(null);
-      return left(l);
+      return left(failure);
     }, (email) async {
-      return password.value.fold((l) {
+      return password.value.fold((failure) {
         state = const AsyncValue.data(null);
-        return left(l);
+        return left(failure);
       }, (password) async {
         final res = await _repository.signIn(
             CredentialsEntity(email: email, password: password),
             store: store);
-        return res.fold((l) {
+        return res.fold((failure) {
           state = const AsyncValue.data(null);
-          String error = l.error.toLowerCase();
-          if (error.contains("no active account")) {
-            return left(Failure.unprocessableEntity(
+          if (failure is ApiBadRequestFailure) {
+            if (failure.errorCode == noInvCodeFailure) {
+              return left(UnprocessableEntityFailure(
+                  message: appLocalizations.wrongCredentials));
+            } else if (failure.errorCode == unverifiedEmailFailure) {
+              return left(UnprocessableEntityFailure(
+                  message: appLocalizations.emailNotVerified));
+            }
+            return left(UnprocessableEntityFailure(message: failure.detail));
+          } else if (failure is InputBadRequestFailure) {
+            if (failure.containsFieldName("email")) {
+              return left(UnprocessableEntityFailure(
+                  message: appLocalizations.emailNotValid));
+            }
+          } else if (failure is UnauthorizedRequestFailure) {
+            return left(UnprocessableEntityFailure(
                 message: appLocalizations.wrongCredentials));
-          } else if (error.contains("unverified email")) {
-            return left(Failure.unprocessableEntity(
-                message: appLocalizations.emailNotVerified));
           }
-          return left(Failure.unprocessableEntity(
+          return left(UnprocessableEntityFailure(
               message: appLocalizations.genericError));
-        }, (r) async {
+        }, (_) async {
           final res = await _repository.getUser();
-          return res.fold((l) => left(l), (r) {
-            state = AsyncValue.data(r);
+          return res.fold(
+              (failure) => left(UnprocessableEntityFailure(
+                  message: appLocalizations.genericError)), (value) {
+            state = AsyncValue.data(value);
             updateAuthState();
             updateAppLocaalizationsState();
             return right(true);
@@ -154,29 +172,29 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
   }
 
   /// Delete current user data
-  Future<Either<Failure, bool>> deleteUser() async {
+  Future<Either<Failure, void>> deleteUser() async {
     final res = await _repository.deleteUser();
     if (res.isLeft()) return res;
     return await signOut();
   }
 
   /// Signs out user
-  Future<Either<Failure, bool>> signOut() async {
+  Future<Either<Failure, void>> signOut() async {
     final res = await _repository.signOut();
     if (res.isLeft()) return res;
     state = const AsyncValue.data(null);
     updateAuthState();
-    return right(true);
+    return right(null);
   }
 
   Future<Either<Failure, bool>> refreshUserData() async {
     state = const AsyncValue.loading();
     return await Future.delayed(const Duration(seconds: 2), () async {
       final res = await _repository.getUser();
-      return res.fold((l) {
-        return left(l);
-      }, (r) {
-        state = AsyncValue.data(r);
+      return res.fold((failure) {
+        return left(failure);
+      }, (value) {
+        state = AsyncValue.data(value);
         return right(true);
       });
     });

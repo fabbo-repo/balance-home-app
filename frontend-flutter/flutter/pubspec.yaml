@@ -5,7 +5,7 @@ description: Revenues and expenses management.
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.8+16
+version: 1.1.0+16
 
 environment:
   sdk: '>=2.18.2 <3.0.0'
@@ -40,11 +40,11 @@ dependencies:
   # Fix url in web
   url_strategy: ^0.2.0
   # Launcher icons
-  flutter_launcher_icons: ^0.11.0
+  flutter_launcher_icons: ^0.13.1
   # Shared preferences
   shared_preferences: ^2.0.15
   # Secure shared preferences
-  flutter_secure_storage: ^7.0.1
+  flutter_secure_storage: ^8.0.0
   # Data class generator
   freezed_annotation: ^2.0.3
   json_annotation: ^4.4.0
@@ -57,12 +57,12 @@ dependencies:
   # Flags images
   flag: ^6.0.0
   # Graphics
-  fl_chart: ^0.55.2
-  syncfusion_flutter_charts: ^20.3.61
+  fl_chart: ^0.62.0
+  syncfusion_flutter_charts: ^21.1.41
   # Env code generation
   envied: ^0.3.0
   # Functional programing
-  fpdart: ^0.4.0
+  fpdart: ^0.5.0
   # File picker (used for images)
   file_picker: ^5.2.4
   

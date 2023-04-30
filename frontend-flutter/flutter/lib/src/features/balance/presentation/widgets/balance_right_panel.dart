@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
@@ -28,7 +28,7 @@ class BalanaceRightPanel extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CustomTextButton(
+              AppTextButton(
                   width: (screenWidth * 0.1 > 160)
                       ? 160
                       : (screenWidth * 0.1 < 100)
@@ -47,7 +47,7 @@ class BalanaceRightPanel extends ConsumerWidget {
                   },
                   text: appLocalizations.orderBy),
               const SizedBox(width: 30),
-              CustomTextButton(
+              AppTextButton(
                   width: (screenWidth * 0.1 > 160)
                       ? 160
                       : (screenWidth * 0.1 < 100)

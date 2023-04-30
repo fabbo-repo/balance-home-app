@@ -1,4 +1,7 @@
-import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/input_bad_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
@@ -18,7 +21,7 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
   UserEditController(this._authRepository, this._exchangeRepository)
       : super(const AsyncValue.data(null));
 
-  Future<Either<Failure, UserEntity>> handle(
+  Future<Either<UnprocessableEntityFailure, UserEntity>> handle(
       UserEntity oldUser,
       UserName username,
       UserEmail email,
@@ -27,21 +30,21 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
       String prefCoinType,
       AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
-    return await username.value.fold((l) {
+    return await username.value.fold((failure) {
       state = const AsyncValue.data(null);
-      return left(l);
+      return left(failure);
     }, (username) async {
-      return await email.value.fold((l) {
+      return await email.value.fold((failure) {
         state = const AsyncValue.data(null);
-        return left(l);
+        return left(failure);
       }, (email) async {
-        return await expectedMonthlyBalance.value.fold((l) {
+        return await expectedMonthlyBalance.value.fold((failure) {
           state = const AsyncValue.data(null);
-          return left(l);
+          return left(failure);
         }, (expectedMonthlyBalance) async {
-          return await expectedAnnualBalance.value.fold((l) {
+          return await expectedAnnualBalance.value.fold((failure) {
             state = const AsyncValue.data(null);
-            return left(l);
+            return left(failure);
           }, (expectedAnnualBalance) async {
             final res = await _authRepository.updateUser(
               UserEntity(
@@ -56,23 +59,25 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
                   lastLogin: null,
                   image: null),
             );
-            return res.fold((l) {
+            return res.fold((failure) {
               state = const AsyncValue.data(null);
-              String error = l.error.toLowerCase();
-              if (error.startsWith("pref_coin_type") &&
-                  error.contains("24 hours")) {
-                return left(Failure.unprocessableEntity(
-                    message: appLocalizations.userEditPrefCoinTypeError));
-              } else if (error.startsWith("username") &&
-                  error.contains("unique")) {
-                return left(Failure.unprocessableEntity(
-                    message: appLocalizations.usernameUsed));
+              if (failure is ApiBadRequestFailure) {
+                return left(
+                    UnprocessableEntityFailure(message: failure.detail));
+              } else if (failure is InputBadRequestFailure) {
+                if (failure.containsFieldName("pref_coin_type")) {
+                  return left(UnprocessableEntityFailure(
+                      message: appLocalizations.userEditPrefCoinTypeError));
+                } else if (failure.containsFieldName("username")) {
+                  return left(UnprocessableEntityFailure(
+                      message: appLocalizations.usernameUsed));
+                }
               }
-              return left(Failure.unprocessableEntity(
+              return left(UnprocessableEntityFailure(
                   message: appLocalizations.genericError));
-            }, (r) {
+            }, (value) {
               state = const AsyncValue.data(null);
-              return right(r);
+              return right(value);
             });
           });
         });
@@ -80,32 +85,39 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
     });
   }
 
-  Future<Either<Failure, bool>> handleImage(Uint8List imageBytes,
-      String imageType, AppLocalizations appLocalizations) async {
+  Future<Either<UnprocessableEntityFailure, void>> handleImage(
+      Uint8List imageBytes,
+      String imageType,
+      AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
     final res = await _authRepository.updateUserImage(imageBytes, imageType);
-    return res.fold((l) {
+    return res.fold((_) {
       state = const AsyncValue.data(null);
-      return left(Failure.unprocessableEntity(
+      return left(UnprocessableEntityFailure(
           message: appLocalizations.userEditImageError));
-    }, (r) {
+    }, (value) {
       state = const AsyncValue.data(null);
-      return right(r);
+      return right(value);
     });
   }
 
-  Future<Either<Failure, double>> getExchange(double quantity, String coinFrom,
-      String coinTo, AppLocalizations appLocalizations) async {
-    return (await _exchangeRepository.getExchanges(coinFrom))
-        .fold((l) => left(l), (r) {
-      for (ExchangeEntity exchange in r.exchanges) {
+  Future<Either<UnprocessableEntityFailure, double>> getExchange(
+      double quantity,
+      String coinFrom,
+      String coinTo,
+      AppLocalizations appLocalizations) async {
+    return (await _exchangeRepository.getExchanges(coinFrom)).fold(
+        (failure) => left(
+            UnprocessableEntityFailure(message: appLocalizations.genericError)),
+        (value) {
+      for (ExchangeEntity exchange in value.exchanges) {
         if (exchange.code == coinTo) {
           return right(
               ((quantity * exchange.value) * 100).roundToDouble() / 100.0);
         }
       }
       return left(
-          Failure.unprocessableEntity(message: appLocalizations.genericError));
+          UnprocessableEntityFailure(message: appLocalizations.genericError));
     });
   }
 }

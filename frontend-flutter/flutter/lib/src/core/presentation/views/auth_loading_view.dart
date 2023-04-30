@@ -21,9 +21,9 @@ class AuthLoadingView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authController = ref.read(authControllerProvider.notifier);
     authController.trySignIn().then((value) {
-      value.fold((l) {
+      value.fold((_) {
         ErrorView.go404();
-      }, (r) {
+      }, (_) {
         if (location != "/$routePath") {
           navigatorKey.currentContext!.go(location);
         } else {

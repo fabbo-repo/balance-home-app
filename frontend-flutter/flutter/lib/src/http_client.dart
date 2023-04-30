@@ -190,13 +190,6 @@ class HttpResponse {
   /// Whether [statusCode] is not a 20X code
   bool get hasError => (statusCode / 10).round() != 20;
 
-  /// Get first message error in the content json if content is not empty
-  String get errorMessage => (content.keys.isEmpty)
-      ? ""
-      : (content[content.keys.first] is! List)
-          ? "${content.keys.first} : ${content[content.keys.first]}"
-          : "${content.keys.first} : ${(content[content.keys.first] as List).first}";
-
   HttpResponse(this.statusCode, this.content);
 
   /// Response creation from `http` package

@@ -1,5 +1,7 @@
 import 'package:balance_home_app/src/core/domain/entities/pagination_entity.dart';
+import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/utils/failure_utils.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/src/http_client.dart';
@@ -19,12 +21,14 @@ class BalanceRemoteDataSource {
         : APIContract.revenue;
     HttpResponse response =
         await client.sendGetRequest('$baseUrl/${id.toString()}');
-    if (response.hasError) {
-      return left(Failure.badRequest(message: response.errorMessage));
-    }
-    return right(balanceTypeMode == BalanceTypeMode.expense
-        ? BalanceEntity.fromExpenseJson(response.content)
-        : BalanceEntity.fromRevenueJson(response.content));
+    // Check if there is a request failure
+    final responseCheck = FailureUtils.checkResponse(
+        body: response.content, statusCode: response.statusCode);
+    return responseCheck.fold(
+        (failure) => left(failure),
+        (body) => right(balanceTypeMode == BalanceTypeMode.expense
+            ? BalanceEntity.fromExpenseJson(body)
+            : BalanceEntity.fromRevenueJson(body)));
   }
 
   Future<Either<Failure, List<BalanceEntity>>> list(
@@ -45,8 +49,12 @@ class BalanceRemoteDataSource {
     int pageNumber = 1;
     HttpResponse response =
         await client.sendGetRequest('$baseUrl?page=$pageNumber$extraArgs');
-    if (response.hasError) {
-      return left(Failure.badRequest(message: response.errorMessage));
+    // Check if there is a request failure
+    final responseCheck = FailureUtils.checkResponse(
+        body: response.content, statusCode: response.statusCode);
+    if (responseCheck.isLeft()) {
+      return left(
+          responseCheck.getLeft().getOrElse(() => const EmptyFailure()));
     }
     PaginationEntity page = PaginationEntity.fromJson(response.content);
     List<BalanceEntity> balances = page.results.map((e) {
@@ -56,10 +64,14 @@ class BalanceRemoteDataSource {
     }).toList();
     while (page.next != null) {
       pageNumber++;
-      HttpResponse response = await client
-          .sendGetRequest('$baseUrl?page=$pageNumber$extraArgs');
-      if (response.hasError) {
-        return left(Failure.badRequest(message: response.errorMessage));
+      HttpResponse response =
+          await client.sendGetRequest('$baseUrl?page=$pageNumber$extraArgs');
+      // Check if there is a request failure
+      final responseCheck = FailureUtils.checkResponse(
+          body: response.content, statusCode: response.statusCode);
+      if (responseCheck.isLeft()) {
+        return left(
+            responseCheck.getLeft().getOrElse(() => const EmptyFailure()));
       }
       page = PaginationEntity.fromJson(response.content);
       balances += page.results.map((e) {
@@ -77,10 +89,11 @@ class BalanceRemoteDataSource {
         ? APIContract.expenseYears
         : APIContract.revenueYears;
     HttpResponse response = await client.sendGetRequest(baseUrl);
-    if (response.hasError) {
-      return left(Failure.badRequest(message: response.errorMessage));
-    }
-    return right(BalanceYearsEntity.fromJson(response.content).years);
+    // Check if there is a request failure
+    final responseCheck = FailureUtils.checkResponse(
+        body: response.content, statusCode: response.statusCode);
+    return responseCheck.fold((failure) => left(failure),
+        (body) => right(BalanceYearsEntity.fromJson(body).years));
   }
 
   Future<Either<Failure, BalanceEntity>> create(
@@ -93,14 +106,14 @@ class BalanceRemoteDataSource {
         balanceTypeMode == BalanceTypeMode.expense
             ? balance.toExpenseJson()
             : balance.toRevenueJson());
-    if (response.hasError) {
-      return left(Failure.badRequest(message: response.errorMessage));
-    }
-    return right(balanceTypeMode == BalanceTypeMode.expense
-        ? BalanceEntity.fromExpenseJson(response.content,
-            type: balance.balanceType)
-        : BalanceEntity.fromRevenueJson(response.content,
-            type: balance.balanceType));
+    // Check if there is a request failure
+    final responseCheck = FailureUtils.checkResponse(
+        body: response.content, statusCode: response.statusCode);
+    return responseCheck.fold(
+        (failure) => left(failure),
+        (body) => right(balanceTypeMode == BalanceTypeMode.expense
+            ? BalanceEntity.fromExpenseJson(body)
+            : BalanceEntity.fromRevenueJson(body)));
   }
 
   Future<Either<Failure, BalanceEntity>> update(
@@ -113,12 +126,14 @@ class BalanceRemoteDataSource {
         balanceTypeMode == BalanceTypeMode.expense
             ? balance.toExpenseJson()
             : balance.toRevenueJson());
-    if (response.hasError) {
-      return left(Failure.badRequest(message: response.errorMessage));
-    }
-    return right(balanceTypeMode == BalanceTypeMode.expense
-        ? BalanceEntity.fromExpenseJson(response.content, type: balance.balanceType)
-        : BalanceEntity.fromRevenueJson(response.content, type: balance.balanceType));
+    // Check if there is a request failure
+    final responseCheck = FailureUtils.checkResponse(
+        body: response.content, statusCode: response.statusCode);
+    return responseCheck.fold(
+        (failure) => left(failure),
+        (body) => right(balanceTypeMode == BalanceTypeMode.expense
+            ? BalanceEntity.fromExpenseJson(body)
+            : BalanceEntity.fromRevenueJson(body)));
   }
 
   Future<Either<Failure, void>> delete(
@@ -128,9 +143,10 @@ class BalanceRemoteDataSource {
         : APIContract.revenue;
     HttpResponse response =
         await client.sendDelRequest('$baseUrl/${balance.id.toString()}');
-    if (response.hasError) {
-      return left(Failure.badRequest(message: response.errorMessage));
-    }
-    return right(null);
+    // Check if there is a request failure
+    final responseCheck = FailureUtils.checkResponse(
+        body: response.content, statusCode: response.statusCode);
+    return responseCheck.fold(
+        (failure) => left(failure), (body) => right(null));
   }
 }

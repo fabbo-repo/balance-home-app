@@ -40,12 +40,12 @@ final appVersionController =
 final themeModeProvider =
     StateNotifierProvider<ThemeModeState, ThemeMode>((ref) {
   final settingsRepository = ref.read(settingsRepositoryProvider);
-  final theme = settingsRepository.getTheme().fold((l) {
+  final theme = settingsRepository.getTheme().fold((failure) {
     return (SchedulerBinding.instance.window.platformBrightness ==
             Brightness.light)
         ? ThemeMode.light
         : ThemeMode.dark;
-  }, (r) => r);
+  }, (value) => value);
   return ThemeModeState(theme);
 });
 

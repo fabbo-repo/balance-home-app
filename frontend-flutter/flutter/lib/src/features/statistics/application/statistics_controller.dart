@@ -1,3 +1,5 @@
+import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_repository_interface.dart';
@@ -35,53 +37,60 @@ class StatisticsController extends StateNotifier<AsyncValue<StatisticsData>> {
         BalanceTypeMode.revenue,
         dateFrom: balanceDate.dateFrom,
         dateTo: balanceDate.dateTo);
-    state = await revenues
-        .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
-            (revenues) async {
+    state = await revenues.fold(
+        (failure) => AsyncValue.error(
+            failure is ApiBadRequestFailure ? failure.detail : "",
+            StackTrace.empty), (revenues) async {
       // Revenues years
       final revenueYears =
           await _balanceRepository.getBalanceYears(BalanceTypeMode.revenue);
-      return await revenueYears
-          .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
-              (revenueYears) async {
+      return await revenueYears.fold(
+          (failure) => AsyncValue.error(
+              failure is ApiBadRequestFailure ? failure.detail : "",
+              StackTrace.empty), (revenueYears) async {
         // Expenses
         final expenses = await _balanceRepository.getBalances(
             BalanceTypeMode.expense,
             dateFrom: balanceDate.dateFrom,
             dateTo: balanceDate.dateTo);
-        return await expenses
-            .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
-                (expenses) async {
+        return await expenses.fold(
+            (failure) => AsyncValue.error(
+                failure is ApiBadRequestFailure ? failure.detail : "",
+                StackTrace.empty), (expenses) async {
           // Expense years
           final expenseYears =
               await _balanceRepository.getBalanceYears(BalanceTypeMode.expense);
-          return await expenseYears
-              .fold((l) => AsyncValue.error(l.error, StackTrace.empty),
-                  (expenseYears) async {
+          return await expenseYears.fold(
+              (failure) => AsyncValue.error(
+                  failure is ApiBadRequestFailure ? failure.detail : "",
+                  StackTrace.empty), (expenseYears) async {
             // Monthly balances
             final monthlyBalances = await _monthlyBalanceRepository
                 .getMonthlyBalances(year: _selectedSavingsDate.year);
             return await monthlyBalances.fold(
-                (l) => AsyncValue.error(l.error, StackTrace.empty),
-                (monthlyBalances) async {
+                (failure) => AsyncValue.error(
+                    failure is ApiBadRequestFailure ? failure.detail : "",
+                    StackTrace.empty), (monthlyBalances) async {
               // Annual balances
               final annualBalances =
                   await _annualBalanceRepository.getAnnualBalances();
               return await annualBalances.fold(
-                  (l) => AsyncValue.error(l.error, StackTrace.empty),
-                  (annualBalances) async {
+                  (failure) => AsyncValue.error(
+                      failure is ApiBadRequestFailure ? failure.detail : "",
+                      StackTrace.empty), (annualBalances) async {
                 // Coin types
                 final coinTypes = await _coinTypeRepository.getCoinTypes();
                 return await coinTypes.fold(
-                    (l) => AsyncValue.error(l.error, StackTrace.empty),
-                    (coinTypes) async {
+                    (failure) => AsyncValue.error(
+                        failure is ApiBadRequestFailure ? failure.detail : "",
+                        StackTrace.empty), (coinTypes) async {
                   // Date exchanges
                   final dateExchanges =
                       await _exchangeRepository.getLastDateExchanges(days: 20);
                   return await dateExchanges.fold(
-                      (l) =>
-                          AsyncValue.error(l.error, StackTrace.empty),
-                      (dateExchanges) async {
+                      (failure) => AsyncValue.error(
+                          failure is ApiBadRequestFailure ? failure.detail : "",
+                          StackTrace.empty), (dateExchanges) async {
                     return AsyncValue.data(StatisticsData(
                       revenues: revenues,
                       revenueYears: revenueYears,

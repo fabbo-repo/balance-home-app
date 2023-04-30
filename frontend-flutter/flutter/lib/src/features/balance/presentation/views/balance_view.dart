@@ -2,8 +2,8 @@ import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/presentation/states/selected_date_state.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_error_widget.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/custom_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_error_widget.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/error_dialog.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/responsive_layout.dart';
@@ -79,7 +79,7 @@ class BalanceView extends ConsumerWidget {
       debugPrint("[BALANCE_VIEW] $o -> $st");
       return Stack(alignment: AlignmentDirectional.centerStart, children: [
         cache,
-        const CustomErrorWidget(),
+        const AppErrorWidget(),
       ]);
     }, loading: () {
       return const LoadingWidget(color: Colors.grey);
@@ -118,7 +118,7 @@ class BalanceView extends ConsumerWidget {
                   fontSize: 18,
                   fontWeight: FontWeight.bold))),
     );
-    Widget dateBtn = CustomTextButton(
+    Widget dateBtn = AppTextButton(
       text: appLocalizations.date,
       backgroundColor: balanceTypeMode == BalanceTypeMode.expense
           ? const Color.fromARGB(255, 160, 71, 41)
