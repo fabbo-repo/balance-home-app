@@ -32,7 +32,7 @@ Either<UnprocessableEntityFailure, String> _validate(
       : appLocalizations.invitationCodeNotValid;
   return left(
     UnprocessableEntityFailure(
-      message: message,
+      detail: message,
     ),
   );
 }

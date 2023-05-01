@@ -22,14 +22,14 @@ Future<bool> showCodeAdviceDialog(AppLocalizations appLocalizations) async {
       false;
 }
 
-Future<bool> showCoinChangeAdviceDialog(
-    AppLocalizations appLocalizations, double newBalance, String coinType) async {
+Future<bool> showCurrencyChangeAdviceDialog(AppLocalizations appLocalizations,
+    double newBalance, String currencyType) async {
   return (await showDialog(
           context: navigatorKey.currentContext!,
           builder: (context) => InfoDialog(
                 dialogTitle: appLocalizations.userEditDialogTitle,
-                dialogDescription: appLocalizations.userCoinChangeDescription
-                  .replaceFirst("%%", "$newBalance $coinType"),
+                dialogDescription: appLocalizations.userCurrencyChangeDescription
+                    .replaceFirst("%%", "$newBalance $currencyType"),
                 confirmationText: appLocalizations.confirmation,
                 cancelText: appLocalizations.cancel,
                 onConfirmation: () => Navigator.pop(context, true),

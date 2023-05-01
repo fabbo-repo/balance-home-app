@@ -4,7 +4,7 @@ import 'package:fpdart/fpdart.dart';
 
 /// Settings Repository Interface.
 abstract class SettingsRepositoryInterface {
-  Future<Either<Failure, bool>> saveTheme(ThemeMode theme);
+  Future<Either<Failure, bool>> saveTheme(ThemeData theme);
 
-  Either<Failure, ThemeMode> getTheme();
+  Future<Either<Failure, ThemeData>> getTheme();
 }

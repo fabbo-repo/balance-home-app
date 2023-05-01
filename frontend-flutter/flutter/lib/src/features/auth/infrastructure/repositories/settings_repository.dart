@@ -15,14 +15,14 @@ class SettingsRepository extends SettingsRepositoryInterface {
   });
 
   @override
-  Future<Either<Failure, bool>> saveTheme(ThemeMode theme) async {
+  Future<Either<Failure, bool>> saveTheme(ThemeData theme) async {
     return right(await themeLocalDataSource.store(theme));
   }
 
   @override
-  Either<Failure, ThemeMode> getTheme() {
-    final theme = themeLocalDataSource.get();
-    if (theme == null) return left(const EmptyFailure()); 
+  Future<Either<Failure, ThemeData>> getTheme() async {
+    final theme = await themeLocalDataSource.get();
+    if (theme == null) return left(const EmptyFailure());
     return right(theme);
   }
 }

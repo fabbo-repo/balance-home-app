@@ -10,8 +10,8 @@ import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart
 import 'package:balance_home_app/src/features/auth/domain/values/user_name.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/values/balance_quantity.dart';
-import 'package:balance_home_app/src/features/coin/presentation/widgets/dropdown_picker_field.dart';
-import 'package:balance_home_app/src/features/coin/providers.dart';
+import 'package:balance_home_app/src/features/currency/presentation/widgets/dropdown_picker_field.dart';
+import 'package:balance_home_app/src/features/currency/providers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -78,12 +78,12 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
             widget._expectedAnnualBalanceController.text.replaceAll(",", ".")));
     _prefCoinType ??= widget.user.prefCoinType;
 
-    final coinTypes = ref.watch(coinTypeListsControllerProvider);
+    final currencyTypes = ref.watch(currencyTypeListsControllerProvider);
     final userEdit = ref.watch(userEditControllerProvider);
     final userEditController = ref.read(userEditControllerProvider.notifier);
     // This is used to refresh page in case handle controller
     return userEdit.when(data: (_) {
-      return coinTypes.when(data: (coinTypes) {
+      return currencyTypes.when(data: (currencyTypes) {
         cache = Form(
           key: widget._formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -154,12 +154,12 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                   controller: widget._expectedAnnualBalanceController,
                 ),
                 verticalSpace(),
-                (coinTypes.isNotEmpty)
+                (currencyTypes.isNotEmpty)
                     ? DropdownPickerField(
                         readOnly: !widget.edit,
-                        name: appLocalizations.coinType,
+                        name: appLocalizations.currencyType,
                         initialValue: _prefCoinType!,
-                        items: coinTypes.map((e) => e.code).toList(),
+                        items: currencyTypes.map((e) => e.code).toList(),
                         onChanged: (value) async {
                           if (value! == widget.user.prefCoinType) return;
                           (await userEditController.getExchange(
@@ -172,9 +172,9 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                               _prefCoinType = widget.user.prefCoinType;
                             });
                             showErrorUserEditDialog(
-                                appLocalizations, failure.message);
+                                appLocalizations, failure.detail);
                           }, (newBalance) async {
-                            if (await showCoinChangeAdviceDialog(
+                            if (await showCurrencyChangeAdviceDialog(
                                 appLocalizations, newBalance, value)) {
                               _prefCoinType = value;
                             } else {
@@ -207,7 +207,7 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                             .fold((failure) {
                           isImageOk = false;
                           showErrorUserEditDialog(
-                              appLocalizations, failure.message);
+                              appLocalizations, failure.detail);
                         }, (_) => null);
                         if (!isImageOk) return;
                       }
@@ -221,7 +221,7 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                               appLocalizations))
                           .fold((failure) {
                         showErrorUserEditDialog(
-                            appLocalizations, failure.message);
+                            appLocalizations, failure.detail);
                       }, (entity) {
                         authController.refreshUserData();
                       });

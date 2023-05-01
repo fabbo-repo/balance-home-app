@@ -1,4 +1,5 @@
 import 'package:balance_home_app/config/app_colors.dart';
+import 'package:balance_home_app/config/theme.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
@@ -19,14 +20,14 @@ class StatisticsViewDesktop extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeModeProvider);
+    final theme = ref.watch(themeDataProvider);
     return ref.watch(statisticsControllerProvider).when<Widget>(
         data: (StatisticsData data) {
       cache = SingleChildScrollView(
         child: Column(
           children: [
             Container(
-              color: theme == ThemeMode.light
+              color: theme == AppTheme.lightTheme
                   ? AppColors.balanceBackgroundColor
                   : AppColors.balanceDarkBackgroundColor,
               foregroundDecoration: BoxDecoration(border: Border.all()),
@@ -50,7 +51,7 @@ class StatisticsViewDesktop extends ConsumerWidget {
               ),
             ),
             Container(
-              color: theme == ThemeMode.light
+              color: theme == AppTheme.lightTheme
                   ? AppColors.balanceBackgroundColor
                   : AppColors.balanceDarkBackgroundColor,
               foregroundDecoration: BoxDecoration(border: Border.all()),
@@ -69,13 +70,13 @@ class StatisticsViewDesktop extends ConsumerWidget {
               ),
             ),
             Container(
-                color: theme == ThemeMode.light
+                color: theme == AppTheme.lightTheme
                     ? const Color.fromARGB(254, 201, 241, 253)
                     : const Color.fromARGB(253, 112, 157, 170),
                 foregroundDecoration: BoxDecoration(border: Border.all()),
                 child: StatisticsCurrencyChartContainer(
-                  dateExchanges: data.dateExchanges,
-                  coinTypes: data.coinTypes,
+                  dateCurrencyConversion: data.dateCurrencyConversion,
+                  currencyTypes: data.currencyTypes,
                 ))
           ],
         ),

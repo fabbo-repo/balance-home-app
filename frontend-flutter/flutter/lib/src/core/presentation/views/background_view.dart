@@ -1,3 +1,4 @@
+import 'package:balance_home_app/config/theme.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,9 +13,10 @@ class BackgroundWidget extends ConsumerWidget {
     return Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage(ref.watch(themeModeProvider) == ThemeMode.dark
-                  ? "assets/images/auth_background_dark_image.jpg"
-                  : "assets/images/auth_background_image.jpg"),
+              image: AssetImage(
+                  ref.watch(themeDataProvider) == AppTheme.darkTheme
+                      ? "assets/images/auth_background_dark_image.jpg"
+                      : "assets/images/auth_background_image.jpg"),
               fit: BoxFit.cover),
         ),
         constraints: const BoxConstraints.expand(),

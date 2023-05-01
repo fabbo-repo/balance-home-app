@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ThemeModeState extends StateNotifier<ThemeMode> {
+class ThemeDataState extends StateNotifier<ThemeData> {
+  ThemeDataState(ThemeData theme) : super(theme);
 
-  ThemeModeState(ThemeMode mode) : super(mode);
-
-  void setThemeMode(ThemeMode mode) {
-    state = mode;
+  void setThemeData(ThemeData theme) {
+    state = theme;
   }
 }

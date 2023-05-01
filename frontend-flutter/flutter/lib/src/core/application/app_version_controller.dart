@@ -1,5 +1,4 @@
 import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
-import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/repositories/app_info_repository_interface.dart';
 import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
 import 'package:flutter/cupertino.dart';

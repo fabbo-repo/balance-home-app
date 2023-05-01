@@ -1,5 +1,4 @@
 import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
-import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_type_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_respository_interface.dart';

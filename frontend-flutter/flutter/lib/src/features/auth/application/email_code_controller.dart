@@ -1,5 +1,5 @@
 import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
-import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/input_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/email_code_entity.dart';
@@ -15,29 +15,29 @@ class EmailCodeController extends StateNotifier<AsyncValue<void>> {
 
   EmailCodeController(this._repository) : super(const AsyncValue.data(null));
 
-  Future<Either<UnprocessableEntityFailure, bool>> requestCode(
+  Future<Either<Failure, bool>> requestCode(
       UserEmail email, AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
     return await email.value.fold((failure) {
-      state = AsyncValue.error(failure.message, StackTrace.empty);
-      return left(UnprocessableEntityFailure(message: failure.message));
+      state = AsyncValue.error(failure.detail, StackTrace.empty);
+      return left(UnprocessableEntityFailure(detail: failure.detail));
     }, (email) async {
       final res = await _repository.requestCode(email);
       return res.fold((failure) {
         if (failure is ApiBadRequestFailure) {
           state = AsyncValue.error(failure.detail, StackTrace.empty);
-          return left(UnprocessableEntityFailure(message: failure.detail));
+          return left(UnprocessableEntityFailure(detail: failure.detail));
         } else if (failure is InputBadRequestFailure &&
             failure.containsFieldName("email")) {
           state = AsyncValue.error(
               appLocalizations.emailNotValid, StackTrace.empty);
           return left(UnprocessableEntityFailure(
-              message: appLocalizations.emailNotValid));
+              detail: appLocalizations.emailNotValid));
         }
         state = AsyncValue.error(
             appLocalizations.errorSendingEmailCode, StackTrace.empty);
         return left(UnprocessableEntityFailure(
-            message: appLocalizations.errorSendingEmailCode));
+            detail: appLocalizations.errorSendingEmailCode));
       }, (_) {
         state = const AsyncValue.data(null);
         return right(true);
@@ -45,34 +45,34 @@ class EmailCodeController extends StateNotifier<AsyncValue<void>> {
     });
   }
 
-  Future<Either<UnprocessableEntityFailure, bool>> verifyCode(UserEmail email,
+  Future<Either<Failure, bool>> verifyCode(UserEmail email,
       VerificationCode code, AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
     return await email.value.fold((failure) {
-      state = AsyncValue.error(failure.message, StackTrace.empty);
+      state = AsyncValue.error(failure.detail, StackTrace.empty);
       return left(failure);
     }, (email) async {
       return await code.value.fold((failure) {
-        state = AsyncValue.error(failure.message, StackTrace.empty);
-        return left(UnprocessableEntityFailure(message: failure.message));
+        state = AsyncValue.error(failure.detail, StackTrace.empty);
+        return left(UnprocessableEntityFailure(detail: failure.detail));
       }, (code) async {
         final res = await _repository
             .verifyCode(EmailCodeEntity(email: email, code: code));
         return res.fold((failure) {
           if (failure is ApiBadRequestFailure) {
             state = AsyncValue.error(failure.detail, StackTrace.empty);
-            return left(UnprocessableEntityFailure(message: failure.detail));
+            return left(UnprocessableEntityFailure(detail: failure.detail));
           } else if (failure is InputBadRequestFailure &&
               failure.containsFieldName("code")) {
             state = AsyncValue.error(
                 appLocalizations.invalidEmailCode, StackTrace.empty);
             return left(UnprocessableEntityFailure(
-                message: appLocalizations.invalidEmailCode));
+                detail: appLocalizations.invalidEmailCode));
           }
           state = AsyncValue.error(
               appLocalizations.errorVerifyingEmailCode, StackTrace.empty);
           return left(UnprocessableEntityFailure(
-              message: appLocalizations.errorVerifyingEmailCode));
+              detail: appLocalizations.errorVerifyingEmailCode));
         }, (_) {
           state = const AsyncValue.data(null);
           return right(true);

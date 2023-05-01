@@ -1,4 +1,5 @@
 import 'package:balance_home_app/config/providers.dart';
+import 'package:balance_home_app/config/theme.dart';
 import 'package:balance_home_app/src/core/application/app_version_controller.dart';
 import 'package:balance_home_app/src/core/domain/repositories/app_info_repository_interface.dart';
 import 'package:balance_home_app/src/core/infrastructure/datasources/remote/app_version_remote_data_source.dart';
@@ -6,7 +7,6 @@ import 'package:balance_home_app/src/core/infrastructure/repositories/app_info_r
 import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
 import 'package:balance_home_app/src/core/presentation/states/app_localizations_state.dart';
 import 'package:balance_home_app/src/core/presentation/states/theme_mode_state.dart';
-import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,7 +20,7 @@ import 'package:universal_io/io.dart';
 final appInfoRepositoryProvider = Provider<AppInfoRepositoryInterface>((ref) {
   return AppInfoRepository(
       appVersionRemoteDataSource:
-          AppVersionRemoteDataSource(client: ref.read(httpClientProvider)));
+          AppVersionRemoteDataSource(apiClient: ref.read(apiClientProvider)));
 });
 
 ///
@@ -37,16 +37,13 @@ final appVersionController =
 /// Presentation dependencies
 ///
 
-final themeModeProvider =
-    StateNotifierProvider<ThemeModeState, ThemeMode>((ref) {
-  final settingsRepository = ref.read(settingsRepositoryProvider);
-  final theme = settingsRepository.getTheme().fold((failure) {
-    return (SchedulerBinding.instance.window.platformBrightness ==
-            Brightness.light)
-        ? ThemeMode.light
-        : ThemeMode.dark;
-  }, (value) => value);
-  return ThemeModeState(theme);
+final themeDataProvider =
+    StateNotifierProvider<ThemeDataState, ThemeData>((ref) {
+  final theme =
+      (SchedulerBinding.instance.window.platformBrightness == Brightness.light)
+          ? AppTheme.lightTheme
+          : AppTheme.darkTheme;
+  return ThemeDataState(theme);
 });
 
 final appLocalizationsProvider =

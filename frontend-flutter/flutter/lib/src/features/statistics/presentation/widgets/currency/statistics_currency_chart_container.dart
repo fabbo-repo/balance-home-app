@@ -1,6 +1,6 @@
 import 'package:balance_home_app/src/core/providers.dart';
-import 'package:balance_home_app/src/features/coin/domain/entities/coin_type_entity.dart';
-import 'package:balance_home_app/src/features/coin/domain/entities/date_exchanges_list_entity.dart';
+import 'package:balance_home_app/src/features/currency/domain/entities/currency_type_entity.dart';
+import 'package:balance_home_app/src/features/currency/domain/entities/date_currency_conversion_list_entity.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/models/selected_exchange.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/currency/statistics_currency_line_chart.dart';
 import 'package:balance_home_app/src/features/statistics/providers.dart';
@@ -8,11 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class StatisticsCurrencyChartContainer extends ConsumerWidget {
-  final DateExchangesListEntity dateExchanges;
-  final List<CoinTypeEntity> coinTypes;
+  final DateCurrencyConversionListEntity dateCurrencyConversion;
+  final List<CurrencyTypeEntity> currencyTypes;
 
   const StatisticsCurrencyChartContainer(
-      {required this.dateExchanges, required this.coinTypes, super.key});
+      {required this.dateCurrencyConversion,
+      required this.currencyTypes,
+      super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,7 +24,7 @@ class StatisticsCurrencyChartContainer extends ConsumerWidget {
     final selectedExchangeState =
         ref.read(statisticsCurrencySelectedExchangeProvider.notifier);
     // Coin codes list
-    List<String> coins = coinTypes.map((e) => e.code).toList();
+    List<String> coins = currencyTypes.map((e) => e.code).toList();
     // Screen sizes:
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
@@ -91,7 +93,7 @@ class StatisticsCurrencyChartContainer extends ConsumerWidget {
             child: StatisticsCurrencyLineChart(
               selectedCoinFrom: selectedExchange.coinFrom,
               selectedCoinTo: selectedExchange.coinTo,
-              dateExchanges: dateExchanges,
+              dateCurrencyConversion: dateCurrencyConversion,
             )),
       ],
     );

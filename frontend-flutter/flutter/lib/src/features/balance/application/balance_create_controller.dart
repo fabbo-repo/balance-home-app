@@ -20,7 +20,7 @@ class BalanceCreateController
   BalanceCreateController(this._repository, this._balanceTypeMode)
       : super(const AsyncValue.data(null));
 
-  Future<Either<UnprocessableEntityFailure, BalanceEntity>> handle(
+  Future<Either<Failure, BalanceEntity>> handle(
       BalanceName name,
       BalanceDescription description,
       BalanceQuantity quantity,
@@ -59,7 +59,7 @@ class BalanceCreateController
             return res.fold((failure) {
               state = const AsyncValue.data(null);
               return left(UnprocessableEntityFailure(
-                  message: appLocalizations.genericError));
+                  detail: appLocalizations.genericError));
             }, (value) {
               state = AsyncValue.data(value);
               return right(value);

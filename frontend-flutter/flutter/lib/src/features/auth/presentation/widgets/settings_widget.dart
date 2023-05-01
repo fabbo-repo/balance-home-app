@@ -1,3 +1,4 @@
+import 'package:balance_home_app/config/theme.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/language_picker_dropdown.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/text_check_box.dart';
 import 'package:balance_home_app/src/core/providers.dart';
@@ -31,8 +32,8 @@ class _SettingsWidgetState extends ConsumerState<SettingsWidget> {
     final settings = ref.watch(settingsControllerProvider);
     final settingsController = ref.read(settingsControllerProvider.notifier);
 
-    final theme = ref.watch(themeModeProvider);
-    final themeStateNotifier = ref.read(themeModeProvider.notifier);
+    final theme = ref.watch(themeDataProvider);
+    final themeStateNotifier = ref.read(themeDataProvider.notifier);
     final appLocalizationStateNotifier =
         ref.read(appLocalizationsProvider.notifier);
     // This is used to refresh page in case handle controller
@@ -60,7 +61,7 @@ class _SettingsWidgetState extends ConsumerState<SettingsWidget> {
                               widget.user, locale, appLocalizations))
                           .fold((failure) {
                         showErrorSettingsDialog(
-                            appLocalizations, failure.message);
+                            appLocalizations, failure.detail);
                       }, (_) {
                         authController.refreshUserData();
                       });
@@ -71,14 +72,14 @@ class _SettingsWidgetState extends ConsumerState<SettingsWidget> {
             verticalSpace(),
             TextCheckBox(
                 title: appLocalizations.darkMode,
-                isChecked: theme == ThemeMode.dark,
+                isChecked: theme == AppTheme.darkTheme,
                 fillColor: const Color.fromARGB(255, 70, 70, 70),
                 onChanged: (value) async {
-                  themeStateNotifier.setThemeMode(value != null && value
-                      ? ThemeMode.dark
-                      : ThemeMode.light);
+                  themeStateNotifier.setThemeData(value != null && value
+                      ? AppTheme.darkTheme
+                      : AppTheme.lightTheme);
                   await settingsController.handleThemeMode(
-                      value! ? ThemeMode.dark : ThemeMode.light,
+                      value! ? AppTheme.darkTheme : AppTheme.lightTheme,
                       appLocalizations);
                 }),
             verticalSpace(),

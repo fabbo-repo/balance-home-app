@@ -15,8 +15,8 @@ import 'package:balance_home_app/src/features/balance/domain/values/balance_quan
 import 'package:balance_home_app/src/features/balance/presentation/views/balance_view.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_type_dropdown_picker.dart';
 import 'package:balance_home_app/src/features/balance/providers.dart';
-import 'package:balance_home_app/src/features/coin/presentation/widgets/dropdown_picker_field.dart';
-import 'package:balance_home_app/src/features/coin/providers.dart';
+import 'package:balance_home_app/src/features/currency/presentation/widgets/dropdown_picker_field.dart';
+import 'package:balance_home_app/src/features/currency/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -32,7 +32,7 @@ class BalanceCreateForm extends ConsumerWidget {
   BalanceDescription? _description;
   BalanceQuantity? _quantity;
   BalanceDate? _date;
-  String? _coinType;
+  String? _currencyType;
   BalanceTypeEntity? _balanceTypeEntity;
   final BalanceTypeMode balanceTypeMode;
   Widget cache = Container();
@@ -80,15 +80,15 @@ class BalanceCreateForm extends ConsumerWidget {
 
     final user = ref.watch(authControllerProvider);
     final balanceCreate = ref.watch(balanceCreateControllerProvider);
-    final coinTypes = ref.watch(coinTypeListsControllerProvider);
+    final coinTypes = ref.watch(currencyTypeListsControllerProvider);
     final balanceTypes = ref.watch(balanceTypeListControllerProvider);
     return user.when(data: (user) {
-      _coinType ??= user!.prefCoinType;
+      _currencyType ??= user!.prefCoinType;
       // This is used to refresh page in case handle controller
       return balanceCreate.when(data: (_) {
         return balanceTypes.when(data: (balanceTypes) {
           _balanceTypeEntity ??= balanceTypes[0];
-          return coinTypes.when(data: (coinTypes) {
+          return coinTypes.when(data: (currencyTypes) {
             cache = SingleChildScrollView(
               child: Form(
                 key: _formKey,
@@ -134,13 +134,14 @@ class BalanceCreateForm extends ConsumerWidget {
                             controller: _quantityController,
                             align: TextAlign.end,
                           ),
-                          (coinTypes.isNotEmpty)
+                          (currencyTypes.isNotEmpty)
                               ? DropdownPickerField(
-                                  initialValue: _coinType!,
-                                  items: coinTypes.map((e) => e.code).toList(),
+                                  initialValue: _currencyType!,
+                                  items:
+                                      currencyTypes.map((e) => e.code).toList(),
                                   width: 100,
                                   onChanged: (value) {
-                                    _coinType = value;
+                                    _currencyType = value;
                                   })
                               : const Icon(
                                   Icons.error_outline,
@@ -200,12 +201,12 @@ class BalanceCreateForm extends ConsumerWidget {
                                   _description!,
                                   _quantity!,
                                   _date!,
-                                  _coinType!,
+                                  _currencyType!,
                                   _balanceTypeEntity!,
                                   appLocalizations))
                               .fold((failure) {
                             showErrorBalanceCreationDialog(appLocalizations,
-                                failure.message, balanceTypeMode);
+                                failure.detail, balanceTypeMode);
                           }, (entity) {
                             navigatorKey.currentContext!.go(
                                 balanceTypeMode == BalanceTypeMode.expense

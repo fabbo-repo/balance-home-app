@@ -1,152 +1,133 @@
+import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/src/core/domain/entities/pagination_entity.dart';
-import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
-import 'package:balance_home_app/src/core/utils/failure_utils.dart';
+import 'package:balance_home_app/src/core/domain/failures/http_request_failure.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/config/api_contract.dart';
-import 'package:balance_home_app/src/http_client.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_years_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:intl/intl.dart';
 
 class BalanceRemoteDataSource {
-  final HttpClient client;
+  final ApiClient apiClient;
 
-  BalanceRemoteDataSource({required this.client});
+  BalanceRemoteDataSource({required this.apiClient});
 
   Future<Either<Failure, BalanceEntity>> get(
       int id, BalanceTypeMode balanceTypeMode) async {
-    String baseUrl = balanceTypeMode == BalanceTypeMode.expense
+    String balanceUrl = balanceTypeMode == BalanceTypeMode.expense
         ? APIContract.expense
         : APIContract.revenue;
-    HttpResponse response =
-        await client.sendGetRequest('$baseUrl/${id.toString()}');
+    final response = await apiClient.getRequest('$balanceUrl/${id.toString()}');
     // Check if there is a request failure
-    final responseCheck = FailureUtils.checkResponse(
-        body: response.content, statusCode: response.statusCode);
-    return responseCheck.fold(
+    return response.fold(
         (failure) => left(failure),
-        (body) => right(balanceTypeMode == BalanceTypeMode.expense
-            ? BalanceEntity.fromExpenseJson(body)
-            : BalanceEntity.fromRevenueJson(body)));
+        (value) => right(balanceTypeMode == BalanceTypeMode.expense
+            ? BalanceEntity.fromExpenseJson(value.data)
+            : BalanceEntity.fromRevenueJson(value.data)));
   }
 
   Future<Either<Failure, List<BalanceEntity>>> list(
       BalanceTypeMode balanceTypeMode,
       {DateTime? dateFrom,
       DateTime? dateTo}) async {
-    String baseUrl = balanceTypeMode == BalanceTypeMode.expense
+    String balanceUrl = balanceTypeMode == BalanceTypeMode.expense
         ? APIContract.expense
         : APIContract.revenue;
-    String extraArgs = "";
+    Map<String, dynamic> queryParameters = {"page": 1};
     if (dateFrom != null) {
-      extraArgs +=
-          "&date_from=${dateFrom.year}-${dateFrom.month}-${dateFrom.day}";
+      queryParameters["date_from"] = DateFormat('yyyy-MM-dd').format(dateFrom);
     }
     if (dateTo != null) {
-      extraArgs += "&date_to=${dateTo.year}-${dateTo.month}-${dateTo.day}";
+      queryParameters["date_to"] = DateFormat('yyyy-MM-dd').format(dateTo);
     }
-    int pageNumber = 1;
-    HttpResponse response =
-        await client.sendGetRequest('$baseUrl?page=$pageNumber$extraArgs');
+    final response = await apiClient.getRequest(balanceUrl,
+        queryParameters: queryParameters);
     // Check if there is a request failure
-    final responseCheck = FailureUtils.checkResponse(
-        body: response.content, statusCode: response.statusCode);
-    if (responseCheck.isLeft()) {
-      return left(
-          responseCheck.getLeft().getOrElse(() => const EmptyFailure()));
-    }
-    PaginationEntity page = PaginationEntity.fromJson(response.content);
-    List<BalanceEntity> balances = page.results.map((e) {
-      return balanceTypeMode == BalanceTypeMode.expense
-          ? BalanceEntity.fromExpenseJson(e)
-          : BalanceEntity.fromRevenueJson(e);
-    }).toList();
-    while (page.next != null) {
-      pageNumber++;
-      HttpResponse response =
-          await client.sendGetRequest('$baseUrl?page=$pageNumber$extraArgs');
-      // Check if there is a request failure
-      final responseCheck = FailureUtils.checkResponse(
-          body: response.content, statusCode: response.statusCode);
-      if (responseCheck.isLeft()) {
-        return left(
-            responseCheck.getLeft().getOrElse(() => const EmptyFailure()));
-      }
-      page = PaginationEntity.fromJson(response.content);
-      balances += page.results.map((e) {
+    return await response.fold((failure) => left(failure), (value) async {
+      PaginationEntity page = PaginationEntity.fromJson(value.data);
+      List<BalanceEntity> balances = page.results.map((e) {
         return balanceTypeMode == BalanceTypeMode.expense
             ? BalanceEntity.fromExpenseJson(e)
             : BalanceEntity.fromRevenueJson(e);
       }).toList();
-    }
-    return right(balances);
+      while (page.next != null) {
+        queryParameters["page"]++;
+        final response = await apiClient.getRequest(balanceUrl,
+            queryParameters: queryParameters);
+        // Check if there is a request failure
+        response.fold((_) => null, (value) {
+          page = PaginationEntity.fromJson(value.data);
+          balances += page.results.map((e) {
+            return balanceTypeMode == BalanceTypeMode.expense
+                ? BalanceEntity.fromExpenseJson(e)
+                : BalanceEntity.fromRevenueJson(e);
+          }).toList();
+        });
+        if (response.isLeft()) {
+          return left(
+              response.getLeft().getOrElse(() => HttpRequestFailure.empty()));
+        }
+      }
+      return right(balances);
+    });
   }
 
   Future<Either<Failure, List<int>>> getYears(
       BalanceTypeMode balanceTypeMode) async {
-    String baseUrl = balanceTypeMode == BalanceTypeMode.expense
+    String balanceUrl = balanceTypeMode == BalanceTypeMode.expense
         ? APIContract.expenseYears
         : APIContract.revenueYears;
-    HttpResponse response = await client.sendGetRequest(baseUrl);
+    final response = await apiClient.getRequest(balanceUrl);
     // Check if there is a request failure
-    final responseCheck = FailureUtils.checkResponse(
-        body: response.content, statusCode: response.statusCode);
-    return responseCheck.fold((failure) => left(failure),
-        (body) => right(BalanceYearsEntity.fromJson(body).years));
+    return response.fold((failure) => left(failure),
+        (value) => right(BalanceYearsEntity.fromJson(value.data).years));
   }
 
   Future<Either<Failure, BalanceEntity>> create(
       BalanceEntity balance, BalanceTypeMode balanceTypeMode) async {
-    String baseUrl = balanceTypeMode == BalanceTypeMode.expense
+    String balanceUrl = balanceTypeMode == BalanceTypeMode.expense
         ? APIContract.expense
         : APIContract.revenue;
-    HttpResponse response = await client.sendPostRequest(
-        baseUrl,
-        balanceTypeMode == BalanceTypeMode.expense
+    final response = await apiClient.postRequest(balanceUrl,
+        data: balanceTypeMode == BalanceTypeMode.expense
             ? balance.toExpenseJson()
             : balance.toRevenueJson());
     // Check if there is a request failure
-    final responseCheck = FailureUtils.checkResponse(
-        body: response.content, statusCode: response.statusCode);
-    return responseCheck.fold(
+    return response.fold(
         (failure) => left(failure),
-        (body) => right(balanceTypeMode == BalanceTypeMode.expense
-            ? BalanceEntity.fromExpenseJson(body)
-            : BalanceEntity.fromRevenueJson(body)));
+        (value) => right(balanceTypeMode == BalanceTypeMode.expense
+            ? BalanceEntity.fromExpenseJson(value.data)
+            : BalanceEntity.fromRevenueJson(value.data)));
   }
 
   Future<Either<Failure, BalanceEntity>> update(
       BalanceEntity balance, BalanceTypeMode balanceTypeMode) async {
-    String baseUrl = balanceTypeMode == BalanceTypeMode.expense
+    String balanceUrl = balanceTypeMode == BalanceTypeMode.expense
         ? APIContract.expense
         : APIContract.revenue;
-    HttpResponse response = await client.sendPutRequest(
-        '$baseUrl/${balance.id.toString()}',
-        balanceTypeMode == BalanceTypeMode.expense
+    final response = await apiClient.putRequest(
+        '$balanceUrl/${balance.id.toString()}',
+        data: balanceTypeMode == BalanceTypeMode.expense
             ? balance.toExpenseJson()
             : balance.toRevenueJson());
     // Check if there is a request failure
-    final responseCheck = FailureUtils.checkResponse(
-        body: response.content, statusCode: response.statusCode);
-    return responseCheck.fold(
+    return response.fold(
         (failure) => left(failure),
-        (body) => right(balanceTypeMode == BalanceTypeMode.expense
-            ? BalanceEntity.fromExpenseJson(body)
-            : BalanceEntity.fromRevenueJson(body)));
+        (value) => right(balanceTypeMode == BalanceTypeMode.expense
+            ? BalanceEntity.fromExpenseJson(value.data)
+            : BalanceEntity.fromRevenueJson(value.data)));
   }
 
   Future<Either<Failure, void>> delete(
       BalanceEntity balance, BalanceTypeMode balanceTypeMode) async {
-    String baseUrl = balanceTypeMode == BalanceTypeMode.expense
+    String balanceUrl = balanceTypeMode == BalanceTypeMode.expense
         ? APIContract.expense
         : APIContract.revenue;
-    HttpResponse response =
-        await client.sendDelRequest('$baseUrl/${balance.id.toString()}');
+    final response =
+        await apiClient.delRequest('$balanceUrl/${balance.id.toString()}');
     // Check if there is a request failure
-    final responseCheck = FailureUtils.checkResponse(
-        body: response.content, statusCode: response.statusCode);
-    return responseCheck.fold(
-        (failure) => left(failure), (body) => right(null));
+    return response.fold((failure) => left(failure), (_) => right(null));
   }
 }

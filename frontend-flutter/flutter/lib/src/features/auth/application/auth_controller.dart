@@ -45,18 +45,18 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
       }, (value) {
         state = AsyncValue.data(value);
         updateAuthState();
-        updateAppLocaalizationsState();
+        updateAppLocalizationsState();
         return right(true);
       });
     });
   }
 
-  Future<Either<UnprocessableEntityFailure, void>> createUser(
+  Future<Either<Failure, void>> createUser(
       UserName username,
       UserEmail email,
       String language,
       InvitationCode invCode,
-      String prefCoinType,
+      String prefCurrencyType,
       UserPassword password,
       UserRepeatPassword password2,
       AppLocalizations appLocalizations) async {
@@ -86,31 +86,31 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
                   email: email,
                   language: language,
                   invCode: invCode,
-                  prefCoinType: prefCoinType,
+                  prefCoinType: prefCurrencyType,
                   password: password,
                   password2: password2));
               state = const AsyncValue.data(null);
               return res.fold((failure) {
                 if (failure is ApiBadRequestFailure) {
                   return left(
-                      UnprocessableEntityFailure(message: failure.detail));
+                      UnprocessableEntityFailure(detail: failure.detail));
                 } else if (failure is InputBadRequestFailure) {
                   if (failure.containsFieldName("password")) {
                     return left(UnprocessableEntityFailure(
-                        message: failure.getFieldDetail("password")));
+                        detail: failure.getFieldDetail("password")));
                   } else if (failure.containsFieldName("inv_code")) {
                     return left(UnprocessableEntityFailure(
-                        message: appLocalizations.invitationCodeNotValid));
+                        detail: appLocalizations.invitationCodeNotValid));
                   } else if (failure.containsFieldName("email")) {
                     return left(UnprocessableEntityFailure(
-                        message: appLocalizations.emailUsed));
+                        detail: appLocalizations.emailUsed));
                   } else if (failure.containsFieldName("username")) {
                     return left(UnprocessableEntityFailure(
-                        message: appLocalizations.usernameUsed));
+                        detail: appLocalizations.usernameUsed));
                   }
                 }
                 return left(UnprocessableEntityFailure(
-                    message: appLocalizations.genericError));
+                    detail: appLocalizations.genericError));
               }, (value) => right(value));
             });
           });
@@ -119,8 +119,8 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
     });
   }
 
-  Future<Either<UnprocessableEntityFailure, bool>> signIn(UserEmail email,
-      LoginPassword password, AppLocalizations appLocalizations,
+  Future<Either<Failure, bool>> signIn(UserEmail email, LoginPassword password,
+      AppLocalizations appLocalizations,
       {bool store = false}) async {
     state = const AsyncValue.loading();
     return email.value.fold((failure) {
@@ -139,31 +139,31 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
           if (failure is ApiBadRequestFailure) {
             if (failure.errorCode == noInvCodeFailure) {
               return left(UnprocessableEntityFailure(
-                  message: appLocalizations.wrongCredentials));
+                  detail: appLocalizations.wrongCredentials));
             } else if (failure.errorCode == unverifiedEmailFailure) {
               return left(UnprocessableEntityFailure(
-                  message: appLocalizations.emailNotVerified));
+                  detail: appLocalizations.emailNotVerified));
             }
-            return left(UnprocessableEntityFailure(message: failure.detail));
+            return left(UnprocessableEntityFailure(detail: failure.detail));
           } else if (failure is InputBadRequestFailure) {
             if (failure.containsFieldName("email")) {
               return left(UnprocessableEntityFailure(
-                  message: appLocalizations.emailNotValid));
+                  detail: appLocalizations.emailNotValid));
             }
           } else if (failure is UnauthorizedRequestFailure) {
             return left(UnprocessableEntityFailure(
-                message: appLocalizations.wrongCredentials));
+                detail: appLocalizations.wrongCredentials));
           }
           return left(UnprocessableEntityFailure(
-              message: appLocalizations.genericError));
+              detail: appLocalizations.genericError));
         }, (_) async {
           final res = await _repository.getUser();
           return res.fold(
               (failure) => left(UnprocessableEntityFailure(
-                  message: appLocalizations.genericError)), (value) {
+                  detail: appLocalizations.genericError)), (value) {
             state = AsyncValue.data(value);
             updateAuthState();
-            updateAppLocaalizationsState();
+            updateAppLocalizationsState();
             return right(true);
           });
         });
@@ -206,7 +206,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
   }
 
   @visibleForTesting
-  void updateAppLocaalizationsState() {
+  void updateAppLocalizationsState() {
     _appLocalizationsState.setLocale(Locale(state.asData!.value!.language));
   }
 }

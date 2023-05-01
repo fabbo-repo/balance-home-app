@@ -1,20 +1,21 @@
 import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/jwt_entity.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Manage JWT in device storage
 class JwtLocalDataSource {
-  final FlutterSecureStorage _storage;
+  final Future<SharedPreferences> futureSharedPreferences;
 
   /// Default constructor for [JwtLocalDataSource]
-  JwtLocalDataSource(this._storage);
+  JwtLocalDataSource({required this.futureSharedPreferences});
 
   /// Get jwt from the device storage
   Future<Either<Failure, JwtEntity>> get() async {
-    final refresh = await _storage.read(key: "refresh_jwt");
-    final access = await _storage.read(key: "access_jwt");
+    final sharedPreferences = await futureSharedPreferences;
+    final refresh = sharedPreferences.getString("refreshToken");
+    final access = sharedPreferences.getString("accessToken");
     if (refresh == null) {
       return left(const EmptyFailure());
     }
@@ -23,9 +24,12 @@ class JwtLocalDataSource {
 
   /// Store jwt in device storage
   Future<bool> store(JwtEntity jwt) async {
+    final sharedPreferences = await futureSharedPreferences;
     try {
-      await _storage.write(key: "refresh_jwt", value: jwt.refresh);
-      await _storage.write(key: "access_jwt", value: jwt.access);
+      await sharedPreferences.setString("refreshToken", jwt.refresh);
+      if (jwt.access != null) {
+        await sharedPreferences.setString("accessToken", jwt.access!);
+      }
     } catch (e) {
       return false;
     }
@@ -34,9 +38,10 @@ class JwtLocalDataSource {
 
   /// Remove jwt from device storage
   Future<bool> remove() async {
+    final sharedPreferences = await futureSharedPreferences;
     try {
-      await _storage.delete(key: "refresh_jwt");
-      await _storage.delete(key: "refresh_jwt");
+      await sharedPreferences.remove("refreshToken");
+      await sharedPreferences.remove("accessToken");
     } catch (e) {
       return false;
     }

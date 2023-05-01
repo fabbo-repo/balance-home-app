@@ -28,14 +28,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Balance type repository
 final balanceTypeRepositoryProvider = Provider<BalanceTypeRepositoryInterface>(
     (ref) => BalanceTypeRepository(
-        balanceTypeRemoteDataSource:
-            BalanceTypeRemoteDataSource(client: ref.read(httpClientProvider))));
+        balanceTypeRemoteDataSource: BalanceTypeRemoteDataSource(
+            apiClient: ref.read(apiClientProvider))));
 
 /// Balance repository
 final balanceRepositoryProvider = Provider<BalanceRepositoryInterface>((ref) =>
     BalanceRepository(
         balanceRemoteDataSource:
-            BalanceRemoteDataSource(client: ref.read(httpClientProvider))));
+            BalanceRemoteDataSource(apiClient: ref.read(apiClientProvider))));
 
 ///
 /// Application dependencies

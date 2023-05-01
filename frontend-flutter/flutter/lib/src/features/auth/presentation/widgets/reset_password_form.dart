@@ -120,7 +120,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                           retry: progress == ResetPasswordProgress.started))
                       .fold((failure) {
                     showErrorResetPasswordCodeDialog(
-                        appLocalizations, failure.message);
+                        appLocalizations, failure.detail);
                   }, (_) {});
                 },
                 text: progress == ResetPasswordProgress.none
@@ -145,7 +145,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                           _email!, _code!, _password!, appLocalizations))
                       .fold((failure) {
                     showErrorResetPasswordCodeDialog(
-                        appLocalizations, failure.message);
+                        appLocalizations, failure.detail);
                   }, (_) {
                     context.go("/${AuthView.routePath}");
                   });
