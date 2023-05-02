@@ -34,10 +34,10 @@ class ApiClient {
       });
 
   ApiClient(
-      {Dio? dioClient,
+      {Dio? dio,
       this.displayRequestLogs = false,
       this.displayResponseLogs = false}) {
-    dioClient = dioClient ?? Dio();
+    dioClient = dio ?? Dio();
     dioClient.options = options;
   }
 

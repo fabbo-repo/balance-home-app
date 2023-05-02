@@ -70,8 +70,7 @@ final authStateListenable = ValueNotifier<bool>(false);
 final authControllerProvider =
     StateNotifierProvider<AuthController, AsyncValue<UserEntity?>>((ref) {
   final repo = ref.read(authRepositoryProvider);
-  final appLocalizationsState = ref.read(appLocalizationsProvider.notifier);
-  return AuthController(repo, appLocalizationsState);
+  return AuthController(repository: repo);
 });
 
 final resetPasswordControllerProvider = StateNotifierProvider<

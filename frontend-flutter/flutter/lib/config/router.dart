@@ -58,10 +58,9 @@ final router = GoRouter(
             name: AuthLoadingView.routeName,
             path: AuthLoadingView.routePath,
             builder: (context, state) {
-              Codec<String, String> stringToBase64 = utf8.fuse(base64Url);
               return AuthLoadingView(
                   location: state.queryParams['path'] != null
-                      ? stringToBase64.decode(state.queryParams['path']!)
+                      ? state.queryParams['path']!
                       : "/${AuthLoadingView.routePath}");
             },
           ),
@@ -219,9 +218,7 @@ Future<String?> authGuard(BuildContext context, GoRouterState state) async {
   } else if (!loggedIn && !goingToAuth) {
     return '/';
   } else if (state.extra != null && state.extra == true) {
-    Codec<String, String> stringToBase64 =
-        utf8.fuse(const Base64Codec.urlSafe());
-    return "/${AuthLoadingView.routePath}?path=${stringToBase64.encode("/${AuthView.routePath}")}";
+    return "/${AuthLoadingView.routePath}?path=/${AuthView.routePath}";
   }
   return null;
 }
@@ -230,9 +227,7 @@ Future<String?> authGuardOrNone(
     BuildContext context, GoRouterState state) async {
   final loggedIn = authStateListenable.value;
   if (!loggedIn) {
-    Codec<String, String> stringToBase64 =
-        utf8.fuse(const Base64Codec.urlSafe());
-    return "/${AuthLoadingView.routePath}?path=${stringToBase64.encode(state.location)}";
+    return "/${AuthLoadingView.routePath}?path=${state.location}";
   }
   return null;
 }

@@ -20,10 +20,18 @@ class BalanceHomeAppState extends ConsumerState<BalanceHomeApp> {
     ref
         .read(apiClientProvider)
         .setLanguage(ref.read(appLocalizationsProvider).localeName);
-    ref.listen(appLocalizationsProvider, (previous, next) {
+    ref.listen(appLocalizationsProvider, (_, value) {
       debugPrint(
-          "[PROVIDER LISTENER] New Accept-Language value: ${next.localeName}");
-      ref.read(apiClientProvider).setLanguage(next.localeName);
+          "[PROVIDER LISTENER] New Accept-Language value: ${value.localeName}");
+      ref.read(apiClientProvider).setLanguage(value.localeName);
+    });
+    // Change aplication language at user sign in
+    ref.listen(authControllerProvider, (_, value) {
+      if (value.asData != null && value.asData!.value != null) {
+        ref
+            .read(appLocalizationsProvider.notifier)
+            .setLocale(Locale(value.asData!.value!.language));
+      }
     });
     // Change theme
     ref.read(settingsRepositoryProvider).getTheme().then((value) {
