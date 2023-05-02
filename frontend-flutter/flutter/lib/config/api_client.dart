@@ -21,13 +21,13 @@ class ApiClient {
   final BaseOptions options = BaseOptions(
       baseUrl: Environment.apiUrl,
       connectTimeout: const Duration(seconds: 15000),
-      receiveTimeout: const Duration(seconds: 13000),
+      receiveTimeout: const Duration(seconds: 15000),
+      sendTimeout: const Duration(seconds: 15000),
       followRedirects: false,
-      validateStatus: (status) {
-        return true;
-      },
+      validateStatus: (status) => true,
       headers: {
-        "Content-Type": ContentType.json.toString(),
+        "content-type": ContentType.json.toString(),
+        "accept": ContentType.json.toString(),
       });
 
   ApiClient({Dio? dioClient}) {
@@ -43,21 +43,24 @@ class ApiClient {
     _dioClient.options.headers.remove(key);
   }
 
+  void setLanguage(String localeName) async {
+    _setHeader("accept-language", localeName);
+  }
+
   void setJwt(JwtEntity jwt) {
     jwtToken = jwt;
     if (jwt.access != null) {
       accessExpirationDate = JwtDecoder.getExpirationDate(jwt.access!);
-      _setHeader("access", "Bearer ${jwt.access}");
+      _setHeader("authorization", "Bearer ${jwt.access}");
     }
   }
 
   void removeJwt() {
-    _removeHeader("access");
+    _removeHeader("authorization");
   }
 
   Either<HttpRequestFailure, Response> _checkFailureOrResponse(
       {required Response response}) {
-    debugPrint((response.statusCode ?? 0).toString());
     if (((response.statusCode ?? unknownStatusCode) / 10).round() == 20) {
       return right(response);
     } else if (response.statusCode == 400) {
