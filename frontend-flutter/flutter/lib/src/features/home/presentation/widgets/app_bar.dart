@@ -73,9 +73,9 @@ class CustomAppBar extends ConsumerWidget {
     return PopupMenuButton(
       onSelected: (value) {
         if (value == 0) {
-          navigatorKey.currentContext!.goNamed(UserEditView.routeName);
+          navigatorKey.currentContext!.pushNamed(UserEditView.routeName);
         } else if (value == 1) {
-          navigatorKey.currentContext!.goNamed(SettingsView.routeName);
+          navigatorKey.currentContext!.pushNamed(SettingsView.routeName);
         } else if (value == 2) {
           // It cannot call authController because it would change provider
           // while changing the entire three and that leads to an error

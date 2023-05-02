@@ -233,14 +233,14 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
         );
         return cache;
       }, error: (error, stackTrace) {
-        return showError(error, stackTrace, cache: cache);
+        return showError(error, stackTrace, background: cache);
       }, loading: () {
-        return showLoading(cache: cache);
+        return showLoading(background: cache);
       });
     }, error: (error, stackTrace) {
-      return showError(error, stackTrace, cache: cache);
+      return showError(error, stackTrace, background: cache);
     }, loading: () {
-      return showLoading(cache: cache);
+      return showLoading(background: cache);
     });
   }
 

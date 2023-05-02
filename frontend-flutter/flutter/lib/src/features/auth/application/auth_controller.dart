@@ -34,7 +34,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
   Future<Either<Failure, bool>> trySignIn() async {
     state = const AsyncValue.loading();
     final res = await _repository.trySignIn();
-    return res.fold((failure) {
+    return await res.fold((failure) {
       state = const AsyncValue.data(null);
       return left(failure);
     }, (_) async {

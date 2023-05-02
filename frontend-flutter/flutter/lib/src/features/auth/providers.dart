@@ -69,28 +69,27 @@ final authStateListenable = ValueNotifier<bool>(false);
 
 final authControllerProvider =
     StateNotifierProvider<AuthController, AsyncValue<UserEntity?>>((ref) {
-  final repo = ref.watch(authRepositoryProvider);
+  final repo = ref.read(authRepositoryProvider);
   final appLocalizationsState = ref.read(appLocalizationsProvider.notifier);
   return AuthController(repo, appLocalizationsState);
 });
 
 final resetPasswordControllerProvider = StateNotifierProvider<
     ResetPasswordController, AsyncValue<ResetPasswordProgress>>((ref) {
-  final repo = ref.watch(resetPasswordRepositoryProvider);
+  final repo = ref.read(resetPasswordRepositoryProvider);
   return ResetPasswordController(repo);
 });
 
 final emailCodeControllerProvider =
     StateNotifierProvider<EmailCodeController, AsyncValue<void>>((ref) {
-  final repo = ref.watch(emailCodeRepositoryProvider);
+  final repo = ref.read(emailCodeRepositoryProvider);
   return EmailCodeController(repo);
 });
 
 final userEditControllerProvider =
     StateNotifierProvider<UserEditController, AsyncValue<void>>((ref) {
-  final authRepo = ref.watch(authRepositoryProvider);
-  final currencyConversionRepo =
-      ref.watch(currencyConversionRepositoryProvider);
+  final authRepo = ref.read(authRepositoryProvider);
+  final currencyConversionRepo = ref.read(currencyConversionRepositoryProvider);
   return UserEditController(
       authRepository: authRepo,
       currencyConversionRepository: currencyConversionRepo);
@@ -98,7 +97,7 @@ final userEditControllerProvider =
 
 final settingsControllerProvider =
     StateNotifierProvider<SettingsController, AsyncValue<void>>((ref) {
-  final authRepo = ref.watch(authRepositoryProvider);
-  final settingsRepo = ref.watch(settingsRepositoryProvider);
+  final authRepo = ref.read(authRepositoryProvider);
+  final settingsRepo = ref.read(settingsRepositoryProvider);
   return SettingsController(authRepo, settingsRepo);
 });

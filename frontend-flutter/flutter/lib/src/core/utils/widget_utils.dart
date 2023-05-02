@@ -4,18 +4,18 @@ import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.da
 import 'package:flutter/material.dart';
 
 Widget showLoading(
-    {Widget? cache,
+    {Widget? background,
     AlignmentGeometry alignment = AlignmentDirectional.centerStart}) {
   return Stack(alignment: alignment, children: [
-    IgnorePointer(child: cache),
+    IgnorePointer(child: background),
     const LoadingWidget(color: Colors.grey),
   ]);
 }
 
-Widget showError(Object error, StackTrace stackTrace, {Widget? cache}) {
+Widget showError(Object error, StackTrace stackTrace, {Widget? background}) {
   debugPrint("[ERROR] $error -> $stackTrace");
   return Stack(alignment: AlignmentDirectional.centerStart, children: [
-    IgnorePointer(child: cache),
+    IgnorePointer(child: background),
     const AppErrorWidget(),
   ]);
 }

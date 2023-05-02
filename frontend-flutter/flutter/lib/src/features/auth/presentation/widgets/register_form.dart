@@ -189,6 +189,6 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         ),
       ),
     );
-    return isLoading ? showLoading(cache: cache) : cache;
+    return isLoading ? showLoading(background: cache) : cache;
   }
 }

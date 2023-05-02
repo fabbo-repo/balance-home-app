@@ -17,11 +17,13 @@ class BalanceHomeAppState extends ConsumerState<BalanceHomeApp> {
   @override
   Widget build(BuildContext context) {
     // Change language header if aplication language changes
+    ref
+        .read(apiClientProvider)
+        .setLanguage(ref.read(appLocalizationsProvider).localeName);
     ref.listen(appLocalizationsProvider, (previous, next) {
       debugPrint(
           "[PROVIDER LISTENER] New Accept-Language value: ${next.localeName}");
-      ref.read(apiClientProvider).options.headers["Accept-Language"] =
-          next.localeName;
+      ref.read(apiClientProvider).setLanguage(next.localeName);
     });
     // Change theme
     ref.read(settingsRepositoryProvider).getTheme().then((value) {

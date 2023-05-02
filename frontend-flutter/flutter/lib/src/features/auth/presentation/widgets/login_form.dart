@@ -150,7 +150,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       ),
     );
     return isLoading
-        ? showLoading(cache: cache, alignment: AlignmentDirectional.topStart)
+        ? showLoading(background: cache, alignment: AlignmentDirectional.topStart)
         : cache;
   }
 }

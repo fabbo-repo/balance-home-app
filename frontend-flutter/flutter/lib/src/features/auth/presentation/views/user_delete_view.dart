@@ -34,7 +34,7 @@ class UserDeleteView extends ConsumerWidget {
             navigatorKey.currentContext!.goNamed(AuthView.routeName);
           });
         } else {
-          navigatorKey.currentContext!.goNamed(UserEditView.routeName);
+          navigatorKey.currentContext!.pop();
         }
       });
     });

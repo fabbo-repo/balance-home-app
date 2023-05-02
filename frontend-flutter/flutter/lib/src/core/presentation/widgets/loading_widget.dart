@@ -14,8 +14,8 @@ class LoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 200,
-        height: 200,
+        width: 170,
+        height: 170,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppLayout.containerRadius),
           color: const Color.fromARGB(115, 231, 231, 231),
@@ -24,12 +24,12 @@ class LoadingWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 100,
-              height: 100,
+              width: 90,
+              height: 90,
               padding: const EdgeInsets.all(AppLayout.genericPadding),
               child: CircularProgressIndicator.adaptive(
                 valueColor: AlwaysStoppedAnimation<Color>(color),
-                strokeWidth: strokeWidth ?? 6.0,
+                strokeWidth: strokeWidth ?? 7.0,
               ),
             ),
             if (text != null && text!.isNotEmpty)

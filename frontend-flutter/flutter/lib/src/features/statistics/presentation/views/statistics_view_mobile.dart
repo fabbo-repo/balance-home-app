@@ -45,10 +45,10 @@ class StatisticsViewMobile extends ConsumerWidget {
       );
       return cache;
     }, error: (Object o, StackTrace st) {
-      return showError(o, st, cache: cache);
+      return showError(o, st, background: cache);
     }, loading: () {
       ref.read(statisticsControllerProvider.notifier).handle();
-      return showLoading(cache: cache);
+      return showLoading(background: cache);
     });
   }
 }

@@ -129,7 +129,7 @@ final router = GoRouter(
                         BalanceEditView.routeName,
                     path: BalanceEditView.routePath,
                     builder: (context, state) => BalanceEditView(
-                      id: int.parse(state.queryParams['id']!),
+                          id: int.parse(state.queryParams['id']!),
                           balanceTypeMode: BalanceTypeMode.revenue,
                         )),
               ]),
@@ -157,7 +157,7 @@ final router = GoRouter(
                         BalanceEditView.routeName,
                     path: BalanceEditView.routePath,
                     builder: (context, state) => BalanceEditView(
-                      id: int.parse(state.queryParams['id']!),
+                          id: int.parse(state.queryParams['id']!),
                           balanceTypeMode: BalanceTypeMode.expense,
                         )),
               ]),
@@ -214,9 +214,15 @@ String? rootGuard(BuildContext context, GoRouterState state) {
 Future<String?> authGuard(BuildContext context, GoRouterState state) async {
   final loggedIn = authStateListenable.value;
   final goingToAuth = state.location == '/${AuthView.routePath}';
-  if (!loggedIn && goingToAuth) return null;
-  if (loggedIn && goingToAuth) return "/${StatisticsView.routePath}";
-  if (!loggedIn) return '/';
+  if (loggedIn && goingToAuth) {
+    return "/${StatisticsView.routePath}";
+  } else if (!loggedIn && !goingToAuth) {
+    return '/';
+  } else if (state.extra != null && state.extra == true) {
+    Codec<String, String> stringToBase64 =
+        utf8.fuse(const Base64Codec.urlSafe());
+    return "/${AuthLoadingView.routePath}?path=${stringToBase64.encode("/${AuthView.routePath}")}";
+  }
   return null;
 }
 

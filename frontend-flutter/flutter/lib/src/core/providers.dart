@@ -29,7 +29,7 @@ final appInfoRepositoryProvider = Provider<AppInfoRepositoryInterface>((ref) {
 
 final appVersionController =
     StateNotifierProvider<AppVersionController, AsyncValue<AppVersion>>((ref) {
-  final repo = ref.watch(appInfoRepositoryProvider);
+  final repo = ref.read(appInfoRepositoryProvider);
   return AppVersionController(repo);
 });
 
@@ -47,7 +47,7 @@ final themeDataProvider =
 });
 
 final appLocalizationsProvider =
-    StateNotifierProvider<AppLocalizationsState, AppLocalizations>((ref) {
+    StateNotifierProvider<AppLocalizationsState, AppLocalizations>((_) {
   Locale locale = Locale(Platform.localeName.substring(0, 2));
   // If system's locale is not supported, Enlish will be used as default
   if (!AppLocalizations.supportedLocales.contains(locale)) {

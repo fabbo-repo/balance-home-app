@@ -83,10 +83,10 @@ class StatisticsViewDesktop extends ConsumerWidget {
       );
       return cache;
     }, error: (error, stackTrace) {
-      return showError(error, stackTrace, cache: cache);
+      return showError(error, stackTrace, background: cache);
     }, loading: () {
       ref.read(statisticsControllerProvider.notifier).handle();
-      return showLoading(cache: cache);
+      return showLoading(background: cache);
     });
   }
 }
