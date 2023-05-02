@@ -116,8 +116,10 @@ class BalanceRemoteDataSource {
     return response.fold(
         (failure) => left(failure),
         (value) => right(balanceTypeMode == BalanceTypeMode.expense
-            ? BalanceEntity.fromExpenseJson(value.data)
-            : BalanceEntity.fromRevenueJson(value.data)));
+            ? BalanceEntity.fromExpenseJson(value.data,
+                type: balance.balanceType)
+            : BalanceEntity.fromRevenueJson(value.data,
+                type: balance.balanceType)));
   }
 
   Future<Either<Failure, void>> delete(

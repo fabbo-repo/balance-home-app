@@ -15,16 +15,14 @@ class HomeView extends ConsumerWidget {
   final Widget child;
 
   const HomeView(
-      {required this.selectedSection,
-      required this.child,
-      super.key});
+      {required this.selectedSection, required this.child, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
     return AdaptiveNavigationScaffold(
-      appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(40), child: CustomAppBar()),
+      appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(40), child: CustomAppBar()),
       resizeToAvoidBottomInset: false,
       body: SafeArea(child: child),
       selectedIndex: selectedSection.index,

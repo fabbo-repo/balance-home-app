@@ -13,7 +13,8 @@ class BalanceEntity with _$BalanceEntity {
   /// [id] - [int] id
   /// [name] - [String] name
   /// [description] - [String] description
-  /// [quantity] - [double] quantity
+  /// [real_quantity] - [double] quantity
+  /// [converted_quantity] - [double] quantity
   /// [date] - [DateTime] date
   /// [coinType] - [String] coin type code
   /// [balanceType] - [BalanceTypeEntity] balance type

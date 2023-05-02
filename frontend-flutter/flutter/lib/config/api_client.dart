@@ -14,7 +14,10 @@ import 'package:universal_io/io.dart';
 const unknownStatusCode = 600;
 
 class ApiClient {
-  late final Dio _dioClient;
+  @visibleForTesting
+  late final Dio dioClient;
+  final bool displayRequestLogs;
+  final bool displayResponseLogs;
   JwtEntity? jwtToken;
   DateTime? accessExpirationDate;
 
@@ -30,37 +33,44 @@ class ApiClient {
         "accept": ContentType.json.toString(),
       });
 
-  ApiClient({Dio? dioClient}) {
-    _dioClient = dioClient ?? Dio();
-    _dioClient.options = options;
+  ApiClient(
+      {Dio? dioClient,
+      this.displayRequestLogs = false,
+      this.displayResponseLogs = false}) {
+    dioClient = dioClient ?? Dio();
+    dioClient.options = options;
   }
 
-  void _setHeader(String key, String value) async {
-    _dioClient.options.headers[key] = value;
+  @visibleForTesting
+  void setHeader(String key, String value) async {
+    dioClient.options.headers[key] = value;
   }
 
-  void _removeHeader(String key) async {
-    _dioClient.options.headers.remove(key);
+  @visibleForTesting
+  void removeHeader(String key) async {
+    dioClient.options.headers.remove(key);
   }
 
   void setLanguage(String localeName) async {
-    _setHeader("accept-language", localeName);
+    setHeader("accept-language", localeName);
   }
 
   void setJwt(JwtEntity jwt) {
     jwtToken = jwt;
     if (jwt.access != null) {
       accessExpirationDate = JwtDecoder.getExpirationDate(jwt.access!);
-      _setHeader("authorization", "Bearer ${jwt.access}");
+      setHeader("authorization", "Bearer ${jwt.access}");
     }
   }
 
   void removeJwt() {
-    _removeHeader("authorization");
+    removeHeader("authorization");
   }
 
-  Either<HttpRequestFailure, Response> _checkFailureOrResponse(
+  @visibleForTesting
+  Either<HttpRequestFailure, Response> checkFailureOrResponse(
       {required Response response}) {
+    if (displayResponseLogs) logResponse(response);
     if (((response.statusCode ?? unknownStatusCode) / 10).round() == 20) {
       return right(response);
     } else if (response.statusCode == 400) {
@@ -73,7 +83,8 @@ class ApiClient {
         detail: '', statusCode: response.statusCode ?? unknownStatusCode));
   }
 
-  Future<void> _checkAccessJwt() async {
+  @visibleForTesting
+  Future<void> checkAccessJwt() async {
     if (accessExpirationDate != null &&
         jwtToken != null &&
         DateTime.now().toUtc().isAfter(accessExpirationDate!
@@ -87,16 +98,26 @@ class ApiClient {
     }
   }
 
+  @visibleForTesting
+  void logRequest(String path, String method) {
+    debugPrint("[HTTP REQUEST] $method ${dioClient.options.baseUrl} - $path "
+        "| Headers: ${dioClient.options.headers}");
+  }
+
+  @visibleForTesting
+  void logResponse(Response response) {
+    debugPrint(
+        "[HTTP RESPONSE] ${response.data} | Headers: ${response.headers}");
+  }
+
   Future<Either<HttpRequestFailure, Response>> getRequest(String path,
       {Map<String, dynamic>? queryParameters}) async {
-    debugPrint("[HTTP REQUEST] GET ${_dioClient.options.baseUrl} - $path "
-        "| Headers: ${_dioClient.options.headers}");
-    await _checkAccessJwt();
     try {
-      final res = await _dioClient.get<Map<String, dynamic>>(path,
-          queryParameters: queryParameters);
-      return _checkFailureOrResponse(response: res);
-    } on DioError catch (error) {
+      if (displayRequestLogs) logRequest(path, "GET");
+      await checkAccessJwt();
+      final res = await dioClient.get(path, queryParameters: queryParameters);
+      return checkFailureOrResponse(response: res);
+    } on Exception catch (error) {
       debugPrint("[HTTP ERROR] $error");
       return left(HttpRequestFailure.empty());
     }
@@ -105,12 +126,11 @@ class ApiClient {
   Future<Either<HttpRequestFailure, Response>> postRequest(String path,
       {Object? data}) async {
     try {
-      debugPrint("[HTTP REQUEST] POST | ${_dioClient.options.baseUrl} - $path "
-          "| Headers: ${_dioClient.options.headers}");
-      await _checkAccessJwt();
-      final res = await _dioClient.post<Map<String, dynamic>>(path, data: data);
-      return _checkFailureOrResponse(response: res);
-    } on DioError catch (error) {
+      if (displayRequestLogs) logRequest(path, "POST");
+      await checkAccessJwt();
+      final res = await dioClient.post(path, data: data);
+      return checkFailureOrResponse(response: res);
+    } on Exception catch (error) {
       debugPrint("[HTTP ERROR] $error");
       return left(HttpRequestFailure.empty());
     }
@@ -119,12 +139,11 @@ class ApiClient {
   Future<Either<HttpRequestFailure, Response>> putRequest(String path,
       {Object? data}) async {
     try {
-      debugPrint("[HTTP REQUEST] PUT | ${_dioClient.options.baseUrl} - $path "
-          "| Headers: ${_dioClient.options.headers}");
-      await _checkAccessJwt();
-      final res = await _dioClient.put<Map<String, dynamic>>(path, data: data);
-      return _checkFailureOrResponse(response: res);
-    } on DioError catch (error) {
+      if (displayRequestLogs) logRequest(path, "PUT");
+      await checkAccessJwt();
+      final res = await dioClient.put(path, data: data);
+      return checkFailureOrResponse(response: res);
+    } on Exception catch (error) {
       debugPrint("[HTTP ERROR] $error");
       return left(HttpRequestFailure.empty());
     }
@@ -133,13 +152,11 @@ class ApiClient {
   Future<Either<HttpRequestFailure, Response>> patchRequest(String path,
       {Object? data}) async {
     try {
-      debugPrint("[HTTP REQUEST] PATCH | ${_dioClient.options.baseUrl} - $path "
-          "| Headers: ${_dioClient.options.headers}");
-      await _checkAccessJwt();
-      final res =
-          await _dioClient.patch<Map<String, dynamic>>(path, data: data);
-      return _checkFailureOrResponse(response: res);
-    } on DioError catch (error) {
+      if (displayRequestLogs) logRequest(path, "PATCH");
+      await checkAccessJwt();
+      final res = await dioClient.patch(path, data: data);
+      return checkFailureOrResponse(response: res);
+    } on Exception catch (error) {
       debugPrint("[HTTP ERROR] $error");
       return left(HttpRequestFailure.empty());
     }
@@ -147,7 +164,7 @@ class ApiClient {
 
   Future<Either<HttpRequestFailure, Response>> patchImageRequest(
       String path, Uint8List bytes, String type) async {
-    debugPrint("[HTTP REQUEST] Sending image...");
+    if (displayRequestLogs) debugPrint("[HTTP REQUEST] Sending image...");
     FormData data = FormData.fromMap({
       "image": MultipartFile.fromBytes(bytes,
           filename: 'upload_image.${type.split("/").last}',
@@ -158,12 +175,11 @@ class ApiClient {
 
   Future<Either<HttpRequestFailure, Response>> delRequest(String path) async {
     try {
-      debugPrint("[HTTP REQUEST] DEL | ${Environment.apiUrl} - $path "
-          "| Headers: ${_dioClient.options.headers}");
-      await _checkAccessJwt();
-      final res = await _dioClient.delete<Map<String, dynamic>>(path);
-      return _checkFailureOrResponse(response: res);
-    } on DioError catch (error) {
+      if (displayRequestLogs) logRequest(path, "DEL");
+      await checkAccessJwt();
+      final res = await dioClient.delete(path);
+      return checkFailureOrResponse(response: res);
+    } on Exception catch (error) {
       debugPrint("[HTTP ERROR] $error");
       return left(HttpRequestFailure.empty());
     }
