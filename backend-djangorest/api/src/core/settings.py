@@ -114,9 +114,11 @@ class Dev(Configuration):
         'django.middleware.locale.LocaleMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
+        "corsheaders.middleware.CorsPostCsrfMiddleware",
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        #'core.middlewares.HeadersLoggingMiddleware',
     ]
 
     ROOT_URLCONF = 'core.urls'
