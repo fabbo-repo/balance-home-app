@@ -46,6 +46,7 @@
     "day": "Day",
     "month": "Month",
     "year": "Year",
+    "exitRepeatMessage": "Press another time to exit",
 
     "@_HOME":{},
     "statistics": "Statistics",

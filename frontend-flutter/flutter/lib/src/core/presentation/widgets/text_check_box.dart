@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class TextCheckBox extends StatefulWidget {
   final String title;
   final Color? fillColor;
   final Function(bool?)? onChanged;
-  bool isChecked;
+  final isCheckedState = ValueNotifier<bool>(false);
 
   TextCheckBox(
       {required this.title,
       this.onChanged,
       this.fillColor,
-      this.isChecked = false,
+      isChecked = false,
       Key? key})
-      : super(key: key);
+      : super(key: key) {
+    isCheckedState.value = isChecked;
+  }
 
   @override
   State<TextCheckBox> createState() => _TextCheckBoxState();
 }
 
 class _TextCheckBoxState extends State<TextCheckBox> {
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -31,9 +31,9 @@ class _TextCheckBoxState extends State<TextCheckBox> {
           TextButton(
             onPressed: () {
               setState(() {
-                widget.isChecked = !widget.isChecked;
+                widget.isCheckedState.value = !widget.isCheckedState.value;
                 if (widget.onChanged != null) {
-                  widget.onChanged!(widget.isChecked);
+                  widget.onChanged!(widget.isCheckedState.value);
                 }
               });
             },
@@ -52,10 +52,10 @@ class _TextCheckBoxState extends State<TextCheckBox> {
     return Checkbox(
       checkColor: Colors.white,
       fillColor: MaterialStateProperty.resolveWith((_) => fillColor),
-      value: widget.isChecked,
+      value: widget.isCheckedState.value,
       onChanged: (bool? value) {
         setState(() {
-          widget.isChecked = value!;
+          widget.isCheckedState.value = value!;
           if (widget.onChanged != null) {
             widget.onChanged!(value);
           }

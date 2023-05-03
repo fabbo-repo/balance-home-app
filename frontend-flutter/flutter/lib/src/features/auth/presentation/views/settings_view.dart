@@ -10,20 +10,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-// ignore: must_be_immutable
-class SettingsView extends ConsumerWidget {
+class SettingsView extends ConsumerStatefulWidget {
   /// Route name
   static const routeName = 'settings';
 
   /// Route path
   static const routePath = 'settings';
 
-  Widget cache = Container();
-
-  SettingsView({super.key});
+  const SettingsView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsView> createState() => _SettingsViewState();
+}
+
+class _SettingsViewState extends ConsumerState<SettingsView> {
+  @visibleForTesting
+  Widget cache = Container();
+
+  @override
+  Widget build(BuildContext context) {
     final user = ref.watch(authControllerProvider);
     return user.when(data: (data) {
       cache = Scaffold(

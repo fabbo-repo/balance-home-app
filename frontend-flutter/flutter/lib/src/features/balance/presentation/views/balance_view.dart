@@ -19,8 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-// ignore: must_be_immutable
-class BalanceView extends ConsumerWidget {
+class BalanceView extends ConsumerStatefulWidget {
   /// Named route for revenues [BalanceView]
   static const String routeRevenueName = 'revenues';
 
@@ -34,23 +33,31 @@ class BalanceView extends ConsumerWidget {
   static const String routeExpensePath = 'expenses';
 
   final BalanceTypeMode balanceTypeMode;
-  Widget cache = Container();
 
-  BalanceView({required this.balanceTypeMode, super.key});
+  const BalanceView({required this.balanceTypeMode, super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final balanceList = balanceTypeMode == BalanceTypeMode.expense
+  ConsumerState<BalanceView> createState() => _BalanceViewState();
+}
+
+class _BalanceViewState extends ConsumerState<BalanceView> {
+  @visibleForTesting
+  Widget cache = Container();
+
+  @override
+  Widget build(BuildContext context) {
+    final balanceList = widget.balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseListControllerProvider)
         : ref.watch(revenueListControllerProvider);
-    final balanceListController = balanceTypeMode == BalanceTypeMode.expense
-        ? ref.watch(expenseListControllerProvider.notifier)
-        : ref.watch(revenueListControllerProvider.notifier);
-    final selectedDate = balanceTypeMode == BalanceTypeMode.expense
+    final balanceListController =
+        widget.balanceTypeMode == BalanceTypeMode.expense
+            ? ref.watch(expenseListControllerProvider.notifier)
+            : ref.watch(revenueListControllerProvider.notifier);
+    final selectedDate = widget.balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseSelectedDateProvider)
         : ref.watch(revenueSelectedDateProvider);
     final appLocalizations = ref.watch(appLocalizationsProvider);
-    final selectedDateState = balanceTypeMode == BalanceTypeMode.expense
+    final selectedDateState = widget.balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseSelectedDateProvider.notifier)
         : ref.watch(revenueSelectedDateProvider.notifier);
     return balanceList.when<Widget>(data: (List<BalanceEntity> balances) {
@@ -101,7 +108,7 @@ class BalanceView extends ConsumerWidget {
             : "${selectedDate.day} $monthText ${selectedDate.year}";
     double screenWidth = MediaQuery.of(context).size.width;
     Widget topContainer = Container(
-      color: balanceTypeMode == BalanceTypeMode.expense
+      color: widget.balanceTypeMode == BalanceTypeMode.expense
           ? const Color.fromARGB(255, 212, 112, 78)
           : const Color.fromARGB(255, 76, 122, 52),
       constraints: BoxConstraints.tightFor(
@@ -120,7 +127,7 @@ class BalanceView extends ConsumerWidget {
     );
     Widget dateBtn = AppTextButton(
       text: appLocalizations.date,
-      backgroundColor: balanceTypeMode == BalanceTypeMode.expense
+      backgroundColor: widget.balanceTypeMode == BalanceTypeMode.expense
           ? const Color.fromARGB(255, 160, 71, 41)
           : const Color.fromARGB(255, 54, 90, 35),
       onPressed: () async {
@@ -178,7 +185,7 @@ class BalanceView extends ConsumerWidget {
             balanceYears),
         Expanded(
           child: BalanaceRightPanel(
-              balances: balances, balanceTypeMode: balanceTypeMode),
+              balances: balances, balanceTypeMode: widget.balanceTypeMode),
         ),
       ],
     );
@@ -203,12 +210,14 @@ class BalanceView extends ConsumerWidget {
             children: [
               Expanded(
                 child: BalanaceLeftPanel(
-                    balances: balances, balanceTypeMode: balanceTypeMode),
+                    balances: balances,
+                    balanceTypeMode: widget.balanceTypeMode),
               ),
               SizedBox(
                 width: (screenWidth * 0.3 > 440) ? 440 : screenWidth * 0.3,
                 child: BalanaceRightPanel(
-                    balances: balances, balanceTypeMode: balanceTypeMode),
+                    balances: balances,
+                    balanceTypeMode: widget.balanceTypeMode),
               )
             ],
           ),

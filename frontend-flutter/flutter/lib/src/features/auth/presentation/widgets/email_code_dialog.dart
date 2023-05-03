@@ -8,19 +8,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-// ignore: must_be_immutable
-class EmailCodeDialog extends ConsumerWidget {
-  final _formKey = GlobalKey<FormState>();
+class EmailCodeDialog extends ConsumerStatefulWidget {
+  @visibleForTesting
+  final formKey = GlobalKey<FormState>();
+  @visibleForTesting
   final String email;
-  final _codeController = TextEditingController();
-  VerificationCode? _code;
+  @visibleForTesting
+  final codeController = TextEditingController();
 
   EmailCodeDialog({required this.email, super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final appLocalizations = ref.watch(appLocalizationsProvider);
+  ConsumerState<EmailCodeDialog> createState() => _EmailCodeDialogState();
+}
 
+class _EmailCodeDialogState extends ConsumerState<EmailCodeDialog> {
+  @visibleForTesting
+  VerificationCode? code;
+
+  @override
+  Widget build(BuildContext context) {
+    final appLocalizations = ref.watch(appLocalizationsProvider);
     final res = ref.watch(emailCodeControllerProvider);
     final emailCodeController = ref.read(emailCodeControllerProvider.notifier);
     final errorText = res.maybeWhen(
@@ -35,7 +43,7 @@ class EmailCodeDialog extends ConsumerWidget {
     return AlertDialog(
       title: Text(appLocalizations.emailVerifiactionCode),
       content: Form(
-        key: _formKey,
+        key: widget.formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Container(
           constraints: const BoxConstraints(maxHeight: 130),
@@ -46,13 +54,13 @@ class EmailCodeDialog extends ConsumerWidget {
                     overflow: TextOverflow.ellipsis),
                 AppTextFormField(
                   onChanged: (value) =>
-                      _code = VerificationCode(appLocalizations, value),
+                      code = VerificationCode(appLocalizations, value),
                   textAlign: TextAlign.center,
                   maxCharacters: 6,
                   maxWidth: 200,
                   title: "",
-                  controller: _codeController,
-                  validator: (value) => _code?.validate ?? errorText,
+                  controller: widget.codeController,
+                  validator: (value) => code?.validate ?? errorText,
                 )
               ],
             ),
@@ -65,13 +73,15 @@ class EmailCodeDialog extends ConsumerWidget {
           loading: isLoading,
           text: appLocalizations.verifyCode,
           onPressed: () async {
-            if (_formKey.currentState == null ||
-                !_formKey.currentState!.validate()) {
+            if (widget.formKey.currentState == null ||
+                !widget.formKey.currentState!.validate()) {
               return;
             }
-            if (_code == null) return;
+            if (code == null) return;
             final res = await emailCodeController.verifyCode(
-                UserEmail(appLocalizations, email), _code!, appLocalizations);
+                UserEmail(appLocalizations, widget.email),
+                code!,
+                appLocalizations);
             res.fold((_) {}, (_) {
               context.go("/");
             });

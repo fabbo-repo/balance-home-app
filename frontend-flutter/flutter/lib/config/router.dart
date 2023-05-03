@@ -20,19 +20,6 @@ import 'package:balance_home_app/src/features/statistics/presentation/views/stat
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-/// Main router
-///
-/// ! Pay attention to the order of routes.
-///
-/// ! Note about parameters
-/// Router keeps parameters in global map. It means that if you create route
-/// organization/:id and organization/:id/department/:id. Department id will
-///  override organization id. So use :oid and :did instead of :id
-/// Also router does not provide option to set regex for parameters.
-/// If you put - example/:eid before - example/create for route - example/create
-/// will be called route - example/:eid
-///
-///
 final router = GoRouter(
   errorBuilder: (context, state) {
     if (state.error.toString().contains("no routes")) {
@@ -98,8 +85,8 @@ final router = GoRouter(
             path: StatisticsView.routePath,
             redirect: authGuardOrNone,
             pageBuilder: (context, state) => FadeTransitionPage(
-                key: _scaffoldKey,
-                child: const HomeView(
+                key: _homeScaffoldKey,
+                child: HomeView(
                     selectedSection: HomeTab.statistics,
                     child: Center(child: StatisticsView()))),
           ),
@@ -108,7 +95,7 @@ final router = GoRouter(
               path: BalanceView.routeRevenuePath,
               redirect: authGuardOrNone,
               pageBuilder: (context, state) => FadeTransitionPage(
-                  key: _scaffoldKey,
+                  key: _homeScaffoldKey,
                   child: HomeView(
                       selectedSection: HomeTab.revenues,
                       child: BalanceView(
@@ -136,7 +123,7 @@ final router = GoRouter(
               path: BalanceView.routeExpensePath,
               redirect: authGuardOrNone,
               pageBuilder: (context, state) => FadeTransitionPage(
-                  key: _scaffoldKey,
+                  key: _homeScaffoldKey,
                   child: HomeView(
                       selectedSection: HomeTab.expenses,
                       child: BalanceView(
@@ -189,7 +176,8 @@ final router = GoRouter(
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
-const ValueKey<String> _scaffoldKey = ValueKey<String>('balhom_scaffold');
+const ValueKey<String> _homeScaffoldKey = ValueKey<String>('balhom_home');
+
 
 /// Route observer to use with RouteAware
 final RouteObserver<ModalRoute<void>> routeObserver =

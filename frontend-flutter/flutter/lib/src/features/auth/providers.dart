@@ -1,5 +1,4 @@
 import 'package:balance_home_app/config/providers.dart';
-import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/application/auth_controller.dart';
 import 'package:balance_home_app/src/features/auth/application/email_code_controller.dart';
 import 'package:balance_home_app/src/features/auth/application/reset_password_controller.dart';
