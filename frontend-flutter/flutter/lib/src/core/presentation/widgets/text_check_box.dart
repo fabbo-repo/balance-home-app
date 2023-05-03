@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-final isCheckedState = ValueNotifier<bool>(false);
-
 class TextCheckBox extends StatefulWidget {
   final String title;
   final Color? fillColor;
   final Function(bool?)? onChanged;
+  final isCheckedState = ValueNotifier<bool>(false);
 
   TextCheckBox(
       {required this.title,
@@ -32,9 +31,9 @@ class _TextCheckBoxState extends State<TextCheckBox> {
           TextButton(
             onPressed: () {
               setState(() {
-                isCheckedState.value = !isCheckedState.value;
+                widget.isCheckedState.value = !widget.isCheckedState.value;
                 if (widget.onChanged != null) {
-                  widget.onChanged!(isCheckedState.value);
+                  widget.onChanged!(widget.isCheckedState.value);
                 }
               });
             },
@@ -53,10 +52,10 @@ class _TextCheckBoxState extends State<TextCheckBox> {
     return Checkbox(
       checkColor: Colors.white,
       fillColor: MaterialStateProperty.resolveWith((_) => fillColor),
-      value: isCheckedState.value,
+      value: widget.isCheckedState.value,
       onChanged: (bool? value) {
         setState(() {
-          isCheckedState.value = value!;
+          widget.isCheckedState.value = value!;
           if (widget.onChanged != null) {
             widget.onChanged!(value);
           }
