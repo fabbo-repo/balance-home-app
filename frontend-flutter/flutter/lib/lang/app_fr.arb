@@ -46,6 +46,7 @@
     "day": "Jour",
     "month": "Mois",
     "year": "Année",
+    "exitRepeatMessage": "Appuyez une autre fois pour quitter",
 
     "@_HOME":{},
     "statistics": "Statistiques",

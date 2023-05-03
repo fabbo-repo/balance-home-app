@@ -46,6 +46,7 @@
     "day": "Día",
     "month": "Mes",
     "year": "Año",
+    "exitRepeatMessage": "Pulse otra vez para salir",
 
     "@_HOME":{},
     "statistics": "Estadísticas",

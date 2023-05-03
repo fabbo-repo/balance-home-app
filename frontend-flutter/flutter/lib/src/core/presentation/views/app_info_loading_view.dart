@@ -9,20 +9,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-// ignore: must_be_immutable
-class AppInfoLoadingView extends ConsumerWidget {
+class AppInfoLoadingView extends ConsumerStatefulWidget {
   /// Named route for [AuthView]
   static const String routeName = 'appInfoLoadingView';
 
   /// Path route for [AuthView]
   static const String routePath = 'app-info';
 
-  String? errorMessage;
-
-  AppInfoLoadingView({super.key});
+  const AppInfoLoadingView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AppInfoLoadingView> createState() => _AppInfoLoadingViewState();
+}
+
+class _AppInfoLoadingViewState extends ConsumerState<AppInfoLoadingView> {
+  String? errorMessage;
+
+  @override
+  Widget build(BuildContext context) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
     return Scaffold(
         body: ref.watch(appVersionController).when<Widget>(
