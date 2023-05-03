@@ -4,7 +4,7 @@ import 'package:balance_home_app/src/core/presentation/models/selected_date_mode
 import 'package:balance_home_app/src/core/presentation/states/selected_date_state.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/providers.dart';
-import 'package:balance_home_app/src/features/coin/providers.dart';
+import 'package:balance_home_app/src/features/currency/providers.dart';
 import 'package:balance_home_app/src/features/statistics/application/statistics_controller.dart';
 import 'package:balance_home_app/src/features/statistics/domain/repositories/annual_balance_repository_interface.dart';
 import 'package:balance_home_app/src/features/statistics/domain/repositories/monthly_balance_repository_interface.dart';
@@ -25,14 +25,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final annualBalanceRepositoryProvider =
     Provider<AnnualBalanceRepositoryInterface>((ref) => AnnualBalanceRepository(
         annualBalanceRemoteDataSource: AnnualBalanceRemoteDataSource(
-            client: ref.read(httpClientProvider))));
+            apiClient: ref.read(apiClientProvider))));
 
 /// Monthly balance repository
 final monthlyBalanceRepositoryProvider =
     Provider<MonthlyBalanceRepositoryInterface>((ref) =>
         MonthlyBalanceRepository(
             monthlyBalanceRemoteDataSource: MonthlyBalanceRemoteDataSource(
-                client: ref.read(httpClientProvider))));
+                apiClient: ref.read(apiClientProvider))));
 
 ///
 /// Application dependencies
@@ -44,8 +44,8 @@ final statisticsControllerProvider =
   final balanceRepo = ref.watch(balanceRepositoryProvider);
   final annualBalanceRepo = ref.watch(annualBalanceRepositoryProvider);
   final monthlyBalanceRepo = ref.watch(monthlyBalanceRepositoryProvider);
-  final coinTypeRepository = ref.watch(coinTypeRepositoryProvider);
-  final exchangeRepository = ref.watch(exchangeRepositoryProvider);
+  final coinTypeRepository = ref.watch(currencyTypeRepositoryProvider);
+  final exchangeRepository = ref.watch(currencyConversionRepositoryProvider);
   final selectedBalanceDate = ref.watch(statisticsBalanceSelectedDateProvider);
   final selectedSavingsDate = ref.watch(statisticsSavingsSelectedDateProvider);
   return StatisticsController(

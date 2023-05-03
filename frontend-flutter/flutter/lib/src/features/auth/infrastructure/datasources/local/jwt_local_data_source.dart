@@ -1,32 +1,36 @@
+import 'package:balance_home_app/config/local_storage_client.dart';
 import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/jwt_entity.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fpdart/fpdart.dart';
 
 /// Manage JWT in device storage
 class JwtLocalDataSource {
-  final FlutterSecureStorage _storage;
+  final LocalStorageClient storageClient;
 
   /// Default constructor for [JwtLocalDataSource]
-  JwtLocalDataSource(this._storage);
+  JwtLocalDataSource({required this.storageClient});
 
   /// Get jwt from the device storage
   Future<Either<Failure, JwtEntity>> get() async {
-    final refresh = await _storage.read(key: "refresh_jwt");
-    final access = await _storage.read(key: "access_jwt");
-    if (refresh == null) {
+    String? access = await storageClient.getValue("accessToken");
+    String? refresh = await storageClient.getValue("refreshToken");
+    if (access == null) {
       return left(const EmptyFailure());
     }
-    return right(JwtEntity(access: access ?? '', refresh: refresh));
+    return right(JwtEntity(access: access, refresh: refresh));
   }
 
   /// Store jwt in device storage
-  Future<bool> store(JwtEntity jwt) async {
+  Future<bool> store(JwtEntity jwt, {required bool longDuration}) async {
     try {
-      await _storage.write(key: "refresh_jwt", value: jwt.refresh);
-      await _storage.write(key: "access_jwt", value: jwt.access);
-    } catch (e) {
+      if (jwt.access != null) {
+        await storageClient.store("accessToken", jwt.access!);
+      }
+      if (jwt.refresh != null && longDuration) {
+        await storageClient.store("refreshToken", jwt.refresh!);
+      }
+    } catch (_) {
       return false;
     }
     return true;
@@ -35,9 +39,9 @@ class JwtLocalDataSource {
   /// Remove jwt from device storage
   Future<bool> remove() async {
     try {
-      await _storage.delete(key: "refresh_jwt");
-      await _storage.delete(key: "refresh_jwt");
-    } catch (e) {
+      await storageClient.removeKey("accessToken");
+      await storageClient.removeKey("refreshToken");
+    } catch (_) {
       return false;
     }
     return true;

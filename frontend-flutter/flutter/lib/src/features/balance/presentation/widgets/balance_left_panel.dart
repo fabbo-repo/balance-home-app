@@ -1,5 +1,6 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/platform_utils.dart';
+import 'package:balance_home_app/config/theme.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/date_util.dart';
@@ -21,7 +22,7 @@ class BalanaceLeftPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
-    final theme = ref.watch(themeModeProvider);
+    final theme = ref.watch(themeDataProvider);
     final selectedDate = balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseSelectedDateProvider)
         : ref.watch(revenueSelectedDateProvider);
@@ -35,10 +36,10 @@ class BalanaceLeftPanel extends ConsumerWidget {
     return Container(
       constraints: const BoxConstraints.expand(),
       color: balanceTypeMode == BalanceTypeMode.expense
-          ? theme == ThemeMode.dark
+          ? theme == AppTheme.darkTheme
               ? AppColors.expenseBackgroundDarkColor
               : AppColors.expenseBackgroundLightColor
-          : theme == ThemeMode.dark
+          : theme == AppTheme.darkTheme
               ? AppColors.revenueBackgroundDarkColor
               : AppColors.revenueBackgroundLightColor,
       child: SingleChildScrollView(

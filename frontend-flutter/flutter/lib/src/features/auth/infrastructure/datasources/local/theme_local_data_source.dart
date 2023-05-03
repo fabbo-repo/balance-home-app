@@ -1,29 +1,30 @@
+import 'package:balance_home_app/config/local_storage_client.dart';
+import 'package:balance_home_app/config/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// Manage Settings in device storage
 class ThemeLocalDataSource {
-  final SharedPreferences _sharedPreferences;
+  final LocalStorageClient storageClient;
 
   /// Default constructor for [ThemeLocalDataSource]
-  ThemeLocalDataSource(this._sharedPreferences);
+  ThemeLocalDataSource({required this.storageClient});
 
-  ThemeMode? get() {
-    String? themeStr = _sharedPreferences.getString("theme");
+  Future<ThemeData?> get() async {
+    String? themeStr = await storageClient.getValue("theme");
     if (themeStr != null && themeStr == "dark") {
-      return ThemeMode.dark;
+      return AppTheme.darkTheme;
     }
     if (themeStr != null && themeStr == "light") {
-      return ThemeMode.light;
+      return AppTheme.lightTheme;
     }
     return null;
   }
 
-  Future<bool> store(ThemeMode theme) async {
-    return await _sharedPreferences.setString("theme", theme.name);
+  Future<bool> store(ThemeData theme) async {
+    return await storageClient.store("theme", theme.brightness.name);
   }
 
   Future<bool> remove() async {
-    return _sharedPreferences.remove("theme");
+    return await storageClient.removeKey("theme");
   }
 }

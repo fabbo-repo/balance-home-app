@@ -1,3 +1,4 @@
+import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_error_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
@@ -29,7 +30,9 @@ class AppInfoLoadingView extends ConsumerWidget {
       if (appVersion != null &&
           appVersion.isLower != null &&
           !appVersion.isLower!) {
-        context.go("/${AuthView.routePath}");
+        Future.delayed(Duration.zero, () {
+          navigatorKey.currentContext!.go("/${AuthView.routePath}");
+        });
         return LoadingWidget(
           color: Colors.green,
           text: "${appLocalizations.version} "

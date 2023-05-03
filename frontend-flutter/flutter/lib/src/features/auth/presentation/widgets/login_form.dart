@@ -106,7 +106,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                 _email!, _password!, appLocalizations,
                                 store: storeCredentials))
                             .fold((failure) async {
-                          if (failure.message ==
+                          if (failure.detail ==
                               appLocalizations.emailNotVerified) {
                             bool sendCode =
                                 await showCodeAdviceDialog(appLocalizations);
@@ -115,14 +115,14 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                       _email!, appLocalizations))
                                   .fold((failure) {
                                 showErrorEmailSendCodeDialog(
-                                    appLocalizations, failure.message);
+                                    appLocalizations, failure.detail);
                               }, (_) {
                                 showCodeSendDialog(widget.emailController.text);
                               });
                             }
                           } else {
                             showErrorLoginDialog(
-                                appLocalizations, failure.message);
+                                appLocalizations, failure.detail);
                           }
                         }, (_) {
                           navigatorKey.currentContext!
@@ -150,7 +150,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       ),
     );
     return isLoading
-        ? showLoading(cache: cache, alignment: AlignmentDirectional.topStart)
+        ? showLoading(background: cache, alignment: AlignmentDirectional.topStart)
         : cache;
   }
 }

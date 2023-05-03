@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/core/domain/values/value_abstract.dart';
 import 'package:fpdart/fpdart.dart';
@@ -6,8 +7,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// User Repeat Password value
 class UserRepeatPassword extends ValueAbstract<String> {
   @override
-  Either<UnprocessableEntityFailure, String> get value => _value;
-  final Either<UnprocessableEntityFailure, String> _value;
+  Either<Failure, String> get value => _value;
+  final Either<Failure, String> _value;
 
   factory UserRepeatPassword(
       AppLocalizations appLocalizations, String input1, String input2) {
@@ -21,7 +22,7 @@ class UserRepeatPassword extends ValueAbstract<String> {
 
 /// * minLength: 1
 /// * [input1] == [input2]
-Either<UnprocessableEntityFailure, String> _validate(
+Either<Failure, String> _validate(
     AppLocalizations appLocalizations, String input1, String input2) {
   if (input2.isNotEmpty && input1 == input2) {
     return right(input2);
@@ -31,7 +32,7 @@ Either<UnprocessableEntityFailure, String> _validate(
       : appLocalizations.passwordNotMatch;
   return left(
     UnprocessableEntityFailure(
-      message: message,
+      detail: message,
     ),
   );
 }

@@ -10,8 +10,8 @@ import 'package:balance_home_app/src/features/auth/domain/values/user_password.d
 import 'package:balance_home_app/src/features/auth/domain/values/user_repeat_password.dart';
 import 'package:balance_home_app/src/core/utils/dialog_utils.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
-import 'package:balance_home_app/src/features/coin/domain/entities/coin_type_entity.dart';
-import 'package:balance_home_app/src/features/coin/presentation/widgets/dropdown_picker_field.dart';
+import 'package:balance_home_app/src/features/currency/domain/entities/currency_type_entity.dart';
+import 'package:balance_home_app/src/features/currency/presentation/widgets/dropdown_picker_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,7 +21,7 @@ class RegisterForm extends ConsumerStatefulWidget {
   final TextEditingController passwordController;
   final TextEditingController password2Controller;
   final TextEditingController invitationCodeController;
-  final List<CoinTypeEntity> coinTypes;
+  final List<CurrencyTypeEntity> currencyTypes;
   final _formKey = GlobalKey<FormState>();
 
   RegisterForm(
@@ -30,7 +30,7 @@ class RegisterForm extends ConsumerStatefulWidget {
       required this.passwordController,
       required this.password2Controller,
       required this.invitationCodeController,
-      required this.coinTypes,
+      required this.currencyTypes,
       Key? key})
       : super(key: key);
 
@@ -129,11 +129,11 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 validator: (value) => _invitationCode?.validate,
               ),
               verticalSpace(),
-              (widget.coinTypes.isNotEmpty)
+              (widget.currencyTypes.isNotEmpty)
                   ? DropdownPickerField(
-                      name: appLocalizations.coinType,
-                      initialValue: widget.coinTypes[0].code,
-                      items: widget.coinTypes.map((e) => e.code).toList(),
+                      name: appLocalizations.currencyType,
+                      initialValue: widget.currencyTypes[0].code,
+                      items: widget.currencyTypes.map((e) => e.code).toList(),
                       onChanged: (value) {
                         prefCoinType = value;
                       })
@@ -155,7 +155,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         if (_invitationCode == null) return;
                         if (_repeatPassword == null) return;
                         String lang = appLocalizations.localeName;
-                        prefCoinType = prefCoinType ?? widget.coinTypes[0].code;
+                        prefCoinType = prefCoinType ?? widget.currencyTypes[0].code;
                         (await authController.createUser(
                                 _username!,
                                 _email!,
@@ -167,7 +167,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                 appLocalizations))
                             .fold((failure) {
                           showErrorRegisterDialog(
-                              appLocalizations, failure.message);
+                              appLocalizations, failure.detail);
                         }, (_) async {
                           bool sendCode =
                               await showCodeAdviceDialog(appLocalizations);
@@ -176,7 +176,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                     _email!, appLocalizations))
                                 .fold((failure) {
                               showErrorEmailSendCodeDialog(
-                                  appLocalizations, failure.message);
+                                  appLocalizations, failure.detail);
                             }, (_) {
                               showCodeSendDialog(widget.emailController.text);
                             });
@@ -189,6 +189,6 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         ),
       ),
     );
-    return isLoading ? showLoading(cache: cache) : cache;
+    return isLoading ? showLoading(background: cache) : cache;
   }
 }

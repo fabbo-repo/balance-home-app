@@ -47,7 +47,13 @@ class CustomAppBar extends ConsumerWidget {
               PlatformUtils().isMediumWindow(context))
           ? 250
           : 0,
-      actions: [_profileButton(appLocalizations, user)],
+      actions: [
+        _profileButton(appLocalizations, user),
+        if (user == null)
+          Container(
+              margin: const EdgeInsets.all(5),
+              child: const CircularProgressIndicator(strokeWidth: 5)),
+      ],
     );
   }
 
@@ -60,9 +66,10 @@ class CustomAppBar extends ConsumerWidget {
         color: const Color.fromARGB(255, 12, 12, 12),
         child: Center(
           child: Text(
-            "${appLocalizations.balance}: ${user == null ? 0 : user.balance} "
+            "${appLocalizations.balance}: ${user == null ? "-" : user.balance} "
             "${user == null ? "" : user.prefCoinType}",
-            style: const TextStyle(color: Colors.white),
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 17, color: Colors.white),
           ),
         ));
   }
@@ -73,9 +80,9 @@ class CustomAppBar extends ConsumerWidget {
     return PopupMenuButton(
       onSelected: (value) {
         if (value == 0) {
-          navigatorKey.currentContext!.goNamed(UserEditView.routeName);
+          navigatorKey.currentContext!.pushNamed(UserEditView.routeName);
         } else if (value == 1) {
-          navigatorKey.currentContext!.goNamed(SettingsView.routeName);
+          navigatorKey.currentContext!.pushNamed(SettingsView.routeName);
         } else if (value == 2) {
           // It cannot call authController because it would change provider
           // while changing the entire three and that leads to an error

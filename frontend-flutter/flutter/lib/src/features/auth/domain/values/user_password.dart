@@ -1,3 +1,4 @@
+import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/core/domain/values/value_abstract.dart';
 import 'package:fpdart/fpdart.dart';
@@ -6,8 +7,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// User Password value
 class UserPassword extends ValueAbstract<String> {
   @override
-  Either<UnprocessableEntityFailure, String> get value => _value;
-  final Either<UnprocessableEntityFailure, String> _value;
+  Either<Failure, String> get value => _value;
+  final Either<Failure, String> _value;
 
   factory UserPassword(AppLocalizations appLocalizations, String input) {
     return UserPassword._(
@@ -20,7 +21,7 @@ class UserPassword extends ValueAbstract<String> {
 
 /// * minLength: 8
 /// * no numeric password
-Either<UnprocessableEntityFailure, String> _validate(
+Either<Failure, String> _validate(
     AppLocalizations appLocalizations, String input) {
   if (input.length >= 8 && !RegExp(r"^[1-9]*$").hasMatch(input)) {
     return right(input);
@@ -32,7 +33,7 @@ Either<UnprocessableEntityFailure, String> _validate(
           : appLocalizations.numericPassword;
   return left(
     UnprocessableEntityFailure(
-      message: message,
+      detail: message,
     ),
   );
 }

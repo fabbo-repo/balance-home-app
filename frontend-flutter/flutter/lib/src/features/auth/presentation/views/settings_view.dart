@@ -42,9 +42,9 @@ class SettingsView extends ConsumerWidget {
           )));
       return cache;
     }, error: (o, st) {
-      return showError(o, st, cache: cache);
+      return showError(o, st, background: cache);
     }, loading: () {
-      return showLoading(cache: cache);
+      return showLoading(background: cache);
     });
   }
 }

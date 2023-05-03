@@ -1,11 +1,10 @@
 import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
-import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_repository_interface.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
-import 'package:balance_home_app/src/features/coin/domain/repositories/coin_type_repository_interface.dart';
-import 'package:balance_home_app/src/features/coin/domain/repositories/exchange_repository_interface.dart';
+import 'package:balance_home_app/src/features/currency/domain/repositories/currency_conversion_repository_interface.dart';
+import 'package:balance_home_app/src/features/currency/domain/repositories/currency_type_repository_interface.dart';
 import 'package:balance_home_app/src/features/statistics/domain/repositories/annual_balance_repository_interface.dart';
 import 'package:balance_home_app/src/features/statistics/domain/repositories/monthly_balance_repository_interface.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/models/statistics_data.dart';
@@ -15,8 +14,8 @@ class StatisticsController extends StateNotifier<AsyncValue<StatisticsData>> {
   final BalanceRepositoryInterface _balanceRepository;
   final AnnualBalanceRepositoryInterface _annualBalanceRepository;
   final MonthlyBalanceRepositoryInterface _monthlyBalanceRepository;
-  final CoinTypeRepositoryInterface _coinTypeRepository;
-  final ExchangeRepositoryInterface _exchangeRepository;
+  final CurrencyTypeRepositoryInterface _currencyTypeRepository;
+  final CurrencyConversionRepositoryInterface _currencyConversionRepository;
   final SelectedDate _selectedBalanceDate;
   final SelectedDate _selectedSavingsDate;
 
@@ -24,8 +23,8 @@ class StatisticsController extends StateNotifier<AsyncValue<StatisticsData>> {
       this._balanceRepository,
       this._annualBalanceRepository,
       this._monthlyBalanceRepository,
-      this._coinTypeRepository,
-      this._exchangeRepository,
+      this._currencyTypeRepository,
+      this._currencyConversionRepository,
       this._selectedBalanceDate,
       this._selectedSavingsDate)
       : super(const AsyncValue.loading());
@@ -79,14 +78,15 @@ class StatisticsController extends StateNotifier<AsyncValue<StatisticsData>> {
                       failure is ApiBadRequestFailure ? failure.detail : "",
                       StackTrace.empty), (annualBalances) async {
                 // Coin types
-                final coinTypes = await _coinTypeRepository.getCoinTypes();
+                final coinTypes =
+                    await _currencyTypeRepository.getCurrencyTypes();
                 return await coinTypes.fold(
                     (failure) => AsyncValue.error(
                         failure is ApiBadRequestFailure ? failure.detail : "",
                         StackTrace.empty), (coinTypes) async {
                   // Date exchanges
-                  final dateExchanges =
-                      await _exchangeRepository.getLastDateExchanges(days: 20);
+                  final dateExchanges = await _currencyConversionRepository
+                      .getLastDateCurrencyConversion(days: 20);
                   return await dateExchanges.fold(
                       (failure) => AsyncValue.error(
                           failure is ApiBadRequestFailure ? failure.detail : "",
@@ -98,8 +98,8 @@ class StatisticsController extends StateNotifier<AsyncValue<StatisticsData>> {
                       expenseYears: expenseYears,
                       monthlyBalances: monthlyBalances,
                       annualBalances: annualBalances,
-                      coinTypes: coinTypes,
-                      dateExchanges: dateExchanges,
+                      currencyTypes: coinTypes,
+                      dateCurrencyConversion: dateExchanges,
                     ));
                   });
                 });

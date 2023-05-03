@@ -1,25 +1,19 @@
-import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
-import 'package:balance_home_app/src/core/utils/failure_utils.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/credentials_entity.dart';
+import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/jwt_remote_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/user_remote_data_source.dart';
-import 'package:balance_home_app/src/http_client.dart';
-import 'package:balance_home_app/src/features/auth/domain/entities/jwt_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/register_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
-import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/credentials_local_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/jwt_local_data_source.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 
 /// Repository that handles authorization and persists session
 class AuthRepository implements AuthRepositoryInterface {
-  final HttpClient client;
-
-  /// Local credentials storage provider
-  final CredentialsLocalDataSource credentialsLocalDataSource;
+  /// Remote jwt provider
+  final JwtRemoteDataSource jwtRemoteDataSource;
 
   /// Local jwt storage provider
   final JwtLocalDataSource jwtLocalDataSource;
@@ -29,8 +23,7 @@ class AuthRepository implements AuthRepositoryInterface {
 
   /// Default constructor
   AuthRepository({
-    required this.client,
-    required this.credentialsLocalDataSource,
+    required this.jwtRemoteDataSource,
     required this.jwtLocalDataSource,
     required this.userRemoteDataSource,
   });
@@ -63,58 +56,33 @@ class AuthRepository implements AuthRepositoryInterface {
 
   @override
   Future<Either<Failure, void>> trySignIn() async {
-    final credentials = await credentialsLocalDataSource.get();
-    // Clean jwt
-    client.setJwtEntity(null);
-    return await credentials.fold((failure) async {
+    final jwtStorage = await jwtLocalDataSource.get();
+    return await jwtStorage.fold((failure) async {
       // Clean wrong data
-      await credentialsLocalDataSource.remove();
       await jwtLocalDataSource.remove();
       return left(failure);
-    }, (credentials) async {
-      HttpResponse response = await client.sendPostRequest(
-          APIContract.jwtLogin, credentials.toJson());
-      // Check if there is a request failure
-      final responseCheck = FailureUtils.checkResponse(
-          body: response.content, statusCode: response.statusCode);
-      if (responseCheck.isLeft()) {
-        return left(
-            responseCheck.getLeft().getOrElse(() => const EmptyFailure()));
-      }
-      JwtEntity jwt = JwtEntity.fromJson(response.content);
-      client.setJwtEntity(jwt);
-      return right(true);
+    }, (value) async {
+      jwtRemoteDataSource.setJwt(value);
+      return right(null);
     });
   }
 
   @override
-  Future<Either<Failure, bool>> signIn(CredentialsEntity credentials,
+  Future<Either<Failure, void>> signIn(CredentialsEntity credentials,
       {bool store = false}) async {
-    // Clean jwt
-    client.setJwtEntity(null);
-    HttpResponse response = await client.sendPostRequest(
-        APIContract.jwtLogin, credentials.toJson());
+    final response = await jwtRemoteDataSource.get(credentials);
     // Check if there is a request failure
-    final responseCheck = FailureUtils.checkResponse(
-        body: response.content, statusCode: response.statusCode);
-    if (responseCheck.isLeft()) {
-      return left(
-          responseCheck.getLeft().getOrElse(() => const EmptyFailure()));
-    }
-    JwtEntity jwt = JwtEntity.fromJson(response.content);
-    client.setJwtEntity(jwt);
-    await jwtLocalDataSource.store(jwt);
-    if (store) await credentialsLocalDataSource.store(credentials);
-    return right(true);
+    return await response.fold((failure) => left(failure), (value) async {
+      await jwtLocalDataSource.store(value, longDuration: store);
+      jwtRemoteDataSource.setJwt(value);
+      return right(null);
+    });
   }
 
   @override
   Future<Either<Failure, bool>> signOut() async {
     if (!await jwtLocalDataSource.remove()) return left(const EmptyFailure());
-    if (!await credentialsLocalDataSource.remove()) {
-      return left(const EmptyFailure());
-    }
-    client.setJwtEntity(null);
+    jwtRemoteDataSource.removeJwt();
     return right(true);
   }
 }

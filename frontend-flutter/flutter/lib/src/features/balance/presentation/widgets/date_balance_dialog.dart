@@ -1,3 +1,4 @@
+import 'package:balance_home_app/config/theme.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
@@ -34,7 +35,7 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
   @override
   Widget build(BuildContext context) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
-    final theme = ref.read(themeModeProvider);
+    final theme = ref.read(themeDataProvider);
     isDay ??= widget.selectedDate.selectedDateMode == SelectedDateMode.day;
     isMonth ??=
         widget.selectedDate.selectedDateMode == SelectedDateMode.month ||
@@ -53,7 +54,7 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
               verticalSpace(),
               monthRow(appLocalizations, theme),
               verticalSpace(),
-              yearRow(appLocalizations, theme),
+              yearRow(appLocalizations),
               verticalSpace(),
               verticalSpace(),
               AppTextButton(
@@ -76,7 +77,7 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
         ));
   }
 
-  Widget dayRow(AppLocalizations appLocalizations, ThemeMode theme) {
+  Widget dayRow(AppLocalizations appLocalizations, ThemeData theme) {
     List<String> days = DateUtil.getDaysList(month!, year!);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -85,7 +86,7 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
           title: appLocalizations.day,
           fillColor: !isDay!
               ? null
-              : theme == ThemeMode.dark
+              : theme == AppTheme.darkTheme
                   ? Colors.white
                   : Colors.black,
           onChanged: (value) {
@@ -116,7 +117,7 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
     );
   }
 
-  Widget monthRow(AppLocalizations appLocalizations, ThemeMode theme) {
+  Widget monthRow(AppLocalizations appLocalizations, ThemeData theme) {
     List<String> months = DateUtil.getMonthList(appLocalizations, year: year!);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -125,7 +126,7 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
           title: appLocalizations.month,
           fillColor: !isMonth!
               ? null
-              : theme == ThemeMode.dark
+              : theme == AppTheme.darkTheme
                   ? Colors.white
                   : Colors.black,
           onChanged: (value) {
@@ -158,7 +159,7 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
     );
   }
 
-  Widget yearRow(AppLocalizations appLocalizations, ThemeMode theme) {
+  Widget yearRow(AppLocalizations appLocalizations) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

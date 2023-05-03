@@ -16,8 +16,8 @@ import 'package:balance_home_app/src/features/balance/domain/values/balance_quan
 import 'package:balance_home_app/src/features/balance/presentation/views/balance_view.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_type_dropdown_picker.dart';
 import 'package:balance_home_app/src/features/balance/providers.dart';
-import 'package:balance_home_app/src/features/coin/presentation/widgets/dropdown_picker_field.dart';
-import 'package:balance_home_app/src/features/coin/providers.dart';
+import 'package:balance_home_app/src/features/currency/presentation/widgets/dropdown_picker_field.dart';
+import 'package:balance_home_app/src/features/currency/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -86,14 +86,14 @@ class BalanceEditForm extends ConsumerWidget {
     final balanceEditController =
         ref.read(balanceEditControllerProvider.notifier);
 
-    final coinTypes = ref.watch(coinTypeListsControllerProvider);
+    final currencyTypes = ref.watch(currencyTypeListsControllerProvider);
     final balanceTypes = ref.watch(balanceTypeListControllerProvider);
     final balanceEdit = ref.watch(balanceEditControllerProvider);
     // This is used to refresh page in case handle controller
     return balanceEdit.when(data: (_) {
       return balanceTypes.when(data: (balanceTypes) {
         _balanceTypeEntity ??= balance.balanceType;
-        return coinTypes.when(data: (coinTypes) {
+        return currencyTypes.when(data: (currencyTypes) {
           cache = SingleChildScrollView(
             child: Form(
               key: _formKey,
@@ -142,11 +142,12 @@ class BalanceEditForm extends ConsumerWidget {
                           controller: _quantityController,
                           align: TextAlign.end,
                         ),
-                        (coinTypes.isNotEmpty)
+                        (currencyTypes.isNotEmpty)
                             ? DropdownPickerField(
                                 readOnly: !edit,
                                 initialValue: _coinType!,
-                                items: coinTypes.map((e) => e.code).toList(),
+                                items:
+                                    currencyTypes.map((e) => e.code).toList(),
                                 width: 100,
                                 onChanged: (value) {
                                   _coinType = value;
@@ -219,7 +220,7 @@ class BalanceEditForm extends ConsumerWidget {
                                   appLocalizations))
                               .fold((failure) {
                             showErrorBalanceEditDialog(appLocalizations,
-                                failure.message, balanceTypeMode);
+                                failure.detail, balanceTypeMode);
                           }, (entity) {
                             navigatorKey.currentContext!.go(
                                 balanceTypeMode == BalanceTypeMode.expense
@@ -237,19 +238,19 @@ class BalanceEditForm extends ConsumerWidget {
           );
           return cache;
         }, error: (error, stackTrace) {
-          return showError(error, stackTrace, cache: cache);
+          return showError(error, stackTrace, background: cache);
         }, loading: () {
-          return showLoading(cache: cache);
+          return showLoading(background: cache);
         });
       }, error: (error, stackTrace) {
-        return showError(error, stackTrace, cache: cache);
+        return showError(error, stackTrace, background: cache);
       }, loading: () {
-        return showLoading(cache: cache);
+        return showLoading(background: cache);
       });
     }, error: (error, stackTrace) {
-      return showError(error, stackTrace, cache: cache);
+      return showError(error, stackTrace, background: cache);
     }, loading: () {
-      return showLoading(cache: cache);
+      return showLoading(background: cache);
     });
   }
 }

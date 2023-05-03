@@ -3,6 +3,7 @@ import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/user_delete_view.dart';
@@ -68,20 +69,21 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  UserEditForm(edit: edit, user: data!),
+                  (data == null)
+                      ? const LoadingWidget()
+                      : UserEditForm(edit: edit, user: data),
                   if (!edit)
                     AppTextButton(
                       text: appLocalizations.userDelete,
                       height: 40,
                       onPressed: () async {
                         navigatorKey.currentContext!
-                            .goNamed(UserDeleteView.routeName);
+                            .pushNamed(UserDeleteView.routeName);
                       },
                       backgroundColor: const Color.fromARGB(220, 221, 65, 54),
                     ),
                   verticalSpace(),
-                  if (!edit)
-                    Text("${appLocalizations.lastLogin}: $lastLogin"),
+                  if (!edit) Text("${appLocalizations.lastLogin}: $lastLogin"),
                   verticalSpace(),
                 ],
               ),
@@ -89,9 +91,9 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
           )));
       return cache;
     }, error: (o, st) {
-      return showError(o, st, cache: cache);
+      return showError(o, st, background: cache);
     }, loading: () {
-      return showLoading(cache: cache);
+      return showLoading(background: cache);
     });
   }
 }

@@ -1,5 +1,6 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/router.dart';
+import 'package:balance_home_app/config/theme.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
@@ -33,17 +34,17 @@ class _BalanceEditViewState extends ConsumerState<BalanceEditView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ref.watch(themeModeProvider);
+    final theme = ref.watch(themeDataProvider);
     final balanceList = widget.balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseListControllerProvider)
         : ref.watch(revenueListControllerProvider);
     return balanceList.when(data: (data) {
       return Scaffold(
         backgroundColor: widget.balanceTypeMode == BalanceTypeMode.expense
-            ? theme == ThemeMode.dark
+            ? theme == AppTheme.darkTheme
                 ? AppColors.expenseBackgroundDarkColor
                 : AppColors.expenseBackgroundLightColor
-            : theme == ThemeMode.dark
+            : theme == AppTheme.darkTheme
                 ? AppColors.revenueBackgroundDarkColor
                 : AppColors.revenueBackgroundLightColor,
         appBar: AppBar(

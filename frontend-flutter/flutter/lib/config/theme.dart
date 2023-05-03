@@ -20,18 +20,22 @@ class AppTheme {
   /// Light [ThemeData]
   static ThemeData lightTheme = ThemeData(
       brightness: Brightness.light,
-      primarySwatch: AppColors.primaryColor,
       primaryColor: AppColors.primaryColor,
-      backgroundColor: const Color.fromARGB(254, 254, 252, 224),
       navigationRailTheme: navigationRailTheme,
-      bottomNavigationBarTheme: bottomNavigationBarTheme);
+      bottomNavigationBarTheme: bottomNavigationBarTheme,
+      colorScheme: ColorScheme.fromSwatch(
+              brightness: Brightness.light,
+              primarySwatch: AppColors.primaryColor)
+          .copyWith(background: const Color.fromARGB(254, 254, 252, 224)));
 
   /// Dark [ThemeData]
   static ThemeData darkTheme = ThemeData(
       brightness: Brightness.dark,
-      primarySwatch: AppColors.primaryColor,
       primaryColor: AppColors.primaryColor,
-      backgroundColor: const Color.fromARGB(254, 254, 252, 224),
       navigationRailTheme: navigationRailTheme,
-      bottomNavigationBarTheme: bottomNavigationBarTheme);
+      bottomNavigationBarTheme: bottomNavigationBarTheme,
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: AppColors.primaryColor)
+          .copyWith(
+              brightness: Brightness.dark,
+              background: const Color.fromARGB(254, 254, 252, 224)));
 }

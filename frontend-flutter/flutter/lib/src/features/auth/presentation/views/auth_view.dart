@@ -8,7 +8,7 @@ import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.da
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/presentation/widgets/login_form.dart';
 import 'package:balance_home_app/src/features/auth/presentation/widgets/register_form.dart';
-import 'package:balance_home_app/src/features/coin/providers.dart';
+import 'package:balance_home_app/src/features/currency/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:language_picker/languages.dart';
@@ -38,7 +38,8 @@ class AuthView extends ConsumerWidget {
     final appLocalizations = ref.watch(appLocalizationsProvider);
     final appLocalizationStateNotifier =
         ref.read(appLocalizationsProvider.notifier);
-    final coinTypeListController = ref.watch(coinTypeListsControllerProvider);
+    final currencyTypeListController =
+        ref.watch(currencyTypeListsControllerProvider);
     return Scaffold(
       appBar: AppBar(
           title: const AppTittle(fontSize: 30),
@@ -46,7 +47,8 @@ class AuthView extends ConsumerWidget {
           automaticallyImplyLeading: false),
       body: SafeArea(
         child: BackgroundWidget(
-            child: coinTypeListController.when<Widget>(data: (coinTypes) {
+            child:
+                currencyTypeListController.when<Widget>(data: (currencyTypes) {
           cache = Column(
             children: [
               Align(
@@ -99,7 +101,7 @@ class AuthView extends ConsumerWidget {
                             password2Controller: registerPassword2Controller,
                             invitationCodeController:
                                 registerInvitationCodeController,
-                            coinTypes: coinTypes)
+                            currencyTypes: currencyTypes)
                       ])),
                     ],
                   ),

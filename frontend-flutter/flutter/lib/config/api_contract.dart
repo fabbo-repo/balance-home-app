@@ -53,12 +53,12 @@ class APIContract {
   static const String monthlyBalance = "/api/v2/monthly_balance";
   
   /*
-   * ============ Coin ============ *
+   * ============ Currency ============ *
    */
-  /// [GET] Returns coin exchange
-  static const String coinExchange = "/api/v2/coin/exchange";
-  /// [GET] Returns coin type
-  static const String coinType = "/api/v2/coin/type";
+  /// [GET] Returns currency conversion
+  static const String currencyConversion = "/api/v2/coin/exchange";
+  /// [GET] Returns currency type
+  static const String currencyType = "/api/v2/coin/type";
   
   /*
    * ============ Revenue ============ *

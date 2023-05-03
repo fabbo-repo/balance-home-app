@@ -1,5 +1,6 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/router.dart';
+import 'package:balance_home_app/config/theme.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
@@ -22,13 +23,13 @@ class BalanceCreateView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeModeProvider);
+    final theme = ref.watch(themeDataProvider);
     return Scaffold(
       backgroundColor: balanceTypeMode == BalanceTypeMode.expense
-          ? theme == ThemeMode.dark
+          ? theme == AppTheme.darkTheme
               ? AppColors.expenseBackgroundDarkColor
               : AppColors.expenseBackgroundLightColor
-          : theme == ThemeMode.dark
+          : theme == AppTheme.darkTheme
               ? AppColors.revenueBackgroundDarkColor
               : AppColors.revenueBackgroundLightColor,
       appBar: AppBar(

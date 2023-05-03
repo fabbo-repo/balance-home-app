@@ -1,89 +1,77 @@
+import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/src/core/domain/entities/pagination_entity.dart';
-import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
-import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
-import 'package:balance_home_app/src/core/utils/failure_utils.dart';
-import 'package:balance_home_app/src/http_client.dart';
+import 'package:balance_home_app/src/core/domain/failures/http_request_failure.dart';
 import 'package:balance_home_app/src/features/statistics/domain/entities/annual_balance_entity.dart';
 import 'package:fpdart/fpdart.dart';
 
 class AnnualBalanceRemoteDataSource {
-  final HttpClient client;
+  final ApiClient apiClient;
 
-  AnnualBalanceRemoteDataSource({required this.client});
+  AnnualBalanceRemoteDataSource({required this.apiClient});
 
   Future<Either<Failure, AnnualBalanceEntity>> get(int id) async {
-    HttpResponse response = await client
-        .sendGetRequest('${APIContract.annualBalance}/${id.toString()}');
+    final response = await apiClient
+        .getRequest('${APIContract.annualBalance}/${id.toString()}');
     // Check if there is a request failure
-    final responseCheck = FailureUtils.checkResponse(
-        body: response.content, statusCode: response.statusCode);
-    return responseCheck.fold((failure) => left(failure),
-        (body) => right(AnnualBalanceEntity.fromJson(body)));
+    return response.fold((failure) => left(failure),
+        (value) => right(AnnualBalanceEntity.fromJson(value.data)));
   }
 
   Future<Either<Failure, List<AnnualBalanceEntity>>> list() async {
-    int pageNumber = 1;
-    HttpResponse response = await client
-        .sendGetRequest('${APIContract.annualBalance}?page=$pageNumber');
+    Map<String, dynamic> queryParameters = {"page": 1};
+    final response = await apiClient.getRequest(APIContract.annualBalance,
+        queryParameters: queryParameters);
     // Check if there is a request failure
-    final responseCheck = FailureUtils.checkResponse(
-        body: response.content, statusCode: response.statusCode);
-    if (responseCheck.isLeft()) {
-      return left(
-          responseCheck.getLeft().getOrElse(() => const EmptyFailure()));
-    }
-    PaginationEntity page = PaginationEntity.fromJson(response.content);
-    List<AnnualBalanceEntity> annualBalances =
-        page.results.map((e) => AnnualBalanceEntity.fromJson(e)).toList();
-    while (page.next != null) {
-      pageNumber++;
-      HttpResponse response = await client
-          .sendGetRequest('${APIContract.annualBalance}?page=$pageNumber');
-      // Check if there is a request failure
-      final responseCheck = FailureUtils.checkResponse(
-          body: response.content, statusCode: response.statusCode);
-      if (responseCheck.isLeft()) {
-        return left(
-            responseCheck.getLeft().getOrElse(() => const EmptyFailure()));
-      }
-      page = PaginationEntity.fromJson(response.content);
-      annualBalances +=
+    return await response.fold((failure) => left(failure), (value) async {
+      PaginationEntity page = PaginationEntity.fromJson(value.data);
+      List<AnnualBalanceEntity> annualBalances =
           page.results.map((e) => AnnualBalanceEntity.fromJson(e)).toList();
-    }
-    return right(annualBalances);
+      while (page.next != null) {
+        queryParameters["page"]++;
+        final response = await apiClient.getRequest(APIContract.annualBalance,
+            queryParameters: queryParameters);
+        // Check if there is a request failure
+        response.fold((_) => null, (value) {
+          page = PaginationEntity.fromJson(value.data);
+          annualBalances +=
+              page.results.map((e) => AnnualBalanceEntity.fromJson(e)).toList();
+        });
+        if (response.isLeft()) {
+          return left(
+              response.getLeft().getOrElse(() => HttpRequestFailure.empty()));
+        }
+      }
+      return right(annualBalances);
+    });
   }
 
   Future<Either<Failure, List<AnnualBalanceEntity>>> getLastEightYears() async {
-    int pageNumber = 1;
-    HttpResponse response = await client
-        .sendGetRequest('${APIContract.annualBalance}?page=$pageNumber');
+    Map<String, dynamic> queryParameters = {"page": 1};
+    final response = await apiClient.getRequest(APIContract.annualBalance,
+        queryParameters: queryParameters);
     // Check if there is a request failure
-    final responseCheck = FailureUtils.checkResponse(
-        body: response.content, statusCode: response.statusCode);
-    if (responseCheck.isLeft()) {
-      return left(
-          responseCheck.getLeft().getOrElse(() => const EmptyFailure()));
-    }
-    PaginationEntity page = PaginationEntity.fromJson(response.content);
-    List<AnnualBalanceEntity> annualBalances =
-        page.results.map((e) => AnnualBalanceEntity.fromJson(e)).toList();
-    while (page.next != null && annualBalances.length < 8) {
-      pageNumber++;
-      HttpResponse response = await client
-          .sendGetRequest('${APIContract.annualBalance}?page=$pageNumber');
-      // Check if there is a request failure
-      final responseCheck = FailureUtils.checkResponse(
-          body: response.content, statusCode: response.statusCode);
-      if (responseCheck.isLeft()) {
-        return left(
-            responseCheck.getLeft().getOrElse(() => const EmptyFailure()));
-      }
-      page = PaginationEntity.fromJson(response.content);
-      annualBalances +=
+    return await response.fold((failure) => left(failure), (value) async {
+      PaginationEntity page = PaginationEntity.fromJson(value.data);
+      List<AnnualBalanceEntity> annualBalances =
           page.results.map((e) => AnnualBalanceEntity.fromJson(e)).toList();
-    }
-    return right(annualBalances.take(8).toList());
+      while (page.next != null && annualBalances.length < 8) {
+        queryParameters["page"]++;
+        final response = await apiClient.getRequest(APIContract.annualBalance,
+            queryParameters: queryParameters);
+        // Check if there is a request failure
+        response.fold((_) => null, (value) {
+          page = PaginationEntity.fromJson(value.data);
+          annualBalances +=
+              page.results.map((e) => AnnualBalanceEntity.fromJson(e)).toList();
+        });
+        if (response.isLeft()) {
+          return left(
+              response.getLeft().getOrElse(() => HttpRequestFailure.empty()));
+        }
+      }
+      return right(annualBalances.take(8).toList());
+    });
   }
 }

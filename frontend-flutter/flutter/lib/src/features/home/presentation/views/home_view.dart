@@ -15,9 +15,7 @@ class HomeView extends ConsumerWidget {
   final Widget child;
 
   const HomeView(
-      {required this.selectedSection,
-      required this.child,
-      super.key});
+      {required this.selectedSection, required this.child, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -10,17 +10,17 @@ import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repo
 import 'package:balance_home_app/src/features/auth/domain/repositories/email_code_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/reset_password_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/settings_repository_interface.dart';
-import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/credentials_local_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/jwt_local_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/theme_local_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/email_code_remote_data_source.dart';
+import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/jwt_remote_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/reset_password_remote_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/user_remote_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/repositories/auth_repository.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/repositories/email_code_repository.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/repositories/reset_password_repository.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/repositories/settings_repository.dart';
-import 'package:balance_home_app/src/features/coin/providers.dart';
+import 'package:balance_home_app/src/features/currency/providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,20 +28,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Infrastructure dependencies
 ///
 final authRepositoryProvider = Provider<AuthRepositoryInterface>((ref) {
-  final secureStorage = ref.read(secureStorageProvider);
   return AuthRepository(
-      client: ref.read(httpClientProvider),
-      credentialsLocalDataSource: CredentialsLocalDataSource(secureStorage),
-      jwtLocalDataSource: JwtLocalDataSource(secureStorage),
+      jwtRemoteDataSource:
+          JwtRemoteDataSource(apiClient: ref.read(apiClientProvider)),
+      jwtLocalDataSource: JwtLocalDataSource(
+          storageClient: ref.read(storageClientProvider)),
       userRemoteDataSource:
-          UserRemoteDataSource(client: ref.read(httpClientProvider)));
+          UserRemoteDataSource(apiClient: ref.read(apiClientProvider)));
 });
 
 final resetPasswordRepositoryProvider =
     Provider<ResetPasswordRepositoryInterface>((ref) {
   return ResetPasswordRepository(
     resetPasswordRemoteDataSource:
-        ResetPasswordRemoteDataSource(client: ref.read(httpClientProvider)),
+        ResetPasswordRemoteDataSource(apiClient: ref.read(apiClientProvider)),
   );
 });
 
@@ -49,14 +49,14 @@ final emailCodeRepositoryProvider =
     Provider<EmailCodeRepositoryInterface>((ref) {
   return EmailCodeRepository(
     emailCodeRemoteDataSource:
-        EmailCodeRemoteDataSource(client: ref.read(httpClientProvider)),
+        EmailCodeRemoteDataSource(apiClient: ref.read(apiClientProvider)),
   );
 });
 
 final settingsRepositoryProvider = Provider<SettingsRepositoryInterface>((ref) {
-  final sharedPreferences = ref.watch(sharedPreferencesProvider);
   return SettingsRepository(
-    themeLocalDataSource: ThemeLocalDataSource(sharedPreferences.asData!.value),
+    themeLocalDataSource: ThemeLocalDataSource(
+        storageClient: ref.read(storageClientProvider)),
   );
 });
 
@@ -69,33 +69,34 @@ final authStateListenable = ValueNotifier<bool>(false);
 
 final authControllerProvider =
     StateNotifierProvider<AuthController, AsyncValue<UserEntity?>>((ref) {
-  final repo = ref.watch(authRepositoryProvider);
-  final appLocalizationsState = ref.read(appLocalizationsProvider.notifier);
-  return AuthController(repo, appLocalizationsState);
+  final repo = ref.read(authRepositoryProvider);
+  return AuthController(repository: repo);
 });
 
 final resetPasswordControllerProvider = StateNotifierProvider<
     ResetPasswordController, AsyncValue<ResetPasswordProgress>>((ref) {
-  final repo = ref.watch(resetPasswordRepositoryProvider);
+  final repo = ref.read(resetPasswordRepositoryProvider);
   return ResetPasswordController(repo);
 });
 
 final emailCodeControllerProvider =
     StateNotifierProvider<EmailCodeController, AsyncValue<void>>((ref) {
-  final repo = ref.watch(emailCodeRepositoryProvider);
+  final repo = ref.read(emailCodeRepositoryProvider);
   return EmailCodeController(repo);
 });
 
 final userEditControllerProvider =
     StateNotifierProvider<UserEditController, AsyncValue<void>>((ref) {
-  final authRepo = ref.watch(authRepositoryProvider);
-  final exchangeRepo = ref.watch(exchangeRepositoryProvider);
-  return UserEditController(authRepo, exchangeRepo);
+  final authRepo = ref.read(authRepositoryProvider);
+  final currencyConversionRepo = ref.read(currencyConversionRepositoryProvider);
+  return UserEditController(
+      authRepository: authRepo,
+      currencyConversionRepository: currencyConversionRepo);
 });
 
 final settingsControllerProvider =
     StateNotifierProvider<SettingsController, AsyncValue<void>>((ref) {
-  final authRepo = ref.watch(authRepositoryProvider);
-  final settingsRepo = ref.watch(settingsRepositoryProvider);
+  final authRepo = ref.read(authRepositoryProvider);
+  final settingsRepo = ref.read(settingsRepositoryProvider);
   return SettingsController(authRepo, settingsRepo);
 });

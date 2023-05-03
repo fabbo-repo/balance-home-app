@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:balance_home_app/src/core/presentation/views/app_info_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/auth_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
@@ -58,10 +57,9 @@ final router = GoRouter(
             name: AuthLoadingView.routeName,
             path: AuthLoadingView.routePath,
             builder: (context, state) {
-              Codec<String, String> stringToBase64 = utf8.fuse(base64Url);
               return AuthLoadingView(
                   location: state.queryParams['path'] != null
-                      ? stringToBase64.decode(state.queryParams['path']!)
+                      ? state.queryParams['path']!
                       : "/${AuthLoadingView.routePath}");
             },
           ),
@@ -74,7 +72,7 @@ final router = GoRouter(
           GoRoute(
             name: LogoutView.routeName,
             path: LogoutView.routePath,
-            redirect: authGuard,
+            redirect: logoutGuard,
             builder: (context, state) => const LogoutView(),
           ),
           GoRoute(
@@ -129,7 +127,7 @@ final router = GoRouter(
                         BalanceEditView.routeName,
                     path: BalanceEditView.routePath,
                     builder: (context, state) => BalanceEditView(
-                      id: int.parse(state.queryParams['id']!),
+                          id: int.parse(state.queryParams['id']!),
                           balanceTypeMode: BalanceTypeMode.revenue,
                         )),
               ]),
@@ -157,7 +155,7 @@ final router = GoRouter(
                         BalanceEditView.routeName,
                     path: BalanceEditView.routePath,
                     builder: (context, state) => BalanceEditView(
-                      id: int.parse(state.queryParams['id']!),
+                          id: int.parse(state.queryParams['id']!),
                           balanceTypeMode: BalanceTypeMode.expense,
                         )),
               ]),
@@ -211,12 +209,25 @@ String? rootGuard(BuildContext context, GoRouterState state) {
   return null;
 }
 
+Future<String?> logoutGuard(BuildContext context, GoRouterState state) async {
+  final loggedIn = authStateListenable.value;
+  final goingToLogout = state.location == '/${LogoutView.routePath}';
+  if (!loggedIn && goingToLogout) {
+    return "/";
+  }
+  return null;
+}
+
 Future<String?> authGuard(BuildContext context, GoRouterState state) async {
   final loggedIn = authStateListenable.value;
   final goingToAuth = state.location == '/${AuthView.routePath}';
-  if (!loggedIn && goingToAuth) return null;
-  if (loggedIn && goingToAuth) return "/${StatisticsView.routePath}";
-  if (!loggedIn) return '/';
+  if (loggedIn && goingToAuth) {
+    return "/${StatisticsView.routePath}";
+  } else if (!loggedIn && !goingToAuth) {
+    return '/';
+  } else if (state.extra == null || state.extra != true) {
+    return "/${AuthLoadingView.routePath}?path=/${AuthView.routePath}";
+  }
   return null;
 }
 
@@ -224,9 +235,7 @@ Future<String?> authGuardOrNone(
     BuildContext context, GoRouterState state) async {
   final loggedIn = authStateListenable.value;
   if (!loggedIn) {
-    Codec<String, String> stringToBase64 =
-        utf8.fuse(const Base64Codec.urlSafe());
-    return "/${AuthLoadingView.routePath}?path=${stringToBase64.encode(state.location)}";
+    return "/${AuthLoadingView.routePath}?path=${state.location}";
   }
   return null;
 }
