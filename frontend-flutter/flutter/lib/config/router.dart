@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:balance_home_app/src/core/presentation/views/app_info_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/auth_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
@@ -73,7 +72,7 @@ final router = GoRouter(
           GoRoute(
             name: LogoutView.routeName,
             path: LogoutView.routePath,
-            redirect: authGuard,
+            redirect: logoutGuard,
             builder: (context, state) => const LogoutView(),
           ),
           GoRoute(
@@ -210,6 +209,15 @@ String? rootGuard(BuildContext context, GoRouterState state) {
   return null;
 }
 
+Future<String?> logoutGuard(BuildContext context, GoRouterState state) async {
+  final loggedIn = authStateListenable.value;
+  final goingToLogout = state.location == '/${LogoutView.routePath}';
+  if (!loggedIn && goingToLogout) {
+    return "/";
+  }
+  return null;
+}
+
 Future<String?> authGuard(BuildContext context, GoRouterState state) async {
   final loggedIn = authStateListenable.value;
   final goingToAuth = state.location == '/${AuthView.routePath}';
@@ -217,7 +225,7 @@ Future<String?> authGuard(BuildContext context, GoRouterState state) async {
     return "/${StatisticsView.routePath}";
   } else if (!loggedIn && !goingToAuth) {
     return '/';
-  } else if (state.extra != null && state.extra == true) {
+  } else if (state.extra == null || state.extra != true) {
     return "/${AuthLoadingView.routePath}?path=/${AuthView.routePath}";
   }
   return null;

@@ -19,7 +19,6 @@ class ApiClient {
   final bool displayRequestLogs;
   final bool displayResponseLogs;
   JwtEntity? jwtToken;
-  DateTime? accessExpirationDate;
 
   final BaseOptions options = BaseOptions(
       baseUrl: Environment.apiUrl,
@@ -57,8 +56,7 @@ class ApiClient {
 
   void setJwt(JwtEntity jwt) {
     jwtToken = jwt;
-    if (jwt.access != null) {
-      accessExpirationDate = JwtDecoder.getExpirationDate(jwt.access!);
+    if (jwt.access != null && JwtDecoder.tryDecode(jwt.access!) != null) {
       setHeader("authorization", "Bearer ${jwt.access}");
     }
   }
@@ -85,11 +83,12 @@ class ApiClient {
 
   @visibleForTesting
   Future<void> checkAccessJwt() async {
-    if (accessExpirationDate != null &&
-        jwtToken != null &&
-        DateTime.now().toUtc().isAfter(accessExpirationDate!
-            .toUtc()
-            .subtract(const Duration(minutes: 5)))) {
+    if (jwtToken != null &&
+        jwtToken!.access != null &&
+        jwtToken!.access!.isNotEmpty &&
+        jwtToken!.refresh != null &&
+        jwtToken!.refresh!.isNotEmpty &&
+        JwtDecoder.isExpired(jwtToken!.access!)) {
       final res = await postRequest(APIContract.jwtRefresh,
           data: {"refresh": jwtToken!.refresh});
       res.fold((_) => null, (value) {

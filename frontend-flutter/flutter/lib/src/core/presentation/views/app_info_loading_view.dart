@@ -31,7 +31,7 @@ class AppInfoLoadingView extends ConsumerWidget {
           appVersion.isLower != null &&
           !appVersion.isLower!) {
         Future.delayed(Duration.zero, () {
-          navigatorKey.currentContext!.go("/${AuthView.routePath}", extra: true);
+          navigatorKey.currentContext!.go("/${AuthView.routePath}");
         });
         return LoadingWidget(
           color: Colors.green,

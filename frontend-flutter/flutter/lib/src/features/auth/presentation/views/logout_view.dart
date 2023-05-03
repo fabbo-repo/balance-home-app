@@ -19,7 +19,8 @@ class LogoutView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authController = ref.read(authControllerProvider.notifier);
-    authController.signOut().then((value) {
+    Future.delayed(Duration.zero, () async {
+      final value = await authController.signOut();
       value.fold((_) {
         ErrorView.go();
       }, (_) {

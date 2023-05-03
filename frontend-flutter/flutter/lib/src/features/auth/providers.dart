@@ -32,7 +32,7 @@ final authRepositoryProvider = Provider<AuthRepositoryInterface>((ref) {
       jwtRemoteDataSource:
           JwtRemoteDataSource(apiClient: ref.read(apiClientProvider)),
       jwtLocalDataSource: JwtLocalDataSource(
-          futureSharedPreferences: ref.read(sharedPreferencesProvider.future)),
+          storageClient: ref.read(storageClientProvider)),
       userRemoteDataSource:
           UserRemoteDataSource(apiClient: ref.read(apiClientProvider)));
 });
@@ -56,7 +56,7 @@ final emailCodeRepositoryProvider =
 final settingsRepositoryProvider = Provider<SettingsRepositoryInterface>((ref) {
   return SettingsRepository(
     themeLocalDataSource: ThemeLocalDataSource(
-        futureSharedPreferences: ref.read(sharedPreferencesProvider.future)),
+        storageClient: ref.read(storageClientProvider)),
   );
 });
 

@@ -28,6 +28,8 @@ class BalanceHomeAppState extends ConsumerState<BalanceHomeApp> {
     // Change aplication language at user sign in
     ref.listen(authControllerProvider, (_, value) {
       if (value.asData != null && value.asData!.value != null) {
+        debugPrint(
+            "[PROVIDER LISTENER] New user language: ${value.asData!.value!.language}");
         ref
             .read(appLocalizationsProvider.notifier)
             .setLocale(Locale(value.asData!.value!.language));

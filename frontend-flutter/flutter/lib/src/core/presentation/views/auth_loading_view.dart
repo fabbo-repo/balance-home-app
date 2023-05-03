@@ -24,7 +24,7 @@ class AuthLoadingView extends ConsumerWidget {
     Future.delayed(Duration.zero, () async {
       final value = await authController.trySignIn();
       if (location == "/${AuthView.routePath}") {
-        goLocation();
+        goLocation(extra: true);
         return const Scaffold(body: LoadingWidget());
       }
       value.fold((_) {
@@ -44,7 +44,7 @@ class AuthLoadingView extends ConsumerWidget {
   }
 
   @visibleForTesting
-  void goLocation() {
-    navigatorKey.currentContext!.go(location);
+  void goLocation({Object? extra}) {
+    navigatorKey.currentContext!.go(location, extra: extra);
   }
 }

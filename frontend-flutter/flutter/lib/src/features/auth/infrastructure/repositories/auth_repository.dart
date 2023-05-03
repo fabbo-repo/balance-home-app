@@ -73,7 +73,7 @@ class AuthRepository implements AuthRepositoryInterface {
     final response = await jwtRemoteDataSource.get(credentials);
     // Check if there is a request failure
     return await response.fold((failure) => left(failure), (value) async {
-      await jwtLocalDataSource.store(value);
+      await jwtLocalDataSource.store(value, longDuration: store);
       jwtRemoteDataSource.setJwt(value);
       return right(null);
     });
