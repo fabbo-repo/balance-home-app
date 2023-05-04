@@ -1,10 +1,10 @@
-import 'package:balance_home_app/config/local_storage_client.dart';
+import 'package:balance_home_app/config/local_preferences_client.dart';
 import 'package:balance_home_app/config/theme.dart';
 import 'package:flutter/material.dart';
 
 /// Manage Settings in device storage
 class ThemeLocalDataSource {
-  final LocalStorageClient storageClient;
+  final LocalPreferencesClient storageClient;
 
   /// Default constructor for [ThemeLocalDataSource]
   ThemeLocalDataSource({required this.storageClient});

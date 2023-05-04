@@ -1,5 +1,5 @@
 import 'package:balance_home_app/config/api_client.dart';
-import 'package:balance_home_app/config/local_storage_client.dart';
+import 'package:balance_home_app/config/local_preferences_client.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,7 +11,7 @@ import 'package:universal_io/io.dart';
 
 /// Exposes [SharedPreferences] instance
 final storageClientProvider =
-    Provider((ref) => LocalStorageClient());
+    Provider((ref) => LocalPreferencesClient());
 
 /// Exposes [HttpClient] instance
 final apiClientProvider = Provider((ref) {
