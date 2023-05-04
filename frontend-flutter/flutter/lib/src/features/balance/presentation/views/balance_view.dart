@@ -9,6 +9,7 @@ import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.da
 import 'package:balance_home_app/src/core/presentation/widgets/responsive_layout.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/date_util.dart';
+import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_left_panel.dart';
@@ -19,7 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class BalanceView extends ConsumerStatefulWidget {
+class BalanceView extends ConsumerWidget {
   /// Named route for revenues [BalanceView]
   static const String routeRevenueName = 'revenues';
 
@@ -32,32 +33,27 @@ class BalanceView extends ConsumerStatefulWidget {
   /// Path route for expenses [BalanceView]
   static const String routeExpensePath = 'expenses';
 
+  @visibleForTesting
+  final cache = ValueNotifier<Widget>(Container());
+
+  @visibleForTesting
   final BalanceTypeMode balanceTypeMode;
 
-  const BalanceView({required this.balanceTypeMode, super.key});
+  BalanceView({required this.balanceTypeMode, super.key});
 
   @override
-  ConsumerState<BalanceView> createState() => _BalanceViewState();
-}
-
-class _BalanceViewState extends ConsumerState<BalanceView> {
-  @visibleForTesting
-  Widget cache = Container();
-
-  @override
-  Widget build(BuildContext context) {
-    final balanceList = widget.balanceTypeMode == BalanceTypeMode.expense
+  Widget build(BuildContext context, WidgetRef ref) {
+    final balanceList = balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseListControllerProvider)
         : ref.watch(revenueListControllerProvider);
-    final balanceListController =
-        widget.balanceTypeMode == BalanceTypeMode.expense
-            ? ref.watch(expenseListControllerProvider.notifier)
-            : ref.watch(revenueListControllerProvider.notifier);
-    final selectedDate = widget.balanceTypeMode == BalanceTypeMode.expense
+    final balanceListController = balanceTypeMode == BalanceTypeMode.expense
+        ? ref.watch(expenseListControllerProvider.notifier)
+        : ref.watch(revenueListControllerProvider.notifier);
+    final selectedDate = balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseSelectedDateProvider)
         : ref.watch(revenueSelectedDateProvider);
     final appLocalizations = ref.watch(appLocalizationsProvider);
-    final selectedDateState = widget.balanceTypeMode == BalanceTypeMode.expense
+    final selectedDateState = balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseSelectedDateProvider.notifier)
         : ref.watch(revenueSelectedDateProvider.notifier);
     return balanceList.when<Widget>(data: (List<BalanceEntity> balances) {
@@ -74,22 +70,18 @@ class _BalanceViewState extends ConsumerState<BalanceView> {
         }
         filteredBalances.add(e);
       }
-      cache = ResponsiveLayout(
+      cache.value = ResponsiveLayout(
           mobileChild: shortPanel(context, appLocalizations, selectedDateState,
               selectedDate, filteredBalances, balanceYears),
           tabletChild: shortPanel(context, appLocalizations, selectedDateState,
               selectedDate, filteredBalances, balanceYears),
           desktopChild: widePanel(context, appLocalizations, selectedDateState,
               selectedDate, filteredBalances, balanceYears));
-      return cache;
-    }, error: (Object o, StackTrace st) {
-      debugPrint("[BALANCE_VIEW] $o -> $st");
-      return Stack(alignment: AlignmentDirectional.centerStart, children: [
-        cache,
-        const AppErrorWidget(),
-      ]);
+      return cache.value;
+    }, error: (Object error, StackTrace st) {
+      return showError(error, st, background: cache.value);
     }, loading: () {
-      return const LoadingWidget(color: Colors.grey);
+      return showLoading(background: cache.value);
     });
   }
 
@@ -108,7 +100,7 @@ class _BalanceViewState extends ConsumerState<BalanceView> {
             : "${selectedDate.day} $monthText ${selectedDate.year}";
     double screenWidth = MediaQuery.of(context).size.width;
     Widget topContainer = Container(
-      color: widget.balanceTypeMode == BalanceTypeMode.expense
+      color: balanceTypeMode == BalanceTypeMode.expense
           ? const Color.fromARGB(255, 212, 112, 78)
           : const Color.fromARGB(255, 76, 122, 52),
       constraints: BoxConstraints.tightFor(
@@ -127,7 +119,7 @@ class _BalanceViewState extends ConsumerState<BalanceView> {
     );
     Widget dateBtn = AppTextButton(
       text: appLocalizations.date,
-      backgroundColor: widget.balanceTypeMode == BalanceTypeMode.expense
+      backgroundColor: balanceTypeMode == BalanceTypeMode.expense
           ? const Color.fromARGB(255, 160, 71, 41)
           : const Color.fromARGB(255, 54, 90, 35),
       onPressed: () async {
@@ -185,7 +177,7 @@ class _BalanceViewState extends ConsumerState<BalanceView> {
             balanceYears),
         Expanded(
           child: BalanaceRightPanel(
-              balances: balances, balanceTypeMode: widget.balanceTypeMode),
+              balances: balances, balanceTypeMode: balanceTypeMode),
         ),
       ],
     );
@@ -210,14 +202,12 @@ class _BalanceViewState extends ConsumerState<BalanceView> {
             children: [
               Expanded(
                 child: BalanaceLeftPanel(
-                    balances: balances,
-                    balanceTypeMode: widget.balanceTypeMode),
+                    balances: balances, balanceTypeMode: balanceTypeMode),
               ),
               SizedBox(
                 width: (screenWidth * 0.3 > 440) ? 440 : screenWidth * 0.3,
                 child: BalanaceRightPanel(
-                    balances: balances,
-                    balanceTypeMode: widget.balanceTypeMode),
+                    balances: balances, balanceTypeMode: balanceTypeMode),
               )
             ],
           ),

@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class DropdownPickerField extends StatefulWidget {
   final String? name;
   final List<String> items;
   final bool readOnly;
   final double width;
   final void Function(String?)? onChanged;
-  String initialValue;
+  final valueState = ValueNotifier<String?>(null);
 
   DropdownPickerField(
-      {required this.initialValue,
+      {required String initialValue,
       required this.items,
       this.name,
       this.readOnly = false,
       this.onChanged,
       this.width = 200,
-      super.key});
+      super.key}) {
+    valueState.value = initialValue;
+  }
 
   @override
   State<DropdownPickerField> createState() => _DropdownPickerFieldState();
@@ -46,7 +47,7 @@ class _DropdownPickerFieldState extends State<DropdownPickerField> {
               ),
             ),
           DropdownButton<String>(
-            value: widget.initialValue,
+            value: widget.valueState.value,
             onChanged: widget.readOnly
                 ? null
                 : (String? value) {
@@ -54,7 +55,7 @@ class _DropdownPickerFieldState extends State<DropdownPickerField> {
                       widget.onChanged!(value);
                     }
                     setState(() {
-                      widget.initialValue = value!;
+                      widget.valueState.value = value!;
                     });
                   },
             items: widget.items.map<DropdownMenuItem<String>>((String value) {

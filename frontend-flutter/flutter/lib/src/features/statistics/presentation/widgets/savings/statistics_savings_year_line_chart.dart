@@ -7,7 +7,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// ignore: must_be_immutable
 class StatisticsSavingsYearLineChart extends ConsumerWidget {
   /// Border chart lines decoration
   FlBorderData get borderData => FlBorderData(
@@ -81,13 +80,16 @@ class StatisticsSavingsYearLineChart extends ConsumerWidget {
 
   final List<String> monthList;
   final List<MonthlyBalanceEntity> monthlyBalances;
-  MinMax? minMax;
+
+  final minMaxModelState = ValueNotifier<MinMax?>(null);
 
   StatisticsSavingsYearLineChart(
       {required this.monthList,
       required this.monthlyBalances,
-      this.minMax,
-      super.key});
+      MinMax? minMaxModel,
+      super.key}) {
+    minMaxModelState.value = minMaxModel;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -212,7 +214,7 @@ class StatisticsSavingsYearLineChart extends ConsumerWidget {
 
   @visibleForTesting
   MinMax getMinMaxQuantity() {
-    if (minMax != null) return minMax!;
+    if (minMaxModelState.value != null) return minMaxModelState.value!;
     double maxQuantity = 4.0;
     double minQuantity = 0.0;
     Map<String, double> quantityMap = {};
@@ -240,7 +242,7 @@ class StatisticsSavingsYearLineChart extends ConsumerWidget {
     }
     if (maxQuantity < 4) maxQuantity = 4;
     if (minQuantity > 0) minQuantity = 0;
-    minMax = MinMax(min: minQuantity, max: maxQuantity);
-    return minMax!;
+    minMaxModelState.value = MinMax(min: minQuantity, max: maxQuantity);
+    return minMaxModelState.value!;
   }
 }

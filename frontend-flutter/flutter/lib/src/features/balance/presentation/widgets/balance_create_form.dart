@@ -32,6 +32,11 @@ class BalanceCreateForm extends ConsumerStatefulWidget {
   final quantityController = TextEditingController();
   @visibleForTesting
   final dateController = TextEditingController();
+
+  @visibleForTesting
+  final cache = ValueNotifier<Widget>(Container());
+
+  @visibleForTesting
   final BalanceTypeMode balanceTypeMode;
 
   BalanceCreateForm({
@@ -44,9 +49,6 @@ class BalanceCreateForm extends ConsumerStatefulWidget {
 }
 
 class _BalanceCreateFormState extends ConsumerState<BalanceCreateForm> {
-  @visibleForTesting
-  Widget cache = Container();
-
   @visibleForTesting
   BalanceName? name;
   @visibleForTesting
@@ -108,7 +110,7 @@ class _BalanceCreateFormState extends ConsumerState<BalanceCreateForm> {
         return balanceTypes.when(data: (balanceTypes) {
           balanceTypeEntity ??= balanceTypes[0];
           return coinTypes.when(data: (currencyTypes) {
-            cache = SingleChildScrollView(
+            widget.cache.value = SingleChildScrollView(
               child: Form(
                 key: widget.formKey,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -243,26 +245,26 @@ class _BalanceCreateFormState extends ConsumerState<BalanceCreateForm> {
                 ),
               ),
             );
-            return cache;
+            return widget.cache.value;
           }, error: (o, st) {
-            return showError(o, st, background: cache);
+            return showError(o, st, background: widget.cache.value);
           }, loading: () {
-            return showLoading(background: cache);
+            return showLoading(background: widget.cache.value);
           });
         }, error: (o, st) {
-          return showError(o, st, background: cache);
+          return showError(o, st, background: widget.cache.value);
         }, loading: () {
-          return showLoading(background: cache);
+          return showLoading(background: widget.cache.value);
         });
       }, error: (o, st) {
-        return showError(o, st, background: cache);
+        return showError(o, st, background: widget.cache.value);
       }, loading: () {
-        return showLoading(background: cache);
+        return showLoading(background: widget.cache.value);
       });
     }, error: (o, st) {
-      return showError(o, st, background: cache);
+      return showError(o, st, background: widget.cache.value);
     }, loading: () {
-      return showLoading(background: cache);
+      return showLoading(background: widget.cache.value);
     });
   }
 }

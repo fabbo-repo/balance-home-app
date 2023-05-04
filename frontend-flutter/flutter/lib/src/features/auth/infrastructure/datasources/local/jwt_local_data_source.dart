@@ -1,4 +1,4 @@
-import 'package:balance_home_app/config/local_storage_client.dart';
+import 'package:balance_home_app/config/local_preferences_client.dart';
 import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/jwt_entity.dart';
@@ -6,7 +6,7 @@ import 'package:fpdart/fpdart.dart';
 
 /// Manage JWT in device storage
 class JwtLocalDataSource {
-  final LocalStorageClient storageClient;
+  final LocalPreferencesClient storageClient;
 
   /// Default constructor for [JwtLocalDataSource]
   JwtLocalDataSource({required this.storageClient});

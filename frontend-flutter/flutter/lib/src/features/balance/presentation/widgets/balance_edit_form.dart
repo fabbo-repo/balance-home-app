@@ -22,23 +22,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-// ignore: must_be_immutable
-class BalanceEditForm extends ConsumerWidget {
-  final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _quantityController = TextEditingController();
-  final _dateController = TextEditingController();
+class BalanceEditForm extends ConsumerStatefulWidget {
+  @visibleForTesting
+  final formKey = GlobalKey<FormState>();
+  @visibleForTesting
+  final nameController = TextEditingController();
+  @visibleForTesting
+  final descriptionController = TextEditingController();
+  @visibleForTesting
+  final quantityController = TextEditingController();
+  @visibleForTesting
+  final dateController = TextEditingController();
+  @visibleForTesting
   final bool edit;
+  @visibleForTesting
   final BalanceEntity balance;
+
+  @visibleForTesting
+  final cache = ValueNotifier<Widget>(Container());
+
+  @visibleForTesting
   final BalanceTypeMode balanceTypeMode;
-  BalanceName? _name;
-  BalanceDescription? _description;
-  BalanceQuantity? _quantity;
-  BalanceDate? _date;
-  String? _coinType;
-  BalanceTypeEntity? _balanceTypeEntity;
-  Widget cache = Container();
 
   BalanceEditForm({
     required this.edit,
@@ -48,38 +52,57 @@ class BalanceEditForm extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BalanceEditForm> createState() => _BalanceEditFormState();
+}
+
+class _BalanceEditFormState extends ConsumerState<BalanceEditForm> {
+  @visibleForTesting
+  BalanceName? name;
+  @visibleForTesting
+  BalanceDescription? description;
+  @visibleForTesting
+  BalanceQuantity? quantity;
+  @visibleForTesting
+  BalanceDate? date;
+  @visibleForTesting
+  String? coinType;
+  @visibleForTesting
+  BalanceTypeEntity? balanceTypeEntity;
+
+  @override
+  Widget build(BuildContext context) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
     final authController = ref.read(authControllerProvider.notifier);
-    _nameController.text = balance.name;
-    _descriptionController.text = balance.description;
-    _quantityController.text =
-        balance.real_quantity.toString().replaceAll(".", ",");
-    if (_dateController.text.isEmpty) {
-      _dateController.text =
-          "${balance.date.day}/${balance.date.month}/${balance.date.year}";
+    widget.nameController.text = widget.balance.name;
+    widget.descriptionController.text = widget.balance.description;
+    widget.quantityController.text =
+        widget.balance.real_quantity.toString().replaceAll(".", ",");
+    if (widget.dateController.text.isEmpty) {
+      widget.dateController.text =
+          "${widget.balance.date.day}/${widget.balance.date.month}/${widget.balance.date.year}";
     }
-    _name = BalanceName(appLocalizations, _nameController.text);
-    _description =
-        BalanceDescription(appLocalizations, _descriptionController.text);
-    _quantity = BalanceQuantity(appLocalizations,
-        double.tryParse(_quantityController.text.replaceAll(",", ".")));
-    _date = BalanceDate(
+    name = BalanceName(appLocalizations, widget.nameController.text);
+    description =
+        BalanceDescription(appLocalizations, widget.descriptionController.text);
+    quantity = BalanceQuantity(appLocalizations,
+        double.tryParse(widget.quantityController.text.replaceAll(",", ".")));
+    date = BalanceDate(
         appLocalizations,
         DateTime(
-            int.parse(_dateController.text.split("/")[2]),
-            int.parse(_dateController.text.split("/")[1]),
-            int.parse(_dateController.text.split("/")[0])));
-    _coinType ??= balance.coinType;
+            int.parse(widget.dateController.text.split("/")[2]),
+            int.parse(widget.dateController.text.split("/")[1]),
+            int.parse(widget.dateController.text.split("/")[0])));
+    coinType ??= widget.balance.coinType;
     final balanceEditControllerProvider =
-        balanceTypeMode == BalanceTypeMode.expense
+        widget.balanceTypeMode == BalanceTypeMode.expense
             ? expenseEditControllerProvider
             : revenueEditControllerProvider;
-    final balanceListController = balanceTypeMode == BalanceTypeMode.expense
-        ? ref.read(expenseListControllerProvider.notifier)
-        : ref.read(revenueListControllerProvider.notifier);
+    final balanceListController =
+        widget.balanceTypeMode == BalanceTypeMode.expense
+            ? ref.read(expenseListControllerProvider.notifier)
+            : ref.read(revenueListControllerProvider.notifier);
     final balanceTypeListControllerProvider =
-        balanceTypeMode == BalanceTypeMode.expense
+        widget.balanceTypeMode == BalanceTypeMode.expense
             ? expenseTypeListControllerProvider
             : revenueTypeListControllerProvider;
 
@@ -92,11 +115,11 @@ class BalanceEditForm extends ConsumerWidget {
     // This is used to refresh page in case handle controller
     return balanceEdit.when(data: (_) {
       return balanceTypes.when(data: (balanceTypes) {
-        _balanceTypeEntity ??= balance.balanceType;
+        balanceTypeEntity ??= widget.balance.balanceType;
         return currencyTypes.when(data: (currencyTypes) {
-          cache = SingleChildScrollView(
+          widget.cache.value = SingleChildScrollView(
             child: Form(
-              key: _formKey,
+              key: widget.formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Padding(
                 padding: const EdgeInsets.all(8),
@@ -104,53 +127,53 @@ class BalanceEditForm extends ConsumerWidget {
                   children: [
                     verticalSpace(),
                     AppTextFormField(
-                      readOnly: !edit,
+                      readOnly: !widget.edit,
                       onChanged: (value) =>
-                          _name = BalanceName(appLocalizations, value),
+                          name = BalanceName(appLocalizations, value),
                       title: appLocalizations.balanceName,
-                      validator: (value) => _name?.validate,
+                      validator: (value) => name?.validate,
                       maxCharacters: 40,
                       maxWidth: 500,
-                      controller: _nameController,
+                      controller: widget.nameController,
                     ),
                     verticalSpace(),
                     AppTextFormField(
-                      readOnly: !edit,
-                      onChanged: (value) => _description =
+                      readOnly: !widget.edit,
+                      onChanged: (value) => description =
                           BalanceDescription(appLocalizations, value),
                       title: appLocalizations.balanceDescription,
-                      validator: (value) => _description?.validate,
+                      validator: (value) => description?.validate,
                       maxCharacters: 2000,
                       maxWidth: 500,
                       maxHeight: 400,
                       maxLines: 7,
                       multiLine: true,
                       showCounterText: true,
-                      controller: _descriptionController,
+                      controller: widget.descriptionController,
                     ),
                     verticalSpace(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         DoubleFormField(
-                          readOnly: !edit,
-                          onChanged: (value) => _quantity =
+                          readOnly: !widget.edit,
+                          onChanged: (value) => quantity =
                               BalanceQuantity(appLocalizations, value),
                           title: appLocalizations.balanceQuantity,
-                          validator: (value) => _quantity?.validate,
+                          validator: (value) => quantity?.validate,
                           maxWidth: 200,
-                          controller: _quantityController,
+                          controller: widget.quantityController,
                           align: TextAlign.end,
                         ),
                         (currencyTypes.isNotEmpty)
                             ? DropdownPickerField(
-                                readOnly: !edit,
-                                initialValue: _coinType!,
+                                readOnly: !widget.edit,
+                                initialValue: coinType!,
                                 items:
                                     currencyTypes.map((e) => e.code).toList(),
                                 width: 100,
                                 onChanged: (value) {
-                                  _coinType = value;
+                                  coinType = value;
                                 })
                             : const Icon(
                                 Icons.error_outline,
@@ -160,7 +183,7 @@ class BalanceEditForm extends ConsumerWidget {
                     ),
                     verticalSpace(),
                     AppTextFormField(
-                        readOnly: !edit,
+                        readOnly: !widget.edit,
                         onTap: () async {
                           // Below line stops keyboard from appearing
                           FocusScope.of(context).requestFocus(FocusNode());
@@ -171,59 +194,60 @@ class BalanceEditForm extends ConsumerWidget {
                               firstDate: DateTime(2000),
                               lastDate: DateTime.now());
                           if (newDate != null) {
-                            _date = BalanceDate(appLocalizations, newDate);
-                            _dateController.text =
+                            date = BalanceDate(appLocalizations, newDate);
+                            widget.dateController.text =
                                 "${newDate.day}/${newDate.month}/${newDate.year}";
                           }
                         },
                         textAlign: TextAlign.center,
-                        controller: _dateController,
+                        controller: widget.dateController,
                         title: appLocalizations.balanceDate,
-                        validator: (value) => _date?.validate,
+                        validator: (value) => date?.validate,
                         maxWidth: 200),
                     verticalSpace(),
                     (balanceTypes.isNotEmpty)
                         ? BalanceTypeDropdownPicker(
-                            readOnly: !edit,
+                            readOnly: !widget.edit,
                             name: appLocalizations.balanceType,
-                            initialValue: _balanceTypeEntity!,
+                            initialValue: balanceTypeEntity!,
                             items: balanceTypes,
                             onChanged: (value) {
-                              _balanceTypeEntity = value!;
+                              balanceTypeEntity = value!;
                             },
                             appLocalizations: appLocalizations,
                           )
                         : Text(appLocalizations.genericError),
                     verticalSpace(),
-                    if (edit)
+                    if (widget.edit)
                       AppTextButton(
                         text: appLocalizations.confirmation,
                         width: 160,
                         height: 50,
                         onPressed: () async {
-                          if (_formKey.currentState == null ||
-                              !_formKey.currentState!.validate()) {
+                          if (widget.formKey.currentState == null ||
+                              !widget.formKey.currentState!.validate()) {
                             return;
                           }
-                          if (_name == null) return;
-                          if (_description == null) return;
-                          if (_quantity == null) return;
-                          if (_date == null) return;
+                          if (name == null) return;
+                          if (description == null) return;
+                          if (quantity == null) return;
+                          if (date == null) return;
                           (await balanceEditController.handle(
-                                  balance.id!,
-                                  _name!,
-                                  _description!,
-                                  _quantity!,
-                                  _date!,
-                                  _coinType!,
-                                  _balanceTypeEntity!,
+                                  widget.balance.id!,
+                                  name!,
+                                  description!,
+                                  quantity!,
+                                  date!,
+                                  coinType!,
+                                  balanceTypeEntity!,
                                   appLocalizations))
                               .fold((failure) {
                             showErrorBalanceEditDialog(appLocalizations,
-                                failure.detail, balanceTypeMode);
+                                failure.detail, widget.balanceTypeMode);
                           }, (entity) {
                             navigatorKey.currentContext!.go(
-                                balanceTypeMode == BalanceTypeMode.expense
+                                widget.balanceTypeMode ==
+                                        BalanceTypeMode.expense
                                     ? "/${BalanceView.routeExpensePath}"
                                     : "/${BalanceView.routeRevenuePath}");
                             balanceListController.updateBalance(entity);
@@ -236,21 +260,21 @@ class BalanceEditForm extends ConsumerWidget {
               ),
             ),
           );
-          return cache;
+          return widget.cache.value;
         }, error: (error, stackTrace) {
-          return showError(error, stackTrace, background: cache);
+          return showError(error, stackTrace, background: widget.cache.value);
         }, loading: () {
-          return showLoading(background: cache);
+          return showLoading(background: widget.cache.value);
         });
       }, error: (error, stackTrace) {
-        return showError(error, stackTrace, background: cache);
+        return showError(error, stackTrace, background: widget.cache.value);
       }, loading: () {
-        return showLoading(background: cache);
+        return showLoading(background: widget.cache.value);
       });
     }, error: (error, stackTrace) {
-      return showError(error, stackTrace, background: cache);
+      return showError(error, stackTrace, background: widget.cache.value);
     }, loading: () {
-      return showLoading(background: cache);
+      return showLoading(background: widget.cache.value);
     });
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LocalStorageClient {
+class LocalPreferencesClient {
   @visibleForTesting
   late final Future<SharedPreferences> futureSharedPreferencesClient;
 
-  LocalStorageClient({Future<SharedPreferences>? futureSharedPreferences}) {
+  LocalPreferencesClient({Future<SharedPreferences>? futureSharedPreferences}) {
     futureSharedPreferencesClient =
         futureSharedPreferences ?? SharedPreferences.getInstance();
   }
