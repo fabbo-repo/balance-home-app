@@ -2,15 +2,14 @@ import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/config/local_preferences_client.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_io/io.dart';
 
 ///
 /// Infrastructure dependencies
 ///
 
-/// Exposes [SharedPreferences] instance
-final storageClientProvider =
+/// Exposes [LocalPreferencesClient] instance
+final localPreferencesClientProvider =
     Provider((ref) => LocalPreferencesClient());
 
 /// Exposes [HttpClient] instance
@@ -24,5 +23,5 @@ Future<void> initializeProviders(ProviderContainer container) async {
 
   /// Core
   container.read(apiClientProvider);
-  container.read(storageClientProvider);
+  container.read(localPreferencesClientProvider);
 }
