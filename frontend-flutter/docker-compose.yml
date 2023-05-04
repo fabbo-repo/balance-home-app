@@ -1,22 +1,21 @@
 version: '3'
 
 services:
-  balance_home_app_web_nginx:
-    image: nginx:1.23.3
+  flutter_web:
+    image: fabbo/balhom-web-flutter:latest
+    container_name: balhom-web-flutter
     ports:
       - "9000:80"
       - "9001:443"
     volumes:
-      - ./nginx:/etc/nginx/conf.d
       - ./certs:/etc/nginx/ssl:ro
-      - ./flutter/build/web:/usr/share/nginx/html
     restart: unless-stopped
     networks:
-      - balhom_frontend_net
+      - balhom_web_net
 
 networks:
-  balhom_frontend_net:
-    name: balhom_frontend_net
+  balhom_web_net:
+    name: balhom_web_net
     ipam:
       driver: default
       config:
