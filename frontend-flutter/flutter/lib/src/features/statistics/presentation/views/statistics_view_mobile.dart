@@ -10,9 +10,9 @@ import 'package:balance_home_app/src/features/statistics/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// ignore: must_be_immutable
 class StatisticsViewMobile extends ConsumerWidget {
-  Widget cache = Container();
+  @visibleForTesting
+  final cache = ValueNotifier<Widget>(Container());
 
   StatisticsViewMobile({super.key});
 
@@ -21,7 +21,7 @@ class StatisticsViewMobile extends ConsumerWidget {
     final theme = ref.watch(themeDataProvider);
     return ref.watch(statisticsControllerProvider).when<Widget>(
         data: (StatisticsData data) {
-      cache = SingleChildScrollView(
+      cache.value = SingleChildScrollView(
         child: Container(
           color: theme == AppTheme.lightTheme
               ? AppColors.balanceBackgroundColor
@@ -43,12 +43,12 @@ class StatisticsViewMobile extends ConsumerWidget {
           ),
         ),
       );
-      return cache;
+      return cache.value;
     }, error: (Object o, StackTrace st) {
-      return showError(o, st, background: cache);
+      return showError(o, st, background: cache.value);
     }, loading: () {
       ref.read(statisticsControllerProvider.notifier).handle();
-      return showLoading(background: cache);
+      return showLoading(background: cache.value);
     });
   }
 }

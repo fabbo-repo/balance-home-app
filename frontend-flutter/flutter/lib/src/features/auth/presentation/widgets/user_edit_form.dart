@@ -20,13 +20,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mime/mime.dart' as mm;
 
 class UserEditForm extends ConsumerStatefulWidget {
-  final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _expectedMonthlyBalanceController = TextEditingController();
-  final _expectedAnnualBalanceController = TextEditingController();
+  @visibleForTesting
+  final formKey = GlobalKey<FormState>();
+  @visibleForTesting
+  final usernameController = TextEditingController();
+  @visibleForTesting
+  final emailController = TextEditingController();
+  @visibleForTesting
+  final expectedMonthlyBalanceController = TextEditingController();
+  @visibleForTesting
+  final expectedAnnualBalanceController = TextEditingController();
+  @visibleForTesting
   final bool edit;
+  @visibleForTesting
   final UserEntity user;
+  @visibleForTesting
+  final cache = ValueNotifier<Widget>(Container());
 
   UserEditForm({
     required this.edit,
@@ -39,44 +48,50 @@ class UserEditForm extends ConsumerStatefulWidget {
 }
 
 class _UserEditFormState extends ConsumerState<UserEditForm> {
-  UserName? _username;
-  UserEmail? _email;
-  BalanceQuantity? _expectedMonthlyBalance;
-  BalanceQuantity? _expectedAnnualBalance;
-  String? _prefCoinType;
-  Uint8List? _imageBytes;
-  String? _imageType;
-  Widget cache = Container();
+  @visibleForTesting
+  UserName? username;
+  @visibleForTesting
+  UserEmail? email;
+  @visibleForTesting
+  BalanceQuantity? expectedMonthlyBalance;
+  @visibleForTesting
+  BalanceQuantity? expectedAnnualBalance;
+  @visibleForTesting
+  String? prefCoinType;
+  @visibleForTesting
+  Uint8List? imageBytes;
+  @visibleForTesting
+  String? imageType;
 
   @override
   Widget build(BuildContext context) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
     final authController = ref.read(authControllerProvider.notifier);
-    widget._usernameController.text = widget._usernameController.text.isEmpty
+    widget.usernameController.text = widget.usernameController.text.isEmpty
         ? widget.user.username
-        : widget._usernameController.text;
-    widget._emailController.text = widget._emailController.text.isEmpty
+        : widget.usernameController.text;
+    widget.emailController.text = widget.emailController.text.isEmpty
         ? widget.user.email
-        : widget._emailController.text;
-    widget._expectedMonthlyBalanceController.text =
-        widget._expectedMonthlyBalanceController.text.isEmpty
+        : widget.emailController.text;
+    widget.expectedMonthlyBalanceController.text =
+        widget.expectedMonthlyBalanceController.text.isEmpty
             ? widget.user.expectedMonthlyBalance.toString().replaceAll(".", ",")
-            : widget._expectedMonthlyBalanceController.text;
-    widget._expectedAnnualBalanceController.text =
-        widget._expectedAnnualBalanceController.text.isEmpty
+            : widget.expectedMonthlyBalanceController.text;
+    widget.expectedAnnualBalanceController.text =
+        widget.expectedAnnualBalanceController.text.isEmpty
             ? widget.user.expectedAnnualBalance.toString().replaceAll(".", ",")
-            : widget._expectedAnnualBalanceController.text;
-    _username = UserName(appLocalizations, widget._usernameController.text);
-    _email = UserEmail(appLocalizations, widget._emailController.text);
-    _expectedMonthlyBalance = BalanceQuantity(
-        appLocalizations,
-        double.tryParse(widget._expectedMonthlyBalanceController.text
-            .replaceAll(",", ".")));
-    _expectedAnnualBalance = BalanceQuantity(
+            : widget.expectedAnnualBalanceController.text;
+    username = UserName(appLocalizations, widget.usernameController.text);
+    email = UserEmail(appLocalizations, widget.emailController.text);
+    expectedMonthlyBalance = BalanceQuantity(
         appLocalizations,
         double.tryParse(
-            widget._expectedAnnualBalanceController.text.replaceAll(",", ".")));
-    _prefCoinType ??= widget.user.prefCoinType;
+            widget.expectedMonthlyBalanceController.text.replaceAll(",", ".")));
+    expectedAnnualBalance = BalanceQuantity(
+        appLocalizations,
+        double.tryParse(
+            widget.expectedAnnualBalanceController.text.replaceAll(",", ".")));
+    prefCoinType ??= widget.user.prefCoinType;
 
     final currencyTypes = ref.watch(currencyTypeListsControllerProvider);
     final userEdit = ref.watch(userEditControllerProvider);
@@ -84,8 +99,8 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
     // This is used to refresh page in case handle controller
     return userEdit.when(data: (_) {
       return currencyTypes.when(data: (currencyTypes) {
-        cache = Form(
-          key: widget._formKey,
+        widget.cache.value = Form(
+          key: widget.formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Padding(
             padding: const EdgeInsets.all(8),
@@ -95,9 +110,9 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                 CircleAvatar(
                     foregroundColor: AppColors.appBarBackgroundColor,
                     backgroundColor: AppColors.appBarBackgroundColor,
-                    backgroundImage: _imageBytes == null
+                    backgroundImage: imageBytes == null
                         ? NetworkImage(widget.user.image!)
-                        : Image.memory(_imageBytes!).image,
+                        : Image.memory(imageBytes!).image,
                     radius: 50,
                     child: !widget.edit
                         ? null
@@ -115,50 +130,50 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                 AppTextFormField(
                   readOnly: !widget.edit,
                   onChanged: (value) =>
-                      _username = UserName(appLocalizations, value),
+                      username = UserName(appLocalizations, value),
                   title: appLocalizations.username,
-                  validator: (value) => _username?.validate,
+                  validator: (value) => username?.validate,
                   maxCharacters: 15,
                   maxWidth: 400,
-                  controller: widget._usernameController,
+                  controller: widget.usernameController,
                 ),
                 verticalSpace(),
                 AppTextFormField(
                   readOnly: true,
                   onChanged: (value) =>
-                      _email = UserEmail(appLocalizations, value),
+                      email = UserEmail(appLocalizations, value),
                   title: appLocalizations.emailAddress,
-                  validator: (value) => _email?.validate,
+                  validator: (value) => email?.validate,
                   maxCharacters: 300,
                   maxWidth: 400,
-                  controller: widget._emailController,
+                  controller: widget.emailController,
                 ),
                 verticalSpace(),
                 DoubleFormField(
                   readOnly: !widget.edit,
-                  onChanged: (value) => _expectedMonthlyBalance =
+                  onChanged: (value) => expectedMonthlyBalance =
                       BalanceQuantity(appLocalizations, value),
                   title: appLocalizations.expectedMonthlyBalance,
-                  validator: (value) => _expectedMonthlyBalance?.validate,
+                  validator: (value) => expectedMonthlyBalance?.validate,
                   maxWidth: 300,
-                  controller: widget._expectedMonthlyBalanceController,
+                  controller: widget.expectedMonthlyBalanceController,
                 ),
                 verticalSpace(),
                 DoubleFormField(
                   readOnly: !widget.edit,
-                  onChanged: (value) => _expectedAnnualBalance =
+                  onChanged: (value) => expectedAnnualBalance =
                       BalanceQuantity(appLocalizations, value),
                   title: appLocalizations.expectedAnnualBalance,
-                  validator: (value) => _expectedAnnualBalance?.validate,
+                  validator: (value) => expectedAnnualBalance?.validate,
                   maxWidth: 300,
-                  controller: widget._expectedAnnualBalanceController,
+                  controller: widget.expectedAnnualBalanceController,
                 ),
                 verticalSpace(),
                 (currencyTypes.isNotEmpty)
                     ? DropdownPickerField(
                         readOnly: !widget.edit,
                         name: appLocalizations.currencyType,
-                        initialValue: _prefCoinType!,
+                        initialValue: prefCoinType!,
                         items: currencyTypes.map((e) => e.code).toList(),
                         onChanged: (value) async {
                           if (value! == widget.user.prefCoinType) return;
@@ -169,17 +184,17 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                                   appLocalizations))
                               .fold((failure) {
                             setState(() {
-                              _prefCoinType = widget.user.prefCoinType;
+                              prefCoinType = widget.user.prefCoinType;
                             });
                             showErrorUserEditDialog(
                                 appLocalizations, failure.detail);
                           }, (newBalance) async {
                             if (await showCurrencyChangeAdviceDialog(
                                 appLocalizations, newBalance, value)) {
-                              _prefCoinType = value;
+                              prefCoinType = value;
                             } else {
                               setState(() {
-                                _prefCoinType = widget.user.prefCoinType;
+                                prefCoinType = widget.user.prefCoinType;
                               });
                             }
                           });
@@ -192,18 +207,18 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                     width: 160,
                     height: 50,
                     onPressed: () async {
-                      if (widget._formKey.currentState == null ||
-                          !widget._formKey.currentState!.validate()) {
+                      if (widget.formKey.currentState == null ||
+                          !widget.formKey.currentState!.validate()) {
                         return;
                       }
-                      if (_username == null) return;
-                      if (_email == null) return;
-                      if (_expectedMonthlyBalance == null) return;
-                      if (_expectedAnnualBalance == null) return;
-                      if (_imageBytes != null) {
+                      if (username == null) return;
+                      if (email == null) return;
+                      if (expectedMonthlyBalance == null) return;
+                      if (expectedAnnualBalance == null) return;
+                      if (imageBytes != null) {
                         bool isImageOk = true;
                         (await userEditController.handleImage(
-                                _imageBytes!, _imageType!, appLocalizations))
+                                imageBytes!, imageType!, appLocalizations))
                             .fold((failure) {
                           isImageOk = false;
                           showErrorUserEditDialog(
@@ -213,11 +228,11 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                       }
                       (await userEditController.handle(
                               widget.user,
-                              _username!,
-                              _email!,
-                              _expectedMonthlyBalance!,
-                              _expectedAnnualBalance!,
-                              _prefCoinType!,
+                              username!,
+                              email!,
+                              expectedMonthlyBalance!,
+                              expectedAnnualBalance!,
+                              prefCoinType!,
                               appLocalizations))
                           .fold((failure) {
                         showErrorUserEditDialog(
@@ -231,16 +246,16 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
             ),
           ),
         );
-        return cache;
+        return widget.cache.value;
       }, error: (error, stackTrace) {
-        return showError(error, stackTrace, background: cache);
+        return showError(error, stackTrace, background: widget.cache.value);
       }, loading: () {
-        return showLoading(background: cache);
+        return showLoading(background: widget.cache.value);
       });
     }, error: (error, stackTrace) {
-      return showError(error, stackTrace, background: cache);
+      return showError(error, stackTrace, background: widget.cache.value);
     }, loading: () {
-      return showLoading(background: cache);
+      return showLoading(background: widget.cache.value);
     });
   }
 
@@ -250,8 +265,8 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
       type: FileType.image,
     );
     if (result != null) {
-      _imageBytes = result.files.single.bytes;
-      _imageType = mm.lookupMimeType(result.files.single.name) ?? "";
+      imageBytes = result.files.single.bytes;
+      imageType = mm.lookupMimeType(result.files.single.name) ?? "";
     }
   }
 }

@@ -66,7 +66,7 @@ final router = GoRouter(
             name: UserEditView.routeName,
             path: UserEditView.routePath,
             redirect: authGuardOrNone,
-            builder: (context, state) => const UserEditView(),
+            builder: (context, state) => UserEditView(),
           ),
           GoRoute(
             name: UserDeleteView.routeName,
@@ -86,7 +86,7 @@ final router = GoRouter(
             redirect: authGuardOrNone,
             pageBuilder: (context, state) => FadeTransitionPage(
                 key: _homeScaffoldKey,
-                child: HomeView(
+                child: const HomeView(
                     selectedSection: HomeTab.statistics,
                     child: Center(child: StatisticsView()))),
           ),
@@ -149,7 +149,7 @@ final router = GoRouter(
           GoRoute(
             name: AppInfoLoadingView.routeName,
             path: AppInfoLoadingView.routePath,
-            builder: (context, state) => AppInfoLoadingView(),
+            builder: (context, state) => const AppInfoLoadingView(),
           ),
           GoRoute(
             name: LoadingView.routeName,
@@ -177,7 +177,6 @@ final router = GoRouter(
 final navigatorKey = GlobalKey<NavigatorState>();
 
 const ValueKey<String> _homeScaffoldKey = ValueKey<String>('balhom_home');
-
 
 /// Route observer to use with RouteAware
 final RouteObserver<ModalRoute<void>> routeObserver =

@@ -6,6 +6,7 @@ import 'package:balance_home_app/src/core/presentation/widgets/app_error_widget.
 import 'package:balance_home_app/src/core/presentation/widgets/language_picker_dropdown.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/providers.dart';
+import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/presentation/widgets/login_form.dart';
 import 'package:balance_home_app/src/features/auth/presentation/widgets/register_form.dart';
 import 'package:balance_home_app/src/features/currency/providers.dart';
@@ -16,7 +17,7 @@ import 'package:universal_io/io.dart';
 
 final lastExitPressState = ValueNotifier<DateTime?>(null);
 
-class AuthView extends ConsumerStatefulWidget {
+class AuthView extends ConsumerWidget {
   /// Named route for [AuthView]
   static const String routeName = 'authentication';
 
@@ -31,18 +32,13 @@ class AuthView extends ConsumerStatefulWidget {
   final registerPassword2Controller = TextEditingController();
   final registerInvitationCodeController = TextEditingController();
 
+  @visibleForTesting
+  final cache = ValueNotifier<Widget>(Container());
+
   AuthView({super.key});
 
   @override
-  ConsumerState<AuthView> createState() => _AuthViewState();
-}
-
-class _AuthViewState extends ConsumerState<AuthView> {
-  @visibleForTesting
-  Widget cache = Container();
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
     final appLocalizationStateNotifier =
         ref.read(appLocalizationsProvider.notifier);
@@ -69,7 +65,7 @@ class _AuthViewState extends ConsumerState<AuthView> {
           child: BackgroundWidget(
               child: currencyTypeListController.when<Widget>(
                   data: (currencyTypes) {
-            cache = Column(
+            cache.value = Column(
               children: [
                 Align(
                   alignment: Alignment.topRight,
@@ -112,19 +108,16 @@ class _AuthViewState extends ConsumerState<AuthView> {
                         Expanded(
                             child: TabBarView(children: [
                           LoginForm(
-                            emailController: widget.loginEmailController,
-                            passwordController: widget.loginPasswordController,
+                            emailController: loginEmailController,
+                            passwordController: loginPasswordController,
                           ),
                           RegisterForm(
-                              usernameController:
-                                  widget.registerUsernameController,
-                              emailController: widget.registerEmailController,
-                              passwordController:
-                                  widget.registerPasswordController,
-                              password2Controller:
-                                  widget.registerPassword2Controller,
+                              usernameController: registerUsernameController,
+                              emailController: registerEmailController,
+                              passwordController: registerPasswordController,
+                              password2Controller: registerPassword2Controller,
                               invitationCodeController:
-                                  widget.registerInvitationCodeController,
+                                  registerInvitationCodeController,
                               currencyTypes: currencyTypes)
                         ])),
                       ],
@@ -133,22 +126,11 @@ class _AuthViewState extends ConsumerState<AuthView> {
                 )
               ],
             );
-            return cache;
+            return cache.value;
           }, error: (error, stackTrace) {
-            debugPrint("[RESET_PASSWORD_FORM] $error -> $stackTrace");
-            return Stack(
-                alignment: AlignmentDirectional.centerStart,
-                children: [
-                  cache,
-                  const AppErrorWidget(),
-                ]);
+            return showError(error, stackTrace, background: cache.value);
           }, loading: () {
-            return Stack(
-                alignment: AlignmentDirectional.centerStart,
-                children: [
-                  cache,
-                  const LoadingWidget(color: Colors.grey),
-                ]);
+            return showLoading(background: cache.value);
           })),
         ),
       ),

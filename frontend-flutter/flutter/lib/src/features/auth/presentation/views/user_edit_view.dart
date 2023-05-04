@@ -21,15 +21,17 @@ class UserEditView extends ConsumerStatefulWidget {
   /// Route path
   static const routePath = 'user-edit';
 
-  const UserEditView({super.key});
+  @visibleForTesting
+  final cache = ValueNotifier<Widget>(Container());
+
+  UserEditView({super.key});
 
   @override
   ConsumerState<UserEditView> createState() => _UserEditViewState();
 }
 
 class _UserEditViewState extends ConsumerState<UserEditView> {
-  bool edit = false;
-  Widget cache = Container();
+  bool editable = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
           : data.lastLogin == null
               ? "-"
               : "${data.lastLogin!.toLocal().day}/${data.lastLogin!.toLocal().month}/${data.lastLogin!.toLocal().year} - ${data.lastLogin!.toLocal().hour}:${data.lastLogin!.toLocal().minute}:${data.lastLogin!.toLocal().second}";
-      cache = Scaffold(
+      widget.cache.value = Scaffold(
           appBar: AppBar(
             title: const AppTittle(fontSize: 30),
             backgroundColor: AppColors.appBarBackgroundColor,
@@ -53,12 +55,12 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
             actions: [
               IconButton(
                 icon: Icon(
-                  (!edit) ? Icons.edit : Icons.cancel_outlined,
+                  (!editable) ? Icons.edit : Icons.cancel_outlined,
                   color: Colors.white,
                 ),
                 onPressed: () {
                   setState(() {
-                    edit = !edit;
+                    editable = !editable;
                   });
                 },
               )
@@ -71,8 +73,8 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
                 children: [
                   (data == null)
                       ? const LoadingWidget()
-                      : UserEditForm(edit: edit, user: data),
-                  if (!edit)
+                      : UserEditForm(edit: editable, user: data),
+                  if (!editable)
                     AppTextButton(
                       text: appLocalizations.userDelete,
                       height: 40,
@@ -83,17 +85,18 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
                       backgroundColor: const Color.fromARGB(220, 221, 65, 54),
                     ),
                   verticalSpace(),
-                  if (!edit) Text("${appLocalizations.lastLogin}: $lastLogin"),
+                  if (!editable)
+                    Text("${appLocalizations.lastLogin}: $lastLogin"),
                   verticalSpace(),
                 ],
               ),
             ),
           )));
-      return cache;
+      return widget.cache.value;
     }, error: (o, st) {
-      return showError(o, st, background: cache);
+      return showError(o, st, background: widget.cache.value);
     }, loading: () {
-      return showLoading(background: cache);
+      return showLoading(background: widget.cache.value);
     });
   }
 }

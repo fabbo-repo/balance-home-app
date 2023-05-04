@@ -15,8 +15,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
-  final _formKey = GlobalKey<FormState>();
+  @visibleForTesting
+  final cache = ValueNotifier<Widget>(Container());
+
+  @visibleForTesting
+  final formKey = GlobalKey<FormState>();
+  @visibleForTesting
   final TextEditingController emailController;
+  @visibleForTesting
   final TextEditingController passwordController;
 
   LoginForm(
@@ -30,16 +36,18 @@ class LoginForm extends ConsumerStatefulWidget {
 }
 
 class _LoginFormState extends ConsumerState<LoginForm> {
-  UserEmail? _email;
-  LoginPassword? _password;
+  @visibleForTesting
+  UserEmail? email;
+  @visibleForTesting
+  LoginPassword? password;
+  @visibleForTesting
   bool storeCredentials = false;
-  Widget cache = Container();
 
   @override
   Widget build(BuildContext context) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
-    _email = UserEmail(appLocalizations, widget.emailController.text);
-    _password = LoginPassword(appLocalizations, widget.passwordController.text);
+    email = UserEmail(appLocalizations, widget.emailController.text);
+    password = LoginPassword(appLocalizations, widget.passwordController.text);
     final auth = ref.watch(authControllerProvider);
     final authController = ref.read(authControllerProvider.notifier);
     final emailCode = ref.watch(emailCodeControllerProvider);
@@ -54,9 +62,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           loading: () => true,
           orElse: () => false,
         );
-    cache = SingleChildScrollView(
+    widget.cache.value = SingleChildScrollView(
       child: Form(
-        key: widget._formKey,
+        key: widget.formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -68,8 +76,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 title: appLocalizations.emailAddress,
                 controller: widget.emailController,
                 onChanged: (value) =>
-                    _email = UserEmail(appLocalizations, value),
-                validator: (value) => _email?.validate,
+                    email = UserEmail(appLocalizations, value),
+                validator: (value) => email?.validate,
               ),
               verticalSpace(),
               PasswordTextFormField(
@@ -78,8 +86,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 title: appLocalizations.password,
                 controller: widget.passwordController,
                 onChanged: (value) =>
-                    _password = LoginPassword(appLocalizations, value),
-                validator: (value) => _password?.validate,
+                    password = LoginPassword(appLocalizations, value),
+                validator: (value) => password?.validate,
               ),
               verticalSpace(),
               TextCheckBox(
@@ -96,14 +104,14 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                   child: AppTextButton(
                       enabled: !isLoading,
                       onPressed: () async {
-                        if (widget._formKey.currentState == null ||
-                            !widget._formKey.currentState!.validate()) {
+                        if (widget.formKey.currentState == null ||
+                            !widget.formKey.currentState!.validate()) {
                           return;
                         }
-                        if (_email == null) return;
-                        if (_password == null) return;
+                        if (email == null) return;
+                        if (password == null) return;
                         (await authController.signIn(
-                                _email!, _password!, appLocalizations,
+                                email!, password!, appLocalizations,
                                 store: storeCredentials))
                             .fold((failure) async {
                           if (failure.detail ==
@@ -112,7 +120,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                 await showCodeAdviceDialog(appLocalizations);
                             if (sendCode) {
                               (await emailCodeController.requestCode(
-                                      _email!, appLocalizations))
+                                      email!, appLocalizations))
                                   .fold((failure) {
                                 showErrorEmailSendCodeDialog(
                                     appLocalizations, failure.detail);
@@ -150,7 +158,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       ),
     );
     return isLoading
-        ? showLoading(background: cache, alignment: AlignmentDirectional.topStart)
-        : cache;
+        ? showLoading(
+            background: widget.cache.value,
+            alignment: AlignmentDirectional.topStart)
+        : widget.cache.value;
   }
 }

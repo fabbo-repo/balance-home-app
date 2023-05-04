@@ -16,13 +16,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegisterForm extends ConsumerStatefulWidget {
+  @visibleForTesting
+  final cache = ValueNotifier<Widget>(Container());
+
+  @visibleForTesting
   final TextEditingController usernameController;
+  @visibleForTesting
   final TextEditingController emailController;
+  @visibleForTesting
   final TextEditingController passwordController;
+  @visibleForTesting
   final TextEditingController password2Controller;
+  @visibleForTesting
   final TextEditingController invitationCodeController;
+  @visibleForTesting
   final List<CurrencyTypeEntity> currencyTypes;
-  final _formKey = GlobalKey<FormState>();
+  @visibleForTesting
+  final formKey = GlobalKey<FormState>();
 
   RegisterForm(
       {required this.usernameController,
@@ -39,23 +49,28 @@ class RegisterForm extends ConsumerStatefulWidget {
 }
 
 class _RegisterFormState extends ConsumerState<RegisterForm> {
-  UserName? _username;
-  UserEmail? _email;
-  UserPassword? _password;
-  UserRepeatPassword? _repeatPassword;
-  InvitationCode? _invitationCode;
-  Widget cache = Container();
+  @visibleForTesting
+  UserName? username;
+  @visibleForTesting
+  UserEmail? email;
+  @visibleForTesting
+  UserPassword? password;
+  @visibleForTesting
+  UserRepeatPassword? repeatPassword;
+  @visibleForTesting
+  InvitationCode? invitationCode;
+  @visibleForTesting
   String? prefCoinType;
 
   @override
   Widget build(BuildContext context) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
-    _username = UserName(appLocalizations, widget.usernameController.text);
-    _email = UserEmail(appLocalizations, widget.emailController.text);
-    _password = UserPassword(appLocalizations, widget.passwordController.text);
-    _repeatPassword = UserRepeatPassword(appLocalizations,
+    username = UserName(appLocalizations, widget.usernameController.text);
+    email = UserEmail(appLocalizations, widget.emailController.text);
+    password = UserPassword(appLocalizations, widget.passwordController.text);
+    repeatPassword = UserRepeatPassword(appLocalizations,
         widget.passwordController.text, widget.password2Controller.text);
-    _invitationCode =
+    invitationCode =
         InvitationCode(appLocalizations, widget.invitationCodeController.text);
     final auth = ref.watch(authControllerProvider);
     final authController = ref.read(authControllerProvider.notifier);
@@ -71,9 +86,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           loading: () => true,
           orElse: () => false,
         );
-    cache = SingleChildScrollView(
+    widget.cache.value = SingleChildScrollView(
       child: Form(
-        key: widget._formKey,
+        key: widget.formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -85,8 +100,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 title: appLocalizations.username,
                 controller: widget.usernameController,
                 onChanged: (value) =>
-                    _username = UserName(appLocalizations, value),
-                validator: (value) => _username?.validate,
+                    username = UserName(appLocalizations, value),
+                validator: (value) => username?.validate,
               ),
               verticalSpace(),
               AppTextFormField(
@@ -95,8 +110,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 maxCharacters: 300,
                 controller: widget.emailController,
                 onChanged: (value) =>
-                    _email = UserEmail(appLocalizations, value),
-                validator: (value) => _email?.validate,
+                    email = UserEmail(appLocalizations, value),
+                validator: (value) => email?.validate,
               ),
               verticalSpace(),
               PasswordTextFormField(
@@ -105,8 +120,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 maxCharacters: 400,
                 controller: widget.passwordController,
                 onChanged: (value) =>
-                    _password = UserPassword(appLocalizations, value),
-                validator: (value) => _password?.validate,
+                    password = UserPassword(appLocalizations, value),
+                validator: (value) => password?.validate,
               ),
               verticalSpace(),
               PasswordTextFormField(
@@ -114,9 +129,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 maxWidth: 400,
                 maxCharacters: 400,
                 controller: widget.password2Controller,
-                onChanged: (value) => _repeatPassword = UserRepeatPassword(
+                onChanged: (value) => repeatPassword = UserRepeatPassword(
                     appLocalizations, widget.passwordController.text, value),
-                validator: (value) => _repeatPassword?.validate,
+                validator: (value) => repeatPassword?.validate,
               ),
               verticalSpace(),
               AppTextFormField(
@@ -125,8 +140,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 maxCharacters: 36,
                 controller: widget.invitationCodeController,
                 onChanged: (value) =>
-                    _invitationCode = InvitationCode(appLocalizations, value),
-                validator: (value) => _invitationCode?.validate,
+                    invitationCode = InvitationCode(appLocalizations, value),
+                validator: (value) => invitationCode?.validate,
               ),
               verticalSpace(),
               (widget.currencyTypes.isNotEmpty)
@@ -145,25 +160,26 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                   child: AppTextButton(
                       enabled: !isLoading,
                       onPressed: () async {
-                        if (widget._formKey.currentState == null ||
-                            !widget._formKey.currentState!.validate()) {
+                        if (widget.formKey.currentState == null ||
+                            !widget.formKey.currentState!.validate()) {
                           return;
                         }
-                        if (_username == null) return;
-                        if (_email == null) return;
-                        if (_password == null) return;
-                        if (_invitationCode == null) return;
-                        if (_repeatPassword == null) return;
+                        if (username == null) return;
+                        if (email == null) return;
+                        if (password == null) return;
+                        if (invitationCode == null) return;
+                        if (repeatPassword == null) return;
                         String lang = appLocalizations.localeName;
-                        prefCoinType = prefCoinType ?? widget.currencyTypes[0].code;
+                        prefCoinType =
+                            prefCoinType ?? widget.currencyTypes[0].code;
                         (await authController.createUser(
-                                _username!,
-                                _email!,
+                                username!,
+                                email!,
                                 lang,
-                                _invitationCode!,
+                                invitationCode!,
                                 prefCoinType!,
-                                _password!,
-                                _repeatPassword!,
+                                password!,
+                                repeatPassword!,
                                 appLocalizations))
                             .fold((failure) {
                           showErrorRegisterDialog(
@@ -173,7 +189,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                               await showCodeAdviceDialog(appLocalizations);
                           if (sendCode) {
                             (await emailCodeController.requestCode(
-                                    _email!, appLocalizations))
+                                    email!, appLocalizations))
                                 .fold((failure) {
                               showErrorEmailSendCodeDialog(
                                   appLocalizations, failure.detail);
@@ -189,6 +205,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         ),
       ),
     );
-    return isLoading ? showLoading(background: cache) : cache;
+    return isLoading
+        ? showLoading(background: widget.cache.value)
+        : widget.cache.value;
   }
 }

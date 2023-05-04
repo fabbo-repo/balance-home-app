@@ -10,28 +10,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class SettingsView extends ConsumerStatefulWidget {
+class SettingsView extends ConsumerWidget {
   /// Route name
   static const routeName = 'settings';
 
   /// Route path
   static const routePath = 'settings';
-
-  const SettingsView({super.key});
-
-  @override
-  ConsumerState<SettingsView> createState() => _SettingsViewState();
-}
-
-class _SettingsViewState extends ConsumerState<SettingsView> {
   @visibleForTesting
-  Widget cache = Container();
+  final cache = ValueNotifier<Widget>(Container());
+
+  SettingsView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authControllerProvider);
     return user.when(data: (data) {
-      cache = Scaffold(
+      cache.value = Scaffold(
           appBar: AppBar(
             title: const AppTittle(fontSize: 30),
             backgroundColor: AppColors.appBarBackgroundColor,
@@ -45,11 +39,11 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
               child: BackgroundWidget(
             child: SettingsWidget(user: data!),
           )));
-      return cache;
-    }, error: (o, st) {
-      return showError(o, st, background: cache);
+      return cache.value;
+    }, error: (error, st) {
+      return showError(error, st, background: cache.value);
     }, loading: () {
-      return showLoading(background: cache);
+      return showLoading(background: cache.value);
     });
   }
 }

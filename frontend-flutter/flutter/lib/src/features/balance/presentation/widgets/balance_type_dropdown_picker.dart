@@ -4,23 +4,24 @@ import 'package:balance_home_app/src/features/balance/domain/entities/balance_ty
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-// ignore: must_be_immutable
 class BalanceTypeDropdownPicker extends StatefulWidget {
   final String name;
   final List<BalanceTypeEntity> items;
   final bool readOnly;
   final void Function(BalanceTypeEntity?)? onChanged;
   final AppLocalizations appLocalizations;
-  BalanceTypeEntity initialValue;
+  final balanceTypeState = ValueNotifier<BalanceTypeEntity?>(null);
 
   BalanceTypeDropdownPicker(
       {required this.name,
-      required this.initialValue,
+      required BalanceTypeEntity initialValue,
       required this.items,
       required this.appLocalizations,
       this.readOnly = false,
       this.onChanged,
-      super.key});
+      super.key}) {
+    balanceTypeState.value = initialValue;
+  }
 
   @override
   State<BalanceTypeDropdownPicker> createState() =>
@@ -50,7 +51,7 @@ class _BalanceTypeDropdownPickerState extends State<BalanceTypeDropdownPicker> {
             ),
           ),
           DropdownButton<BalanceTypeEntity>(
-            value: widget.initialValue,
+            value: widget.balanceTypeState.value,
             onChanged: widget.readOnly
                 ? null
                 : (BalanceTypeEntity? value) {
@@ -58,7 +59,7 @@ class _BalanceTypeDropdownPickerState extends State<BalanceTypeDropdownPicker> {
                       widget.onChanged!(value);
                     }
                     setState(() {
-                      widget.initialValue = value!;
+                      widget.balanceTypeState.value = value!;
                     });
                   },
             items: widget.items.map<DropdownMenuItem<BalanceTypeEntity>>(
