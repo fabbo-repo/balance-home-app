@@ -1,9 +1,9 @@
-name: Flutter App Build and Test
+name: Flutter Web App Build, Test, Upload to Docker Hub and Create Tag
 
 on:
   push:
     branches:
-      - develop
+      - main
 
 jobs:
   build-test-upload:
@@ -48,8 +48,13 @@ jobs:
         run: |
           export APP_VERSION=$(grep -m 1 version pubspec.yaml | tr -s ' ' | cut -d' ' -f2 | cut -d'+' -f1 | tr -d '\n' | tr -d '\r')
           echo "Using version ${APP_VERSION}"
-          IMAGE_TAG="${FLUTTER_DOCKER_REPO_NAME}:${APP_VERSION}"
+          IMAGE_TAG="${DOCKER_USERNAME}/${FLUTTER_DOCKER_REPO_NAME}:${APP_VERSION}"
+          LATEST_TAG="${DOCKER_USERNAME}/${FLUTTER_DOCKER_REPO_NAME}:latest"
           docker build . -t ${IMAGE_TAG}
+          docker tag ${IMAGE_TAG} ${LATEST_TAG}
+          docker push ${IMAGE_TAG}
+          docker push ${LATEST_TAG}
         env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           FLUTTER_DOCKER_REPO_NAME: ${{ secrets.FLUTTER_DOCKER_REPO_NAME }}
         working-directory: ./frontend-flutter/flutter
