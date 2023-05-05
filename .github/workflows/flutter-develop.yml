@@ -19,6 +19,11 @@ jobs:
           flutter-version: '3.7.7'
           channel: 'stable'
 
+      - name: Create sample env file
+        run: |
+          cp example_env .env
+        working-directory: ./frontend-flutter/flutter
+
       - name: Install dependencies
         run: |
           flutter pub get
