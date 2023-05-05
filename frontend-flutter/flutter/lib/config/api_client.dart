@@ -1,7 +1,9 @@
 import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/config/environment.dart';
 import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/too_many_requests_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/unauthorized_request_failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/jwt_entity.dart';
 import 'package:dio/dio.dart';
@@ -67,7 +69,7 @@ class ApiClient {
 
   @visibleForTesting
   Either<HttpRequestFailure, Response> checkFailureOrResponse(
-      {required Response response}) {
+      {required String path, required Response response}) {
     if (displayResponseLogs) logResponse(response);
     if (((response.statusCode ?? unknownStatusCode) / 10).round() == 20) {
       return right(response);
@@ -75,6 +77,8 @@ class ApiClient {
       return left(BadRequestFailure.fromJson(response.data));
     } else if (response.statusCode == 401) {
       return left(UnauthorizedRequestFailure.fromJson(response.data));
+    } else if (response.statusCode == 429) {
+      return left(TooManyRequestFailure(endpoint: path));
     }
     debugPrint("[HTTP CHECK] Unknown HttpFailure: ${response.data}");
     return left(HttpRequestFailure(
@@ -115,10 +119,10 @@ class ApiClient {
       if (displayRequestLogs) logRequest(path, "GET");
       await checkAccessJwt();
       final res = await dioClient.get(path, queryParameters: queryParameters);
-      return checkFailureOrResponse(response: res);
+      return checkFailureOrResponse(path: path, response: res);
     } on Exception catch (error) {
       debugPrint("[HTTP ERROR] $error");
-      return left(HttpRequestFailure.empty());
+      return left(HttpConnectionFailure(detail: error.toString()));
     }
   }
 
@@ -128,10 +132,10 @@ class ApiClient {
       if (displayRequestLogs) logRequest(path, "POST");
       await checkAccessJwt();
       final res = await dioClient.post(path, data: data);
-      return checkFailureOrResponse(response: res);
+      return checkFailureOrResponse(path: path, response: res);
     } on Exception catch (error) {
       debugPrint("[HTTP ERROR] $error");
-      return left(HttpRequestFailure.empty());
+      return left(HttpConnectionFailure(detail: error.toString()));
     }
   }
 
@@ -141,10 +145,10 @@ class ApiClient {
       if (displayRequestLogs) logRequest(path, "PUT");
       await checkAccessJwt();
       final res = await dioClient.put(path, data: data);
-      return checkFailureOrResponse(response: res);
+      return checkFailureOrResponse(path: path, response: res);
     } on Exception catch (error) {
       debugPrint("[HTTP ERROR] $error");
-      return left(HttpRequestFailure.empty());
+      return left(HttpConnectionFailure(detail: error.toString()));
     }
   }
 
@@ -154,10 +158,10 @@ class ApiClient {
       if (displayRequestLogs) logRequest(path, "PATCH");
       await checkAccessJwt();
       final res = await dioClient.patch(path, data: data);
-      return checkFailureOrResponse(response: res);
+      return checkFailureOrResponse(path: path, response: res);
     } on Exception catch (error) {
       debugPrint("[HTTP ERROR] $error");
-      return left(HttpRequestFailure.empty());
+      return left(HttpConnectionFailure(detail: error.toString()));
     }
   }
 
@@ -177,10 +181,10 @@ class ApiClient {
       if (displayRequestLogs) logRequest(path, "DEL");
       await checkAccessJwt();
       final res = await dioClient.delete(path);
-      return checkFailureOrResponse(response: res);
+      return checkFailureOrResponse(path: path, response: res);
     } on Exception catch (error) {
       debugPrint("[HTTP ERROR] $error");
-      return left(HttpRequestFailure.empty());
+      return left(HttpConnectionFailure(detail: error.toString()));
     }
   }
 }

@@ -25,7 +25,7 @@
     "december": "Déc",
 
     "@_APP_ERRORS":{},
-    "noInternet": "Impossible de se connecter à Internet, vérifiez votre connexion et réessayez plus tard",
+    "noConnection": "Impossible d'établir la connexion à nos services",
     "badRequest": "Il y a eu une erreur de connexion sur nos services, veuillez réessayer plus tard",
     "wrongVersion": "Vous utilisez une version obsolète, veuillez passer à une version plus à jour",
     "wrongCredentials": "Mauvais email ou mot de passe",

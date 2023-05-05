@@ -1,4 +1,5 @@
 import 'package:balance_home_app/config/router.dart';
+import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
 import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_error_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
@@ -30,25 +31,37 @@ class _AppInfoLoadingViewState extends ConsumerState<AppInfoLoadingView> {
     final appLocalizations = ref.watch(appLocalizationsProvider);
     return Scaffold(
         body: ref.watch(appVersionController).when<Widget>(
-            data: (AppVersion? appVersion) {
-      if (appVersion != null &&
-          appVersion.isLower != null &&
-          !appVersion.isLower!) {
-        Future.delayed(Duration.zero, () {
-          navigatorKey.currentContext!.go("/${AuthView.routePath}");
-        });
-        return LoadingWidget(
-          color: Colors.green,
-          text: "${appLocalizations.version} "
-              "${appVersion.x}.${appVersion.y}.${appVersion.z}",
+            data: (final failureOrAppVersion) {
+      return failureOrAppVersion.fold((failure) {
+        if (failure is HttpConnectionFailure) {
+          return AppErrorWidget(
+            color: Colors.red,
+            text: appLocalizations.noConnection,
+            icon: Icons.network_wifi_1_bar,
+          );
+        }
+        return AppErrorWidget(
+          color: Colors.red,
+          text: appLocalizations.genericError,
         );
-      }
-      return AppErrorWidget(
-        color: Colors.red,
-        text: appLocalizations.wrongVersion,
-      );
+      }, (appVersion) {
+        if (appVersion.isLower != null && !appVersion.isLower!) {
+          Future.delayed(Duration.zero, () {
+            navigatorKey.currentContext!.go("/${AuthView.routePath}");
+          });
+          return LoadingWidget(
+            color: Colors.green,
+            text: "${appLocalizations.version} "
+                "${appVersion.x}.${appVersion.y}.${appVersion.z}",
+          );
+        }
+        return AppErrorWidget(
+          color: Colors.red,
+          text: appLocalizations.wrongVersion,
+        );
+      });
     }, error: (Object o, StackTrace st) {
-      return showError(o, st);
+      return showError(o, st, text: appLocalizations.genericError);
     }, loading: () {
       return showLoading();
     }));

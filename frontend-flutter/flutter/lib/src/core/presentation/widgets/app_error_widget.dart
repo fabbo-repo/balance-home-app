@@ -5,11 +5,13 @@ class AppErrorWidget extends StatelessWidget {
   final Color color;
   final String? text;
   final double? strokeWidth;
+  final IconData? icon;
 
   const AppErrorWidget(
       {this.color = const Color.fromARGB(255, 211, 33, 33),
       this.text,
       this.strokeWidth,
+      this.icon = Icons.error_outline,
       Key? key})
       : super(key: key);
 
@@ -27,7 +29,7 @@ class AppErrorWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              icon,
               color: color,
               size: 110,
             ),

@@ -12,11 +12,12 @@ Widget showLoading(
   ]);
 }
 
-Widget showError(Object error, StackTrace stackTrace, {Widget? background}) {
+Widget showError(Object error, StackTrace stackTrace,
+    {Widget? background, String? text}) {
   debugPrint("[ERROR] $error -> $stackTrace");
   return Stack(alignment: AlignmentDirectional.centerStart, children: [
     IgnorePointer(child: background),
-    const AppErrorWidget(),
+    AppErrorWidget(text: text),
   ]);
 }
 
