@@ -4,6 +4,7 @@ import 'package:balance_home_app/src/features/currency/application/currency_type
 import 'package:balance_home_app/src/features/currency/domain/entities/currency_type_entity.dart';
 import 'package:balance_home_app/src/features/currency/domain/repositories/currency_conversion_repository_interface.dart';
 import 'package:balance_home_app/src/features/currency/domain/repositories/currency_type_repository_interface.dart';
+import 'package:balance_home_app/src/features/currency/infrastructure/datasources/local/currency_type_local_data_source.dart';
 import 'package:balance_home_app/src/features/currency/infrastructure/datasources/remote/currency_conversion_remote_data_source.dart';
 import 'package:balance_home_app/src/features/currency/infrastructure/datasources/remote/currency_type_remote_data_source.dart';
 import 'package:balance_home_app/src/features/currency/infrastructure/repositories/currency_conversion_repository.dart';
@@ -30,7 +31,9 @@ final currencyTypeListsControllerProvider = StateNotifierProvider<
 final currencyTypeRepositoryProvider =
     Provider<CurrencyTypeRepositoryInterface>((ref) => CurrencyTypeRepository(
         currencyTypeRemoteDataSource: CurrencyTypeRemoteDataSource(
-            apiClient: ref.read(apiClientProvider))));
+            apiClient: ref.read(apiClientProvider)),
+        currencyTypeLocalDataSource: CurrencyTypeLocalDataSource(
+            localDbClient: ref.read(localDbClientProvider))));
 
 /// Exchange repository
 final currencyConversionRepositoryProvider =

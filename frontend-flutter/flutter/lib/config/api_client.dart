@@ -15,6 +15,9 @@ import 'package:universal_io/io.dart';
 
 const unknownStatusCode = 600;
 
+/// Provides a [ValueNotifier] to the app to check http connection state 
+final connectionStateListenable = ValueNotifier<bool>(true);
+
 class ApiClient {
   @visibleForTesting
   late final Dio dioClient;
@@ -70,6 +73,7 @@ class ApiClient {
   @visibleForTesting
   Either<HttpRequestFailure, Response> checkFailureOrResponse(
       {required String path, required Response response}) {
+    connectionStateListenable.value = true;
     if (displayResponseLogs) logResponse(response);
     if (((response.statusCode ?? unknownStatusCode) / 10).round() == 20) {
       return right(response);
@@ -114,6 +118,13 @@ class ApiClient {
         "[HTTP RESPONSE] ${response.data} | Headers: ${response.headers}");
   }
 
+  @visibleForTesting
+  HttpConnectionFailure handleConnectionError(final Exception error) {
+    debugPrint("[HTTP ERROR] $error");
+    connectionStateListenable.value = false;
+    return HttpConnectionFailure(detail: error.toString());
+  }
+
   Future<Either<HttpRequestFailure, Response>> getRequest(String path,
       {Map<String, dynamic>? queryParameters}) async {
     try {
@@ -122,8 +133,7 @@ class ApiClient {
       final res = await dioClient.get(path, queryParameters: queryParameters);
       return checkFailureOrResponse(path: path, response: res);
     } on Exception catch (error) {
-      debugPrint("[HTTP ERROR] $error");
-      return left(HttpConnectionFailure(detail: error.toString()));
+      return left(handleConnectionError(error));
     }
   }
 
@@ -135,8 +145,7 @@ class ApiClient {
       final res = await dioClient.post(path, data: data);
       return checkFailureOrResponse(path: path, response: res);
     } on Exception catch (error) {
-      debugPrint("[HTTP ERROR] $error");
-      return left(HttpConnectionFailure(detail: error.toString()));
+      return left(handleConnectionError(error));
     }
   }
 
@@ -148,8 +157,7 @@ class ApiClient {
       final res = await dioClient.put(path, data: data);
       return checkFailureOrResponse(path: path, response: res);
     } on Exception catch (error) {
-      debugPrint("[HTTP ERROR] $error");
-      return left(HttpConnectionFailure(detail: error.toString()));
+      return left(handleConnectionError(error));
     }
   }
 
@@ -161,8 +169,7 @@ class ApiClient {
       final res = await dioClient.patch(path, data: data);
       return checkFailureOrResponse(path: path, response: res);
     } on Exception catch (error) {
-      debugPrint("[HTTP ERROR] $error");
-      return left(HttpConnectionFailure(detail: error.toString()));
+      return left(handleConnectionError(error));
     }
   }
 
@@ -184,8 +191,7 @@ class ApiClient {
       final res = await dioClient.delete(path);
       return checkFailureOrResponse(path: path, response: res);
     } on Exception catch (error) {
-      debugPrint("[HTTP ERROR] $error");
-      return left(HttpConnectionFailure(detail: error.toString()));
+      return left(handleConnectionError(error));
     }
   }
 }

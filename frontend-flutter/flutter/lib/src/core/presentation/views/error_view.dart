@@ -11,9 +11,12 @@ class ErrorView extends ConsumerWidget {
 
   /// Path route for [ErrorView].
   static const String routePath = 'error';
-  
+
   /// Path route for [ErrorView] with not found error.
   static const String notFoundPath = 'not-found';
+
+  /// Path route for [ErrorView] with no connection error.
+  static const String noConnectionErrorPath = 'connection-error';
 
   final String location;
 
@@ -24,10 +27,16 @@ class ErrorView extends ConsumerWidget {
     final appLocalizations = ref.watch(appLocalizationsProvider);
     return Scaffold(
       body: AppErrorWidget(
-        text: (location == '/$routePath')
-            ? appLocalizations.genericError
-            : appLocalizations.pageNotFound,
-      ),
+          text: (location == '/$notFoundPath')
+              ? appLocalizations.pageNotFound
+              : (location == '/$noConnectionErrorPath')
+                  ? appLocalizations.noConnection
+                  : appLocalizations.genericError,
+          icon: (location == '/$notFoundPath')
+              ? Icons.question_mark
+              : (location == '/$noConnectionErrorPath')
+                  ? Icons.network_wifi_1_bar
+                  : null),
     );
   }
 
@@ -35,7 +44,7 @@ class ErrorView extends ConsumerWidget {
   static void go() {
     navigatorKey.currentContext!.go('/$routePath');
   }
-  
+
   /// Redirects current view to [ErrorView] using a not found error.
   static void go404() {
     navigatorKey.currentContext!.go('/$notFoundPath');

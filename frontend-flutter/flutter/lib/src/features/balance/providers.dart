@@ -1,4 +1,5 @@
 import 'package:balance_home_app/config/providers.dart';
+import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/features/balance/application/balance_create_controller.dart';
@@ -20,6 +21,7 @@ import 'package:balance_home_app/src/features/balance/presentation/states/balanc
 import 'package:balance_home_app/src/features/balance/presentation/states/balance_ordering_type_state.dart';
 import 'package:balance_home_app/src/core/presentation/states/selected_date_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 
 ///
 /// Infrastructure dependencies
@@ -41,19 +43,27 @@ final balanceRepositoryProvider = Provider<BalanceRepositoryInterface>((ref) =>
 /// Application dependencies
 ///
 final revenueListControllerProvider = StateNotifierProvider<
-    BalanceListController, AsyncValue<List<BalanceEntity>>>((ref) {
+    BalanceListController,
+    AsyncValue<Either<Failure, List<BalanceEntity>>>>((ref) {
   final repo = ref.watch(balanceRepositoryProvider);
   const balanceTypeMode = BalanceTypeMode.revenue;
   final selectedDate = ref.watch(revenueSelectedDateProvider);
-  return BalanceListController(repo, balanceTypeMode, selectedDate);
+  return BalanceListController(
+      repository: repo,
+      balanceTypeMode: balanceTypeMode,
+      selectedDate: selectedDate);
 });
 
 final expenseListControllerProvider = StateNotifierProvider<
-    BalanceListController, AsyncValue<List<BalanceEntity>>>((ref) {
+    BalanceListController,
+    AsyncValue<Either<Failure, List<BalanceEntity>>>>((ref) {
   final repo = ref.watch(balanceRepositoryProvider);
   const balanceTypeMode = BalanceTypeMode.expense;
   final selectedDate = ref.watch(expenseSelectedDateProvider);
-  return BalanceListController(repo, balanceTypeMode, selectedDate);
+  return BalanceListController(
+      repository: repo,
+      balanceTypeMode: balanceTypeMode,
+      selectedDate: selectedDate);
 });
 
 final revenueCreateControllerProvider =

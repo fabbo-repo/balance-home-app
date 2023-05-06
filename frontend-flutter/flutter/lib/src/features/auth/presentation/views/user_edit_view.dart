@@ -1,3 +1,4 @@
+import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
@@ -37,6 +38,7 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
   Widget build(BuildContext context) {
     final user = ref.watch(authControllerProvider);
     final appLocalizations = ref.watch(appLocalizationsProvider);
+    final isConnected = connectionStateListenable.value;
     return user.when(data: (data) {
       String lastLogin = data == null
           ? "-"
@@ -53,17 +55,18 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
                   .goNamed(StatisticsView.routeName),
             ),
             actions: [
-              IconButton(
-                icon: Icon(
-                  (!editable) ? Icons.edit : Icons.cancel_outlined,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  setState(() {
-                    editable = !editable;
-                  });
-                },
-              )
+              if (isConnected)
+                IconButton(
+                  icon: Icon(
+                    (!editable) ? Icons.edit : Icons.cancel_outlined,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      editable = !editable;
+                    });
+                  },
+                )
             ],
           ),
           body: SafeArea(
@@ -74,7 +77,7 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
                   (data == null)
                       ? const LoadingWidget()
                       : UserEditForm(edit: editable, user: data),
-                  if (!editable)
+                  if (!editable && isConnected)
                     AppTextButton(
                       text: appLocalizations.userDelete,
                       height: 40,

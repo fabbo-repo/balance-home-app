@@ -1,6 +1,7 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/app_layout.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/no_local_entity_failure.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/language_picker_dropdown.dart';
@@ -64,7 +65,8 @@ class AuthView extends ConsumerWidget {
           child: BackgroundWidget(
               child: currencyTypeListController.when<Widget>(data: (data) {
             return data.fold((failure) {
-              if (failure is HttpConnectionFailure) {
+              if (failure is HttpConnectionFailure ||
+                  failure is NoLocalEntityFailure) {
                 return showError(
                     icon: Icons.network_wifi_1_bar,
                     text: appLocalizations.noConnection);

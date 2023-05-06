@@ -21,8 +21,9 @@ final localDbClientProvider =
           "revenueType",
           "expenseType",
           "expense",
-          "annual_balance",
-          "monthly_balance"
+          "currencyType",
+          "annualBalance",
+          "monthlyBalance"
         }));
 
 /// Exposes [HttpClient] instance

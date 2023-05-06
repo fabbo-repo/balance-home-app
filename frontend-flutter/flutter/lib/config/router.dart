@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_info_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/auth_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
@@ -22,8 +23,13 @@ import 'package:go_router/go_router.dart';
 
 final router = GoRouter(
   errorBuilder: (context, state) {
-    if (state.error.toString().contains("no routes")) {
-      return ErrorView(location: state.location);
+    if (state.error
+        .toString()
+        .contains("/${ErrorView.noConnectionErrorPath}")) {
+      return const ErrorView(location: "/${ErrorView.noConnectionErrorPath}");
+    }
+    if (state.error.toString().contains("/${ErrorView.notFoundPath}")) {
+      return const ErrorView(location: "/${ErrorView.notFoundPath}");
     }
     debugPrint(state.error.toString());
     return const ErrorView(location: '/${ErrorView.routePath}');
@@ -207,7 +213,7 @@ Future<String?> logoutGuard(BuildContext context, GoRouterState state) async {
 
 Future<String?> authGuard(BuildContext context, GoRouterState state) async {
   final loggedIn = authStateListenable.value;
-  final goingToAuth = state.location == '/${AuthView.routePath}';
+  final goingToAuth = state.name == AuthView.routeName;
   if (loggedIn && goingToAuth) {
     return "/${StatisticsView.routePath}";
   } else if (!loggedIn && !goingToAuth) {
@@ -221,6 +227,14 @@ Future<String?> authGuard(BuildContext context, GoRouterState state) async {
 Future<String?> authGuardOrNone(
     BuildContext context, GoRouterState state) async {
   final loggedIn = authStateListenable.value;
+  final isConnected = connectionStateListenable.value;
+  if (!isConnected &&
+      (state.name == SettingsView.routeName ||
+          state.name == BalanceCreateView.routeName ||
+          state.name == UserDeleteView.routeName ||
+          state.name == LogoutView.routeName)) {
+    return "/${ErrorView.noConnectionErrorPath}";
+  }
   if (!loggedIn) {
     return "/${AuthLoadingView.routePath}?path=${state.location}";
   }
@@ -228,6 +242,10 @@ Future<String?> authGuardOrNone(
 }
 
 Future<String?> passwordGuard(BuildContext context, GoRouterState state) async {
+  final isConnected = connectionStateListenable.value;
+  if (!isConnected) {
+    return "/${ErrorView.noConnectionErrorPath}";
+  }
   final goingToPassword = state.location == '/password';
   if (goingToPassword) return "/";
   return null;

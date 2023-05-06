@@ -63,7 +63,8 @@ class LocalDbClient {
   Future<Map<String, dynamic>?> getById(
       {required String tableName, required String id}) async {
     final table = await (await futureCollection).openBox<Map>(tableName);
-    return Map<String, dynamic>.from((await table.get(id))!);
+    final element = await table.get(id);
+    return (element != null) ? Map<String, dynamic>.from(element) : null;
   }
 
   Future<void> putById(

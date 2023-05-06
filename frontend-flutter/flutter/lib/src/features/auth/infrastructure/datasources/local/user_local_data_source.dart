@@ -18,12 +18,12 @@ class UserLocalDataSource {
   UserLocalDataSource({required this.localDbClient});
 
   Future<Either<Failure, UserEntity>> get() async {
-    final jsonObj =
-        await localDbClient.getById(tableName: tableName, id: userId);
-    if (jsonObj == null) {
-      return left(NoLocalEntityFailure(entityName: tableName, detail: ""));
-    }
     try {
+      final jsonObj =
+          await localDbClient.getById(tableName: tableName, id: userId);
+      if (jsonObj == null) {
+        return left(NoLocalEntityFailure(entityName: tableName, detail: ""));
+      }
       return right(UserEntity.fromJson(jsonObj));
     } on Exception {
       return left(NoLocalEntityFailure(entityName: tableName, detail: ""));
