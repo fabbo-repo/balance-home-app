@@ -93,9 +93,10 @@ class ApiClient {
         jwtToken!.refresh != null &&
         jwtToken!.refresh!.isNotEmpty &&
         JwtDecoder.isExpired(jwtToken!.access!)) {
-      final res = await postRequest(APIContract.jwtRefresh,
-          data: {"refresh": jwtToken!.refresh});
-      res.fold((_) => null, (value) {
+      final res = await dioClient
+          .post(APIContract.jwtRefresh, data: {"refresh": jwtToken!.refresh});
+      checkFailureOrResponse(path: APIContract.jwtRefresh, response: res)
+          .fold((_) => null, (value) {
         setJwt(jwtToken!.copyWith(access: value.data["access"]));
       });
     }
