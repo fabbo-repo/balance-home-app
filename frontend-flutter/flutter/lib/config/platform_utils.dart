@@ -8,6 +8,18 @@ class PlatformUtils {
   // Whether is web environment
   bool get isWeb => kIsWeb;
 
+  bool get isAndroid =>
+      defaultTargetPlatform == TargetPlatform.android && !isWeb;
+
+  bool get isIOS => defaultTargetPlatform == TargetPlatform.iOS && !isWeb;
+
+  bool get isWindows =>
+      defaultTargetPlatform == TargetPlatform.windows && !isWeb;
+
+  bool get isLinux => defaultTargetPlatform == TargetPlatform.linux && !isWeb;
+
+  bool get isMacOS => defaultTargetPlatform == TargetPlatform.macOS && !isWeb;
+
   // Whether is mobile environment
   bool get isMobile =>
       (defaultTargetPlatform == TargetPlatform.android ||
@@ -25,17 +37,17 @@ class PlatformUtils {
   ///
   /// Web is not included.
   TargetPlatform get targetPlatform => defaultTargetPlatform;
-  
+
   // Whether the platform window is considered as large
   bool isLargeWindow(BuildContext context) =>
-    getWindowType(context) >= AdaptiveWindowType.large;
-  
+      getWindowType(context) >= AdaptiveWindowType.large;
+
   // Whether the platform window is considered as medium
   bool isMediumWindow(BuildContext context) =>
-    getWindowType(context) == AdaptiveWindowType.medium;
-  
+      getWindowType(context) == AdaptiveWindowType.medium;
+
   // Whether the platform window is considered as small
   bool isSmallWindow(BuildContext context) =>
-    getWindowType(context) == AdaptiveWindowType.small 
-    || getWindowType(context) == AdaptiveWindowType.xsmall;
+      getWindowType(context) == AdaptiveWindowType.small ||
+      getWindowType(context) == AdaptiveWindowType.xsmall;
 }
