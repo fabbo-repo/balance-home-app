@@ -1,5 +1,6 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/app_layout.dart';
+import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_error_widget.dart';
@@ -63,72 +64,84 @@ class AuthView extends ConsumerWidget {
             automaticallyImplyLeading: false),
         body: SafeArea(
           child: BackgroundWidget(
-              child: currencyTypeListController.when<Widget>(
-                  data: (currencyTypes) {
-            cache.value = Column(
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: CustomLanguagePickerDropdown(
-                      appLocalizations: appLocalizations,
-                      onValuePicked: (Language language) {
-                        Locale locale = Locale(language.isoCode);
-                        appLocalizationStateNotifier.setLocale(locale);
-                      }),
-                ),
-                const SizedBox(height: AppLayout.genericPadding),
-                Expanded(
-                  child: DefaultTabController(
-                    length: 2,
-                    initialIndex: 0,
-                    child: Column(
-                      children: [
-                        TabBar(
-                            isScrollable: true,
-                            indicatorColor:
-                                const Color.fromARGB(255, 7, 136, 76),
-                            tabs: [
-                              Tab(
-                                child: Text(
-                                  appLocalizations.signIn,
-                                  style: const TextStyle(
-                                      color: Color.fromARGB(255, 27, 27, 27),
-                                      fontSize: 20),
-                                ),
-                              ),
-                              Tab(
-                                child: Text(
-                                  appLocalizations.register,
-                                  style: const TextStyle(
-                                      color: Color.fromARGB(255, 27, 27, 27),
-                                      fontSize: 20),
-                                ),
-                              )
-                            ]),
-                        Expanded(
-                            child: TabBarView(children: [
-                          LoginForm(
-                            emailController: loginEmailController,
-                            passwordController: loginPasswordController,
-                          ),
-                          RegisterForm(
-                              usernameController: registerUsernameController,
-                              emailController: registerEmailController,
-                              passwordController: registerPasswordController,
-                              password2Controller: registerPassword2Controller,
-                              invitationCodeController:
-                                  registerInvitationCodeController,
-                              currencyTypes: currencyTypes)
-                        ])),
-                      ],
-                    ),
+              child: currencyTypeListController.when<Widget>(data: (data) {
+            return data.fold((failure) {
+              if (failure is HttpConnectionFailure) {
+                return showError(
+                    icon: Icons.network_wifi_1_bar,
+                    text: appLocalizations.noConnection);
+              }
+              return showError(background: cache.value, text: failure.detail);
+            }, (currencyTypes) {
+              cache.value = Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: CustomLanguagePickerDropdown(
+                        appLocalizations: appLocalizations,
+                        onValuePicked: (Language language) {
+                          Locale locale = Locale(language.isoCode);
+                          appLocalizationStateNotifier.setLocale(locale);
+                        }),
                   ),
-                )
-              ],
-            );
-            return cache.value;
-          }, error: (error, stackTrace) {
-            return showError(error, stackTrace, background: cache.value);
+                  const SizedBox(height: AppLayout.genericPadding),
+                  Expanded(
+                    child: DefaultTabController(
+                      length: 2,
+                      initialIndex: 0,
+                      child: Column(
+                        children: [
+                          TabBar(
+                              isScrollable: true,
+                              indicatorColor:
+                                  const Color.fromARGB(255, 7, 136, 76),
+                              tabs: [
+                                Tab(
+                                  child: Text(
+                                    appLocalizations.signIn,
+                                    style: const TextStyle(
+                                        color: Color.fromARGB(255, 27, 27, 27),
+                                        fontSize: 20),
+                                  ),
+                                ),
+                                Tab(
+                                  child: Text(
+                                    appLocalizations.register,
+                                    style: const TextStyle(
+                                        color: Color.fromARGB(255, 27, 27, 27),
+                                        fontSize: 20),
+                                  ),
+                                )
+                              ]),
+                          Expanded(
+                              child: TabBarView(children: [
+                            LoginForm(
+                              emailController: loginEmailController,
+                              passwordController: loginPasswordController,
+                            ),
+                            RegisterForm(
+                                usernameController: registerUsernameController,
+                                emailController: registerEmailController,
+                                passwordController: registerPasswordController,
+                                password2Controller:
+                                    registerPassword2Controller,
+                                invitationCodeController:
+                                    registerInvitationCodeController,
+                                currencyTypes: currencyTypes)
+                          ])),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              );
+              return cache.value;
+            });
+          }, error: (error, _) {
+            return showError(
+                error: error,
+                background: cache.value,
+                text: appLocalizations.genericError);
           }, loading: () {
             return showLoading(background: cache.value);
           })),

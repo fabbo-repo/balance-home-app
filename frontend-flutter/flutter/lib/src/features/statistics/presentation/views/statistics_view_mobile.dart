@@ -44,8 +44,8 @@ class StatisticsViewMobile extends ConsumerWidget {
         ),
       );
       return cache.value;
-    }, error: (Object o, StackTrace st) {
-      return showError(o, st, background: cache.value);
+    }, error: (error, _) {
+      return showError(error: error, background: cache.value);
     }, loading: () {
       ref.read(statisticsControllerProvider.notifier).handle();
       return showLoading(background: cache.value);

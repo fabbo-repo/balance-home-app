@@ -28,7 +28,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
   AuthController({required this.repository})
       : super(const AsyncValue.data(null));
 
-  Future<Either<Failure, bool>> trySignIn() async {
+  Future<Either<Failure, void>> trySignIn() async {
     state = const AsyncValue.loading();
     final res = await repository.trySignIn();
     return await res.fold((failure) {
@@ -42,7 +42,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
       }, (value) {
         state = AsyncValue.data(value);
         updateAuthState();
-        return right(true);
+        return right(null);
       });
     });
   }
@@ -115,7 +115,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
     });
   }
 
-  Future<Either<Failure, bool>> signIn(UserEmail email, LoginPassword password,
+  Future<Either<Failure, void>> signIn(UserEmail email, LoginPassword password,
       AppLocalizations appLocalizations,
       {bool store = false}) async {
     state = const AsyncValue.loading();
@@ -159,7 +159,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
                   detail: appLocalizations.genericError)), (value) {
             state = AsyncValue.data(value);
             updateAuthState();
-            return right(true);
+            return right(null);
           });
         });
       });
@@ -182,7 +182,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
     return right(null);
   }
 
-  Future<Either<Failure, bool>> refreshUserData() async {
+  Future<Either<Failure, void>> refreshUserData() async {
     state = const AsyncValue.loading();
     return await Future.delayed(const Duration(seconds: 2), () async {
       final res = await repository.getUser();
@@ -190,7 +190,7 @@ class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
         return left(failure);
       }, (value) {
         state = AsyncValue.data(value);
-        return right(true);
+        return right(null);
       });
     });
   }

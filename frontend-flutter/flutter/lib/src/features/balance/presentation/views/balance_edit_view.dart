@@ -76,8 +76,8 @@ class _BalanceEditViewState extends ConsumerState<BalanceEditView> {
             balance: data.firstWhere((element) => element.id == widget.id),
             balanceTypeMode: widget.balanceTypeMode),
       );
-    }, error: (o, st) {
-      return showError(o, st);
+    }, error: (error, _) {
+      return showError(error: error);
     }, loading: () {
       return showLoading();
     });

@@ -78,8 +78,8 @@ class BalanceView extends ConsumerWidget {
           desktopChild: widePanel(context, appLocalizations, selectedDateState,
               selectedDate, filteredBalances, balanceYears));
       return cache.value;
-    }, error: (Object error, StackTrace st) {
-      return showError(error, st, background: cache.value);
+    }, error: (error, _) {
+      return showError(error: error, background: cache.value);
     }, loading: () {
       return showLoading(background: cache.value);
     });

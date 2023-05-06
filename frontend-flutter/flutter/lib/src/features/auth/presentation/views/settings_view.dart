@@ -2,6 +2,7 @@ import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
+import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/presentation/widgets/settings_widget.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
@@ -24,6 +25,7 @@ class SettingsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authControllerProvider);
+    final appLocalizations = ref.watch(appLocalizationsProvider);
     return user.when(data: (data) {
       cache.value = Scaffold(
           appBar: AppBar(
@@ -41,7 +43,10 @@ class SettingsView extends ConsumerWidget {
           )));
       return cache.value;
     }, error: (error, st) {
-      return showError(error, st, background: cache.value);
+      return showError(
+          error: error,
+          background: cache.value,
+          text: appLocalizations.genericError);
     }, loading: () {
       return showLoading(background: cache.value);
     });

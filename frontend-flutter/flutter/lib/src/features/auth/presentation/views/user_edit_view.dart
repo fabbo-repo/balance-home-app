@@ -93,8 +93,11 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
             ),
           )));
       return widget.cache.value;
-    }, error: (o, st) {
-      return showError(o, st, background: widget.cache.value);
+    }, error: (error, _) {
+      return showError(
+          error: error,
+          background: widget.cache.value,
+          text: appLocalizations.genericError);
     }, loading: () {
       return showLoading(background: widget.cache.value);
     });

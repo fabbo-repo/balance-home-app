@@ -1,6 +1,8 @@
 import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/credentials_entity.dart';
+import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/user_local_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/jwt_remote_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/user_remote_data_source.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
@@ -21,11 +23,15 @@ class AuthRepository implements AuthRepositoryInterface {
   /// Remote user data provider
   final UserRemoteDataSource userRemoteDataSource;
 
+  /// Local user data provider
+  final UserLocalDataSource userLocalDataSource;
+
   /// Default constructor
   AuthRepository({
     required this.jwtRemoteDataSource,
     required this.jwtLocalDataSource,
     required this.userRemoteDataSource,
+    required this.userLocalDataSource,
   });
 
   @override
@@ -46,11 +52,20 @@ class AuthRepository implements AuthRepositoryInterface {
 
   @override
   Future<Either<Failure, UserEntity>> getUser() async {
-    return await userRemoteDataSource.get();
+    final response = await userRemoteDataSource.get();
+    return await response.fold((failure) async {
+      if (failure is HttpConnectionFailure) {
+        return await userLocalDataSource.get();
+      }
+      return left(failure);
+    }, (remoteUser) {
+      return right(remoteUser);
+    });
   }
 
   @override
   Future<Either<Failure, void>> deleteUser() async {
+    await userLocalDataSource.delete();
     return await userRemoteDataSource.delete();
   }
 

@@ -95,7 +95,10 @@ class SettingsWidget extends ConsumerWidget {
       );
       return cache.value;
     }, error: (error, stackTrace) {
-      return showError(error, stackTrace, background: cache.value);
+      return showError(
+          error: error,
+          background: cache.value,
+          text: appLocalizations.genericError);
     }, loading: () {
       return showLoading(background: cache.value);
     });

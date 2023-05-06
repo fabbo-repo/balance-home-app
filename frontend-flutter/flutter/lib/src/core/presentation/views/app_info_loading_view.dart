@@ -34,16 +34,16 @@ class _AppInfoLoadingViewState extends ConsumerState<AppInfoLoadingView> {
             data: (final failureOrAppVersion) {
       return failureOrAppVersion.fold((failure) {
         if (failure is HttpConnectionFailure) {
-          return AppErrorWidget(
-            color: Colors.red,
-            text: appLocalizations.noConnection,
-            icon: Icons.network_wifi_1_bar,
-          );
+          Future.delayed(Duration.zero, () {
+            navigatorKey.currentContext!.go("/${AuthView.routePath}");
+          });
+          return showError(
+              icon: Icons.network_wifi_1_bar,
+              text: appLocalizations.noConnection);
         }
-        return AppErrorWidget(
-          color: Colors.red,
-          text: appLocalizations.genericError,
-        );
+        return showError(
+            icon: Icons.network_wifi_1_bar,
+            text: appLocalizations.genericError);
       }, (appVersion) {
         if (appVersion.isLower != null && !appVersion.isLower!) {
           Future.delayed(Duration.zero, () {
@@ -55,13 +55,12 @@ class _AppInfoLoadingViewState extends ConsumerState<AppInfoLoadingView> {
                 "${appVersion.x}.${appVersion.y}.${appVersion.z}",
           );
         }
-        return AppErrorWidget(
-          color: Colors.red,
-          text: appLocalizations.wrongVersion,
-        );
+        return showError(
+            icon: Icons.network_wifi_1_bar,
+            text: appLocalizations.wrongVersion);
       });
-    }, error: (Object o, StackTrace st) {
-      return showError(o, st, text: appLocalizations.genericError);
+    }, error: (error, _) {
+      return showError(error: error, text: appLocalizations.genericError);
     }, loading: () {
       return showLoading();
     }));
