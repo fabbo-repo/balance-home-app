@@ -1,9 +1,11 @@
+import 'dart:math';
+
+import 'package:balance_home_app/config/platform_utils.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
 class LocalDbClient {
-  @visibleForTesting
-  final Uint8List encryptionKey;
   @visibleForTesting
   final String dbName;
   @visibleForTesting
@@ -12,38 +14,73 @@ class LocalDbClient {
   late final Future<BoxCollection> futureCollection;
 
   LocalDbClient(
-      {required this.encryptionKey,
+      {List<int>? encryptionKey,
       required this.dbName,
       required this.tableNames}) {
-    futureCollection = BoxCollection.open(
-      dbName,
-      tableNames,
-      path: './', // Only used for Dart IO
-      key: HiveAesCipher(encryptionKey),
-    );
+    futureCollection = Future.microtask(() async {
+      return await BoxCollection.open(
+        dbName,
+        tableNames,
+        path: './', // Only used for Dart IO
+        key: HiveAesCipher(await generateEncryptionKey()),
+      );
+    });
   }
 
-  Future<Map> getAll({required String tableName}) async {
-    final table = await (await futureCollection).openBox<Map>(tableName);
-    return await table.getAllValues();
+  @visibleForTesting
+  Future<List<int>> generateEncryptionKey() async {
+    final deviceInfoPlugin = DeviceInfoPlugin();
+    final platformUtils = PlatformUtils();
+    String key = "";
+    if (platformUtils.isWeb) {
+      key = (await deviceInfoPlugin.webBrowserInfo).userAgent ?? "";
+    } else if (platformUtils.isAndroid) {
+      key = (await deviceInfoPlugin.androidInfo).id;
+    } else if (platformUtils.isIOS) {
+      key = (await deviceInfoPlugin.iosInfo).identifierForVendor ?? "";
+    } else if (platformUtils.isWindows) {
+      key = (await deviceInfoPlugin.windowsInfo).deviceId;
+    } else if (platformUtils.isLinux) {
+      key = (await deviceInfoPlugin.linuxInfo).id;
+    } else if (platformUtils.isMacOS) {
+      key = (await deviceInfoPlugin.macOsInfo).computerName;
+    }
+    if (key.isEmpty) {
+      return List<int>.generate(32, (_) => Random().nextInt(50));
+    } else {
+      return List<int>.generate(32, (i) => key.codeUnitAt(i % key.length));
+    }
   }
 
-  Future<Map?> getById({required String tableName, required String id}) async {
-    final table = await (await futureCollection).openBox<Map>(tableName);
+  Future<List<Map<String, dynamic>>> getAll({required String tableName}) async {
+    final table =
+        await (await futureCollection).openBox<Map<String, dynamic>>(tableName);
+    final values = await table.getAllValues();
+    return values.keys.map((key) {
+      return values[key]!;
+    }).toList();
+  }
+
+  Future<Map<String, dynamic>?> getById(
+      {required String tableName, required String id}) async {
+    final table =
+        await (await futureCollection).openBox<Map<String, dynamic>>(tableName);
     return await table.get(id);
   }
 
   Future<void> putById(
       {required String tableName,
       required String id,
-      required Map content}) async {
-    final table = await (await futureCollection).openBox<Map>(tableName);
+      required Map<String, dynamic> content}) async {
+    final table =
+        await (await futureCollection).openBox<Map<String, dynamic>>(tableName);
     await table.put(id, content);
   }
 
   Future<void> deleteById(
       {required String tableName, required String id}) async {
-    final table = await (await futureCollection).openBox<Map>(tableName);
+    final table =
+        await (await futureCollection).openBox<Map<String, dynamic>>(tableName);
     await table.delete(id);
   }
 }
