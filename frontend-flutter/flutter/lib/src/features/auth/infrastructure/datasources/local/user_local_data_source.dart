@@ -1,4 +1,3 @@
-import 'package:balance_home_app/config/api_contract.dart';
 import 'package:balance_home_app/config/local_db_client.dart';
 import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';

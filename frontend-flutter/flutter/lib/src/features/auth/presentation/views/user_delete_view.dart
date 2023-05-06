@@ -4,7 +4,6 @@ import 'package:balance_home_app/src/core/presentation/widgets/info_dialog.dart'
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
-import 'package:balance_home_app/src/features/auth/presentation/views/user_edit_view.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

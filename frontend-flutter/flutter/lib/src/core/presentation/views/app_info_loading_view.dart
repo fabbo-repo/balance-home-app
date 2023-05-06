@@ -1,7 +1,5 @@
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
-import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/app_error_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';

@@ -58,7 +58,9 @@ class AuthRepository implements AuthRepositoryInterface {
         return await userLocalDataSource.get();
       }
       return left(failure);
-    }, (remoteUser) {
+    }, (remoteUser) async {
+      // Store user data
+      await userLocalDataSource.put(remoteUser);
       return right(remoteUser);
     });
   }
