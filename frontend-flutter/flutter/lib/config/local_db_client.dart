@@ -53,34 +53,30 @@ class LocalDbClient {
   }
 
   Future<List<Map<String, dynamic>>> getAll({required String tableName}) async {
-    final table =
-        await (await futureCollection).openBox<Map<String, dynamic>>(tableName);
+    final table = await (await futureCollection).openBox<Map>(tableName);
     final values = await table.getAllValues();
     return values.keys.map((key) {
-      return values[key]!;
+      return Map<String, dynamic>.from(values[key]!);
     }).toList();
   }
 
   Future<Map<String, dynamic>?> getById(
       {required String tableName, required String id}) async {
-    final table =
-        await (await futureCollection).openBox<Map<String, dynamic>>(tableName);
-    return await table.get(id);
+    final table = await (await futureCollection).openBox<Map>(tableName);
+    return Map<String, dynamic>.from((await table.get(id))!);
   }
 
   Future<void> putById(
       {required String tableName,
       required String id,
       required Map<String, dynamic> content}) async {
-    final table =
-        await (await futureCollection).openBox<Map<String, dynamic>>(tableName);
+    final table = await (await futureCollection).openBox<Map>(tableName);
     await table.put(id, content);
   }
 
   Future<void> deleteById(
       {required String tableName, required String id}) async {
-    final table =
-        await (await futureCollection).openBox<Map<String, dynamic>>(tableName);
+    final table = await (await futureCollection).openBox<Map>(tableName);
     await table.delete(id);
   }
 }
