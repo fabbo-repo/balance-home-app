@@ -10,7 +10,7 @@ services:
       - "9001:443"
     volumes:
       - ./certs:/etc/nginx/ssl:ro
-      - ./web:/usr/share/nginx/html
+      - ./web:/usr/share/nginx/html # optional (cache)
     env_file:
       - ./web.env
     restart: unless-stopped
