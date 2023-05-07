@@ -1,4 +1,6 @@
+import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/config/app_layout.dart';
+import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/info_dialog.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
@@ -21,6 +23,7 @@ class BalanceCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isConnected = connectionStateListenable.value;
     final authController = ref.read(authControllerProvider.notifier);
     final balanceListController = balanceTypeMode == BalanceTypeMode.expense
         ? ref.read(expenseListControllerProvider.notifier)
@@ -62,19 +65,22 @@ class BalanceCard extends ConsumerWidget {
                     backgroundColor:
                         MaterialStateProperty.resolveWith((states) {
                       // If the button is pressed, return grey, otherwise red
-                      if (states.contains(MaterialState.pressed)) {
+                      if (states.contains(MaterialState.pressed) ||
+                          states.contains(MaterialState.disabled)) {
                         return Colors.grey;
                       }
                       return Colors.red;
                     }),
                   ),
-                  onPressed: () async {
-                    if (await showDeleteAdviceDialog(
-                        context, appLocalizations)) {
-                      balanceListController.deleteBalance(balance);
-                      authController.refreshUserData();
-                    }
-                  },
+                  onPressed: (isConnected)
+                      ? () async {
+                          if (await showDeleteAdviceDialog(
+                              navigatorKey.currentContext!, appLocalizations)) {
+                            balanceListController.deleteBalance(balance);
+                            authController.refreshUserData();
+                          }
+                        }
+                      : null,
                   child: const Icon(
                     Icons.delete,
                   ),

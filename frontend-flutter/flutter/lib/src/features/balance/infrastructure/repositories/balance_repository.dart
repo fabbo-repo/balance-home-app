@@ -62,7 +62,13 @@ class BalanceRepository implements BalanceRepositoryInterface {
   @override
   Future<Either<Failure, List<int>>> getBalanceYears(
       BalanceTypeMode balanceTypeMode) async {
-    return await balanceRemoteDataSource.getYears(balanceTypeMode);
+    final res = await balanceRemoteDataSource.getYears(balanceTypeMode);
+    return res.fold((failure) {
+      if (failure is HttpConnectionFailure) {
+        return right([DateTime.now().year]);
+      }
+      return left(failure);
+    }, (value) => right(value));
   }
 
   /// Store a [BalanceEntity].

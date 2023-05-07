@@ -9,8 +9,4 @@ abstract class AnnualBalanceRepositoryInterface {
 
   /// Get a list of [AnnualBalanceEntity].
   Future<Either<Failure, List<AnnualBalanceEntity>>> getAnnualBalances();
-
-  /// Get last eight [AnnualBalanceEntity].
-  Future<Either<Failure, List<AnnualBalanceEntity>>>
-      getLastEightYearsAnnualBalances();
 }

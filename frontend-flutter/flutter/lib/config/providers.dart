@@ -5,6 +5,8 @@ import 'package:balance_home_app/src/features/auth/infrastructure/datasources/lo
 import 'package:balance_home_app/src/features/balance/infrastructure/datasources/local/balance_local_data_source.dart';
 import 'package:balance_home_app/src/features/balance/infrastructure/datasources/local/balance_type_local_data_source.dart';
 import 'package:balance_home_app/src/features/currency/infrastructure/datasources/local/currency_type_local_data_source.dart';
+import 'package:balance_home_app/src/features/statistics/infrastructure/datasources/local/annual_balance_local_data_source.dart';
+import 'package:balance_home_app/src/features/statistics/infrastructure/datasources/local/monthly_balance_local_data_source.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:universal_io/io.dart';
@@ -24,8 +26,8 @@ final localDbClientProvider =
           BalanceTypeLocalDataSource.tableName,
           BalanceLocalDataSource.tableName,
           CurrencyTypeLocalDataSource.tableName,
-          "annualBalance",
-          "monthlyBalance"
+          AnnualBalanceLocalDataSource.tableName,
+          MonthlyBalanceLocalDataSource.tableName,
         }));
 
 /// Exposes [HttpClient] instance
