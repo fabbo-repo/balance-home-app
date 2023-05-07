@@ -20,17 +20,25 @@ $$$$$$$  |\$$$$$$$ |$$ |$$ |  $$ |\$$$$$$  |$$ | $$ | $$ |
 
 EOF
 
-echo "API_URL=${API_URL}" > .env
+APP_VERSION=$(grep -m 1 version pubspec.yaml | tr -s ' ' | cut -d' ' -f2 | cut -d'+' -f1 | tr -d '\n' | tr -d '\r')
+WEB_DIR=/usr/share/nginx/html
 
-# Install dependencies
-flutter pub get
-# Generate files (env file included from .env)
-flutter pub run build_runner build --delete-conflicting-outputs
-# Build app
-flutter build web
+if [ -d "${WEB_DIR}" ] && [ "$(ls -A ${WEB_DIR})" ] && [ "$(cat ${WEB_DIR}/.version)" = "$APP_VERSION" ]; then
+    echo "Web directory already exists, is not empty and version is correct. Skipping build..."
+else
+    echo "API_URL=${API_URL}" > .env
 
-rm -rf /usr/share/nginx/html/*
-cp -rf /app/build/web/* /usr/share/nginx/html
-rm -rf /app/*
+    # Install dependencies
+    flutter pub get
+    # Generate files (env file included from .env)
+    flutter pub run build_runner build --delete-conflicting-outputs
+    # Build app
+    flutter build web
+
+    rm -rf ${WEB_DIR}/*
+    cp -rf /app/build/web/* ${WEB_DIR}
+    echo "${APP_VERSION}" > ${WEB_DIR}/.version
+    rm -rf /app/*
+fi
 
 exec /docker-entrypoint.sh nginx -g "daemon off;" "$@"
