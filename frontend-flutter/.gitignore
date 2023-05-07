@@ -124,3 +124,5 @@ app.*.symbols
 *.crt
 *.key
 *.pem
+
+web
