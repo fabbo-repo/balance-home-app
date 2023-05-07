@@ -59,8 +59,6 @@ class AuthRepository implements AuthRepositoryInterface {
       }
       return left(failure);
     }, (remoteUser) async {
-      // Delete user data
-      await userLocalDataSource.delete();
       // Store user data
       await userLocalDataSource.put(remoteUser);
       return right(remoteUser);

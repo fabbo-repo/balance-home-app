@@ -43,7 +43,7 @@ class UserLocalDataSource {
 
   Future<Either<Failure, void>> delete() async {
     try {
-      await localDbClient.deleteAll(tableName: tableName);
+      await localDbClient.clearAllTables();
       return right(null);
     } on Exception {
       return left(const EmptyFailure());

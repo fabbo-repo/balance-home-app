@@ -93,4 +93,11 @@ class LocalDbClient {
     final table = await (await futureCollection).openBox<Map>(tableName);
     await table.clear();
   }
+
+  Future<void> clearAllTables() async {
+    for (final tableName in tableNames) {
+      final table = await (await futureCollection).openBox<Map>(tableName);
+      await table.clear();
+    }
+  }
 }
