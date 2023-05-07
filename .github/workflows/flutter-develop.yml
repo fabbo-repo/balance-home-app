@@ -1,4 +1,4 @@
-name: Flutter App Build and Test
+name: Flutter App Build, Test and Package check
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python 3.10
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.7.7'

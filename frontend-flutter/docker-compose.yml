@@ -4,12 +4,15 @@ services:
   flutter_web:
     image: fabbo/balhom-web-flutter:latest
     container_name: balhom-web-flutter
+    build: flutter
     ports:
       - "9000:80"
       - "9001:443"
     volumes:
       - ./certs:/etc/nginx/ssl:ro
-      - ./web:/usr/share/nginx/html
+      - ./web:/usr/share/nginx/html # optional (cache)
+    env_file:
+      - ./web.env
     restart: unless-stopped
     networks:
       - balhom_web_net
