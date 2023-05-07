@@ -2,15 +2,13 @@ import 'package:balance_home_app/config/app_layout.dart';
 import 'package:flutter/material.dart';
 
 class AppErrorWidget extends StatelessWidget {
-  final Color color;
+  final Color? color;
   final String? text;
   final double? strokeWidth;
+  final IconData? icon;
 
   const AppErrorWidget(
-      {this.color = const Color.fromARGB(255, 211, 33, 33),
-      this.text,
-      this.strokeWidth,
-      Key? key})
+      {this.color, this.text, this.strokeWidth, this.icon, Key? key})
       : super(key: key);
 
   @override
@@ -27,8 +25,8 @@ class AppErrorWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
-              color: color,
+              icon ?? Icons.error_outline,
+              color: color ?? Colors.red,
               size: 110,
             ),
             if (text != null && text!.isNotEmpty)

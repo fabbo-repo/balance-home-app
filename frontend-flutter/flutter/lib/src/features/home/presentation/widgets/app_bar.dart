@@ -1,3 +1,4 @@
+import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/platform_utils.dart';
 import 'package:balance_home_app/config/router.dart';
@@ -77,6 +78,7 @@ class CustomAppBar extends ConsumerWidget {
   /// Returns a [Widget] that includes a button with the image
   /// profile and name of the user account.
   Widget _profileButton(AppLocalizations appLocalizations, UserEntity? user) {
+    final isConnected = connectionStateListenable.value;
     return PopupMenuButton(
       onSelected: (value) {
         if (value == 0) {
@@ -95,14 +97,16 @@ class CustomAppBar extends ConsumerWidget {
             value: 0,
             child: Text(appLocalizations.myAccount),
           ),
-          PopupMenuItem<int>(
-            value: 1,
-            child: Text(appLocalizations.settings),
-          ),
-          PopupMenuItem<int>(
-            value: 2,
-            child: Text(appLocalizations.logout),
-          ),
+          if (isConnected)
+            PopupMenuItem<int>(
+              value: 1,
+              child: Text(appLocalizations.settings),
+            ),
+          if (isConnected)
+            PopupMenuItem<int>(
+              value: 2,
+              child: Text(appLocalizations.logout),
+            ),
         ];
       },
       child: Row(

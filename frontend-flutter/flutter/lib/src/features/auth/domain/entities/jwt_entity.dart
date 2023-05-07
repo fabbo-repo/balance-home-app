@@ -16,6 +16,7 @@ class JwtEntity with _$JwtEntity {
     // ignore: invalid_annotation_target
     @JsonKey(includeIfNull: false) 
     required String? access,
+    // ignore: invalid_annotation_target
     @JsonKey(includeIfNull: false) 
     required String? refresh
   }) = _JwtEntity;

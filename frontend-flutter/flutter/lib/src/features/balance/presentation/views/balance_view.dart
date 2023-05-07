@@ -1,11 +1,11 @@
 import 'package:balance_home_app/config/router.dart';
+import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/no_local_entity_failure.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/presentation/states/selected_date_state.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/app_error_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/error_dialog.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/responsive_layout.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/date_util.dart';
@@ -56,30 +56,56 @@ class BalanceView extends ConsumerWidget {
     final selectedDateState = balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseSelectedDateProvider.notifier)
         : ref.watch(revenueSelectedDateProvider.notifier);
-    return balanceList.when<Widget>(data: (List<BalanceEntity> balances) {
+    return balanceList.when<Widget>(data: (data) {
       final balanceYears = balanceListController.getAllBalanceYears();
-      List<BalanceEntity> filteredBalances = [];
-      for (BalanceEntity e in balances) {
-        if (selectedDate.year != e.date.year) continue;
-        if (selectedDate.selectedDateMode == SelectedDateMode.month ||
-            selectedDate.selectedDateMode == SelectedDateMode.day) {
-          if (selectedDate.month != e.date.month) continue;
-          if (selectedDate.selectedDateMode == SelectedDateMode.day) {
-            if (selectedDate.day != e.date.day) continue;
-          }
+      return data.fold((failure) {
+        if (failure is HttpConnectionFailure ||
+            failure is NoLocalEntityFailure) {
+          return showError(
+              icon: Icons.network_wifi_1_bar,
+              text: appLocalizations.noConnection,
+              background: cache.value);
         }
-        filteredBalances.add(e);
-      }
-      cache.value = ResponsiveLayout(
-          mobileChild: shortPanel(context, appLocalizations, selectedDateState,
-              selectedDate, filteredBalances, balanceYears),
-          tabletChild: shortPanel(context, appLocalizations, selectedDateState,
-              selectedDate, filteredBalances, balanceYears),
-          desktopChild: widePanel(context, appLocalizations, selectedDateState,
-              selectedDate, filteredBalances, balanceYears));
-      return cache.value;
-    }, error: (Object error, StackTrace st) {
-      return showError(error, st, background: cache.value);
+        return showError(text: failure.detail, background: cache.value);
+      }, (entities) {
+        List<BalanceEntity> filteredBalances = [];
+        for (BalanceEntity e in entities) {
+          if (selectedDate.year != e.date.year) continue;
+          if (selectedDate.selectedDateMode == SelectedDateMode.month ||
+              selectedDate.selectedDateMode == SelectedDateMode.day) {
+            if (selectedDate.month != e.date.month) continue;
+            if (selectedDate.selectedDateMode == SelectedDateMode.day) {
+              if (selectedDate.day != e.date.day) continue;
+            }
+          }
+          filteredBalances.add(e);
+        }
+        cache.value = ResponsiveLayout(
+            mobileChild: shortPanel(
+                context,
+                appLocalizations,
+                selectedDateState,
+                selectedDate,
+                filteredBalances,
+                balanceYears),
+            tabletChild: shortPanel(
+                context,
+                appLocalizations,
+                selectedDateState,
+                selectedDate,
+                filteredBalances,
+                balanceYears),
+            desktopChild: widePanel(
+                context,
+                appLocalizations,
+                selectedDateState,
+                selectedDate,
+                filteredBalances,
+                balanceYears));
+        return cache.value;
+      });
+    }, error: (error, _) {
+      return showError(error: error, background: cache.value);
     }, loading: () {
       return showLoading(background: cache.value);
     });
@@ -145,7 +171,7 @@ class BalanceView extends ConsumerWidget {
       await showDialog(
           context: navigatorKey.currentContext!,
           builder: (context) => ErrorDialog(
-                dialogTitle: appLocalizations.resetPassword,
+                dialogTitle: appLocalizations.date,
                 dialogDescription: appLocalizations.genericError,
                 cancelText: appLocalizations.cancel,
               ));

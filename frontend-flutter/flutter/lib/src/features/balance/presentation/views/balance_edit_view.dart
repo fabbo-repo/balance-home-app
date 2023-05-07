@@ -1,6 +1,9 @@
+import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/config/theme.dart';
+import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/no_local_entity_failure.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
@@ -34,52 +37,67 @@ class _BalanceEditViewState extends ConsumerState<BalanceEditView> {
 
   @override
   Widget build(BuildContext context) {
+    final isConnected = connectionStateListenable.value;
+    final appLocalizations = ref.read(appLocalizationsProvider);
     final theme = ref.watch(themeDataProvider);
     final balanceList = widget.balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseListControllerProvider)
         : ref.watch(revenueListControllerProvider);
     return balanceList.when(data: (data) {
-      return Scaffold(
-        backgroundColor: widget.balanceTypeMode == BalanceTypeMode.expense
-            ? theme == AppTheme.darkTheme
-                ? AppColors.expenseBackgroundDarkColor
-                : AppColors.expenseBackgroundLightColor
-            : theme == AppTheme.darkTheme
-                ? AppColors.revenueBackgroundDarkColor
-                : AppColors.revenueBackgroundLightColor,
-        appBar: AppBar(
-          title: const AppTittle(fontSize: 30),
-          backgroundColor: AppColors.appBarBackgroundColor,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => navigatorKey.currentContext!.goNamed(
-                widget.balanceTypeMode == BalanceTypeMode.expense
-                    ? BalanceView.routeExpenseName
-                    : BalanceView.routeRevenueName),
+      return data.fold((failure) {
+        if (failure is HttpConnectionFailure ||
+            failure is NoLocalEntityFailure) {
+          return showError(
+              icon: Icons.network_wifi_1_bar,
+              text: appLocalizations.noConnection);
+        }
+        return showError(text: failure.detail);
+      }, (entities) {
+        return Scaffold(
+          backgroundColor: widget.balanceTypeMode == BalanceTypeMode.expense
+              ? theme == AppTheme.darkTheme
+                  ? AppColors.expenseBackgroundDarkColor
+                  : AppColors.expenseBackgroundLightColor
+              : theme == AppTheme.darkTheme
+                  ? AppColors.revenueBackgroundDarkColor
+                  : AppColors.revenueBackgroundLightColor,
+          appBar: AppBar(
+            title: const AppTittle(fontSize: 30),
+            backgroundColor: AppColors.appBarBackgroundColor,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => navigatorKey.currentContext!.goNamed(
+                  widget.balanceTypeMode == BalanceTypeMode.expense
+                      ? BalanceView.routeExpenseName
+                      : BalanceView.routeRevenueName),
+            ),
+            actions: [
+              if (isConnected)
+                IconButton(
+                  icon: Icon(
+                    (!edit) ? Icons.edit : Icons.cancel_outlined,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      edit = !edit;
+                    });
+                  },
+                )
+            ],
           ),
-          actions: [
-            IconButton(
-              icon: Icon(
-                (!edit) ? Icons.edit : Icons.cancel_outlined,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                setState(() {
-                  edit = !edit;
-                });
-              },
-            )
-          ],
-        ),
-        body: BalanceEditForm(
-            edit: edit,
-            balance: data.firstWhere((element) => element.id == widget.id),
-            balanceTypeMode: widget.balanceTypeMode),
-      );
-    }, error: (o, st) {
-      return showError(o, st);
+          body: BalanceEditForm(
+              edit: edit,
+              balance:
+                  entities.firstWhere((element) => element.id == widget.id),
+              balanceTypeMode: widget.balanceTypeMode),
+        );
+      });
+    }, error: (error, _) {
+      return Scaffold(
+          body: showError(error: error, text: appLocalizations.genericError));
     }, loading: () {
-      return showLoading();
+      return Scaffold(body: showLoading());
     });
   }
 }

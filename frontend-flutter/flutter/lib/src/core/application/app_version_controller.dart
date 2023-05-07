@@ -1,14 +1,19 @@
 import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
 import 'package:balance_home_app/src/core/domain/repositories/app_info_repository_interface.dart';
 import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-class AppVersionController extends StateNotifier<AsyncValue<AppVersion>> {
-  final AppInfoRepositoryInterface _repository;
+class AppVersionController
+    extends StateNotifier<AsyncValue<Either<Failure, AppVersion>>> {
+  final AppInfoRepositoryInterface repository;
 
-  AppVersionController(this._repository) : super(const AsyncValue.loading()) {
+  AppVersionController({required this.repository})
+      : super(const AsyncValue.loading()) {
     handle();
   }
 
@@ -16,10 +21,10 @@ class AppVersionController extends StateNotifier<AsyncValue<AppVersion>> {
   @visibleForTesting
   Future<void> handle() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    final res = await _repository.getVersion();
+    final res = await repository.getVersion();
     state = res.fold((failure) {
-      if (failure is ApiBadRequestFailure) {
-        return AsyncValue.error(failure.detail, StackTrace.empty);
+      if (failure is ApiBadRequestFailure || failure is HttpConnectionFailure) {
+        return AsyncValue.data(left(failure));
       }
       return const AsyncValue.error("", StackTrace.empty);
     }, (remoteVersion) {
@@ -36,7 +41,7 @@ class AppVersionController extends StateNotifier<AsyncValue<AppVersion>> {
       } else {
         localVersion = localVersion.copyWith(isLower: false);
       }
-      return AsyncValue.data(localVersion);
+      return AsyncValue.data(right(localVersion));
     });
   }
 }

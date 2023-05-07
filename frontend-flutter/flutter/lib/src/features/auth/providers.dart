@@ -11,6 +11,7 @@ import 'package:balance_home_app/src/features/auth/domain/repositories/reset_pas
 import 'package:balance_home_app/src/features/auth/domain/repositories/settings_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/jwt_local_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/theme_local_data_source.dart';
+import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/user_local_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/email_code_remote_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/jwt_remote_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/reset_password_remote_data_source.dart';
@@ -33,7 +34,9 @@ final authRepositoryProvider = Provider<AuthRepositoryInterface>((ref) {
       jwtLocalDataSource: JwtLocalDataSource(
           storageClient: ref.read(localPreferencesClientProvider)),
       userRemoteDataSource:
-          UserRemoteDataSource(apiClient: ref.read(apiClientProvider)));
+          UserRemoteDataSource(apiClient: ref.read(apiClientProvider)),
+      userLocalDataSource:
+          UserLocalDataSource(localDbClient: ref.read(localDbClientProvider)));
 });
 
 final resetPasswordRepositoryProvider =

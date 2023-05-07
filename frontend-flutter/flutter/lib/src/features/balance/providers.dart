@@ -1,4 +1,5 @@
 import 'package:balance_home_app/config/providers.dart';
+import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/features/balance/application/balance_create_controller.dart';
@@ -10,6 +11,8 @@ import 'package:balance_home_app/src/features/balance/domain/entities/balance_ty
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_repository_interface.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_respository_interface.dart';
+import 'package:balance_home_app/src/features/balance/infrastructure/datasources/local/balance_local_data_source.dart';
+import 'package:balance_home_app/src/features/balance/infrastructure/datasources/local/balance_type_local_data_source.dart';
 import 'package:balance_home_app/src/features/balance/infrastructure/datasources/remote/balance_remote_data_source.dart';
 import 'package:balance_home_app/src/features/balance/infrastructure/datasources/remote/balance_type_remote_data_source.dart';
 import 'package:balance_home_app/src/features/balance/infrastructure/repositories/balance_repository.dart';
@@ -20,6 +23,7 @@ import 'package:balance_home_app/src/features/balance/presentation/states/balanc
 import 'package:balance_home_app/src/features/balance/presentation/states/balance_ordering_type_state.dart';
 import 'package:balance_home_app/src/core/presentation/states/selected_date_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 
 ///
 /// Infrastructure dependencies
@@ -28,32 +32,44 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Balance type repository
 final balanceTypeRepositoryProvider = Provider<BalanceTypeRepositoryInterface>(
     (ref) => BalanceTypeRepository(
-        balanceTypeRemoteDataSource: BalanceTypeRemoteDataSource(
-            apiClient: ref.read(apiClientProvider))));
+        balanceTypeRemoteDataSource:
+            BalanceTypeRemoteDataSource(apiClient: ref.read(apiClientProvider)),
+        balanceTypeLocalDataSource: BalanceTypeLocalDataSource(
+            localDbClient: ref.read(localDbClientProvider))));
 
 /// Balance repository
 final balanceRepositoryProvider = Provider<BalanceRepositoryInterface>((ref) =>
     BalanceRepository(
         balanceRemoteDataSource:
-            BalanceRemoteDataSource(apiClient: ref.read(apiClientProvider))));
+            BalanceRemoteDataSource(apiClient: ref.read(apiClientProvider)),
+        balanceLocalDataSource: BalanceLocalDataSource(
+            localDbClient: ref.read(localDbClientProvider))));
 
 ///
 /// Application dependencies
 ///
 final revenueListControllerProvider = StateNotifierProvider<
-    BalanceListController, AsyncValue<List<BalanceEntity>>>((ref) {
+    BalanceListController,
+    AsyncValue<Either<Failure, List<BalanceEntity>>>>((ref) {
   final repo = ref.watch(balanceRepositoryProvider);
   const balanceTypeMode = BalanceTypeMode.revenue;
   final selectedDate = ref.watch(revenueSelectedDateProvider);
-  return BalanceListController(repo, balanceTypeMode, selectedDate);
+  return BalanceListController(
+      repository: repo,
+      balanceTypeMode: balanceTypeMode,
+      selectedDate: selectedDate);
 });
 
 final expenseListControllerProvider = StateNotifierProvider<
-    BalanceListController, AsyncValue<List<BalanceEntity>>>((ref) {
+    BalanceListController,
+    AsyncValue<Either<Failure, List<BalanceEntity>>>>((ref) {
   final repo = ref.watch(balanceRepositoryProvider);
   const balanceTypeMode = BalanceTypeMode.expense;
   final selectedDate = ref.watch(expenseSelectedDateProvider);
-  return BalanceListController(repo, balanceTypeMode, selectedDate);
+  return BalanceListController(
+      repository: repo,
+      balanceTypeMode: balanceTypeMode,
+      selectedDate: selectedDate);
 });
 
 final revenueCreateControllerProvider =

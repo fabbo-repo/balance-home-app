@@ -1,6 +1,7 @@
 import 'package:balance_home_app/config/providers.dart';
 import 'package:balance_home_app/config/theme.dart';
 import 'package:balance_home_app/src/core/application/app_version_controller.dart';
+import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/core/domain/repositories/app_info_repository_interface.dart';
 import 'package:balance_home_app/src/core/infrastructure/datasources/remote/app_version_remote_data_source.dart';
 import 'package:balance_home_app/src/core/infrastructure/repositories/app_info_repository.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:universal_io/io.dart';
 
 ///
@@ -27,10 +29,10 @@ final appInfoRepositoryProvider = Provider<AppInfoRepositoryInterface>((ref) {
 /// Application dependencies
 ///
 
-final appVersionController =
-    StateNotifierProvider<AppVersionController, AsyncValue<AppVersion>>((ref) {
+final appVersionController = StateNotifierProvider<AppVersionController,
+    AsyncValue<Either<Failure, AppVersion>>>((ref) {
   final repo = ref.read(appInfoRepositoryProvider);
-  return AppVersionController(repo);
+  return AppVersionController(repository: repo);
 });
 
 ///

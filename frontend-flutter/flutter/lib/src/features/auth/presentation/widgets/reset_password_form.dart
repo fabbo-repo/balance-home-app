@@ -167,8 +167,11 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
           ),
         ),
       );
-    }, error: (o, st) {
-      return showError(o, st, background: widget.cache.value);
+    }, error: (error, _) {
+      return showError(
+          error: error,
+          background: widget.cache.value,
+          text: appLocalizations.genericError);
     }, loading: () {
       return showLoading(background: widget.cache.value);
     });

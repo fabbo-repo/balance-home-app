@@ -25,7 +25,7 @@
     "december": "Dec",
 
     "@_APP_ERRORS":{},
-    "noInternet": "Could not connect to the internet, check your connection and try again later",
+    "noConnection": "Could not establish connection to our services",
     "badRequest": "There was a connection error on our services, please try again later",
     "wrongVersion": "You are using a deprecated version, please upgrade to a more updated one",
     "wrongCredentials": "Wrong email or password",

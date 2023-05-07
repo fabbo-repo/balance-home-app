@@ -1,3 +1,4 @@
+import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/statistics/domain/entities/monthly_balance_entity.dart';
@@ -21,6 +22,7 @@ class StatisticsSavingsYearChartContainer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isConnected = connectionStateListenable.value;
     final appLocalizations = ref.watch(appLocalizationsProvider);
     SelectedDate selectedDate =
         ref.watch(statisticsSavingsSelectedDateProvider);
@@ -76,11 +78,13 @@ class StatisticsSavingsYearChartContainer extends ConsumerWidget {
                       child: Text(year.toString()),
                     );
                   }).toList(),
-                  onChanged: (year) {
-                    if (year! != selectedDate.year) {
-                      selectedDateState.setYear(year);
-                    }
-                  }),
+                  onChanged: (isConnected)
+                      ? (year) {
+                          if (year! != selectedDate.year) {
+                            selectedDateState.setYear(year);
+                          }
+                        }
+                      : null),
             )
           ],
         ),

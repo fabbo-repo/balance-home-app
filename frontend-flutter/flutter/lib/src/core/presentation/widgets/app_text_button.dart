@@ -49,6 +49,7 @@ class AppTextButton extends StatelessWidget {
             ? const CircularProgressIndicator()
             : Text(
                 text,
+                textAlign: TextAlign.center,
                 style:
                     TextStyle(fontSize: 16, color: textColor ?? Colors.white),
               ),

@@ -1,4 +1,5 @@
 import 'package:adaptive_navigation/adaptive_navigation.dart';
+import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/config/platform_utils.dart';
 import 'package:balance_home_app/src/features/balance/presentation/views/balance_view.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:universal_io/io.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final lastExitPressState = ValueNotifier<DateTime?>(null);
 
@@ -28,6 +30,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   Widget build(BuildContext context) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
+    final isConnected = connectionStateListenable.value;
+    if (!isConnected) {
+      Future.delayed(Duration.zero, () {
+        showNoConnectionSnackBar(appLocalizations);
+      });
+    }
     return WillPopScope(
       onWillPop: () async {
         final now = DateTime.now();
@@ -38,7 +46,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
         } else {
           lastExitPressState.value = now;
           final snackBar = SnackBar(
-              content: Text(appLocalizations.exitRepeatMessage),
+              content: Text(appLocalizations.exitRepeatMessage,
+                  textAlign: TextAlign.center),
               duration: const Duration(seconds: 2));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           return false;
@@ -83,6 +92,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
+  @visibleForTesting
   NavigationType navigationTypeResolver(BuildContext context) {
     if (PlatformUtils().isLargeWindow(context) ||
         PlatformUtils().isMediumWindow(context)) {
@@ -90,5 +100,15 @@ class _HomeViewState extends ConsumerState<HomeView> {
     } else {
       return NavigationType.bottom;
     }
+  }
+
+  @visibleForTesting
+  void showNoConnectionSnackBar(final AppLocalizations appLocalizations) {
+    final snackBar = SnackBar(
+        content:
+            Text(appLocalizations.noConnection, textAlign: TextAlign.center),
+        backgroundColor: Colors.grey,
+        duration: const Duration(seconds: 3));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

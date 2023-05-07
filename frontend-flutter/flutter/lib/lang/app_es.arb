@@ -25,7 +25,7 @@
     "december": "Dic",
 
     "@_APP_ERRORS":{},
-    "noInternet": "No se ha podido establece conexión a internet, revisa tu conexión e intentalo más tarde",
+    "noConnection": "No se ha podido establecer conexión a nuestros servicios",
     "badRequest": "Hubo un error de conexión con nuestros servicios, por favor intentalo más tarde",
     "wrongVersion": "Estas usando una versión obsoleta, por favor actualiza a una más moderna",
     "wrongCredentials": "Correo o contraseña incorrecta",

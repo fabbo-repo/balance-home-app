@@ -22,7 +22,7 @@ env = environ.Env(
         "APP_UNVERIFIED_USER_DAYS", default=2)),
     COIN_TYPE_CODES=(str, os.getenv("COIN_TYPE_CODES", default='EUR,USD')),
     APP_FRONTEND_VERSION=(str, os.getenv(
-        "APP_FRONTEND_VERSION", default="1.2.1")),
+        "APP_FRONTEND_VERSION", default="1.3.0")),
     APP_DISABLE_ADMIN_PANEL=(bool, os.getenv(
         "APP_DISABLE_ADMIN_PANEL", default=False)),
     APP_EMAIL_HOST=(str, os.getenv(

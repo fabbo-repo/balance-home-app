@@ -1,3 +1,4 @@
+import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/config/platform_utils.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
@@ -115,6 +116,7 @@ class StatisticsBalanceChartContainer extends ConsumerWidget {
       SelectedDateState selectedDateState,
       AppLocalizations appLocalizations) {
     List<String> values = (dateMode == SelectedDateMode.month) ? months : years;
+    final isConnected = connectionStateListenable.value;
     return Container(
       margin: const EdgeInsets.only(top: 20, bottom: 10),
       color: const Color.fromARGB(255, 195, 187, 56),
@@ -130,18 +132,20 @@ class StatisticsBalanceChartContainer extends ConsumerWidget {
               child: Text(value),
             );
           }).toList(),
-          onChanged: (value) {
-            if (dateMode == SelectedDateMode.month) {
-              int newMonth =
-                  DateUtil.monthStringToNum(value!, appLocalizations);
-              if (newMonth == selectedDate.month) return;
-              selectedDateState.setMonth(newMonth);
-            } else if (dateMode == SelectedDateMode.year) {
-              int newYear = int.parse(value!);
-              if (newYear == selectedDate.year) return;
-              selectedDateState.setYear(newYear);
-            }
-          }),
+          onChanged: (isConnected)
+              ? (value) {
+                  if (dateMode == SelectedDateMode.month) {
+                    int newMonth =
+                        DateUtil.monthStringToNum(value!, appLocalizations);
+                    if (newMonth == selectedDate.month) return;
+                    selectedDateState.setMonth(newMonth);
+                  } else if (dateMode == SelectedDateMode.year) {
+                    int newYear = int.parse(value!);
+                    if (newYear == selectedDate.year) return;
+                    selectedDateState.setYear(newYear);
+                  }
+                }
+              : null),
     );
   }
 
