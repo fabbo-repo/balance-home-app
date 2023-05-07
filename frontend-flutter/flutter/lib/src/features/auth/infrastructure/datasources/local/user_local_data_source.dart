@@ -9,8 +9,7 @@ import 'package:fpdart/fpdart.dart';
 class UserLocalDataSource {
   @visibleForTesting
   final LocalDbClient localDbClient;
-  @visibleForTesting
-  final tableName = "user";
+  static const tableName = "user";
   @visibleForTesting
   final userId = "profile";
 
@@ -22,11 +21,13 @@ class UserLocalDataSource {
       final jsonObj =
           await localDbClient.getById(tableName: tableName, id: userId);
       if (jsonObj == null) {
-        return left(NoLocalEntityFailure(entityName: tableName, detail: ""));
+        return left(
+            const NoLocalEntityFailure(entityName: tableName, detail: ""));
       }
       return right(UserEntity.fromJson(jsonObj));
     } on Exception {
-      return left(NoLocalEntityFailure(entityName: tableName, detail: ""));
+      return left(
+          const NoLocalEntityFailure(entityName: tableName, detail: ""));
     }
   }
 
@@ -42,10 +43,10 @@ class UserLocalDataSource {
 
   Future<Either<Failure, void>> delete() async {
     try {
-      return right(
-          await localDbClient.deleteById(tableName: tableName, id: userId));
+      await localDbClient.deleteAll(tableName: tableName);
+      return right(null);
     } on Exception {
-      return left(NoLocalEntityFailure(entityName: tableName, detail: ""));
+      return left(const EmptyFailure());
     }
   }
 }

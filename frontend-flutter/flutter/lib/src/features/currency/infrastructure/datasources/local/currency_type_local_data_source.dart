@@ -9,8 +9,7 @@ import 'package:fpdart/fpdart.dart';
 class CurrencyTypeLocalDataSource {
   @visibleForTesting
   final LocalDbClient localDbClient;
-  @visibleForTesting
-  final tableName = "currencyType";
+  static const tableName = "currencyType";
 
   CurrencyTypeLocalDataSource({required this.localDbClient});
 
@@ -19,11 +18,11 @@ class CurrencyTypeLocalDataSource {
       final jsonObj =
           await localDbClient.getById(tableName: tableName, id: code);
       if (jsonObj == null) {
-        return left(NoLocalEntityFailure(entityName: tableName, detail: ""));
+        return left(const NoLocalEntityFailure(entityName: tableName, detail: ""));
       }
       return right(CurrencyTypeEntity.fromJson(jsonObj));
     } on Exception {
-      return left(NoLocalEntityFailure(entityName: tableName, detail: ""));
+      return left(const NoLocalEntityFailure(entityName: tableName, detail: ""));
     }
   }
 
@@ -43,12 +42,21 @@ class CurrencyTypeLocalDataSource {
     try {
       final jsonObjList = await localDbClient.getAll(tableName: tableName);
       if (jsonObjList.isEmpty) {
-        return left(NoLocalEntityFailure(entityName: tableName, detail: ""));
+        return left(const NoLocalEntityFailure(entityName: tableName, detail: ""));
       }
       return right(
           jsonObjList.map((e) => CurrencyTypeEntity.fromJson(e)).toList());
     } on Exception {
-      return left(NoLocalEntityFailure(entityName: tableName, detail: ""));
+      return left(const NoLocalEntityFailure(entityName: tableName, detail: ""));
+    }
+  }
+
+  Future<Either<Failure, void>> deleteAll() async {
+    try {
+      await localDbClient.deleteAll(tableName: tableName);
+      return right(null);
+    } on Exception {
+      return left(const EmptyFailure());
     }
   }
 }

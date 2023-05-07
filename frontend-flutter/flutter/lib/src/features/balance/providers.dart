@@ -11,6 +11,8 @@ import 'package:balance_home_app/src/features/balance/domain/entities/balance_ty
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_repository_interface.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_respository_interface.dart';
+import 'package:balance_home_app/src/features/balance/infrastructure/datasources/local/balance_local_data_source.dart';
+import 'package:balance_home_app/src/features/balance/infrastructure/datasources/local/balance_type_local_data_source.dart';
 import 'package:balance_home_app/src/features/balance/infrastructure/datasources/remote/balance_remote_data_source.dart';
 import 'package:balance_home_app/src/features/balance/infrastructure/datasources/remote/balance_type_remote_data_source.dart';
 import 'package:balance_home_app/src/features/balance/infrastructure/repositories/balance_repository.dart';
@@ -30,14 +32,18 @@ import 'package:fpdart/fpdart.dart';
 /// Balance type repository
 final balanceTypeRepositoryProvider = Provider<BalanceTypeRepositoryInterface>(
     (ref) => BalanceTypeRepository(
-        balanceTypeRemoteDataSource: BalanceTypeRemoteDataSource(
-            apiClient: ref.read(apiClientProvider))));
+        balanceTypeRemoteDataSource:
+            BalanceTypeRemoteDataSource(apiClient: ref.read(apiClientProvider)),
+        balanceTypeLocalDataSource: BalanceTypeLocalDataSource(
+            localDbClient: ref.read(localDbClientProvider))));
 
 /// Balance repository
 final balanceRepositoryProvider = Provider<BalanceRepositoryInterface>((ref) =>
     BalanceRepository(
         balanceRemoteDataSource:
-            BalanceRemoteDataSource(apiClient: ref.read(apiClientProvider))));
+            BalanceRemoteDataSource(apiClient: ref.read(apiClientProvider)),
+        balanceLocalDataSource: BalanceLocalDataSource(
+            localDbClient: ref.read(localDbClientProvider))));
 
 ///
 /// Application dependencies

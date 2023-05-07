@@ -1,8 +1,9 @@
+import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/config/theme.dart';
-import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/no_local_entity_failure.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
@@ -36,6 +37,7 @@ class _BalanceEditViewState extends ConsumerState<BalanceEditView> {
 
   @override
   Widget build(BuildContext context) {
+    final isConnected = connectionStateListenable.value;
     final appLocalizations = ref.read(appLocalizationsProvider);
     final theme = ref.watch(themeDataProvider);
     final balanceList = widget.balanceTypeMode == BalanceTypeMode.expense
@@ -43,7 +45,8 @@ class _BalanceEditViewState extends ConsumerState<BalanceEditView> {
         : ref.watch(revenueListControllerProvider);
     return balanceList.when(data: (data) {
       return data.fold((failure) {
-        if (failure is HttpConnectionFailure) {
+        if (failure is HttpConnectionFailure ||
+            failure is NoLocalEntityFailure) {
           return showError(
               icon: Icons.network_wifi_1_bar,
               text: appLocalizations.noConnection);
@@ -69,17 +72,18 @@ class _BalanceEditViewState extends ConsumerState<BalanceEditView> {
                       : BalanceView.routeRevenueName),
             ),
             actions: [
-              IconButton(
-                icon: Icon(
-                  (!edit) ? Icons.edit : Icons.cancel_outlined,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  setState(() {
-                    edit = !edit;
-                  });
-                },
-              )
+              if (isConnected)
+                IconButton(
+                  icon: Icon(
+                    (!edit) ? Icons.edit : Icons.cancel_outlined,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      edit = !edit;
+                    });
+                  },
+                )
             ],
           ),
           body: BalanceEditForm(

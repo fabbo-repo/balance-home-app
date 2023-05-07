@@ -41,7 +41,8 @@ class CurrencyTypeRepository implements CurrencyTypeRepositoryInterface {
       }
       return left(failure);
     }, (currencyTypes) async {
-      print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+      // Delete stored currency types data
+      await currencyTypeLocalDataSource.deleteAll();
       // Store currency types data
       for (final currencyType in currencyTypes) {
         await currencyTypeLocalDataSource.put(currencyType);

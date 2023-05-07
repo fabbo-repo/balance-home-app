@@ -41,9 +41,9 @@ class BalanceList extends ConsumerWidget {
       Container(
         margin: const EdgeInsets.only(bottom: 10),
         alignment: Alignment.bottomCenter,
-        child: FloatingActionButton(
-          onPressed: isConnected
-              ? () async {
+        child: isConnected
+            ? FloatingActionButton(
+                onPressed: () async {
                   if (balanceTypeMode == BalanceTypeMode.expense) {
                     context.push(
                         "/${BalanceView.routeExpensePath}/${BalanceCreateView.routePath}");
@@ -51,13 +51,13 @@ class BalanceList extends ConsumerWidget {
                     context.push(
                         "/${BalanceView.routeRevenuePath}/${BalanceCreateView.routePath}");
                   }
-                }
-              : null,
-          backgroundColor: balanceTypeMode == BalanceTypeMode.expense
-              ? Colors.orange
-              : Colors.green,
-          child: const Icon(Icons.add),
-        ),
+                },
+                backgroundColor: balanceTypeMode == BalanceTypeMode.expense
+                    ? Colors.orange
+                    : Colors.green,
+                child: const Icon(Icons.add),
+              )
+            : null,
       ),
     ]);
   }

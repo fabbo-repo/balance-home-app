@@ -1,5 +1,6 @@
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/no_local_entity_failure.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/presentation/states/selected_date_state.dart';
@@ -58,7 +59,8 @@ class BalanceView extends ConsumerWidget {
     return balanceList.when<Widget>(data: (data) {
       final balanceYears = balanceListController.getAllBalanceYears();
       return data.fold((failure) {
-        if (failure is HttpConnectionFailure) {
+        if (failure is HttpConnectionFailure ||
+            failure is NoLocalEntityFailure) {
           return showError(
               icon: Icons.network_wifi_1_bar,
               text: appLocalizations.noConnection,
@@ -169,7 +171,7 @@ class BalanceView extends ConsumerWidget {
       await showDialog(
           context: navigatorKey.currentContext!,
           builder: (context) => ErrorDialog(
-                dialogTitle: appLocalizations.resetPassword,
+                dialogTitle: appLocalizations.date,
                 dialogDescription: appLocalizations.genericError,
                 cancelText: appLocalizations.cancel,
               ));

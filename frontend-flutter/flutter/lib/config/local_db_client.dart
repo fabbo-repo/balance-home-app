@@ -18,12 +18,13 @@ class LocalDbClient {
       required this.dbName,
       required this.tableNames}) {
     futureCollection = Future.microtask(() async {
-      return await BoxCollection.open(
+      final collection = await BoxCollection.open(
         dbName,
         tableNames,
         path: './', // Only used for Dart IO
         key: HiveAesCipher(await generateEncryptionKey()),
       );
+      return collection;
     });
   }
 
@@ -60,6 +61,13 @@ class LocalDbClient {
     }).toList();
   }
 
+  Future<Map<String, dynamic>> getAllWithIds(
+      {required String tableName}) async {
+    final table = await (await futureCollection).openBox<Map>(tableName);
+    final values = await table.getAllValues();
+    return Map<String, dynamic>.from(values);
+  }
+
   Future<Map<String, dynamic>?> getById(
       {required String tableName, required String id}) async {
     final table = await (await futureCollection).openBox<Map>(tableName);
@@ -79,5 +87,10 @@ class LocalDbClient {
       {required String tableName, required String id}) async {
     final table = await (await futureCollection).openBox<Map>(tableName);
     await table.delete(id);
+  }
+
+  Future<void> deleteAll({required String tableName}) async {
+    final table = await (await futureCollection).openBox<Map>(tableName);
+    await table.clear();
   }
 }

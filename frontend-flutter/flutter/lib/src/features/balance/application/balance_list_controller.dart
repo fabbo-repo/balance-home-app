@@ -1,6 +1,7 @@
 import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/no_local_entity_failure.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_repository_interface.dart';
@@ -26,7 +27,9 @@ class BalanceListController
     final res = await repository.getBalances(balanceTypeMode,
         dateFrom: selectedDate.dateFrom, dateTo: selectedDate.dateTo);
     state = res.fold((failure) {
-      if (failure is HttpConnectionFailure || failure is ApiBadRequestFailure) {
+      if (failure is HttpConnectionFailure ||
+          failure is NoLocalEntityFailure ||
+          failure is ApiBadRequestFailure) {
         return AsyncData(left(failure));
       }
       return AsyncValue.error(failure.detail, StackTrace.empty);
@@ -37,7 +40,7 @@ class BalanceListController
 
   /// Add an entity to list
   void addBalance(BalanceEntity entity) {
-    // No need to use repository, 
+    // No need to use repository,
     // it will be used by Create Controller
     if (state.value != null) {
       state.value!.fold((_) {}, (entities) {
@@ -51,7 +54,7 @@ class BalanceListController
 
   /// Update an entity of the list
   void updateBalance(BalanceEntity entity) {
-    // No need to use repository, 
+    // No need to use repository,
     // it will be used by Edit Controller
     if (state.value != null) {
       state.value!.fold((_) {}, (entities) {

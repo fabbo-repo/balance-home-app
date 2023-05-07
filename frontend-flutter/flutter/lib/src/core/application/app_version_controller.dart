@@ -10,9 +10,10 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 class AppVersionController
     extends StateNotifier<AsyncValue<Either<Failure, AppVersion>>> {
-  final AppInfoRepositoryInterface _repository;
+  final AppInfoRepositoryInterface repository;
 
-  AppVersionController(this._repository) : super(const AsyncValue.loading()) {
+  AppVersionController({required this.repository})
+      : super(const AsyncValue.loading()) {
     handle();
   }
 
@@ -20,7 +21,7 @@ class AppVersionController
   @visibleForTesting
   Future<void> handle() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    final res = await _repository.getVersion();
+    final res = await repository.getVersion();
     state = res.fold((failure) {
       if (failure is ApiBadRequestFailure || failure is HttpConnectionFailure) {
         return AsyncValue.data(left(failure));

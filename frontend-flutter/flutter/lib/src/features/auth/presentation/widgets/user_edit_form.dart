@@ -123,7 +123,7 @@ class _UserEditFormState extends ConsumerState<UserEditForm> {
                       foregroundColor: AppColors.appBarBackgroundColor,
                       backgroundColor: AppColors.appBarBackgroundColor,
                       backgroundImage: imageBytes == null
-                          ? NetworkImage(widget.user.image!)
+                          ? Image.network(widget.user.image!).image
                           : Image.memory(imageBytes!).image,
                       radius: 50,
                       child: !widget.edit

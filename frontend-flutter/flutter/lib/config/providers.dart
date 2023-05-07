@@ -1,6 +1,10 @@
 import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/config/local_db_client.dart';
 import 'package:balance_home_app/config/local_preferences_client.dart';
+import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/user_local_data_source.dart';
+import 'package:balance_home_app/src/features/balance/infrastructure/datasources/local/balance_local_data_source.dart';
+import 'package:balance_home_app/src/features/balance/infrastructure/datasources/local/balance_type_local_data_source.dart';
+import 'package:balance_home_app/src/features/currency/infrastructure/datasources/local/currency_type_local_data_source.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:universal_io/io.dart';
@@ -16,12 +20,10 @@ final localPreferencesClientProvider =
 /// Exposes [LocalDbClient] instance
 final localDbClientProvider =
     Provider((ref) => LocalDbClient(dbName: "balhomDb", tableNames: {
-          "user",
-          "revenue",
-          "revenueType",
-          "expenseType",
-          "expense",
-          "currencyType",
+          UserLocalDataSource.tableName,
+          BalanceTypeLocalDataSource.tableName,
+          BalanceLocalDataSource.tableName,
+          CurrencyTypeLocalDataSource.tableName,
           "annualBalance",
           "monthlyBalance"
         }));

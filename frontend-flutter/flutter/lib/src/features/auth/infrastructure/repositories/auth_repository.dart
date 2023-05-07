@@ -59,6 +59,8 @@ class AuthRepository implements AuthRepositoryInterface {
       }
       return left(failure);
     }, (remoteUser) async {
+      // Delete user data
+      await userLocalDataSource.delete();
       // Store user data
       await userLocalDataSource.put(remoteUser);
       return right(remoteUser);
@@ -100,6 +102,8 @@ class AuthRepository implements AuthRepositoryInterface {
   Future<Either<Failure, bool>> signOut() async {
     if (!await jwtLocalDataSource.remove()) return left(const EmptyFailure());
     jwtRemoteDataSource.removeJwt();
+    // Delete user data
+    await userLocalDataSource.delete();
     return right(true);
   }
 }

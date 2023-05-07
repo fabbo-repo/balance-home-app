@@ -32,7 +32,7 @@ final appInfoRepositoryProvider = Provider<AppInfoRepositoryInterface>((ref) {
 final appVersionController = StateNotifierProvider<AppVersionController,
     AsyncValue<Either<Failure, AppVersion>>>((ref) {
   final repo = ref.read(appInfoRepositoryProvider);
-  return AppVersionController(repo);
+  return AppVersionController(repository: repo);
 });
 
 ///

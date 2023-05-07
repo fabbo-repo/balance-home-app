@@ -1,5 +1,6 @@
 import 'package:balance_home_app/config/router.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
+import 'package:balance_home_app/src/core/domain/failures/no_local_entity_failure.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/double_form_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_form_field.dart';
@@ -119,7 +120,8 @@ class _BalanceEditFormState extends ConsumerState<BalanceEditForm> {
         balanceTypeEntity ??= widget.balance.balanceType;
         return currencyTypes.when(data: (data) {
           return data.fold((failure) {
-            if (failure is HttpConnectionFailure) {
+            if (failure is HttpConnectionFailure ||
+                failure is NoLocalEntityFailure) {
               return showError(
                   icon: Icons.network_wifi_1_bar,
                   text: appLocalizations.noConnection);
