@@ -11,6 +11,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./database:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d
     networks:
       balhom_db_net:
         ipv4_address: 192.168.92.20
