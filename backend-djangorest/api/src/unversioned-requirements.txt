@@ -11,9 +11,8 @@ django-configurations
 django-filter
 # Cors
 django-cors-headers
-drf-yasg
 # Swagger
-djangorestframework-simplejwt
+drf-yasg
 # Jwt Authentication
 PyJWT
 cryptography
@@ -43,8 +42,6 @@ beautifulsoup4
 docutils
 # Web server
 gunicorn
-# Cryptographic library
-pycryptodome
 # Minio driver
 minio
 django-minio-storage
