@@ -198,7 +198,7 @@ python manage.py collectstatic
 * Upload default media files to minio:
 
 ~~~bash
-python manage.py collectstatic
+python manage.py collectmedia
 ~~~
 
 * Launch celery for development:
