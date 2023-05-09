@@ -4,3 +4,6 @@ DATABASE_URL=postgres://bahom_api_user:password@db:31500/balhomdb
 COIN_TYPE_CODES=EUR,USD
 APP_MINIO_STATIC_BUCKET_NAME=balhom-static-bucket
 APP_MINIO_MEDIA_BUCKET_NAME=balhom-media-bucket
+APP_MINIO_ENDPOINT=localhost:33090
+APP_MINIO_ACCESS_KEY=access
+APP_MINIO_SECRET_KEY=secret

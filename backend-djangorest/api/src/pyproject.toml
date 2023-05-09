@@ -35,6 +35,7 @@ gunicorn = "^20.1.0"
 pycryptodome = "^3.17"
 minio = "^7.1.14"
 django-storages = "^1.13.2"
+boto3 = "^1.26.131"
 
 
 [build-system]

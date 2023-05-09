@@ -49,3 +49,4 @@ pycryptodome
 minio
 # Storage provider drivers (AWS S3 will be used for minio)
 django-storages
+boto3

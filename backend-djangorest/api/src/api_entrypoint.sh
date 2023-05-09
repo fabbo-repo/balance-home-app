@@ -11,6 +11,8 @@ until psql $DATABASE_URL -c '\l'; do
 done
 >&2 echo "Postgres is up - continuing"
 
+chmod -R 777 /app
+
 # Create log directory
 touch /var/log/api/app.log
 chmod 777 /var/log/api/app.log
