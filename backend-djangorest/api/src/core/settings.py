@@ -365,6 +365,13 @@ class OnPremise(Dev):
     EMAIL_HOST_PASSWORD = env('APP_EMAIL_HOST_PASSWORD')
 
     if env('APP_MINIO_ENDPOINT'):
+        STORAGES = {
+            "default" : "core.minio_storage.MediaStorage",
+            "staticfiles": "core.minio_storage.StaticStorage"
+        }
+        
+
+        # REMOVE
         DEFAULT_FILE_STORAGE = 'minio_storage.storage.MinioMediaStorage'
         STATICFILES_STORAGE = 'minio_storage.storage.MinioMediaStorage'
 

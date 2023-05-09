@@ -47,4 +47,5 @@ gunicorn
 pycryptodome
 # Minio driver
 minio
-django-minio-storage
+# Storage provider drivers (AWS S3 will be used for minio)
+django-storages
