@@ -104,7 +104,7 @@ zstd = ["zstandard"]
 
 [[package]]
 name = "certifi"
-version = "2022.12.7"
+version = "2023.5.7"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "main"
 optional = false
@@ -213,7 +213,7 @@ jinja2 = "*"
 
 [[package]]
 name = "coverage"
-version = "7.2.3"
+version = "7.2.5"
 description = "Code coverage measurement for Python"
 category = "main"
 optional = false
@@ -224,7 +224,7 @@ toml = ["tomli"]
 
 [[package]]
 name = "cron-descriptor"
-version = "1.2.35"
+version = "1.3.0"
 description = "A Python library that converts cron expressions into human readable strings."
 category = "main"
 optional = false
@@ -256,7 +256,7 @@ tox = ["tox"]
 
 [[package]]
 name = "django"
-version = "4.2"
+version = "4.2.1"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 category = "main"
 optional = false
@@ -289,7 +289,7 @@ tzdata = "*"
 
 [[package]]
 name = "django-celery-results"
-version = "2.5.0"
+version = "2.5.1"
 description = "Celery result backends for Django."
 category = "main"
 optional = false
@@ -343,7 +343,7 @@ testing = ["coverage[toml] (>=5.0a4)", "pytest (>=4.6.11)"]
 
 [[package]]
 name = "django-filter"
-version = "23.1"
+version = "23.2"
 description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
 category = "main"
 optional = false
@@ -353,23 +353,27 @@ python-versions = ">=3.7"
 Django = ">=3.2"
 
 [[package]]
-name = "django-minio-storage"
-version = "0.5.0"
-description = "Django file storage using the minio python client"
+name = "django-storages"
+version = "1.13.2"
+description = "Support for many storage backends in Django"
 category = "main"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.7"
 
 [package.dependencies]
-django = ">=3.2"
-minio = ">=7.1.12"
+Django = ">=3.2"
 
 [package.extras]
-test = ["coverage", "requests"]
+azure = ["azure-storage-blob (>=12.0.0)"]
+boto3 = ["boto3 (>=1.4.4)"]
+dropbox = ["dropbox (>=7.2.1)"]
+google = ["google-cloud-storage (>=1.27.0)"]
+libcloud = ["apache-libcloud"]
+sftp = ["paramiko (>=1.10.0)"]
 
 [[package]]
 name = "django-stubs"
-version = "1.16.0"
+version = "4.2.0"
 description = "Mypy stubs for Django"
 category = "main"
 optional = false
@@ -377,19 +381,19 @@ python-versions = ">=3.7"
 
 [package.dependencies]
 django = "*"
-django-stubs-ext = ">=0.8.0"
+django-stubs-ext = ">=4.2.0"
 mypy = ">=0.980"
-tomli = "*"
+tomli = {version = "*", markers = "python_version < \"3.11\""}
 types-pytz = "*"
 types-PyYAML = "*"
 typing-extensions = "*"
 
 [package.extras]
-compatible-mypy = ["mypy (>=1.1.1,<1.2)"]
+compatible-mypy = ["mypy (>=1.2.0,<1.3)"]
 
 [[package]]
 name = "django-stubs-ext"
-version = "0.8.0"
+version = "4.2.0"
 description = "Monkey-patching and extensions for django-stubs"
 category = "main"
 optional = false
@@ -755,14 +759,14 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "redis"
-version = "4.5.4"
+version = "4.5.5"
 description = "Python client for Redis database and key-value store"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
-async-timeout = {version = ">=4.0.2", markers = "python_version <= \"3.11.2\""}
+async-timeout = {version = ">=4.0.2", markers = "python_full_version <= \"3.11.2\""}
 
 [package.extras]
 hiredis = ["hiredis (>=1.0.0)"]
@@ -770,17 +774,17 @@ ocsp = ["cryptography (>=36.0.1)", "pyopenssl (==20.0.1)", "requests (>=2.26.0)"
 
 [[package]]
 name = "requests"
-version = "2.28.2"
+version = "2.30.0"
 description = "Python HTTP for Humans."
 category = "main"
 optional = false
-python-versions = ">=3.7, <4"
+python-versions = ">=3.7"
 
 [package.dependencies]
 certifi = ">=2017.4.17"
 charset-normalizer = ">=2,<4"
 idna = ">=2.5,<4"
-urllib3 = ">=1.21.1,<1.27"
+urllib3 = ">=1.21.1,<3"
 
 [package.extras]
 socks = ["PySocks (>=1.5.6,!=1.5.7)"]
@@ -788,14 +792,14 @@ use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "ruamel.yaml"
-version = "0.17.21"
+version = "0.17.24"
 description = "ruamel.yaml is a YAML parser/emitter that supports roundtrip preservation of comments, seq/map flow style, and map key order"
 category = "main"
 optional = false
 python-versions = ">=3"
 
 [package.dependencies]
-"ruamel.yaml.clib" = {version = ">=0.2.6", markers = "platform_python_implementation == \"CPython\" and python_version < \"3.11\""}
+"ruamel.yaml.clib" = {version = ">=0.2.7", markers = "platform_python_implementation == \"CPython\" and python_version < \"3.12\""}
 
 [package.extras]
 docs = ["ryd"]
@@ -888,16 +892,17 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "urllib3"
-version = "1.26.15"
+version = "2.0.2"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
+python-versions = ">=3.7"
 
 [package.extras]
-brotli = ["brotlicffi (>=0.8.0)", "brotli (>=1.0.9)", "brotlipy (>=0.6.0)"]
-secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "urllib3-secure-extra", "ipaddress"]
-socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
+brotli = ["brotli (>=1.0.9)", "brotlicffi (>=0.8.0)"]
+secure = ["certifi", "cryptography (>=1.9)", "idna (>=2.0.0)", "pyopenssl (>=17.1.0)", "urllib3-secure-extra"]
+socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
+zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "vine"
@@ -918,7 +923,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "15d3ace16aed8c68131a713c95e95047863ad5b6ae790589bb2effbb7f87e423"
+content-hash = "34f8469d6d10787d03257b16104c1137c81585bbde3e7bcd1f61f516265bcc28"
 
 [metadata.files]
 amqp = []
@@ -947,7 +952,7 @@ django-configurations = []
 django-cors-headers = []
 django-environ = []
 django-filter = []
-django-minio-storage = []
+django-storages = []
 django-stubs = []
 django-stubs-ext = []
 django-timezone-field = []
