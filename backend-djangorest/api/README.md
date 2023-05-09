@@ -2,26 +2,27 @@
 
 ## Environment Variables
 
-| NAME                      | DESCRIPTION                                                      |
-| ------------------------- | ---------------------------------------------------------------- |
-| APP_ALLOWED_HOSTS         | List of strings representing the allowed host/domain names       |
-| APP_CORS_HOSTS            | CORS allowed host/domain names                                   |
-| APP_EMAIL_HOST            | Email service host name                                          |
-| APP_EMAIL_PORT            | Email service port                                               |
-| APP_EMAIL_HOST_USER       | Email service authentication user                                |
-| APP_EMAIL_HOST_PASSWORD   | Email service authentication password                            |
-| APP_CELERY_BROKER_URL     | Celery url                                                       |
-| APP_EMAIL_CODE_THRESHOLD  | Time to wait for a new email verification code generation        |
-| APP_EMAIL_CODE_VALID      | Email verification code validity duration                        |
-| APP_UNVERIFIED_USER_DAYS  | Days for a periodic deletion of unverified users                 |
-| DATABASE_URL              | Databse endpoint                                                 |
-| COIN_TYPE_CODES           | Coin type codes allowed (they have to be valid)                  |
-| APP_FRONTEND_VERSION      | Minimum supported frontend version. Optional                     |
-| APP_DISABLE_ADMIN_PANEL   | Disable admin panel url `/general/admin`. Default: ***False***   |
-| APP_MINIO_ENDPOINT        | Minio api endpoint                                               |
-| APP_MINIO_ACCESS_KEY      | Minio access key                                                 |
-| APP_MINIO_SECRET_KEY      | Minio secret key                                                 |
-| APP_MINIO_BUCKET_NAME     | Minio bucket name. Default: ***balhom-bucket***                  |
+| NAME                         | DESCRIPTION                                                      |
+| ---------------------------- | ---------------------------------------------------------------- |
+| APP_ALLOWED_HOSTS            | List of strings representing the allowed host/domain names       |
+| APP_CORS_HOSTS               | CORS allowed host/domain names                                   |
+| APP_EMAIL_HOST               | Email service host name                                          |
+| APP_EMAIL_PORT               | Email service port                                               |
+| APP_EMAIL_HOST_USER          | Email service authentication user                                |
+| APP_EMAIL_HOST_PASSWORD      | Email service authentication password                            |
+| APP_CELERY_BROKER_URL        | Celery url                                                       |
+| APP_EMAIL_CODE_THRESHOLD     | Time to wait for a new email verification code generation        |
+| APP_EMAIL_CODE_VALID         | Email verification code validity duration                        |
+| APP_UNVERIFIED_USER_DAYS     | Days for a periodic deletion of unverified users                 |
+| DATABASE_URL                 | Databse endpoint                                                 |
+| COIN_TYPE_CODES              | Coin type codes allowed (they have to be valid)                  |
+| APP_FRONTEND_VERSION         | Minimum supported frontend version. Optional                     |
+| APP_DISABLE_ADMIN_PANEL      | Disable admin panel url `/general/admin`. Default: ***False***   |
+| APP_MINIO_ENDPOINT           | Minio api endpoint                                               |
+| APP_MINIO_ACCESS_KEY         | Minio access key                                                 |
+| APP_MINIO_SECRET_KEY         | Minio secret key                                                 |
+| APP_MINIO_STATIC_BUCKET_NAME | Minio static bucket name. Default: ***balhom-static-bucket***    |
+| APP_MINIO_MEDIA_BUCKET_NAME  | Minio media bucket name. Default: ***balhom-media-bucket***      |
 
 ## Error Codes
 
@@ -189,7 +190,7 @@ python manage.py test
 coverage html
 ~~~
 
-* Create static files:
+* Create static files (also used to upload static files to minio):
 
 ~~~bash
 python manage.py collectstatic
@@ -198,7 +199,13 @@ python manage.py collectstatic
 * Upload default media files to minio:
 
 ~~~bash
-python manage.py collectstatic
+python manage.py collectmedia
+~~~
+
+* Create static and media buckets:
+
+~~~bash
+python manage.py createbuckets
 ~~~
 
 * Launch celery for development:
