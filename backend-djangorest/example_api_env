@@ -2,4 +2,5 @@ APP_ALLOWED_HOSTS=localhost
 APP_CELERY_BROKER_URL=redis://redis:6379/0
 DATABASE_URL=postgres://bahom_api_user:password@db:31500/balhomdb
 COIN_TYPE_CODES=EUR,USD
-APP_MINIO_BUCKET_NAME=balhom-bucket
+APP_MINIO_STATIC_BUCKET_NAME=balhom-static-bucket
+APP_MINIO_MEDIA_BUCKET_NAME=balhom-media-bucket
