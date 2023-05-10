@@ -2,8 +2,7 @@ version: '3'
 
 services:
   flutter_web:
-    #image: fabbo/balhom-web-flutter:latest
-    build: .
+    image: fabbo/balhom-web-flutter:latest
     container_name: balhom-web-flutter
     ports:
       - "9000:80"

@@ -22,4 +22,7 @@ RUN mkdir /app
 WORKDIR /app
 ADD ./flutter /app/
 
+# Entrypoint permissions
+RUN chmod a+x /app/entrypoint.sh
+
 ENTRYPOINT [ "/app/entrypoint.sh" ]
