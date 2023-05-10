@@ -4,13 +4,13 @@ services:
     image: bitnami/keycloak:21.1.1
     ports:
       - "39080:8080"
-      - "39081:8443"
+      #- "39081:8443" # Uncomment for HTTPS
     environment:
-      - KEYCLOAK_ENABLE_HTTPS=true
-      - KEYCLOAK_HTTPS_USE_PEM=true
-      - KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE=/certs/privkey.pem
-      - KEYCLOAK_HTTPS_CERTIFICATE_FILE=/certs/fullchain.pem
       - KEYCLOAK_PRODUCTION=true
+      #- KEYCLOAK_ENABLE_HTTPS=true # Uncomment to enabe HTTPS
+      #- KEYCLOAK_HTTPS_USE_PEM=true # Uncomment for HTTPS
+      #- KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE=/certs/privkey.pem # Uncomment for HTTPS
+      #- KEYCLOAK_HTTPS_CERTIFICATE_FILE=/certs/fullchain.pem # Uncomment for HTTPS
     env_file:
       - keycloak.env
     restart: unless-stopped
