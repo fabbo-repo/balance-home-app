@@ -25,7 +25,7 @@ env = environ.Env(
     EMAIL_CODE_VALID=(int, os.getenv("EMAIL_CODE_VALID", default=120)),
     UNVERIFIED_USER_DAYS=(int, os.getenv("UNVERIFIED_USER_DAYS", default=2)),
     COIN_TYPE_CODES=(str, os.getenv("COIN_TYPE_CODES", default="EUR,USD")),
-    FRONTEND_VERSION=(str, os.getenv("FRONTEND_VERSION", default="1.3.0")),
+    FRONTEND_VERSION=(str, os.getenv("FRONTEND_VERSION", default="1.4.0")),
     DISABLE_ADMIN_PANEL=(bool, os.getenv(
         "DISABLE_ADMIN_PANEL", default=False)),
     EMAIL_HOST=(str, os.getenv("EMAIL_HOST", default="smtp.gmail.com")),
