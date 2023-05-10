@@ -1,6 +1,9 @@
 FROM nginx:1.23.4
 
-COPY nginx/local.conf /etc/nginx/conf.d/local.conf
+# Create config files
+RUN mkdir /confs
+COPY nginx/local_http.conf /confs/local_http.conf
+COPY nginx/local_https.conf /confs/local_https.conf
 
 # Install Flutter only for web
 RUN mkdir /flutter
@@ -14,8 +17,9 @@ ENV PATH="$PATH:/flutter/flutter/bin"
 RUN git config --global --add safe.directory /flutter/flutter
 RUN flutter precache
 
+# Create app directory
 RUN mkdir /app
 WORKDIR /app
-ADD . /app/
+ADD ./flutter /app/
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]
