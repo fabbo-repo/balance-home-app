@@ -80,7 +80,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   #very_good_analysis: ^3.1.0
   # Data class generator
-  build_runner: ^2.1.10
+  build_runner: ^2.3.3
   freezed: ^2.0.3
   json_serializable: ^6.5.3
   # Env code generator

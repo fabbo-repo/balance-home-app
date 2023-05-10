@@ -36,7 +36,7 @@ jobs:
         
       - name: Generate temporary files
         run: |
-          flutter pub run build_runner build --delete-conflicting-outputs
+          flutter pub run build_runner build
         working-directory: ./frontend-flutter/flutter
 
       - name: Run tests
@@ -46,13 +46,11 @@ jobs:
         
       - name: List dir
         run: |
-          flutter pub run build_runner build --delete-conflicting-outputs
           ls -l lib/config
         working-directory: ./frontend-flutter/flutter
 
       - name: Build web
         run: |
-          ls -l lib/config
           flutter build web
         working-directory: ./frontend-flutter/flutter
         
