@@ -374,7 +374,8 @@ class OnPremise(Dev):
     EMAIL_HOST_USER = env("EMAIL_HOST_USER")
     EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 
-    if env("MINIO_ENDPOINT"):
+    MINIO_STORAGE_ENDPOINT = env("MINIO_ENDPOINT")
+    if MINIO_STORAGE_ENDPOINT:
         STORAGES = {
             "default": {"BACKEND": "core.storage_backends.MinioMediaStorage"},
             "staticfiles": {"BACKEND": "core.storage_backends.MinioStaticStorage"},
@@ -393,6 +394,5 @@ class OnPremise(Dev):
 
         MINIO_STATIC_BUCKET_NAME = env("MINIO_STATIC_BUCKET_NAME")
         MINIO_MEDIA_BUCKET_NAME = env("MINIO_MEDIA_BUCKET_NAME")
-        MINIO_STORAGE_ENDPOINT = env("MINIO_ENDPOINT")
         MINIO_STORAGE_ACCESS_KEY = env("MINIO_ACCESS_KEY")
         MINIO_STORAGE_SECRET_KEY = env("MINIO_SECRET_KEY")
