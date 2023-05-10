@@ -4,18 +4,22 @@
 <head></head>
 
 <body>
-    <h2>{{ year }}:</h2>
+    <h2
+        style="padding: 10px; width:400px; height:30px; text-align:center; color:#8B0000; background-color:rgb(189, 189, 189);">
+        {{ year }}:
+    </h2>
     <ul>
         <li>
-            Balance: {{ annual_balance }}
+            <h4>
+                Balance: {{ annual_balance }}
+            </h4>
         </li>
         <li>
-            Expected balance: {{ expected_annual_balance }}
+            <h4>
+                Expected balance: {{ expected_annual_balance }}
+            </h4>
         </li>
     </ul>
-    <h4 style="color:#8B0000">
-        Result: {{ annual_result }}
-    </h4>
 </body>
 
 </html>

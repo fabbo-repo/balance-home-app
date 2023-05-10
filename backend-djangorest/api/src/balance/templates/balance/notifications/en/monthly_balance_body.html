@@ -4,18 +4,22 @@
 <head></head>
 
 <body>
-    <h2>{{ month }} / {{ year }}:</h2>
+    <h2
+        style="padding: 10px; width:400px; height:30px; text-align:center; color:#8B0000; background-color:rgb(189, 189, 189);">
+        {{ month }} / {{ year }}:
+    </h2>
     <ul>
         <li>
-            Balance: {{ monthly_balance }}
+            <h4>
+                Balance: {{ monthly_balance }}
+            </h4>
         </li>
         <li>
-            Expected balance: {{ expected_monthly_balance }}
+            <h4>
+                Expected balance: {{ expected_monthly_balance }}
+            </h4>
         </li>
     </ul>
-    <h4 style="color:#8B0000">
-        Result: {{ monthly_result }}
-    </h4>
 </body>
 
 </html>
