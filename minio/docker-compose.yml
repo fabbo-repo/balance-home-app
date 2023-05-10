@@ -10,9 +10,9 @@ services:
     env_file:
       - ./minio.env
     volumes:
-      - ./certs/fullchain.pem:/etc/minio/certs/public.crt
-      - ./certs/privkey.pem:/etc/minio/certs/private.key
       - ./minio:/data
+      #- ./certs/fullchain.pem:/etc/minio/certs/public.crt # Uncomment to enabe HTTPS
+      #- ./certs/privkey.pem:/etc/minio/certs/private.key # Uncomment to enabe HTTPS
     command: server -C "/etc/minio" --address ":33090" --console-address ":33091" /data
     restart: unless-stopped
     networks:
