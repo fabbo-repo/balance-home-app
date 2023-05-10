@@ -11,8 +11,9 @@ from django.core.management.utils import get_random_secret_key
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(
-    APP_ALLOWED_HOSTS=(str, os.getenv("APP_ALLOWED_HOSTS", default="*")),
-    APP_CORS_HOSTS=(str, os.getenv("APP_CORS_HOSTS")),
+    ALLOWED_HOSTS=(str, os.getenv("ALLOWED_HOSTS", default="*")),
+    CORS_HOSTS=(str, os.getenv("CORS_HOSTS")),
+    USE_HTTPS=(bool, os.getenv("USE_HTTPS", default=False)),
     DATABASE_URL=(
         str,
         os.getenv(
@@ -20,38 +21,40 @@ env = environ.Env(
             default="sqlite:///" + os.path.join(BASE_DIR, "default.sqlite3"),
         ),
     ),
-    APP_EMAIL_CODE_THRESHOLD=(int, os.getenv("APP_EMAIL_CODE_THRESHOLD", default=120)),
-    APP_EMAIL_CODE_VALID=(int, os.getenv("APP_EMAIL_CODE_VALID", default=120)),
-    APP_UNVERIFIED_USER_DAYS=(int, os.getenv("APP_UNVERIFIED_USER_DAYS", default=2)),
+    EMAIL_CODE_THRESHOLD=(int, os.getenv("EMAIL_CODE_THRESHOLD", default=120)),
+    EMAIL_CODE_VALID=(int, os.getenv("EMAIL_CODE_VALID", default=120)),
+    UNVERIFIED_USER_DAYS=(int, os.getenv("UNVERIFIED_USER_DAYS", default=2)),
     COIN_TYPE_CODES=(str, os.getenv("COIN_TYPE_CODES", default="EUR,USD")),
-    APP_FRONTEND_VERSION=(str, os.getenv("APP_FRONTEND_VERSION", default="1.3.0")),
-    APP_DISABLE_ADMIN_PANEL=(bool, os.getenv("APP_DISABLE_ADMIN_PANEL", default=False)),
-    APP_EMAIL_HOST=(str, os.getenv("APP_EMAIL_HOST", default="smtp.gmail.com")),
-    APP_EMAIL_PORT=(int, os.getenv("APP_EMAIL_PORT", default=587)),
-    APP_EMAIL_HOST_USER=(
+    FRONTEND_VERSION=(str, os.getenv("FRONTEND_VERSION", default="1.3.0")),
+    DISABLE_ADMIN_PANEL=(bool, os.getenv(
+        "DISABLE_ADMIN_PANEL", default=False)),
+    EMAIL_HOST=(str, os.getenv("EMAIL_HOST", default="smtp.gmail.com")),
+    EMAIL_PORT=(int, os.getenv("EMAIL_PORT", default=587)),
+    EMAIL_HOST_USER=(
         str,
-        os.getenv("APP_EMAIL_HOST_USER", default="example@gmail.com"),
+        os.getenv("EMAIL_HOST_USER", default="example@gmail.com"),
     ),
-    APP_EMAIL_HOST_PASSWORD=(
+    EMAIL_HOST_PASSWORD=(
         str,
-        os.getenv("APP_EMAIL_HOST_PASSWORD", default="password"),
+        os.getenv("EMAIL_HOST_PASSWORD", default="password"),
     ),
-    APP_CELERY_BROKER_URL=(
+    CELERY_BROKER_URL=(
         str,
-        os.getenv("APP_CELERY_BROKER_URL", default="redis://localhost:6379/0"),
+        os.getenv("CELERY_BROKER_URL", default="redis://localhost:6379/0"),
     ),
-    APP_MINIO_ENDPOINT=(str, os.getenv("APP_MINIO_ENDPOINT")),
-    APP_MINIO_ACCESS_KEY=(str, os.getenv("APP_MINIO_ACCESS_KEY")),
-    APP_MINIO_SECRET_KEY=(str, os.getenv("APP_MINIO_SECRET_KEY")),
-    APP_MINIO_MEDIA_BUCKET_NAME=(
+    MINIO_ENDPOINT=(str, os.getenv("MINIO_ENDPOINT")),
+    MINIO_ACCESS_KEY=(str, os.getenv("MINIO_ACCESS_KEY")),
+    MINIO_SECRET_KEY=(str, os.getenv("MINIO_SECRET_KEY")),
+    MINIO_MEDIA_BUCKET_NAME=(
         str,
-        os.getenv("APP_MINIO_MEDIA_BUCKET_NAME", default="balhom-static-bucket"),
+        os.getenv("MINIO_MEDIA_BUCKET_NAME", default="balhom-static-bucket"),
     ),
-    APP_MINIO_STATIC_BUCKET_NAME=(
+    MINIO_STATIC_BUCKET_NAME=(
         str,
-        os.getenv("APP_MINIO_STATIC_BUCKET_NAME", default="balhom-media-bucket"),
+        os.getenv("MINIO_STATIC_BUCKET_NAME", default="balhom-media-bucket"),
     ),
 )
+USE_HTTPS = env("USE_HTTPS")
 
 
 class Dev(Configuration):
@@ -77,10 +80,10 @@ class Dev(Configuration):
 
     DEBUG = True
 
-    ALLOWED_HOSTS = env("APP_ALLOWED_HOSTS").split(",")
-    if env("APP_CORS_HOSTS"):
+    ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
+    if env("CORS_HOSTS"):
         CORS_ALLOW_ALL_ORIGINS = False
-        CORS_ALLOWED_ORIGINS = env("APP_CORS_HOSTS").split(",")
+        CORS_ALLOWED_ORIGINS = env("CORS_HOSTS").split(",")
     else:
         CORS_ALLOW_ALL_ORIGINS = True
     X_FRAME_OPTIONS = "DENY"
@@ -128,7 +131,7 @@ class Dev(Configuration):
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
-        #'core.middlewares.HeadersLoggingMiddleware',
+        # 'core.middlewares.HeadersLoggingMiddleware',
     ]
 
     ROOT_URLCONF = "core.urls"
@@ -277,20 +280,20 @@ class Dev(Configuration):
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
     CELERY_RESULT_BACKEND = "django-db"
-    CELERY_BROKER_URL = env("APP_CELERY_BROKER_URL")
+    CELERY_BROKER_URL = env("CELERY_BROKER_URL")
 
     # Time to wait for a new email verification code generation
-    EMAIL_CODE_THRESHOLD = env("APP_EMAIL_CODE_THRESHOLD")
+    EMAIL_CODE_THRESHOLD = env("EMAIL_CODE_THRESHOLD")
     # Email verification code validity duration
-    EMAIL_CODE_VALID = env("APP_EMAIL_CODE_VALID")
+    EMAIL_CODE_VALID = env("EMAIL_CODE_VALID")
     # Days for a periodic deletion of unverified users
-    UNVERIFIED_USER_DAYS = env("APP_UNVERIFIED_USER_DAYS")
+    UNVERIFIED_USER_DAYS = env("UNVERIFIED_USER_DAYS")
 
     COIN_TYPE_CODES = env("COIN_TYPE_CODES").split(",")
 
-    APP_FRONTEND_VERSION = env("APP_FRONTEND_VERSION")
+    FRONTEND_VERSION = env("FRONTEND_VERSION")
 
-    APP_DISABLE_ADMIN_PANEL = env("APP_DISABLE_ADMIN_PANEL")
+    DISABLE_ADMIN_PANEL = env("DISABLE_ADMIN_PANEL")
 
 
 class OnPremise(Dev):
@@ -299,12 +302,13 @@ class OnPremise(Dev):
 
     # Security headers
     CSRF_COOKIE_SECURE = True
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SESSION_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    if USE_HTTPS:
+        SESSION_COOKIE_SECURE = True
+        SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+        SECURE_SSL_REDIRECT = True
+        SECURE_HSTS_SECONDS = 31536000  # 1 year
+        SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+        SECURE_HSTS_PRELOAD = True
 
     if os.path.exists("/var/log/api/app.log"):
         print("* Using file log")
@@ -364,28 +368,31 @@ class OnPremise(Dev):
 
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     # It is setup for gmail
-    EMAIL_HOST = env("APP_EMAIL_HOST")
+    EMAIL_HOST = env("EMAIL_HOST")
     EMAIL_USE_TLS = True
-    EMAIL_PORT = env("APP_EMAIL_PORT")
-    EMAIL_HOST_USER = env("APP_EMAIL_HOST_USER")
-    EMAIL_HOST_PASSWORD = env("APP_EMAIL_HOST_PASSWORD")
+    EMAIL_PORT = env("EMAIL_PORT")
+    EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 
-    if env("APP_MINIO_ENDPOINT"):
+    if env("MINIO_ENDPOINT"):
         STORAGES = {
             "default": {"BACKEND": "core.storage_backends.MinioMediaStorage"},
             "staticfiles": {"BACKEND": "core.storage_backends.MinioStaticStorage"},
         }
-        AWS_S3_ENDPOINT_URL = "https://" + env("APP_MINIO_ENDPOINT")
-        AWS_ACCESS_KEY_ID = env("APP_MINIO_ACCESS_KEY")
-        AWS_SECRET_ACCESS_KEY = env("APP_MINIO_SECRET_KEY")
+        if USE_HTTPS:
+            AWS_S3_USE_SSL = True
+            AWS_S3_ENDPOINT_URL = "https://" + env("MINIO_ENDPOINT")
+        else:
+            AWS_S3_ENDPOINT_URL = "http://" + env("MINIO_ENDPOINT")
+        AWS_ACCESS_KEY_ID = env("MINIO_ACCESS_KEY")
+        AWS_SECRET_ACCESS_KEY = env("MINIO_SECRET_KEY")
         AWS_S3_OBJECT_PARAMETERS = {
             "CacheControl": "max-age=86400",
         }
         AWS_DEFAULT_ACL = None
-        AWS_S3_USE_SSL = True
 
-        MINIO_STATIC_BUCKET_NAME = env("APP_MINIO_STATIC_BUCKET_NAME")
-        MINIO_MEDIA_BUCKET_NAME = env("APP_MINIO_MEDIA_BUCKET_NAME")
-        MINIO_STORAGE_ENDPOINT = env("APP_MINIO_ENDPOINT")
-        MINIO_STORAGE_ACCESS_KEY = env("APP_MINIO_ACCESS_KEY")
-        MINIO_STORAGE_SECRET_KEY = env("APP_MINIO_SECRET_KEY")
+        MINIO_STATIC_BUCKET_NAME = env("MINIO_STATIC_BUCKET_NAME")
+        MINIO_MEDIA_BUCKET_NAME = env("MINIO_MEDIA_BUCKET_NAME")
+        MINIO_STORAGE_ENDPOINT = env("MINIO_ENDPOINT")
+        MINIO_STORAGE_ACCESS_KEY = env("MINIO_ACCESS_KEY")
+        MINIO_STORAGE_SECRET_KEY = env("MINIO_SECRET_KEY")

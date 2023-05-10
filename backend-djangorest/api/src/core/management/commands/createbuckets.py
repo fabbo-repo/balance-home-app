@@ -21,7 +21,7 @@ class Command(BaseCommand):
             endpoint=settings.MINIO_STORAGE_ENDPOINT,
             access_key=settings.MINIO_STORAGE_ACCESS_KEY,
             secret_key=settings.MINIO_STORAGE_SECRET_KEY,
-            secure=True,
+            secure=settings.USE_HTTPS,
         )
         minio_client.make_bucket(settings.MINIO_STATIC_BUCKET_NAME)
         minio_client.make_bucket(settings.MINIO_MEDIA_BUCKET_NAME)

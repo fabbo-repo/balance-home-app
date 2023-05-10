@@ -27,7 +27,7 @@ if settings.DEBUG:
         document_root=settings.MEDIA_ROOT
     )
 
-if not settings.APP_DISABLE_ADMIN_PANEL:
+if not settings.DISABLE_ADMIN_PANEL:
     urlpatterns += [
         path('general/admin/', admin.site.urls),
     ]

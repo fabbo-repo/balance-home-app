@@ -17,6 +17,6 @@ class FrontendVersionView(APIView):
         """
         return Response(
             data={
-                'version': settings.APP_FRONTEND_VERSION
+                'version': settings.FRONTEND_VERSION
             }
         )
