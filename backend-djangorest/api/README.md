@@ -28,18 +28,18 @@
 
 | CODE  | DEFINITION                                                 | ENDPOINT                       |
 | ----- | ---------------------------------------------------------- | ------------------------------ |
-| 1     | No invitation code stored for an user                      | /api/v2/jwt                    |
-| 2     | Unverified email for an user                               | /api/v2/jwt                    |
-| 3     | Invalid refresh token                                      | /api/v2/jwt/refresh            |
-| 4     | No active account found for specified refresh token        | /api/v2/jwt/refresh            |
-| 5     | Username and email can not be the same                     | /api/v2/user                   |
-| 6     | Code has already been sent, wait X seconds                 | /api/v2/email_code/send, /api/v2/user/password/reset/start |
-| 7     | No code sent                                               | /api/v2/email_code/verify, /api/v2/user/password/reset/verify |
-| 8     | Code is no longer valid                                    | /api/v2/email_code/verify, /api/v2/user/password/reset/verify |
-| 9     | Invalid code                                               | /api/v2/email_code/verify, /api/v2/user/password/reset/verify |
-| 10    | Only three codes can be sent per day                       | /api/v2/user/password/reset/start |
-| 11    | New password must be different from old password           | /api/v2/user/password/change   |
-| 12    | New password cannot match other profile data               | /api/v2/user/password/change   |
+| 1     | No invitation code stored for an user                      | /api/v1/jwt                    |
+| 2     | Unverified email for an user                               | /api/v1/jwt                    |
+| 3     | Invalid refresh token                                      | /api/v1/jwt/refresh            |
+| 4     | No active account found for specified refresh token        | /api/v1/jwt/refresh            |
+| 5     | Username and email can not be the same                     | /api/v1/user                   |
+| 6     | Code has already been sent, wait X seconds                 | /api/v1/email_code/send, /api/v1/user/password/reset/start |
+| 7     | No code sent                                               | /api/v1/email_code/verify, /api/v1/user/password/reset/verify |
+| 8     | Code is no longer valid                                    | /api/v1/email_code/verify, /api/v1/user/password/reset/verify |
+| 9     | Invalid code                                               | /api/v1/email_code/verify, /api/v1/user/password/reset/verify |
+| 10    | Only three codes can be sent per day                       | /api/v1/user/password/reset/start |
+| 11    | New password must be different from old password           | /api/v1/user/password/change   |
+| 12    | New password cannot match other profile data               | /api/v1/user/password/change   |
 
 ## Directory tree example
 
