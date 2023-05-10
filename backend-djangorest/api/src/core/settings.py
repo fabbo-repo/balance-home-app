@@ -301,8 +301,8 @@ class OnPremise(Dev):
     WSGI_APPLICATION = "core.wsgi.application"
 
     # Security headers
-    CSRF_COOKIE_SECURE = True
     if USE_HTTPS:
+        CSRF_COOKIE_SECURE = True
         SESSION_COOKIE_SECURE = True
         SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
         SECURE_SSL_REDIRECT = True
