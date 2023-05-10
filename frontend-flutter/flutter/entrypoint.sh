@@ -38,7 +38,15 @@ else
     rm -rf ${WEB_DIR}/*
     cp -rf /app/build/web/* ${WEB_DIR}
     echo "${APP_VERSION}" > ${WEB_DIR}/.version
-    rm -rf /app/*
 fi
+rm -rf /app
+
+# Move nginx conf
+if [ "$USE_HTTPS" = true ]; then
+    mv /confs/local_https.conf /etc/nginx/conf.d/local.conf
+else
+    mv /confs/local_http.conf /etc/nginx/conf.d/local.conf
+fi
+rm -rf /confs
 
 exec /docker-entrypoint.sh nginx -g "daemon off;" "$@"

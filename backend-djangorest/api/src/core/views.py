@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import status
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 
 def not_found_view(request, exception=None):
@@ -25,3 +26,6 @@ def bad_request_view(request, exception=None):
 def csrf_failure(request, reason=""):
     context = {"message": reason}
     return render(request, 'core/403.html', status=status.HTTP_403_FORBIDDEN)
+
+def favicon_view(request):
+    return redirect(to=staticfiles_storage.url("favicon.ico"))

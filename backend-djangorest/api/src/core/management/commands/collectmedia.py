@@ -22,7 +22,7 @@ class Command(BaseCommand):
             endpoint=settings.MINIO_STORAGE_ENDPOINT,
             access_key=settings.MINIO_STORAGE_ACCESS_KEY,
             secret_key=settings.MINIO_STORAGE_SECRET_KEY,
-            secure=True,
+            secure=settings.USE_HTTPS,
         )
         for dirpath, _, filenames in os.walk(settings.MEDIA_ROOT):
             for file in filenames:
