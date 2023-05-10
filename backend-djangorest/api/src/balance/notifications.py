@@ -9,9 +9,11 @@ MONTHS = {
 }
 
 
-def send_monthly_balance(email, month, year,
-                         monthly_balance, expected_monthly_balance,
-                         montly_result, lang='en'):
+def send_monthly_balance(
+        email, month, year,
+        monthly_balance,
+        expected_monthly_balance,
+        lang='en'):
 
     subject = render_to_string(
         "balance/notifications/{}/monthly_balance_subject.txt".format(lang)
@@ -22,8 +24,7 @@ def send_monthly_balance(email, month, year,
             "month": MONTHS[month],
             "year": str(year),
             "monthly_balance": str(monthly_balance),
-            "expected_monthly_balance": str(expected_monthly_balance),
-            "montly_result": str(montly_result)
+            "expected_monthly_balance": str(expected_monthly_balance)
         },
     )
     send_mail(
@@ -36,9 +37,11 @@ def send_monthly_balance(email, month, year,
     )
 
 
-def send_annual_balance(email, year,
-                        annual_balance, expected_annual_balance,
-                        annual_result, lang='en'):
+def send_annual_balance(
+        email, year,
+        annual_balance,
+        expected_annual_balance,
+        lang='en'):
 
     subject = render_to_string(
         "balance/notifications/{}/annual_balance_subject.txt".format(lang)
@@ -48,8 +51,7 @@ def send_annual_balance(email, year,
         {
             "year": str(year),
             "annual_balance": str(annual_balance),
-            "expected_annual_balance": str(expected_annual_balance),
-            "annual_result": str(annual_result)
+            "expected_annual_balance": str(expected_annual_balance)
         },
     )
     send_mail(
