@@ -24,6 +24,11 @@ jobs:
           cp example_env .env
         working-directory: ./frontend-flutter/flutter
 
+      - name: Clean dependencies
+        run: |
+          flutter clean
+        working-directory: ./frontend-flutter/flutter
+
       - name: Install dependencies
         run: |
           flutter pub get
