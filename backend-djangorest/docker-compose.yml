@@ -11,9 +11,10 @@ services:
       - redis:redis
     volumes:
       - ./logs/api:/var/log/api
-      - ./certs:/certs:ro
+      #- ./certs:/certs:ro  # Uncomment for HTTPS
     ports:
-      - "8001:443"
+      - "18000:80"
+      #- "18001:443"  # Uncomment for HTTPS
     depends_on:
       - redis
       - celery_worker
