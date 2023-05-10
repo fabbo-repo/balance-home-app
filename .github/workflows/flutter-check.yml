@@ -44,7 +44,13 @@ jobs:
         
       - name: Generate temporary files
         run: |
+          flutter pub run build_runner clean
           flutter pub run build_runner build
+        working-directory: ./frontend-flutter/flutter
+
+      - name: List dir
+        run: |
+          ls -l lib/config
         working-directory: ./frontend-flutter/flutter
 
       - name: Run tests
@@ -52,11 +58,6 @@ jobs:
           flutter test
         working-directory: ./frontend-flutter/flutter
         
-      - name: List dir
-        run: |
-          ls -l lib/config
-        working-directory: ./frontend-flutter/flutter
-
       - name: Build web
         run: |
           flutter build web --release
