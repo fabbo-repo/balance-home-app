@@ -4,8 +4,7 @@ from django.conf import settings
 from core.swagger import urls as swagger_urls
 from core import api_urls
 from django.conf.urls.static import static
-from django.views.generic.base import RedirectView
-from django.contrib.staticfiles.storage import staticfiles_storage
+from core.views import favicon_view
 
 handler404 = 'core.views.not_found_view'
 handler500 = 'core.views.error_view'
@@ -34,8 +33,5 @@ if not settings.DISABLE_ADMIN_PANEL:
 
 urlpatterns += [
     path("api/v1/", include(api_urls)),
-    path(
-        "favicon.ico",
-        RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
-    ),
+    path("favicon.ico", favicon_view),
 ]
