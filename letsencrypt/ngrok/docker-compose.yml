@@ -1,8 +1,0 @@
-version: '3'
-services:
-  ngrok:
-    image: ngrok/ngrok
-    command: http 192.168.0.197:8000
-    env_file:
-      - ngrok.env
-    restart: unless-stopped
