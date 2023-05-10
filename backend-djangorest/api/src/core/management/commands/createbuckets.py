@@ -25,3 +25,4 @@ class Command(BaseCommand):
         )
         minio_client.make_bucket(settings.MINIO_STATIC_BUCKET_NAME)
         minio_client.make_bucket(settings.MINIO_MEDIA_BUCKET_NAME)
+        print("Buckets succesfully created")
