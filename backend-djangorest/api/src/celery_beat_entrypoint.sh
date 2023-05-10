@@ -13,6 +13,8 @@ done
 
 export DJANGO_CONFIGURATION=OnPremise
 
+chmod -R 777 /app
+
 # Create log directory
 touch /var/log/api/app.log
 chmod 777 /var/log/api/app.log

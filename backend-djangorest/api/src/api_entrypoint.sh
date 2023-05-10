@@ -11,6 +11,8 @@ until psql $DATABASE_URL -c '\l'; do
 done
 >&2 echo "Postgres is up - continuing"
 
+chmod -R 777 /app
+
 # Create log directory
 touch /var/log/api/app.log
 chmod 777 /var/log/api/app.log
@@ -33,5 +35,11 @@ EOF
 
 APP_USER_UID=`id -u $APP_USER`
 
-exec gunicorn --certfile=/certs/fullchain.pem --keyfile=/certs/privkey.pem --bind 0.0.0.0:443 --user $APP_USER_UID \
-    --workers 1 --threads 4 --timeout 0 $WSGI_APLICATION "$@"
+if [ "$USE_HTTPS" = true ]; then
+    exec gunicorn --certfile=/certs/fullchain.pem --keyfile=/certs/privkey.pem \
+        --bind 0.0.0.0:443 --user $APP_USER_UID --workers 1 --threads 4 \
+        --timeout 0 $WSGI_APLICATION "$@"
+else
+    exec gunicorn --bind 0.0.0.0:80 --user $APP_USER_UID --workers 1 --threads 4 \
+        --timeout 0 $WSGI_APLICATION "$@"
+fi

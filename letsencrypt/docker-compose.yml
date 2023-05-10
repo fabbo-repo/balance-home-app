@@ -15,9 +15,7 @@ services:
     image: nginx:1.23.3
     ports:
       - "8000:80"
-      - "8001:443"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/local.conf
-      - ./acme_challenge:/var/www/certbot
+      - ./acme_challenge:/usr/share/nginx/html/.well-known/acme-challenge
     restart: unless-stopped
 

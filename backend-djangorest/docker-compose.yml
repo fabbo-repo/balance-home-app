@@ -11,9 +11,10 @@ services:
       - redis:redis
     volumes:
       - ./logs/api:/var/log/api
-      - ./certs:/certs:ro
+      #- ./certs:/certs:ro  # Uncomment for HTTPS
     ports:
-      - "8001:443"
+      - "18000:80"
+      #- "18001:443"  # Uncomment for HTTPS
     depends_on:
       - redis
       - celery_worker
@@ -24,7 +25,7 @@ services:
 
   celery_worker:
     image: fabbo/balhom-api-djangorest:latest
-    container_name: balhom-api-djangorest
+    container_name: api-celery-worker
     env_file:
       - ./api.env
     links:
@@ -40,7 +41,7 @@ services:
       
   celery_beat:
     image: fabbo/balhom-api-djangorest:latest
-    container_name: balhom-api-djangorest
+    container_name: api-celery-beat
     env_file:
       - ./api.env
     links:
