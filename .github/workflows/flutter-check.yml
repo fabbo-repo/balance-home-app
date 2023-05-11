@@ -15,7 +15,8 @@ jobs:
 
       - name: Set up Flutter
         run: |
-          docker pull mobiledevops/flutter-sdk-image
+          docker build . -t flutter
+        working-directory: ./frontend-flutter
 
       - name: Create sample env file and cache dir
         run: |
@@ -26,10 +27,10 @@ jobs:
         
       - name: Check files
         run: |
-          docker run -v $(pwd)/flutter:/home/mobiledevops/app \
-          -v $(pwd)/cache:/home/mobiledevops/.pub-cache \
-          -w /home/mobiledevops/app \
-          mobiledevops/flutter-sdk-image \
+          docker run -v $(pwd)/flutter:/app \
+          -w /app \
+          --entrypoint "sh" \
+          flutter \
           ls -l
         working-directory: ./frontend-flutter
 
@@ -58,11 +59,19 @@ jobs:
 
       - name: Run tests
         run: |
+          docker run -v $(pwd)/flutter:/home/mobiledevops/app \
+          -v $(pwd)/cache:/home/mobiledevops/.pub-cache \
+          -w /home/mobiledevops/app \
+          mobiledevops/flutter-sdk-image \
           flutter test
         working-directory: ./frontend-flutter/flutter
         
       - name: Build web
         run: |
+          docker run -v $(pwd)/flutter:/home/mobiledevops/app \
+          -v $(pwd)/cache:/home/mobiledevops/.pub-cache \
+          -w /home/mobiledevops/app \
+          mobiledevops/flutter-sdk-image \
           flutter build web --release
         working-directory: ./frontend-flutter/flutter
         
