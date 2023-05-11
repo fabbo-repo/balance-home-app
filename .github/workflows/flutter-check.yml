@@ -20,22 +20,10 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Set up Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: "12.x"
-          cache: gradle
-
       - name: Create sample env file
         run: |
-          mv example_web_env web.env
+          mv example_app_env app.env
           ls -l
-        working-directory: ./frontend-flutter/flutter
-
-      - name: Clean dependencies
-        run: |
-          flutter clean
         working-directory: ./frontend-flutter/flutter
 
       - name: Install dependencies
@@ -45,8 +33,7 @@ jobs:
         
       - name: Generate temporary files
         run: |
-          flutter pub run build_runner clean
-          flutter pub run build_runner build
+          flutter pub run build_runner build --delete-conflicting-outputs
         working-directory: ./frontend-flutter/flutter
 
       - name: List dir
