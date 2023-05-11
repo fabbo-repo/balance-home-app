@@ -14,68 +14,36 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Flutter
-        run: |
-          docker build . -t flutter
-        working-directory: ./frontend-flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.7.7'
+          channel: 'stable'
 
-      - name: Create sample env file and cache dir
+      - name: Create sample env file
         run: |
-          mv example_app_env app.env
-          mkdir ../cache
-          chmod -R 777 ..
+          cp example_env app.env
         working-directory: ./frontend-flutter/flutter
-        
-      - name: Check files
-        run: |
-          docker run -v $(pwd)/flutter:/app \
-          -w /app \
-          --entrypoint "" \
-          flutter \
-          ls -l
-        working-directory: ./frontend-flutter
 
       - name: Install dependencies
         run: |
-          docker run -v $(pwd)/flutter:/app \
-          -v $(pwd)/cache:/root/.pub-cache \
-          -w /app \
-          --entrypoint "" \
-          flutter \
           flutter pub get
-        working-directory: ./frontend-flutter
+        working-directory: ./frontend-flutter/flutter
         
       - name: Generate temporary files
         run: |
-          docker run -v $(pwd)/flutter:/app \
-          -v $(pwd)/cache:/root/.pub-cache \
-          -w /app \
-          --entrypoint "" \
-          flutter \
+          ls -l
           flutter pub run build_runner build --delete-conflicting-outputs
-        working-directory: ./frontend-flutter
-
-      - name: List dir
-        run: |
           ls -l lib/config
+          ls -l lib/src/core/domain/entities
         working-directory: ./frontend-flutter/flutter
 
       - name: Run tests
         run: |
-          docker run -v $(pwd)/flutter:/app \
-          -v $(pwd)/cache:/root/.pub-cache \
-          -w /app \
-          --entrypoint "" \
-          flutter \
           flutter test
         working-directory: ./frontend-flutter/flutter
-        
+
       - name: Build web
         run: |
-          docker run -v $(pwd)/flutter:/home/mobiledevops/app \
-          -v $(pwd)/cache:/home/mobiledevops/.pub-cache \
-          -w /home/mobiledevops/app \
-          mobiledevops/flutter-sdk-image \
-          flutter build web --release
         working-directory: ./frontend-flutter/flutter
         
       - name: Check build Docker Image

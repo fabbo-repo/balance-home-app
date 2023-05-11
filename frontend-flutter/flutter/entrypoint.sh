@@ -30,7 +30,7 @@ else
 
     # Install dependencies
     flutter pub get
-    # Generate files (env file included from .env)
+    # Generate files (env file included from app.env)
     flutter pub run build_runner build --delete-conflicting-outputs
     # Build app
     flutter build web

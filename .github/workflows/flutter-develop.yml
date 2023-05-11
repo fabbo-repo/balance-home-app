@@ -21,7 +21,7 @@ jobs:
 
       - name: Create sample env file
         run: |
-          cp example_env .env
+          cp example_env app.env
         working-directory: ./frontend-flutter/flutter
      
       - name: Clean dependencies
@@ -36,7 +36,6 @@ jobs:
         
       - name: Generate temporary files
         run: |
-          ls -l
           flutter pub run build_runner build --delete-conflicting-outputs
         working-directory: ./frontend-flutter/flutter
 
