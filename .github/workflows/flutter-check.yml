@@ -20,7 +20,6 @@ jobs:
       - name: Create sample env file
         run: |
           mv example_app_env app.env
-          chmod -R 777 *
         working-directory: ./frontend-flutter/flutter
         
       - name: Check files
@@ -32,6 +31,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          chmod -R 777 flutter
           docker run --rm -v $(pwd)/flutter:/tmp/app -w /tmp/app \
           mobiledevops/flutter-sdk-image \
           flutter pub get
