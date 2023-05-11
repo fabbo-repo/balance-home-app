@@ -14,11 +14,8 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.7.7'
-          channel: 'stable'
-          cache: true
+        run: |
+          docker pull mobiledevops/flutter-sdk-image
 
       - name: Create sample env file
         run: |
@@ -28,12 +25,15 @@ jobs:
 
       - name: Install dependencies
         run: |
+          docker run mobiledevops/flutter-sdk-image \
+          --rm -v flutter:/app -w /app \
           flutter pub get
-        working-directory: ./frontend-flutter/flutter
+        working-directory: ./frontend-flutter
         
       - name: Generate temporary files
         run: |
-          ls -l
+          docker run mobiledevops/flutter-sdk-image \
+          --rm -v flutter:/app -w /app \
           flutter pub run build_runner build --delete-conflicting-outputs
         working-directory: ./frontend-flutter/flutter
 
