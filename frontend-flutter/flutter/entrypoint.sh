@@ -26,11 +26,11 @@ WEB_DIR=/usr/share/nginx/html
 if [ -d "${WEB_DIR}" ] && [ "$(ls -A ${WEB_DIR})" ] && [ "$(cat ${WEB_DIR}/.version)" = "$APP_VERSION" ]; then
     echo "Web directory already exists, is not empty and version is correct. Skipping build..."
 else
-    echo "API_URL=${API_URL}" > .env
+    echo "API_URL=${API_URL}" > app.env
 
     # Install dependencies
     flutter pub get
-    # Generate files (env file included from .env)
+    # Generate files (env file included from app.env)
     flutter pub run build_runner build --delete-conflicting-outputs
     # Build app
     flutter build web

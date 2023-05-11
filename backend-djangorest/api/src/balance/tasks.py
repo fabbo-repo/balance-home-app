@@ -31,7 +31,6 @@ def send_monthly_balance(user_email, month, year):
         month,
         year,
         monthly_balance.gross_quantity,
-        user.expected_monthly_balance,
         monthly_balance.expected_quantity,
         user.language
     )

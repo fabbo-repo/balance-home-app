@@ -36,7 +36,7 @@ class BalanceCard extends ConsumerWidget {
                     ? BalanceView.routeExpenseName
                     : BalanceView.routeRevenueName) +
                 BalanceEditView.routeName,
-            queryParams: {"id": "${balance.id}"});
+            queryParameters: {"id": "${balance.id}"});
       },
       child: Card(
         shape: RoundedRectangleBorder(
