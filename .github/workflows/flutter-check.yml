@@ -25,7 +25,7 @@ jobs:
         
       - name: Check files
         run: |
-          docker run --rm --mount source=flutter,target=/app -w /app \
+          docker run --rm --mount source=/app,target=flutter -w /app \
           mobiledevops/flutter-sdk-image \
           ls -l
         working-directory: ./frontend-flutter
