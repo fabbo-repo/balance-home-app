@@ -37,6 +37,7 @@ jobs:
       - name: Install dependencies
         run: |
           docker run -v $(pwd)/flutter:/app \
+          -v $(pwd)/cache:/root/.pub-cache \
           -w /app \
           --entrypoint "" \
           flutter \
@@ -46,6 +47,7 @@ jobs:
       - name: Generate temporary files
         run: |
           docker run -v $(pwd)/flutter:/app \
+          -v $(pwd)/cache:/root/.pub-cache \
           -w /app \
           --entrypoint "" \
           flutter \
@@ -60,6 +62,7 @@ jobs:
       - name: Run tests
         run: |
           docker run -v $(pwd)/flutter:/app \
+          -v $(pwd)/cache:/root/.pub-cache \
           -w /app \
           --entrypoint "" \
           flutter \
