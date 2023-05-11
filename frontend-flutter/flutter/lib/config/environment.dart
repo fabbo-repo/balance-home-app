@@ -6,6 +6,6 @@ part 'environment.g.dart';
 @Envied(path: 'app.env', requireEnvFile: true)
 abstract class Environment {
   /// URL for API
-  @EnviedField(varName: "API_URL")
+  @EnviedField(varName: "API_URL", defaultValue: "localhost")
   static const apiUrl = _Environment.apiUrl;
 }
