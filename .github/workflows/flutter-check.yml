@@ -21,6 +21,7 @@ jobs:
         run: |
           mv example_app_env app.env
           mkdir ../cache
+          chmod -R 777 ..
         working-directory: ./frontend-flutter/flutter
         
       - name: Check files
@@ -34,7 +35,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          chmod -R 777 flutter
           docker run -v $(pwd)/flutter:/home/mobiledevops/app \
           -v $(pwd)/cache:/home/mobiledevops/.pub-cache \
           -w /home/mobiledevops/app \
