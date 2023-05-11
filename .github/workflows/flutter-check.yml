@@ -25,21 +25,21 @@ jobs:
         
       - name: Check files
         run: |
-          docker run --rm -v $(pwd)/flutter:/app -w /app \
+          docker run --rm -v $(pwd)/flutter:/tmp/app -w /tmp/app \
           mobiledevops/flutter-sdk-image \
           ls -l
         working-directory: ./frontend-flutter
 
       - name: Install dependencies
         run: |
-          docker run --rm -v $(pwd)/flutter:/app -w /app \
+          docker run --rm -v $(pwd)/flutter:/tmp/app -w /tmp/app \
           mobiledevops/flutter-sdk-image \
           flutter pub get
         working-directory: ./frontend-flutter
         
       - name: Generate temporary files
         run: |
-          docker run --rm -v $(pwd)/flutter:/app -w /app \
+          docker run --rm -v $(pwd)/flutter:/tmp/app -w /tmp/app \
           mobiledevops/flutter-sdk-image \
           flutter pub run build_runner build --delete-conflicting-outputs
         working-directory: ./frontend-flutter
