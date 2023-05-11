@@ -44,6 +44,7 @@ jobs:
 
       - name: Build web
         run: |
+          flutter build web --release
         working-directory: ./frontend-flutter/flutter
         
       - name: Check build Docker Image

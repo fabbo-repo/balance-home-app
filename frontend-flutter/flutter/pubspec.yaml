@@ -28,13 +28,13 @@ dependencies:
     sdk: flutter
   intl: ^0.17.0
   # Get version info
-  package_info_plus: ^3.0.1
+  package_info_plus: ^4.0.0
   # Http request
   dio: ^5.1.1
   http_parser: ^4.0.2
   jwt_decoder: ^2.0.1
   # Routing
-  go_router: ^6.0.0
+  go_router: ^7.0.0
   # State management
   flutter_riverpod: ^2.0.2
   # Equals and hashCode override
@@ -49,7 +49,7 @@ dependencies:
   hive: ^2.2.3
   # Data class generator
   freezed_annotation: ^2.0.3
-  json_annotation: ^4.4.0
+  json_annotation: ^4.8.1
   # Adaptative navigation
   adaptive_navigation: ^0.0.7
   # UI widgets
@@ -64,11 +64,11 @@ dependencies:
   # Env code generation
   envied: ^0.3.0
   # Functional programing
-  fpdart: ^0.5.0
+  fpdart: ^0.6.0
   # File picker (used for images)
   file_picker: ^5.2.4
   # Device info package
-  device_info_plus: ^8.2.2
+  device_info_plus: ^9.0.0
   
 
 dev_dependencies:
@@ -82,7 +82,7 @@ dev_dependencies:
   # Data class generator
   build_runner: ^2.3.3
   freezed: ^2.0.3
-  json_serializable: ^6.5.3
+  json_serializable: ^6.6.2
   # Env code generator
   envied_generator: ^0.3.0
   # Splash screen
