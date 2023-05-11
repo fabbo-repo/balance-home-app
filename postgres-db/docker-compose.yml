@@ -4,6 +4,7 @@ services:
 
   db:
     image: postgres:15.2
+    container_name: balhom-postgres
     env_file:
       - ./postgres_db.env
     ports:
@@ -18,6 +19,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:latest
+    container_name: balhom-pgadmin
     env_file:
       - ./pgadmin.env
     ports:

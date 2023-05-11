@@ -2,6 +2,7 @@ version: '2'
 services:
   keycloak:
     image: bitnami/keycloak:21.1.1
+    container_name: balhom-keycloak
     ports:
       - "39080:8080"
       #- "39081:8443" # Uncomment for HTTPS
