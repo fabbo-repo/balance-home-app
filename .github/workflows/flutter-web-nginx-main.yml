@@ -13,12 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.7.7'
-          channel: 'stable'
-
       - name: Check build Docker Image
         run: |
           export APP_VERSION=$(grep -m 1 version pubspec.yaml | tr -s ' ' | cut -d' ' -f2 | cut -d'+' -f1 | tr -d '\n' | tr -d '\r')
