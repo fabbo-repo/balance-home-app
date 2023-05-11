@@ -7,7 +7,7 @@ services:
     container_name: balhom-minio
     ports:
       - "33090:33090"
-      #- "33091:33091" # Uncomment for HTTPS
+      - "33091:33091"
     env_file:
       - ./minio.env
     volumes:
