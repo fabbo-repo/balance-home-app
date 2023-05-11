@@ -1,1 +1,7 @@
 *.env
+*.crt
+*.key
+*.pem
+*.log
+*.log.*
+.vscode/settings.json

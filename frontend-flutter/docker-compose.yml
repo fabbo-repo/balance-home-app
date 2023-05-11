@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  flutter_web:
+    image: fabbo/balhom-web-flutter:latest
+    container_name: balhom-web-flutter
+    ports:
+      - "9000:80"
+      #- "9001:443" # Uncomment for HTTPS
+    volumes:
+      #- ./certs:/etc/nginx/ssl:ro # Uncomment for HTTPS
+      - ./web:/usr/share/nginx/html # optional (cache)
+    env_file:
+      - ./web.env
+    restart: unless-stopped
+    networks:
+      - balhom_web_net
+
+networks:
+  balhom_web_net:
+    name: balhom_web_net
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.94.0/24"

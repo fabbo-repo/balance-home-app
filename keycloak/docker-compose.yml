@@ -1,0 +1,29 @@
+version: '2'
+services:
+  keycloak:
+    image: bitnami/keycloak:21.1.1
+    ports:
+      - "39080:8080"
+      #- "39081:8443" # Uncomment for HTTPS
+    environment:
+      - KEYCLOAK_PRODUCTION=true
+      #- KEYCLOAK_ENABLE_HTTPS=true # Uncomment to enabe HTTPS
+      #- KEYCLOAK_HTTPS_USE_PEM=true # Uncomment for HTTPS
+      #- KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE=/certs/privkey.pem # Uncomment for HTTPS
+      #- KEYCLOAK_HTTPS_CERTIFICATE_FILE=/certs/fullchain.pem # Uncomment for HTTPS
+    env_file:
+      - keycloak.env
+    restart: unless-stopped
+    volumes:
+      - ./certs:/certs:ro
+    networks:
+      balhom_keycloak_net:
+        ipv4_address: 192.168.95.10
+        
+networks:
+  balhom_keycloak_net:
+    name: balhom_keycloak_net
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.95.0/24"

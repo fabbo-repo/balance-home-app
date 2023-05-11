@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+
+  db:
+    image: postgres:15.2
+    env_file:
+      - ./postgres_db.env
+    ports:
+      - "31500:5432"
+    restart: unless-stopped
+    volumes:
+      - ./database:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d
+    networks:
+      balhom_db_net:
+        ipv4_address: 192.168.92.20
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    env_file:
+      - ./pgadmin.env
+    ports:
+      - "36050:80"
+    depends_on:
+      - db
+    restart: unless-stopped
+    networks:
+      balhom_db_net:
+        ipv4_address: 192.168.92.25
+
+networks:
+  balhom_db_net:
+    name: balhom_db_net
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.92.0/24"
