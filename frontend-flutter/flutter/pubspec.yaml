@@ -83,6 +83,7 @@ dev_dependencies:
   json_serializable: ^6.6.2
   # Env code generator
   envied_generator: ^0.3.0
+  graphs: 2.2.0 # needed for envied bugfix
   # Splash screen
   flutter_native_splash: ^2.2.15
 
