@@ -74,8 +74,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  # Environment generator (dev, stage, prod ...)
-  flutter_flavorizr: ^2.1.4
   # Contains a set of recommended lints to encourage good coding practices.
   flutter_lints: ^2.0.0
   #very_good_analysis: ^3.1.0

@@ -51,8 +51,8 @@ final router = GoRouter(
             path: AuthLoadingView.routePath,
             builder: (context, state) {
               return AuthLoadingView(
-                  location: state.queryParams['path'] != null
-                      ? state.queryParams['path']!
+                  location: state.queryParameters['path'] != null
+                      ? state.queryParameters['path']!
                       : "/${AuthLoadingView.routePath}");
             },
           ),
@@ -120,7 +120,7 @@ final router = GoRouter(
                         BalanceEditView.routeName,
                     path: BalanceEditView.routePath,
                     builder: (context, state) => BalanceEditView(
-                          id: int.parse(state.queryParams['id']!),
+                          id: int.parse(state.queryParameters['id']!),
                           balanceTypeMode: BalanceTypeMode.revenue,
                         )),
               ]),
@@ -148,7 +148,7 @@ final router = GoRouter(
                         BalanceEditView.routeName,
                     path: BalanceEditView.routePath,
                     builder: (context, state) => BalanceEditView(
-                          id: int.parse(state.queryParams['id']!),
+                          id: int.parse(state.queryParameters['id']!),
                           balanceTypeMode: BalanceTypeMode.expense,
                         )),
               ]),
