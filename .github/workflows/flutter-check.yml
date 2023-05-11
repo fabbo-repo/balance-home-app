@@ -22,6 +22,13 @@ jobs:
           mv example_app_env app.env
           ls -l
         working-directory: ./frontend-flutter/flutter
+        
+      - name: Check files
+        run: |
+          docker run --rm --mount source=flutter,target=/app -w /app \
+          mobiledevops/flutter-sdk-image \
+          ls -l
+        working-directory: ./frontend-flutter
 
       - name: Install dependencies
         run: |
