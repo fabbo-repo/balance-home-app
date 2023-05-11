@@ -31,10 +31,7 @@ jobs:
         
       - name: Generate temporary files
         run: |
-          ls -l
           flutter pub run build_runner build --delete-conflicting-outputs
-          ls -l lib/config
-          ls -l lib/src/core/domain/entities
         working-directory: ./frontend-flutter/flutter
 
       - name: Run tests
@@ -55,4 +52,4 @@ jobs:
           docker build . -t ${IMAGE_TAG}
         env:
           FLUTTER_DOCKER_REPO_NAME: ${{ secrets.FLUTTER_DOCKER_REPO_NAME }}
-        working-directory: ./frontend-flutter/flutter
+        working-directory: ./frontend-flutter
