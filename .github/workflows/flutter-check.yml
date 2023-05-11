@@ -17,14 +17,16 @@ jobs:
         run: |
           docker pull mobiledevops/flutter-sdk-image
 
-      - name: Create sample env file
+      - name: Create sample env file and cache dir
         run: |
           mv example_app_env app.env
+          mkdir ../cache
         working-directory: ./frontend-flutter/flutter
         
       - name: Check files
         run: |
-          docker run -v $(pwd)/flutter:/tmp/app -w /tmp/app \
+          docker run -v $(pwd)/flutter:~/app -w ~/app \
+          -v $(pwd)/cache:~/.pub-cache -w ~/app \
           mobiledevops/flutter-sdk-image \
           ls -l
         working-directory: ./frontend-flutter
@@ -32,14 +34,16 @@ jobs:
       - name: Install dependencies
         run: |
           chmod -R 777 flutter
-          docker run -v $(pwd)/flutter:/tmp/app -w /tmp/app \
+          docker run -v $(pwd)/flutter:~/app -w ~/app \
+          -v $(pwd)/cache:~/.pub-cache -w ~/app \
           mobiledevops/flutter-sdk-image \
           flutter pub get
         working-directory: ./frontend-flutter
         
       - name: Generate temporary files
         run: |
-          docker run -v $(pwd)/flutter:/tmp/app -w /tmp/app \
+          docker run -v $(pwd)/flutter:~/app -w ~/app \
+          -v $(pwd)/cache:~/.pub-cache -w ~/app \
           mobiledevops/flutter-sdk-image \
           flutter pub run build_runner build --delete-conflicting-outputs
         working-directory: ./frontend-flutter
