@@ -21,7 +21,7 @@ jobs:
 
       - name: Create sample env file
         run: |
-          cp example_env app.env
+          cp example_app_env app.env
         working-directory: ./frontend-flutter/flutter
 
       - name: Install dependencies
