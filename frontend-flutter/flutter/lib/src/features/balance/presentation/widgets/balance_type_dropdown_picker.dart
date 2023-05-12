@@ -70,12 +70,15 @@ class _BalanceTypeDropdownPickerState extends State<BalanceTypeDropdownPicker> {
                   children: [
                     Image.network(
                       value.image,
-                      width: 20,
-                      height: 20,
+                      width: 24,
+                      height: 24,
                     ),
                     horizontalSpace(),
-                    Text(TypeUtil.balanceTypeToString(
-                        value.name, widget.appLocalizations)),
+                    Text(
+                      TypeUtil.balanceTypeToString(
+                          value.name, widget.appLocalizations),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
               );
