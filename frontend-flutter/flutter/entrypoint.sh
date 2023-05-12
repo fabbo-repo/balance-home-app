@@ -43,9 +43,9 @@ rm -rf /app
 
 # Move nginx conf
 if [ "$USE_HTTPS" = true ]; then
-    mv /confs/local_https.conf /etc/nginx/conf.d/local.conf
+    mv /confs/local_https.conf /etc/nginx/conf.d/default.conf
 else
-    mv /confs/local_http.conf /etc/nginx/conf.d/local.conf
+    mv /confs/local_http.conf /etc/nginx/conf.d/default.conf
 fi
 rm -rf /confs
 
