@@ -15,8 +15,7 @@ class BadRequestFailure extends HttpRequestFailure {
   factory BadRequestFailure.fromJson(Map<String, dynamic> json) {
     if (json.containsKey("error_code")) {
       return ApiBadRequestFailure.fromJson(json);
-    }
-    else if (json.containsKey("fields")) {
+    } else if (json.containsKey("fields")) {
       return InputBadRequestFailure.fromJson(json);
     }
     return _$BadRequestFailureFromJson(json);

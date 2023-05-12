@@ -15,7 +15,7 @@ import 'package:universal_io/io.dart';
 
 const unknownStatusCode = 600;
 
-/// Provides a [ValueNotifier] to the app to check http connection state 
+/// Provides a [ValueNotifier] to the app to check http connection state
 final connectionStateListenable = ValueNotifier<bool>(true);
 
 class ApiClient {
@@ -78,8 +78,14 @@ class ApiClient {
     if (((response.statusCode ?? unknownStatusCode) / 10).round() == 20) {
       return right(response);
     } else if (response.statusCode == 400) {
+      if (response.data is String) {
+        return left(BadRequestFailure(detail: response.data));
+      }
       return left(BadRequestFailure.fromJson(response.data));
     } else if (response.statusCode == 401) {
+      if (response.data is String) {
+        return left(UnauthorizedRequestFailure(detail: response.data));
+      }
       return left(UnauthorizedRequestFailure.fromJson(response.data));
     } else if (response.statusCode == 429) {
       return left(TooManyRequestFailure(endpoint: path));
