@@ -8,9 +8,9 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
     ALTER DATABASE keycloakdb OWNER TO keycloak_user;
 
     CREATE DATABASE balhomdb;
-    CREATE USER bahom_api_user WITH PASSWORD '${BAHOM_USER_PASSWORD}';
-    GRANT ALL PRIVILEGES ON DATABASE balhomdb TO bahom_api_user;
-    ALTER DATABASE balhomdb OWNER TO bahom_api_user;
+    CREATE USER balhom_api_user WITH PASSWORD '${BAHOM_USER_PASSWORD}';
+    GRANT ALL PRIVILEGES ON DATABASE balhomdb TO balhom_api_user;
+    ALTER DATABASE balhomdb OWNER TO balhom_api_user;
     
     CREATE DATABASE currencydb;
     CREATE USER currency_api_user WITH PASSWORD '${CURRENCY_USER_PASSWORD}';
