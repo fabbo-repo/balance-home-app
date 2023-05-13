@@ -8,7 +8,7 @@ docker exec balhom-postgres sh -c "cat /keycloakdbexport.pgsql | psql -U keycloa
 
 # Balhom
 docker cp ./balhomdbexport.pgsql balhom-postgres:/balhomdbexport.pgsql
-docker exec balhom-postgres sh -c "cat /balhomdbexport.pgsql | psql -U bahom_api_user balhomdb"
+docker exec balhom-postgres sh -c "cat /balhomdbexport.pgsql | psql -U balhom_api_user balhomdb"
 
 # Currency
 docker cp ./currencydbexport.pgsql balhom-postgres:/currencydbexport.pgsql

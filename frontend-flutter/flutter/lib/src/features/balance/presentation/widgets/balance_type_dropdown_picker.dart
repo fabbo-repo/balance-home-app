@@ -10,7 +10,7 @@ class BalanceTypeDropdownPicker extends StatefulWidget {
   final bool readOnly;
   final void Function(BalanceTypeEntity?)? onChanged;
   final AppLocalizations appLocalizations;
-  final balanceTypeState = ValueNotifier<BalanceTypeEntity?>(null);
+  final ValueNotifier<BalanceTypeEntity> balanceTypeState;
 
   BalanceTypeDropdownPicker(
       {required this.name,
@@ -19,9 +19,8 @@ class BalanceTypeDropdownPicker extends StatefulWidget {
       required this.appLocalizations,
       this.readOnly = false,
       this.onChanged,
-      super.key}) {
-    balanceTypeState.value = initialValue;
-  }
+      super.key})
+      : balanceTypeState = ValueNotifier<BalanceTypeEntity>(initialValue);
 
   @override
   State<BalanceTypeDropdownPicker> createState() =>
@@ -50,32 +49,40 @@ class _BalanceTypeDropdownPickerState extends State<BalanceTypeDropdownPicker> {
                   fontSize: 15),
             ),
           ),
-          DropdownButton<BalanceTypeEntity>(
-            value: widget.balanceTypeState.value,
+          DropdownButton<String>(
+            value: widget.balanceTypeState.value?.name,
             onChanged: widget.readOnly
                 ? null
-                : (BalanceTypeEntity? value) {
-                    if (widget.onChanged != null) {
-                      widget.onChanged!(value);
+                : (String? name) {
+                    for (final value in widget.items) {
+                      if (value.name == name) {
+                        if (widget.onChanged != null) {
+                          widget.onChanged!(value);
+                        }
+                        setState(() {
+                          widget.balanceTypeState.value = value!;
+                        });
+                        return;
+                      }
                     }
-                    setState(() {
-                      widget.balanceTypeState.value = value!;
-                    });
                   },
-            items: widget.items.map<DropdownMenuItem<BalanceTypeEntity>>(
-                (BalanceTypeEntity value) {
-              return DropdownMenuItem<BalanceTypeEntity>(
-                value: value,
+            items: widget.items
+                .map<DropdownMenuItem<String>>((BalanceTypeEntity value) {
+              return DropdownMenuItem<String>(
+                value: value.name,
                 child: Row(
                   children: [
                     Image.network(
                       value.image,
-                      width: 20,
-                      height: 20,
+                      width: 24,
+                      height: 24,
                     ),
                     horizontalSpace(),
-                    Text(TypeUtil.balanceTypeToString(
-                        value.name, widget.appLocalizations)),
+                    Text(
+                      TypeUtil.balanceTypeToString(
+                          value.name, widget.appLocalizations),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
               );
