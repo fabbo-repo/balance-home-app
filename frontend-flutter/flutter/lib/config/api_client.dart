@@ -97,18 +97,28 @@ class ApiClient {
 
   @visibleForTesting
   Future<void> checkAccessJwt() async {
-    if (jwtToken != null &&
-        jwtToken!.access != null &&
-        jwtToken!.access!.isNotEmpty &&
-        jwtToken!.refresh != null &&
-        jwtToken!.refresh!.isNotEmpty &&
-        JwtDecoder.isExpired(jwtToken!.access!)) {
-      final res = await dioClient
-          .post(APIContract.jwtRefresh, data: {"refresh": jwtToken!.refresh});
-      checkFailureOrResponse(path: APIContract.jwtRefresh, response: res)
-          .fold((_) => null, (value) {
-        setJwt(jwtToken!.copyWith(access: value.data["access"]));
-      });
+    try {
+      if (jwtToken != null &&
+          jwtToken!.access != null &&
+          jwtToken!.access!.isNotEmpty &&
+          JwtDecoder.isExpired(jwtToken!.access!)) {
+        if (jwtToken!.refresh != null &&
+            jwtToken!.refresh!.isNotEmpty &&
+            !JwtDecoder.isExpired(jwtToken!.refresh!)) {
+          final res = await dioClient.post(APIContract.jwtRefresh,
+              data: {"refresh": jwtToken!.refresh});
+          checkFailureOrResponse(path: APIContract.jwtRefresh, response: res)
+              .fold((_) {
+            removeJwt();
+          }, (value) {
+            setJwt(jwtToken!.copyWith(access: value.data["access"]));
+          });
+        } else {
+          removeJwt();
+        }
+      }
+    } on Exception {
+      removeJwt();
     }
   }
 
