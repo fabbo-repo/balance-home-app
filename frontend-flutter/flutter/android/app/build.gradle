@@ -44,7 +44,7 @@ android {
     defaultConfig {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         
-        applicationId "com.fabbo.balance_home_app"
+        applicationId "com.fabbo.balhom"
         
         // Fetch custom ENV variables to use them in the AndroidManifest as: "${ENV_NAME}"
         //manifestPlaceholders += [ENV_NAME:  System.getenv("ENV_NAME")]

@@ -98,3 +98,21 @@ flutter pub run build_runner build --delete-conflicting-outputs
 ~~~bash
 flutter pub run flutter_native_splash:create
 ~~~
+
+* Generate keystore:
+
+~~~bash
+keytool -genkey -v -keystore ./keystore.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias <ALIAS>
+~~~
+
+* Generate SHA1 and SHA2 keys:
+
+~~~bash
+cd android: ./gradlew signingreport; cd ..
+~~~
+
+or
+
+~~~bash
+keytool -list -v -alias <ALIAS> -keystore <PATH_KEYSTORE>
+~~~
