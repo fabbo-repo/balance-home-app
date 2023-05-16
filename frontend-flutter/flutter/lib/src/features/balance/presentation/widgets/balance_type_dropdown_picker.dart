@@ -50,7 +50,7 @@ class _BalanceTypeDropdownPickerState extends State<BalanceTypeDropdownPicker> {
             ),
           ),
           DropdownButton<String>(
-            value: widget.balanceTypeState.value?.name,
+            value: widget.balanceTypeState.value.name,
             onChanged: widget.readOnly
                 ? null
                 : (String? name) {
@@ -60,7 +60,7 @@ class _BalanceTypeDropdownPickerState extends State<BalanceTypeDropdownPicker> {
                           widget.onChanged!(value);
                         }
                         setState(() {
-                          widget.balanceTypeState.value = value!;
+                          widget.balanceTypeState.value = value;
                         });
                         return;
                       }
