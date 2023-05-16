@@ -1,4 +1,4 @@
-package com.fabbo.balance_home_app;
+package com.fabbo.balhom;
 
 import io.flutter.embedding.android.FlutterActivity;
 

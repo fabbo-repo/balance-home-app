@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fabbo.balance_home_app">
+    package="com.fabbo.balhom">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="BalHom"
