@@ -49,7 +49,7 @@ android {
         // Fetch custom ENV variables to use them in the AndroidManifest as: "${ENV_NAME}"
         //manifestPlaceholders += [ENV_NAME:  System.getenv("ENV_NAME")]
         
-        minSdkVersion 18 // flutter_secure_storage needs version 18
+        minSdkVersion 19
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
