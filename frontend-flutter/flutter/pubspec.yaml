@@ -67,8 +67,6 @@ dependencies:
   fpdart: ^0.6.0
   # File picker (used for images)
   file_picker: ^5.2.4
-  # Device info package
-  device_info_plus: ^9.0.0
   
 
 dev_dependencies:
