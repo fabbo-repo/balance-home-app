@@ -53,29 +53,30 @@ env = environ.Env(
         str,
         os.getenv("MINIO_STATIC_BUCKET_NAME", default="balhom-media-bucket"),
     ),
+    KEYCLOAK_ENDPOINT=(str, os.getenv(
+        "KEYCLOAK_ENDPOINT", default="localhost:39080")),
+    KEYCLOAK_CLIENT_ID=(
+        str,
+        os.getenv("KEYCLOAK_CLIENT_ID", default="balhom-api"),
+    ),
+    KEYCLOAK_CLIENT_SECRET=(
+        str,
+        os.getenv("KEYCLOAK_CLIENT_SECRET", default="secret"),
+    ),
+    KEYCLOAK_REALM=(
+        str,
+        os.getenv("KEYCLOAK_REALM", default="balhom-realm"),
+    ),
+    KEYCLOAK_REDIRECT_URL=(
+        str,
+        os.getenv("KEYCLOAK_REDIRECT_URL",
+                  default="http://127.0.0.1:8000/api/v2"),
+    ),
 )
 USE_HTTPS = env("USE_HTTPS")
 
 
 class Dev(Configuration):
-    # Build paths inside the project like this: BASE_DIR / 'subdir'.
-    private_key_file = os.path.join(BASE_DIR, "private.key")
-    public_key_file = os.path.join(BASE_DIR, "public.key")
-
-    if os.path.exists(private_key_file):
-        print("* Using RSA key from file")
-        with open(private_key_file, "rb") as reader:
-            RSAkey = RSA.importKey(reader.read())
-    else:
-        print("* Generating RSA key")
-        RSAkey = RSA.generate(4096)
-        with open(private_key_file, "wb") as writer:
-            print("* Generating PRIVATE key file")
-            writer.write(RSAkey.exportKey())
-        if not os.path.exists(public_key_file):
-            with open(public_key_file, "wb") as writer:
-                print("* Generating PUBLIC key file")
-                writer.write(RSAkey.publickey().exportKey())
     SECRET_KEY = get_random_secret_key()
 
     DEBUG = True
@@ -98,8 +99,6 @@ class Dev(Configuration):
         "django.contrib.staticfiles",
         # Cors
         "corsheaders",
-        # Admin documentation
-        "django.contrib.admindocs",
         # Rest framework
         "rest_framework",
         "django_filters",
@@ -230,14 +229,14 @@ class Dev(Configuration):
         },
     }
 
-    # Backup
-    DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
-    DBBACKUP_STORAGE_OPTIONS = {"location": "."}
+    AUTHENTICATION_BACKENDS = (
+        'core.keycloak.KeycloakOIDCAuthenticationBackend',
+    )
 
     # Django Rest Framework setting:
     REST_FRAMEWORK = {
         "DEFAULT_AUTHENTICATION_CLASSES": [
-            "rest_framework_simplejwt.authentication.JWTAuthentication"
+            'mozilla_django_oidc.contrib.drf.OIDCAuthentication',
         ],
         "DEFAULT_PERMISSION_CLASSES": [
             "rest_framework.permissions.IsAuthenticated",
@@ -252,22 +251,29 @@ class Dev(Configuration):
             "rest_framework.throttling.UserRateThrottle",
         ],
         "DEFAULT_THROTTLE_RATES": {
-            "anon": "30/minute",
-            "user": "100/minute",
-            "jwt_obtain_pair": "50/minute",
-            "jwt_refresh": "100/minute",
+            "anon": "50/minute",
+            "user": "5000/minute",
         },
         "EXCEPTION_HANDLER": "core.exceptions.app_exception_handler",
     }
 
-    SIMPLE_JWT = {
-        "UPDATE_LAST_LOGIN": True,
-        "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-        "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-        "ALGORITHM": "RS256",
-        "SIGNING_KEY": RSAkey.exportKey(),
-        "VERIFYING_KEY": RSAkey.publickey().exportKey(),
-    }
+    # Keycloak setup
+    # https://felipesanchezweb.es/integracion-de-keycloak-con-django-rest-framework/
+    OIDC_RP_CLIENT_ID = env('KEYCLOAK_CLIENT_ID')
+    OIDC_RP_CLIENT_SECRET = env('KEYCLOAK_CLIENT_SECRET')
+    protocol = "https" if USE_HTTPS else 'http'
+    endpoint = env('KEYCLOAK_ENDPOINT')
+    realm = env('KEYCLOAK_REALM')
+    OIDC_OP_TOKEN_ENDPOINT = '{}://{}/auth/realms/{}/protocol/openid-connect/token'.format(
+        protocol, endpoint, realm)
+    OIDC_OP_USER_ENDPOINT = '{}://{}/auth/realms/{}/protocol/openid-connect/userinfo'.format(
+        protocol, endpoint, realm)
+    OIDC_OP_AUTHORIZATION_ENDPOINT = '{}://{}/auth/realms/{}/protocol/openid-connect/auth'.format(
+        protocol, endpoint, endpoint, realm)
+    LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/api/'
+    OIDC_RP_SIGN_ALGO = 'RS256'
+    OIDC_OP_JWKS_ENDPOINT = '{}://{}/auth/realms/{}/protocol/openid-connect/certs'.format(
+        protocol, endpoint, realm)
 
     SWAGGER_SETTINGS = {
         "SECURITY_DEFINITIONS": {
@@ -356,15 +362,6 @@ class OnPremise(Dev):
                 "level": "ERROR",
             },
         }
-
-    SIMPLE_JWT = {
-        "UPDATE_LAST_LOGIN": True,
-        "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
-        "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-        "ALGORITHM": "RS256",
-        "SIGNING_KEY": Dev.RSAkey.exportKey(),
-        "VERIFYING_KEY": Dev.RSAkey.publickey().exportKey(),
-    }
 
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     # It is setup for gmail

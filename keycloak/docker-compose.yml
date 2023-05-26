@@ -6,8 +6,8 @@ services:
     ports:
       - "39080:8080"
       #- "39081:8443" # Uncomment for HTTPS
-    environment:
-      - KEYCLOAK_PRODUCTION=true
+    # environment:
+      #- KEYCLOAK_PRODUCTION=true # Uncomment to enabe HTTPS
       #- KEYCLOAK_ENABLE_HTTPS=true # Uncomment to enabe HTTPS
       #- KEYCLOAK_HTTPS_USE_PEM=true # Uncomment for HTTPS
       #- KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE=/certs/privkey.pem # Uncomment for HTTPS

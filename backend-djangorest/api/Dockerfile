@@ -56,12 +56,12 @@ RUN django-admin compilemessages --ignore=env
 ENV DJANGO_CONFIGURATION=OnPremise
 ENV WSGI_APLICATION="core.wsgi:application"
 
-# Change to a non-root user
-#USER ${APP_USER}:${APP_USER}
-
 # Entrypoint permissions
 RUN chmod a+x /app/api_entrypoint.sh
 RUN chmod a+x /app/celery_worker_entrypoint.sh
 RUN chmod a+x /app/celery_beat_entrypoint.sh
+
+# Change to a non-root user
+USER ${APP_USER}:${APP_USER}
 
 ENTRYPOINT ["/app/api_entrypoint.sh"]

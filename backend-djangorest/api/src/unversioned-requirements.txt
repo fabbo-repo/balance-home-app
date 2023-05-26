@@ -15,7 +15,7 @@ django-cors-headers
 drf-yasg
 # Jwt Authentication
 PyJWT
-cryptography
+mozilla-django-oidc
 # Image library
 Pillow
 # Celery driver
@@ -38,8 +38,6 @@ psycopg2-binary
 coverage
 # Web scrapping
 beautifulsoup4
-# Admin documentation
-docutils
 # Web server
 gunicorn
 # Minio driver
