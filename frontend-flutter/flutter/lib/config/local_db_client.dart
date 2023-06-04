@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
 class LocalDbClient {
   @visibleForTesting
@@ -14,10 +15,12 @@ class LocalDbClient {
       required this.dbName,
       required this.tableNames}) {
     futureCollection = Future.microtask(() async {
+      final path =
+          kIsWeb ? "./" : (await getApplicationDocumentsDirectory()).path;
       final collection = await BoxCollection.open(
         dbName,
         tableNames,
-        path: './', // Only used for Dart IO
+        path: path, // Only used for Dart IO
       );
       return collection;
     });
