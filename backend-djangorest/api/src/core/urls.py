@@ -30,7 +30,6 @@ if not settings.DISABLE_ADMIN_PANEL:
     ]
 
 urlpatterns += [
-    path('oidc/', include('mozilla_django_oidc.urls')),
     path("api/v2/", include(api_urls)),
     path("favicon.ico", favicon_view),
 ]

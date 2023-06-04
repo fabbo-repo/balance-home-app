@@ -221,14 +221,14 @@ class Dev(Configuration):
         },
     }
 
-    AUTHENTICATION_BACKENDS = (
-        'core.keycloak.KeycloakOIDCAuthenticationBackend',
-    )
+    #AUTHENTICATION_BACKENDS = (
+    #    'keycloak.authentication.KeycloakAuthenticationBackend',
+    #)
 
     # Django Rest Framework setting:
     REST_FRAMEWORK = {
         "DEFAULT_AUTHENTICATION_CLASSES": [
-            'mozilla_django_oidc.contrib.drf.OIDCAuthentication',
+            'keycloak_client.authentication.KeycloakAuthentication',
         ],
         "DEFAULT_PERMISSION_CLASSES": [
             "rest_framework.permissions.IsAuthenticated",

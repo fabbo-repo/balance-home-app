@@ -1,7 +1,6 @@
 import logging
 from typing import Literal
 from jose import JWTError
-import requests
 from django.conf import settings
 from keycloak import KeycloakOpenID
 
