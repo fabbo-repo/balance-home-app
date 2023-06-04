@@ -1,10 +1,8 @@
 from pathlib import Path
 from configurations import Configuration
-from django.utils.timezone import timedelta
 import os
 from django.utils.translation import gettext_lazy as _
 import environ
-from Crypto.PublicKey import RSA
 from django.core.management.utils import get_random_secret_key
 
 
