@@ -59,7 +59,7 @@ env = environ.Env(
     ),
     KEYCLOAK_CLIENT_SECRET=(
         str,
-        os.getenv("KEYCLOAK_CLIENT_SECRET", default="6qK8cfy3F20TuTj53Q7QM7GLdy5Wu4HL"),
+        os.getenv("KEYCLOAK_CLIENT_SECRET", default="secret"),
     ),
     KEYCLOAK_REALM=(
         str,
