@@ -221,9 +221,9 @@ class Dev(Configuration):
         },
     }
 
-    #AUTHENTICATION_BACKENDS = (
-    #    'keycloak.authentication.KeycloakAuthenticationBackend',
-    #)
+    AUTHENTICATION_BACKENDS = (
+        'keycloak_client.backend.KeycloakAuthenticationBackend',
+    )
 
     # Django Rest Framework setting:
     REST_FRAMEWORK = {
@@ -254,7 +254,7 @@ class Dev(Configuration):
     KEYCLOAK_CLIENT_SECRET = env('KEYCLOAK_CLIENT_SECRET')
     KEYCLOAK_ENDPOINT = env('KEYCLOAK_ENDPOINT')
     KEYCLOAK_REALM = env('KEYCLOAK_REALM')
-    
+
     SWAGGER_SETTINGS = {
         "SECURITY_DEFINITIONS": {
             "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"},
