@@ -61,16 +61,11 @@ env = environ.Env(
     ),
     KEYCLOAK_CLIENT_SECRET=(
         str,
-        os.getenv("KEYCLOAK_CLIENT_SECRET", default="secret"),
+        os.getenv("KEYCLOAK_CLIENT_SECRET", default="6qK8cfy3F20TuTj53Q7QM7GLdy5Wu4HL"),
     ),
     KEYCLOAK_REALM=(
         str,
         os.getenv("KEYCLOAK_REALM", default="balhom-realm"),
-    ),
-    KEYCLOAK_REDIRECT_URL=(
-        str,
-        os.getenv("KEYCLOAK_REDIRECT_URL",
-                  default="http://127.0.0.1:8000/api/v2"),
     ),
 )
 USE_HTTPS = env("USE_HTTPS")
@@ -126,7 +121,6 @@ class Dev(Configuration):
         "django.middleware.locale.LocaleMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
-        "corsheaders.middleware.CorsPostCsrfMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -257,24 +251,12 @@ class Dev(Configuration):
         "EXCEPTION_HANDLER": "core.exceptions.app_exception_handler",
     }
 
-    # Keycloak setup
-    # https://felipesanchezweb.es/integracion-de-keycloak-con-django-rest-framework/
-    OIDC_RP_CLIENT_ID = env('KEYCLOAK_CLIENT_ID')
-    OIDC_RP_CLIENT_SECRET = env('KEYCLOAK_CLIENT_SECRET')
-    protocol = "https" if USE_HTTPS else 'http'
-    endpoint = env('KEYCLOAK_ENDPOINT')
-    realm = env('KEYCLOAK_REALM')
-    OIDC_OP_TOKEN_ENDPOINT = '{}://{}/auth/realms/{}/protocol/openid-connect/token'.format(
-        protocol, endpoint, realm)
-    OIDC_OP_USER_ENDPOINT = '{}://{}/auth/realms/{}/protocol/openid-connect/userinfo'.format(
-        protocol, endpoint, realm)
-    OIDC_OP_AUTHORIZATION_ENDPOINT = '{}://{}/auth/realms/{}/protocol/openid-connect/auth'.format(
-        protocol, endpoint, endpoint, realm)
-    LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/api/'
-    OIDC_RP_SIGN_ALGO = 'RS256'
-    OIDC_OP_JWKS_ENDPOINT = '{}://{}/auth/realms/{}/protocol/openid-connect/certs'.format(
-        protocol, endpoint, realm)
-
+    # Keycloak config
+    KEYCLOAK_CLIENT_ID = env('KEYCLOAK_CLIENT_ID')
+    KEYCLOAK_CLIENT_SECRET = env('KEYCLOAK_CLIENT_SECRET')
+    KEYCLOAK_ENDPOINT = env('KEYCLOAK_ENDPOINT')
+    KEYCLOAK_REALM = env('KEYCLOAK_REALM')
+    
     SWAGGER_SETTINGS = {
         "SECURITY_DEFINITIONS": {
             "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"},

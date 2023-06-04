@@ -14,8 +14,8 @@ django-cors-headers
 # Swagger
 drf-yasg
 # Jwt Authentication
+python-keycloak
 PyJWT
-mozilla-django-oidc
 # Image library
 Pillow
 # Celery driver
