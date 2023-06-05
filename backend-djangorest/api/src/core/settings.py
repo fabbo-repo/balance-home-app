@@ -19,9 +19,6 @@ env = environ.Env(
             default="sqlite:///" + os.path.join(BASE_DIR, "default.sqlite3"),
         ),
     ),
-    EMAIL_CODE_THRESHOLD=(int, os.getenv("EMAIL_CODE_THRESHOLD", default=120)),
-    EMAIL_CODE_VALID=(int, os.getenv("EMAIL_CODE_VALID", default=120)),
-    UNVERIFIED_USER_DAYS=(int, os.getenv("UNVERIFIED_USER_DAYS", default=2)),
     COIN_TYPE_CODES=(str, os.getenv("COIN_TYPE_CODES", default="EUR,USD")),
     FRONTEND_VERSION=(str, os.getenv("FRONTEND_VERSION", default="1.4.0")),
     DISABLE_ADMIN_PANEL=(bool, os.getenv(
@@ -267,13 +264,6 @@ class Dev(Configuration):
 
     CELERY_RESULT_BACKEND = "django-db"
     CELERY_BROKER_URL = env("CELERY_BROKER_URL")
-
-    # Time to wait for a new email verification code generation
-    EMAIL_CODE_THRESHOLD = env("EMAIL_CODE_THRESHOLD")
-    # Email verification code validity duration
-    EMAIL_CODE_VALID = env("EMAIL_CODE_VALID")
-    # Days for a periodic deletion of unverified users
-    UNVERIFIED_USER_DAYS = env("UNVERIFIED_USER_DAYS")
 
     COIN_TYPE_CODES = env("COIN_TYPE_CODES").split(",")
 

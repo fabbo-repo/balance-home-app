@@ -47,31 +47,6 @@ class SameUsernameEmailException(AppBadRequestException):
         super().__init__(detail, SAME_USERNAME_EMAIL_ERROR)
 
 
-class CodeSentException(AppBadRequestException):
-    def __init__(self, duration_s: int):
-        detail = _("Code has already been sent, wait {} seconds").format(
-            str(settings.EMAIL_CODE_THRESHOLD-duration_s))
-        super().__init__(detail, CODE_SENT_ERROR)
-
-
-class NoCodeSentException(AppBadRequestException):
-    def __init__(self):
-        detail = _("No code sent")
-        super().__init__(detail, NO_CODE_SENT_ERROR)
-
-
-class NoLongerValidCodeException(AppBadRequestException):
-    def __init__(self):
-        detail = _("Code is no longer valid")
-        super().__init__(detail, NO_LONGER_VALID_CODE_ERROR)
-
-
-class InvalidCodeException(AppBadRequestException):
-    def __init__(self):
-        detail = _("Invalid code")
-        super().__init__(detail, INVALID_CODE_ERROR)
-
-
 class ResetPasswordRetriesException(AppBadRequestException):
     def __init__(self):
         detail = _("Only three codes can be sent per day")

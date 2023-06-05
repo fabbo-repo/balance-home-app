@@ -50,7 +50,8 @@ class KeycloakClient:
 
     def verify_access_token(self, access_token: str) -> tuple[bool, dict]:
         """Tries to decode `acces_token` using keycloak's public key."""
-        options = {"verify_signature": True, "verify_aud": True, "verify_exp": True}
+        options = {"verify_signature": True,
+                   "verify_aud": True, "verify_exp": True}
         try:
             res = self.keycloak_openid.decode_token(
                 access_token, key=self.public_key, options=options
@@ -74,4 +75,21 @@ class KeycloakClient:
     def send_verify_email(self, email: str):
         user = self.get_user_info(email)
         if user:
-            self.keycloak_admin.send_verify_email(user_id="user-id-keycloak")
+            self.keycloak_admin.send_verify_email(user_id=user["id"])
+
+    def send_reset_password_email(self, email: str):
+        user = self.get_user_info(email)
+        if user:
+            self.keycloak_admin.send_update_account(
+                user_id=user["id"],
+                payload=["UPDATE_PASSWORD"]
+            )
+
+    def change_user_password(self, email: str, password: str):
+        user = self.get_user_info(email)
+        if user:
+            self.keycloak_admin.set_user_password(
+                user_id=user["id"],
+                password=password,
+                temporary=False
+            )
