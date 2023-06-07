@@ -14,7 +14,8 @@ class InvitationCode(models.Model):
         default=uuid.uuid4,
         editable=False,
     )
-    usage_left = models.PositiveIntegerField(verbose_name=_("usage left"), default=1)
+    usage_left = models.PositiveIntegerField(
+        verbose_name=_("usage left"), default=1)
     is_active = models.BooleanField(verbose_name=_("is active"), default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -64,18 +65,16 @@ class User(AbstractUser):
     first_name = None
     last_name = None
     password = None
+    username = None
+    email = None
 
     # Change default id to uuid will make
     # an enumeration attack more difficult
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    email = models.EmailField(
-        verbose_name=_("email address"), unique=True, editable=False
-    )
-    language = models.CharField(
-        verbose_name=_("language"),
-        validators=[MinLengthValidator(2)],
-        max_length=2,
-        default="en",
+    keycloak_id = models.TextField(
+        verbose_name=_("keycloak id"),
+        unique=True, 
+        editable=False
     )
     image = models.ImageField(
         verbose_name=_("profile image"),
@@ -111,9 +110,9 @@ class User(AbstractUser):
     )
     # Date of the last password reset code sent
     date_pass_reset = models.DateTimeField(
-        verbose_name = _("date of last password reset code sent"),
-        blank = True,
-        null = True
+        verbose_name=_("date of last password reset code sent"),
+        blank=True,
+        null=True
     )
     # Number of requests for password reset
     count_pass_reset = models.IntegerField(

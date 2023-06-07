@@ -51,12 +51,12 @@ class UserCreationSerializer(serializers.ModelSerializer):
             'expected_monthly_balance',  # not required
             'language',
             'inv_code',
-            'pref_coin_type',
+            'pref_currency_type',
             'password',
             'password2'
         ]
         extra_kwargs = {
-            "pref_coin_type": {"required": True},
+            "pref_currency_type": {"required": True},
             "language": {"required": True}
         }
 
@@ -84,13 +84,13 @@ class UserCreationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         inv_code = validated_data['inv_code']
-        pref_coin_type = validated_data['pref_coin_type']
+        pref_currency_type = validated_data['pref_currency_type']
         language = validated_data['language']
         user = User.objects.create(
             username=validated_data['username'],
             email=validated_data['email'],
             inv_code=inv_code,
-            pref_coin_type=pref_coin_type,
+            pref_currency_type=pref_currency_type,
             language=language
         )
         user.set_password(validated_data['password'])
@@ -128,7 +128,7 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
             'expected_monthly_balance',
             'receive_email_balance',
             'language',
-            'pref_coin_type',
+            'pref_currency_type',
             'image',
             'last_login'
         ]

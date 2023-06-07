@@ -16,9 +16,7 @@ class KeycloakAuthentication(authentication.BaseAuthentication):
         if not header:
             return None
         header = header.decode(authentication.HTTP_HEADER_ENCODING)
-
         auth = header.split()
-
         if len(auth) != 2 or auth[0].lower() != "bearer":
             raise exceptions.AuthenticationFailed(
                 _("Unprocessable authorization header")
@@ -31,6 +29,7 @@ class KeycloakAuthentication(authentication.BaseAuthentication):
         if not access_token:
             return None
         is_valid, data = keycloak_client.verify_access_token(access_token)
+        print(data)
         if is_valid:
             email = data.get("email")
             if email:
@@ -39,7 +38,8 @@ class KeycloakAuthentication(authentication.BaseAuthentication):
                     # TODO: check invitation code
                     return (user, None)
                 except ObjectDoesNotExist:
-                    raise exceptions.AuthenticationFailed(_("User does not exists"))
+                    raise exceptions.AuthenticationFailed(
+                        _("User does not exists"))
         raise exceptions.AuthenticationFailed(_("Invalid access token"))
 
     def authenticate_header(self, request):
