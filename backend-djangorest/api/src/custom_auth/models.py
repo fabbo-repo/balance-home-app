@@ -134,8 +134,8 @@ class User(AbstractUser):
     )
 
     objects = BalanceUserManager()
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username"]
+    USERNAME_FIELD = None
+    REQUIRED_FIELDS = None
 
     def __str__(self):
         return self.email
