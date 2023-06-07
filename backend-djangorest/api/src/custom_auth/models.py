@@ -134,14 +134,15 @@ class User(AbstractUser):
     )
 
     objects = BalanceUserManager()
-    USERNAME_FIELD = None
-    REQUIRED_FIELDS = None
+    USERNAME_FIELD = "keycloak_id"
+    REQUIRED_FIELDS = []
 
     def __str__(self):
-        return self.email
+        return self.keycloak_id
 
     def save(self, *args, **kwargs):
-        if not check_for_language(self.language):
+        # TODO move to serializer
+        if not check_for_language(self.locale):
             raise ValueError(_("Language not supported"))
         if self.username == self.email:
             raise ValueError(_("Username and email can not be the same"))

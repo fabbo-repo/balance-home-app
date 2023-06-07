@@ -10,7 +10,6 @@ class AuthConfig(AppConfig):
     name = 'custom_auth'
 
     def ready(self):
-        from django.conf import settings
         try:
             # Schedule users tasks
             from custom_auth.schedule_setup import schedule_setup

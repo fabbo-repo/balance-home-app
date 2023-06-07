@@ -29,8 +29,8 @@ class KeycloakAuthentication(authentication.BaseAuthentication):
         if not access_token:
             return None
         is_valid, data = keycloak_client.verify_access_token(access_token)
-        print(data)
         if is_valid:
+            # TODO decode access_token and get user id to find user model
             email = data.get("email")
             if email:
                 try:
