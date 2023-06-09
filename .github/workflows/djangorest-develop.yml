@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - develop
+    paths:
+      - 'backend-djangorest/**'
 
 jobs:
   build-test-upload:
