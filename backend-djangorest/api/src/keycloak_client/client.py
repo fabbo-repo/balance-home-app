@@ -8,6 +8,7 @@ from keycloak import (
     KeycloakPostError,
     KeycloakGetError
 )
+from django.utils.timezone import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -68,9 +69,21 @@ class KeycloakClient:
         except KeycloakPostError as err:
             logger.debug(str(err))
             return None
-        
+
     def get_user_info(self, keycloak_id: str):
         return self.keycloak_admin.get_user(user_id=keycloak_id)
+
+    def get_user_sessions(self, keycloak_id: str):
+        sessions = self.keycloak_admin.get_sessions(user_id=keycloak_id)
+        return sessions
+
+    def get_user_last_login(self, keycloak_id: str) -> datetime | None:
+        sessions = self.get_user_sessions(keycloak_id)
+        if not sessions:
+            return None
+        if "start" not in sessions[0]:
+            return None
+        return datetime.fromtimestamp(sessions[0]["start"])
 
     def get_user_info_by_email(self, email: str):
         users = self.keycloak_admin.get_users({"email": email})

@@ -51,9 +51,14 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(instance)
         keycloak_client = get_keycloak_client()
         user_data = keycloak_client.get_user_info(
-            keycloak_id=request.user.keycloak_id)
+            keycloak_id=request.user.keycloak_id
+        )
+        last_login = keycloak_client.get_user_last_login(
+            keycloak_id=request.user.keycloak_id
+        )
         serializer.data["username"] = user_data["username"]
         serializer.data["email"] = user_data["email"]
+        serializer.data["last_login"] = last_login
         serializer.data["locale"] = user_data["attributes"]["locale"]
         return Response(serializer.data)
 
