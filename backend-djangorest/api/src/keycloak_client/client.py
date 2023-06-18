@@ -6,7 +6,7 @@ from keycloak import (
     KeycloakAdmin,
     KeycloakOpenIDConnection,
     KeycloakPostError,
-    KeycloakGetError
+    KeycloakGetError,
 )
 from django.utils.timezone import datetime
 
@@ -52,8 +52,7 @@ class KeycloakClient:
 
     def verify_access_token(self, access_token: str) -> tuple[bool, dict]:
         """Tries to decode `acces_token` using keycloak's public key."""
-        options = {"verify_signature": True,
-                   "verify_aud": True, "verify_exp": True}
+        options = {"verify_signature": True, "verify_aud": True, "verify_exp": True}
         try:
             res = self.keycloak_openid.decode_token(
                 access_token, key=self.public_key, options=options
@@ -96,12 +95,8 @@ class KeycloakClient:
         return None
 
     def create_user(
-        self,
-            email: str,
-            username: str,
-            password: str,
-            locale: str
-    ) -> bool:
+        self, email: str, username: str, password: str, locale: str
+    ) -> tuple[bool, int]:
         try:
             self.keycloak_admin.create_user(
                 payload={
@@ -111,43 +106,30 @@ class KeycloakClient:
                     "username": username,
                     "enabled": True,
                     "emailVerified": False,
-                    "attributes": {
-                        "locale": locale
-                    },
+                    "attributes": {"locale": locale},
                     "credentials": [
-                        {
-                            "type": "password",
-                            "value": password,
-                            "temporary": False
-                        }
-                    ]
+                        {"type": "password", "value": password, "temporary": False}
+                    ],
                 },
-                exist_ok=False
+                exist_ok=False,
             )
-            return True
-        except KeycloakGetError:
-            return False
+            return True, 200
+        except KeycloakGetError as ex:
+            return False, ex.response_code
 
     def update_user(
-        self,
-            keycloak_id: str,
-            username: str | None = None,
-            locale: str | None = None
+        self, keycloak_id: str, username: str | None = None, locale: str | None = None
     ) -> bool:
         try:
             payload = {}
             if username:
                 payload["username"] = username
             if locale:
-                payload["attributes"] = {
-                    "locale": locale
-                }
+                payload["attributes"] = {"locale": locale}
             if not payload:
                 return False
             self.keycloak_admin.update_user(
-                user_id=keycloak_id,
-                payload=payload,
-                exist_ok=False
+                user_id=keycloak_id, payload=payload, exist_ok=False
             )
             return True
         except KeycloakGetError:
@@ -161,13 +143,10 @@ class KeycloakClient:
 
     def send_reset_password_email(self, keycloak_id: str):
         self.keycloak_admin.send_update_account(
-            user_id=keycloak_id,
-            payload=["UPDATE_PASSWORD"]
+            user_id=keycloak_id, payload=["UPDATE_PASSWORD"]
         )
 
     def change_user_password(self, keycloak_id: str, password: str):
         self.keycloak_admin.set_user_password(
-            user_id=keycloak_id,
-            password=password,
-            temporary=False
+            user_id=keycloak_id, password=password, temporary=False
         )

@@ -1,3 +1,5 @@
+import jwt
+from custom_auth.exceptions import NoInvitationCodeException
 from rest_framework import exceptions, authentication
 from django.utils.translation import gettext_lazy as _
 from keycloak_client.django_client import get_keycloak_client
@@ -30,12 +32,11 @@ class KeycloakAuthentication(authentication.BaseAuthentication):
             return None
         is_valid, data = keycloak_client.verify_access_token(access_token)
         if is_valid:
-            # TODO decode access_token and get user id to find user model
-            email = data.get("email")
-            if email:
+            if "sub" in data:
                 try:
-                    user = User.objects.get(email=email)
-                    # TODO: check invitation code
+                    user = User.objects.get(keycloak_id=data["sub"])
+                    if not user.inv_code:
+                        raise NoInvitationCodeException()
                     return (user, None)
                 except ObjectDoesNotExist:
                     raise exceptions.AuthenticationFailed(

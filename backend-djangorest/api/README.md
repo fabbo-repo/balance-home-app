@@ -34,6 +34,8 @@
 | 3     | Invalid refresh token                                      | /api/v2/jwt/refresh            |
 | 4     | No active account found for specified refresh token        | /api/v2/jwt/refresh            |
 | 5     | Username and email can not be the same                     | /api/v2/user                   |
+| 6     | Email already used                                         | /api/v2/user                   |
+| 7     | Cannot create user                                         | /api/v2/user                   |
 | 10    | Only three codes can be sent per day                       | /api/v2/user/password/reset    |
 | 11    | New password must be different from old password           | /api/v2/user/password/change   |
 | 12    | New password cannot match other profile data               | /api/v2/user/password/change   |
