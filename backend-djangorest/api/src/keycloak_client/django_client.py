@@ -1,4 +1,3 @@
-from django.conf import settings
 from functools import lru_cache
 from keycloak_client.client import KeycloakClient
 
