@@ -1,13 +1,15 @@
-import jwt
+"""Imports."""
 from custom_auth.exceptions import NoInvitationCodeException
+from custom_auth.models import User
 from rest_framework import exceptions, authentication
 from django.utils.translation import gettext_lazy as _
-from keycloak_client.django_client import get_keycloak_client
-from custom_auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from keycloak_client.django_client import get_keycloak_client
 
 
 class KeycloakAuthentication(authentication.BaseAuthentication):
+    """Keycloak rest authentication backend."""
+
     def get_access_token(self, request) -> str:
         """
         Get `access_token` str based on a request.
@@ -38,9 +40,9 @@ class KeycloakAuthentication(authentication.BaseAuthentication):
                     if not user.inv_code:
                         raise NoInvitationCodeException()
                     return (user, None)
-                except ObjectDoesNotExist:
+                except ObjectDoesNotExist as exc:
                     raise exceptions.AuthenticationFailed(
-                        _("User does not exists"))
+                        _("User does not exists")) from exc
         raise exceptions.AuthenticationFailed(_("Invalid access token"))
 
     def authenticate_header(self, request):
