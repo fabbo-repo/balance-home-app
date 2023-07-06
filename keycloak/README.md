@@ -10,8 +10,10 @@
 
 5. Create `openid` client scope and add it to `balhom-client`.
 
-6. Assign `manage-users` role (realm-management) in `Service accounts roles` tab to `balhom-api` client inside `Clients` section.
+6. Assign `manage-users` role (realm-management) in `Service accounts roles` tab to `balhom-api` client inside `Clients` section. 
 
 7. In `Login` tab inside `Realm settings` section enable `Email as username`, `Login with email` and `Verify email`.
 
-7. In `Email` tab inside `Realm settings` section setup email settings.
+8. Enable `Internatiolization` in `Localization` tab inside `Realm settings` section, and add "français" and "español" as `Supported locales`.
+
+9. In `Email` tab inside `Realm settings` section setup email settings.
