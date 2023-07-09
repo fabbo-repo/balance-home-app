@@ -7,7 +7,7 @@ from balance.utils import (
     update_or_create_monthly_balance
 )
 from coin.currency_converter_integration import convert_or_fetch
-from custom_auth.models import User
+from app_auth.models import User
 
 
 @receiver(pre_save, sender=Expense, dispatch_uid="expense_pre_save")

@@ -2,7 +2,7 @@ from django.utils.timezone import now
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from coin.models import CoinType
-from custom_auth.models import InvitationCode, User
+from app_auth.models import InvitationCode, User
 import logging
 from balance.models import AnnualBalance, MonthlyBalance
 from rest_framework import status

@@ -1,6 +1,7 @@
-"""Imports."""
-from custom_auth.exceptions import NoInvitationCodeException
-from custom_auth.models import User
+"""
+Provides a Keycloak authentication backend class for django rest framework.
+"""
+from app_auth.models import User
 from rest_framework import exceptions, authentication
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
@@ -38,7 +39,9 @@ class KeycloakAuthentication(authentication.BaseAuthentication):
                 try:
                     user = User.objects.get(keycloak_id=data["sub"])
                     if not user.inv_code:
-                        raise NoInvitationCodeException()
+                        raise exceptions.AuthenticationFailed(
+                            _("No invitation code stored")
+                        )
                     return (user, None)
                 except ObjectDoesNotExist as exc:
                     raise exceptions.AuthenticationFailed(

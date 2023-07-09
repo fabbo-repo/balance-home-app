@@ -4,7 +4,7 @@ import logging
 from django.urls import reverse
 from balance.models import AnnualBalance, MonthlyBalance
 from coin.models import CoinType
-from custom_auth.models import InvitationCode, User
+from app_auth.models import InvitationCode, User
 from expense.models import Expense, ExpenseType
 from revenue.models import Revenue, RevenueType
 from django.utils.timezone import now, timedelta

@@ -7,16 +7,16 @@ logger = logging.getLogger(__name__)
 
 class AuthConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'custom_auth'
+    name = 'app_auth'
 
     def ready(self):
         try:
             # Schedule users tasks
-            from custom_auth.schedule_setup import schedule_setup
+            from app_auth.schedule_setup import schedule_setup
             schedule_setup()
 
             # Initiate Invitation Code
-            from custom_auth.models import InvitationCode
+            from app_auth.models import InvitationCode
             if not len(InvitationCode.objects.all()):
                 logger.info(
                     "Invitation Code: " +

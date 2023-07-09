@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 from coin.models import CoinExchange, CoinType
-from custom_auth.models import User, InvitationCode
+from app_auth.models import User, InvitationCode
 import logging
 from expense.models import Expense, ExpenseType
 from coin.currency_converter_integration import (

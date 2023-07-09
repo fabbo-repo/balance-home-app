@@ -153,190 +153,190 @@ msgstr "Espagnol"
 msgid "French"
 msgstr "Français"
 
-#: .\custom_auth\api\serializers\code_serializers.py:99
-#: .\custom_auth\api\serializers\code_serializers.py:136
-#: .\custom_auth\api\serializers\utils.py:16
+#: .\app_auth\api\serializers\code_serializers.py:99
+#: .\app_auth\api\serializers\code_serializers.py:136
+#: .\app_auth\api\serializers\utils.py:16
 msgid "User not found"
 msgstr "Utilisateur non trouvé"
 
-#: .\custom_auth\api\serializers\code_serializers.py:171
+#: .\app_auth\api\serializers\code_serializers.py:171
 msgid "Invalid old password"
 msgstr "Ancien mot de passe invalide"
 
-#: .\custom_auth\api\serializers\user_serializers.py:65
-#: .\custom_auth\models.py:185
+#: .\app_auth\api\serializers\user_serializers.py:65
+#: .\app_auth\models.py:185
 msgid "Language not supported"
 msgstr "Langue non prise en charge"
 
-#: .\custom_auth\api\serializers\user_serializers.py:73
+#: .\app_auth\api\serializers\user_serializers.py:73
 msgid "Invitation code not found"
 msgstr "Code d'invitation introuvable"
 
-#: .\custom_auth\api\serializers\user_serializers.py:75
+#: .\app_auth\api\serializers\user_serializers.py:75
 msgid "Invalid invitation code"
 msgstr "Code d'invitation invalide"
 
-#: .\custom_auth\api\serializers\utils.py:19
+#: .\app_auth\api\serializers\utils.py:19
 msgid "User already verified"
 msgstr "Utilisateur déjà vérifié"
 
-#: .\custom_auth\api\serializers\utils.py:29
+#: .\app_auth\api\serializers\utils.py:29
 msgid "Password fields do not match"
 msgstr "Les champs de mot de passe ne correspondent pas"
 
-#: .\custom_auth\api\serializers\utils.py:32 .\custom_auth\models.py:188
+#: .\app_auth\api\serializers\utils.py:32 .\app_auth\models.py:188
 msgid "Password cannot match other profile data"
 msgstr "Le mot de passe ne peut pas correspondre à d'autres données de profil"
 
-#: .\custom_auth\api\views\user_views.py:55
+#: .\app_auth\api\views\user_views.py:55
 msgid "Coin type has already been changed in the las 24 hours"
 msgstr "Le type de pièce a déjà été modifié au cours des dernières 24 heures"
 
-#: .\custom_auth\exceptions.py:22
+#: .\app_auth\exceptions.py:22
 msgid "No invitation code stored"
 msgstr "Aucun code d'invitation stocké"
 
-#: .\custom_auth\exceptions.py:28
+#: .\app_auth\exceptions.py:28
 msgid "Unverified email"
 msgstr "E-mail non vérifié"
 
-#: .\custom_auth\exceptions.py:34
+#: .\app_auth\exceptions.py:34
 msgid "Invalid refresh token"
 msgstr "Jeton d'actualisation non valide"
 
-#: .\custom_auth\exceptions.py:40
+#: .\app_auth\exceptions.py:40
 msgid "No active account found for specified refresh token"
 msgstr "Aucun compte actif trouvé pour le jeton d'actualisation spécifié"
 
-#: .\custom_auth\exceptions.py:46 .\custom_auth\models.py:191
+#: .\app_auth\exceptions.py:46 .\app_auth\models.py:191
 msgid "Username and email can not be the same"
 msgstr "Le nom d'utilisateur et l'e-mail ne peuvent pas être identiques"
 
-#: .\custom_auth\exceptions.py:52
+#: .\app_auth\exceptions.py:52
 msgid "Code has already been sent, wait {} seconds"
 msgstr "Le code a déjà été envoyé, attendez {} secondes"
 
-#: .\custom_auth\exceptions.py:59
+#: .\app_auth\exceptions.py:59
 msgid "No code sent"
 msgstr "Aucun code envoyé"
 
-#: .\custom_auth\exceptions.py:65
+#: .\app_auth\exceptions.py:65
 msgid "Code is no longer valid"
 msgstr "Le code n'est plus valide"
 
-#: .\custom_auth\exceptions.py:71
+#: .\app_auth\exceptions.py:71
 msgid "Invalid code"
 msgstr "Code invalide"
 
-#: .\custom_auth\exceptions.py:77
+#: .\app_auth\exceptions.py:77
 msgid "Only three codes can be sent per day"
 msgstr "Seuls trois codes peuvent être envoyés par jour"
 
-#: .\custom_auth\exceptions.py:83
+#: .\app_auth\exceptions.py:83
 msgid "New password must be different from old password"
 msgstr "Le nouveau mot de passe doit être différent de l'ancien mot de passe"
 
-#: .\custom_auth\exceptions.py:89
+#: .\app_auth\exceptions.py:89
 msgid "New password cannot match other profile data"
 msgstr "Le nouveau mot de passe ne peut pas correspondre aux autres données de profil"
 
-#: .\custom_auth\models.py:12
+#: .\app_auth\models.py:12
 msgid "uuid code"
 msgstr "code uuid"
 
-#: .\custom_auth\models.py:18
+#: .\app_auth\models.py:18
 msgid "usage left"
 msgstr "utilisation restante"
 
-#: .\custom_auth\models.py:22
+#: .\app_auth\models.py:22
 msgid "is active"
 msgstr "is active"
 
-#: .\custom_auth\models.py:29
+#: .\app_auth\models.py:29
 msgid "Invitation code"
 msgstr "Code d'invitation"
 
-#: .\custom_auth\models.py:30
+#: .\app_auth\models.py:30
 msgid "Invitation codes"
 msgstr "Codes d'invitation"
 
-#: .\custom_auth\models.py:43 .\custom_auth\models.py:58
+#: .\app_auth\models.py:43 .\app_auth\models.py:58
 msgid "An email address must be provided"
 msgstr "Une adresse e-mail doit être fournie"
 
-#: .\custom_auth\models.py:45 .\custom_auth\models.py:60
+#: .\app_auth\models.py:45 .\app_auth\models.py:60
 msgid "An username must be provided"
 msgstr "Un nom d'utilisateur doit être fourni"
 
-#: .\custom_auth\models.py:53
+#: .\app_auth\models.py:53
 msgid "Superuser must have is_staff=True"
 msgstr "Le superutilisateur doit avoir is_staff=True"
 
-#: .\custom_auth\models.py:55
+#: .\app_auth\models.py:55
 msgid "Superuser must have is_superuser=True"
 msgstr "Le superutilisateur doit avoir is_superuser=True"
 
-#: .\custom_auth\models.py:77
+#: .\app_auth\models.py:77
 msgid "email address"
 msgstr "adresse e-mail"
 
-#: .\custom_auth\models.py:82
+#: .\app_auth\models.py:82
 msgid "language"
 msgstr "langue"
 
-#: .\custom_auth\models.py:88
+#: .\app_auth\models.py:88
 msgid "profile image"
 msgstr "photo de profil"
 
-#: .\custom_auth\models.py:94
+#: .\app_auth\models.py:94
 msgid "invitation code"
 msgstr "invitation code"
 
-#: .\custom_auth\models.py:99
+#: .\app_auth\models.py:99
 msgid "current balance"
 msgstr "Solde actuel"
 
-#: .\custom_auth\models.py:103
+#: .\app_auth\models.py:103
 msgid "receive email about balance"
 msgstr "recevoir un e-mail sur le solde"
 
-#: .\custom_auth\models.py:110
+#: .\app_auth\models.py:110
 msgid "expected annual balance"
 msgstr "solde annuel attendu"
 
-#: .\custom_auth\models.py:118
+#: .\app_auth\models.py:118
 msgid "expected monthly balance"
 msgstr "solde mensuel prévu"
 
-#: .\custom_auth\models.py:124
+#: .\app_auth\models.py:124
 msgid "verified"
 msgstr "vérifié"
 
-#: .\custom_auth\models.py:130
+#: .\app_auth\models.py:130
 msgid "last code sent"
 msgstr "dernier code envoyé"
 
-#: .\custom_auth\models.py:138
+#: .\app_auth\models.py:138
 msgid "date of last code sent"
 msgstr "date du dernier code envoyé"
 
-#: .\custom_auth\models.py:145
+#: .\app_auth\models.py:145
 msgid "last password reset code sent"
 msgstr "dernier code de réinitialisation du mot de passe envoyé"
 
-#: .\custom_auth\models.py:153
+#: .\app_auth\models.py:153
 msgid "date of last password reset code sent"
 msgstr "date du dernier code de réinitialisation du mot de passe envoyé"
 
-#: .\custom_auth\models.py:159
+#: .\app_auth\models.py:159
 msgid "number of requests for password reset code"
 msgstr "nombre de demandes de code de réinitialisation de mot de passe"
 
-#: .\custom_auth\models.py:164
+#: .\app_auth\models.py:164
 msgid "preferred coin type"
 msgstr "type de pièce préféré"
 
-#: .\custom_auth\models.py:171
+#: .\app_auth\models.py:171
 msgid "date of last preferred coin type change"
 msgstr "date du dernier changement de type de pièce préféré"
 

@@ -2,14 +2,14 @@ import time
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
-from custom_auth.models import InvitationCode, User
+from app_auth.models import InvitationCode, User
 import logging
 from django.conf import settings
 from django.utils.timezone import timedelta
 from django.core.cache import cache
 import core.tests.utils as test_utils
 from unittest import mock
-from custom_auth.exceptions import (
+from app_auth.exceptions import (
     INVALID_CODE_ERROR,
     NO_LONGER_VALID_CODE_ERROR,
 )
@@ -19,7 +19,7 @@ class PasswordResetTests(APITestCase):
     def setUp(self):
         # Mock Celery tasks
         settings.CELERY_TASK_ALWAYS_EAGER = True
-        mock.patch("custom_auth.tasks.notifications.send_password_code",
+        mock.patch("app_auth.tasks.notifications.send_password_code",
                    return_value=None)
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)

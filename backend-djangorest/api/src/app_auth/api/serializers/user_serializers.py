@@ -1,21 +1,21 @@
+"""
+Provide serializer classes.
+"""
 from rest_framework import serializers
-from custom_auth.models import InvitationCode, User
+from rest_framework.serializers import ValidationError
 from django.core.validators import RegexValidator
-from rest_framework.validators import UniqueValidator
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
-from django.utils.translation import gettext_lazy as _
-from django.utils.translation import check_for_language
-from rest_framework.serializers import ValidationError
-from custom_auth.api.serializers.utils import check_username_pass
-from custom_auth.exceptions import (
+from django.utils.translation import check_for_language, gettext_lazy as _
+from app_auth.models import InvitationCode, User
+from app_auth.api.serializers.utils import check_username_pass
+from app_auth.exceptions import (
     SameUsernameEmailException,
     UserEmailConflictException,
     CannotCreateUserException
 )
 from keycloak_client.django_client import get_keycloak_client
-from django.core.exceptions import ObjectDoesNotExist
-
 
 
 class UserCreationSerializer(serializers.ModelSerializer):
@@ -37,13 +37,13 @@ class UserCreationSerializer(serializers.ModelSerializer):
         required=True,
         slug_field="code",
         many=False,
-        queryset=InvitationCode.objects.all(),
+        queryset=InvitationCode.objects.all(),  # pylint: disable=no-member
     )
     password = serializers.CharField(
         required=True, write_only=True, max_length=30, validators=[validate_password]
     )
 
-    class Meta:
+    class Meta:  # pylint: disable=missing-class-docstring too-few-public-methods
         model = User
         fields = [
             "username",
@@ -60,15 +60,22 @@ class UserCreationSerializer(serializers.ModelSerializer):
         }
 
     def validate_locale(self, locale):
+        """
+        Validate locale param.
+        """
         if not check_for_language(locale):
             raise ValidationError(_("Locale not supported"))
         return locale
 
     def validate_inv_code(self, code):
+        """
+        Validate invitation code param.
+        """
         try:
-            inv_code = InvitationCode.objects.get(code=str(code))
-        except ObjectDoesNotExist:
-            raise ValidationError(_("Invitation code not found"))
+            inv_code = InvitationCode.objects.get(  # pylint: disable=no-member
+                code=str(code))
+        except ObjectDoesNotExist as exc:
+            raise ValidationError(_("Invitation code not found")) from exc
         if not inv_code.is_active:
             raise ValidationError(_("Invalid invitation code"))
         return code
@@ -102,7 +109,7 @@ class UserCreationSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data["password"])
         # Invitation code decrease, race condition
-        inv_codes = InvitationCode.objects.select_for_update().filter(
+        inv_codes = InvitationCode.objects.select_for_update().filter(  # pylint: disable=no-member
             code=inv_code.code
         )
         for inv_code in inv_codes:
@@ -127,8 +134,12 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
         validators=[RegexValidator(regex=r"^[A-Za-z0-9]+$")],
     )
     email = serializers.EmailField(required=True)
+    locale = serializers.CharField(
+        max_length=5,
+        required=True
+    )
 
-    class Meta:
+    class Meta:  # pylint: disable=missing-class-docstring too-few-public-methods
         model = User
         fields = [
             "username",
@@ -138,7 +149,7 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
             "expected_annual_balance",
             "expected_monthly_balance",
             "receive_email_balance",
-            "language",
+            "locale",
             "pref_currency_type",
             "image",
             "last_login",
@@ -147,5 +158,19 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
             "last_login" "email",
         ]
 
+    def validate_locale(self, locale):
+        """
+        Validate locale param.
+        """
+        if not check_for_language(locale):
+            raise ValidationError(_("Locale not supported"))
+        return locale
+
+    # TODO retrieve username, email and language in keycloak
+
+    @transaction.atomic
     def update(self, instance, validated_data):
+        # TODO update username and language in keycloak
         super().update(instance, validated_data)
+
+    # TODO delete keycloak user after removing app user (in case of error rollback transaction)

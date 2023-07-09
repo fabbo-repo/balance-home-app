@@ -1,9 +1,8 @@
 import uuid
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
-from django.core.validators import MinValueValidator, MinLengthValidator
+from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import check_for_language
 from coin.models import CoinType
 
 
@@ -30,29 +29,39 @@ class InvitationCode(models.Model):
 
 
 class BalanceUserManager(UserManager):
-    def create_user(self, username, email, password=None, **extra_fields):
-        extra_fields.setdefault("is_staff", False)
-        extra_fields.setdefault("is_superuser", False)
-        if not email:
-            raise ValueError(_("An email address must be provided"))
-        if not username:
-            raise ValueError(_("An username must be provided"))
-        return self._create_user(username, email, password, **extra_fields)
+    def create_user(self, keycloak_id, **extra_fields):
+        if not keycloak_id:
+            raise ValueError(_("A keycloak id must be provided"))
+        currency_type, _ = CoinType.objects.get_or_create(  # pylint: disable=no-member
+            code="EUR"
+        )
+        User.objects.create(
+            keycloak_id=keycloak_id,
+            inv_code=InvitationCode.objects.create(  # pylint: disable=no-member
+                usage_left=0,
+                is_active=False
+            ),
+            is_staff=False,
+            is_superuser=False,
+            pref_currency_type=currency_type
+        )
 
-    def create_superuser(self, username, email, password, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
-
-        if extra_fields.get("is_staff") is not True:
-            raise ValueError(_("Superuser must have is_staff=True"))
-        if extra_fields.get("is_superuser") is not True:
-            raise ValueError(_("Superuser must have is_superuser=True"))
-
-        if not email:
-            raise ValueError(_("An email address must be provided"))
-        if not username:
-            raise ValueError(_("An username must be provided"))
-        return self._create_user(username, email, password, **extra_fields)
+    def create_superuser(self, keycloak_id, **extra_fields):
+        if not keycloak_id:
+            raise ValueError(_("A keycloak id must be provided"))
+        currency_type, _ = CoinType.objects.get_or_create(  # pylint: disable=no-member
+            code="EUR"
+        )
+        User.objects.create(
+            keycloak_id=keycloak_id,
+            inv_code=InvitationCode.objects.create(  # pylint: disable=no-member
+                usage_left=0,
+                is_active=False
+            ),
+            is_staff=True,
+            is_superuser=True,
+            pref_currency_type=currency_type
+        )
 
 
 def _image_user_dir(instance, filename):
@@ -73,7 +82,7 @@ class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     keycloak_id = models.TextField(
         verbose_name=_("keycloak id"),
-        unique=True, 
+        unique=True,
         editable=False
     )
     image = models.ImageField(
@@ -138,4 +147,4 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     def __str__(self):
-        return self.keycloak_id
+        return str(self.keycloak_id)

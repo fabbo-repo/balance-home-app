@@ -1,80 +1,34 @@
-from pathlib import Path
-from configurations import Configuration
+"""
+Provides Settings classes for execution environments.
+"""
 import os
-from django.utils.translation import gettext_lazy as _
+from pathlib import Path
 import environ
+from configurations import Configuration
+from django.utils.translation import gettext_lazy as _
 from django.core.management.utils import get_random_secret_key
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-env = environ.Env(
-    ALLOWED_HOSTS=(str, os.getenv("ALLOWED_HOSTS", default="*")),
-    CORS_HOSTS=(str, os.getenv("CORS_HOSTS")),
-    USE_HTTPS=(bool, os.getenv("USE_HTTPS", default=False)),
-    DATABASE_URL=(
-        str,
-        os.getenv(
-            "DATABASE_URL",
-            default="sqlite:///" + os.path.join(BASE_DIR, "default.sqlite3"),
-        ),
-    ),
-    COIN_TYPE_CODES=(str, os.getenv("COIN_TYPE_CODES", default="EUR,USD")),
-    FRONTEND_VERSION=(str, os.getenv("FRONTEND_VERSION", default="1.4.0")),
-    DISABLE_ADMIN_PANEL=(bool, os.getenv(
-        "DISABLE_ADMIN_PANEL", default=False)),
-    EMAIL_HOST=(str, os.getenv("EMAIL_HOST", default="smtp.gmail.com")),
-    EMAIL_PORT=(int, os.getenv("EMAIL_PORT", default=587)),
-    EMAIL_HOST_USER=(
-        str,
-        os.getenv("EMAIL_HOST_USER", default="example@gmail.com"),
-    ),
-    EMAIL_HOST_PASSWORD=(
-        str,
-        os.getenv("EMAIL_HOST_PASSWORD", default="password"),
-    ),
-    CELERY_BROKER_URL=(
-        str,
-        os.getenv("CELERY_BROKER_URL", default="redis://localhost:6379/0"),
-    ),
-    MINIO_ENDPOINT=(str, os.getenv("MINIO_ENDPOINT")),
-    MINIO_ACCESS_KEY=(str, os.getenv("MINIO_ACCESS_KEY")),
-    MINIO_SECRET_KEY=(str, os.getenv("MINIO_SECRET_KEY")),
-    MINIO_MEDIA_BUCKET_NAME=(
-        str,
-        os.getenv("MINIO_MEDIA_BUCKET_NAME", default="balhom-static-bucket"),
-    ),
-    MINIO_STATIC_BUCKET_NAME=(
-        str,
-        os.getenv("MINIO_STATIC_BUCKET_NAME", default="balhom-media-bucket"),
-    ),
-    KEYCLOAK_ENDPOINT=(str, os.getenv(
-        "KEYCLOAK_ENDPOINT", default="localhost:39080")),
-    KEYCLOAK_CLIENT_ID=(
-        str,
-        os.getenv("KEYCLOAK_CLIENT_ID", default="balhom-api"),
-    ),
-    KEYCLOAK_CLIENT_SECRET=(
-        str,
-        os.getenv("KEYCLOAK_CLIENT_SECRET", default="secret"),
-    ),
-    KEYCLOAK_REALM=(
-        str,
-        os.getenv("KEYCLOAK_REALM", default="balhom-realm"),
-    ),
-)
-USE_HTTPS = env("USE_HTTPS")
+env = environ.Env()
+USE_HTTPS = env.bool("USE_HTTPS", default=False)
 
 
 class Dev(Configuration):
+    """
+    Development configuration.
+    """
+
     SECRET_KEY = get_random_secret_key()
 
     DEBUG = True
 
-    ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
-    if env("CORS_HOSTS"):
+    ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
+    cors_hosts = env.list("CORS_HOSTS", default=[])
+    if cors_hosts:
         CORS_ALLOW_ALL_ORIGINS = False
-        CORS_ALLOWED_ORIGINS = env("CORS_HOSTS").split(",")
+        CORS_ALLOWED_ORIGINS = cors_hosts
     else:
         CORS_ALLOW_ALL_ORIGINS = True
     X_FRAME_OPTIONS = "DENY"
@@ -101,7 +55,7 @@ class Dev(Configuration):
         "storages",
         # Custom apps
         "core",
-        "custom_auth",
+        "app_auth",
         "balance",
         "revenue",
         "expense",
@@ -144,7 +98,10 @@ class Dev(Configuration):
 
     # Database
     # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-    DATABASES = {"default": env.db()}
+    DATABASES = {"default": env.db(
+        "DATABASE_URL",
+        default="sqlite:///" + os.path.join(BASE_DIR, "default.sqlite3")
+    )}
 
     # Password validation
     # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -247,10 +204,11 @@ class Dev(Configuration):
     }
 
     # Keycloak config
-    KEYCLOAK_CLIENT_ID = env('KEYCLOAK_CLIENT_ID')
-    KEYCLOAK_CLIENT_SECRET = env('KEYCLOAK_CLIENT_SECRET')
-    KEYCLOAK_ENDPOINT = env('KEYCLOAK_ENDPOINT')
-    KEYCLOAK_REALM = env('KEYCLOAK_REALM')
+    KEYCLOAK_CLIENT_ID = env.str("KEYCLOAK_CLIENT_ID", default="balhom-api")
+    KEYCLOAK_CLIENT_SECRET = env.str(
+        "KEYCLOAK_CLIENT_SECRET", default="secret")
+    KEYCLOAK_ENDPOINT = env.str("KEYCLOAK_ENDPOINT", default="localhost:39080")
+    KEYCLOAK_REALM = env.str("KEYCLOAK_REALM", default="balhom-realm")
 
     SWAGGER_SETTINGS = {
         "SECURITY_DEFINITIONS": {
@@ -258,21 +216,25 @@ class Dev(Configuration):
         }
     }
 
-    AUTH_USER_MODEL = "custom_auth.User"
+    AUTH_USER_MODEL = "app_auth.User"
 
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
     CELERY_RESULT_BACKEND = "django-db"
-    CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+    CELERY_BROKER_URL = env.str(
+        "CELERY_BROKER_URL", default="redis://localhost:6379/0")
 
-    COIN_TYPE_CODES = env("COIN_TYPE_CODES").split(",")
+    COIN_TYPE_CODES = env.list("COIN_TYPE_CODES", default=["EUR", "USD"])
 
-    FRONTEND_VERSION = env("FRONTEND_VERSION")
+    FRONTEND_VERSION = env.str("FRONTEND_VERSION", default="1.4.0")
 
-    DISABLE_ADMIN_PANEL = env("DISABLE_ADMIN_PANEL")
+    DISABLE_ADMIN_PANEL = env.bool("DISABLE_ADMIN_PANEL", default=False)
 
 
 class OnPremise(Dev):
+    """
+    On-premise configuration.
+    """
     DEBUG = False
     WSGI_APPLICATION = "core.wsgi.application"
 
@@ -335,13 +297,13 @@ class OnPremise(Dev):
 
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     # It is setup for gmail
-    EMAIL_HOST = env("EMAIL_HOST")
+    EMAIL_HOST = env.str("EMAIL_HOST", default="smtp.gmail.com")
     EMAIL_USE_TLS = True
-    EMAIL_PORT = env("EMAIL_PORT")
-    EMAIL_HOST_USER = env("EMAIL_HOST_USER")
-    EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+    EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+    EMAIL_HOST_USER = env.str("EMAIL_HOST_USER", default="example@gmail.com")
+    EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD", default="password")
 
-    MINIO_STORAGE_ENDPOINT = env("MINIO_ENDPOINT")
+    MINIO_STORAGE_ENDPOINT = env.str("MINIO_ENDPOINT", default=None)
     if MINIO_STORAGE_ENDPOINT:
         STORAGES = {
             "default": {"BACKEND": "core.storage_backends.MinioMediaStorage"},
@@ -349,17 +311,21 @@ class OnPremise(Dev):
         }
         if USE_HTTPS:
             AWS_S3_USE_SSL = True
-            AWS_S3_ENDPOINT_URL = "https://" + env("MINIO_ENDPOINT")
+            AWS_S3_ENDPOINT_URL = "https://" + \
+                env.str("MINIO_ENDPOINT", default=None)
         else:
-            AWS_S3_ENDPOINT_URL = "http://" + env("MINIO_ENDPOINT")
-        AWS_ACCESS_KEY_ID = env("MINIO_ACCESS_KEY")
-        AWS_SECRET_ACCESS_KEY = env("MINIO_SECRET_KEY")
+            AWS_S3_ENDPOINT_URL = "http://" + \
+                env.str("MINIO_ENDPOINT", default=None)
+        AWS_ACCESS_KEY_ID = env.str("MINIO_ACCESS_KEY")
+        AWS_SECRET_ACCESS_KEY = env.str("MINIO_SECRET_KEY")
         AWS_S3_OBJECT_PARAMETERS = {
             "CacheControl": "max-age=86400",
         }
         AWS_DEFAULT_ACL = None
 
-        MINIO_STATIC_BUCKET_NAME = env("MINIO_STATIC_BUCKET_NAME")
-        MINIO_MEDIA_BUCKET_NAME = env("MINIO_MEDIA_BUCKET_NAME")
-        MINIO_STORAGE_ACCESS_KEY = env("MINIO_ACCESS_KEY")
-        MINIO_STORAGE_SECRET_KEY = env("MINIO_SECRET_KEY")
+        MINIO_STATIC_BUCKET_NAME = env.str(
+            "MINIO_STATIC_BUCKET_NAME", default="balhom-static-bucket")
+        MINIO_MEDIA_BUCKET_NAME = env.str(
+            "MINIO_MEDIA_BUCKET_NAME", default="balhom-media-bucket")
+        MINIO_STORAGE_ACCESS_KEY = env.str("MINIO_ACCESS_KEY")
+        MINIO_STORAGE_SECRET_KEY = env.str("MINIO_SECRET_KEY")

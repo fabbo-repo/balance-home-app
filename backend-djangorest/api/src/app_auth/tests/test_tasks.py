@@ -1,6 +1,6 @@
 from unittest import mock
 from django.test import TestCase
-from custom_auth.tasks import send_email_code, send_password_code
+from app_auth.tasks import send_email_code, send_password_code
 
 
 class AuthTasksTests(TestCase):
@@ -9,7 +9,7 @@ class AuthTasksTests(TestCase):
         """
         Checks that shared_task decorator is used
         """
-        from custom_auth.tasks import shared_task
+        from app_auth.tasks import shared_task
         self.assertIsNotNone(
             shared_task
         )  # assume if it's imported there then it's used as the decorator
@@ -28,13 +28,13 @@ class AuthTasksTests(TestCase):
         shared tasks
         """
         with mock.patch(
-            "custom_auth.tasks.notifications.send_email_code"
+            "app_auth.tasks.notifications.send_email_code"
         ) as notifications_send_email_code:
             send_email_code('123456', 'test@gmail.com', 'en')
             notifications_send_email_code.assert_any_call(
                 '123456', 'test@gmail.com', 'en')
         with mock.patch(
-            "custom_auth.tasks.notifications.send_password_code"
+            "app_auth.tasks.notifications.send_password_code"
         ) as notifications_send_password_code:
             send_password_code('123456', 'test@gmail.com', 'en')
             notifications_send_password_code.assert_any_call(

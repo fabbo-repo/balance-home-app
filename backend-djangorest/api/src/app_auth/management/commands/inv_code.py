@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from custom_auth.models import InvitationCode
+from app_auth.models import InvitationCode
 
 
 class Command(BaseCommand):

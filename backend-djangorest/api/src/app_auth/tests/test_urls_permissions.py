@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 from coin.models import CoinType
-from custom_auth.models import InvitationCode, User
+from app_auth.models import InvitationCode, User
 import logging
 from django.conf import settings
 import core.tests.utils as test_utils
@@ -13,7 +13,7 @@ class UrlPermissionsTests(APITestCase):
     def setUp(self):
         # Mock Celery tasks
         settings.CELERY_TASK_ALWAYS_EAGER = True
-        mock.patch("custom_auth.tasks.notifications.send_email_code",
+        mock.patch("app_auth.tasks.notifications.send_email_code",
                    return_value=None)
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)

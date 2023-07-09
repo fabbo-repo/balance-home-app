@@ -1,8 +1,10 @@
-"""Imports."""
+"""
+Provides a Keycloak authentication backend class for django.
+"""
 import logging
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import ObjectDoesNotExist
-from custom_auth.models import User
+from app_auth.models import User
 from keycloak_client.django_client import get_keycloak_client
 
 logger = logging.getLogger(__name__)
@@ -19,7 +21,8 @@ class KeycloakAuthenticationBackend(ModelBackend):
         res = keycloak_client.authenticate_user(username, password)
         if res:
             try:
-                user = User.objects.get(email=username)
+                keycloak_id = keycloak_client.get_user_id(email=username)
+                user = User.objects.get(keycloak_id=keycloak_id)
             except ObjectDoesNotExist:
                 logger.debug("User does not exists")
                 return None

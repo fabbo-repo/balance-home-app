@@ -8,7 +8,7 @@ from balance.tasks import (
 )
 from balance.schedule_setup import schedule_setup
 from django_celery_beat.models import CrontabSchedule
-from custom_auth.models import InvitationCode, User
+from app_auth.models import InvitationCode, User
 from balance.models import CoinType
 import logging
 from balance.tasks import periodic_monthly_balance, periodic_annual_balance

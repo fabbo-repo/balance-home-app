@@ -1,10 +1,10 @@
 from core.permissions import IsCurrentVerifiedUser
-from custom_auth.models import User
+from app_auth.models import User
 from rest_framework import generics, status
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from custom_auth.api.serializers.password_serializers import (
+from app_auth.api.serializers.password_serializers import (
     ChangePasswordSerializer,
     ResetPasswordSerializer
 )

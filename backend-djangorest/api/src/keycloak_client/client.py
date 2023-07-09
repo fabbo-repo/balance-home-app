@@ -1,4 +1,6 @@
-"""Imports."""
+"""
+Provides a Keycloak client class.
+"""
 import logging
 from jose import JWTError
 from django.conf import settings
@@ -19,7 +21,9 @@ KEYCLOAK_URL = (
 
 
 class KeycloakClient:
-    """Keycloak service client for user crud and authentication."""
+    """
+    Keycloak service client for user crud and authentication.
+    """
 
     def __init__(self):
         logger.debug(

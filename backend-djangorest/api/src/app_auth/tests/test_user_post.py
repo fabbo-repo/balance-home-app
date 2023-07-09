@@ -3,10 +3,10 @@ from rest_framework import status
 from django.urls import reverse
 from django.core.cache import cache
 from coin.models import CoinType
-from custom_auth.models import User, InvitationCode
+from app_auth.models import User, InvitationCode
 import logging
 import core.tests.utils as test_utils
-from custom_auth.exceptions import SAME_USERNAME_EMAIL_ERROR
+from app_auth.exceptions import SAME_USERNAME_EMAIL_ERROR
 
 
 class UserPostTests(APITestCase):

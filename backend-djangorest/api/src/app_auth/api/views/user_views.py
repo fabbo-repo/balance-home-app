@@ -1,18 +1,18 @@
 from coin.currency_converter_integration import convert_or_fetch
 from core.permissions import IsCurrentVerifiedUser
-from custom_auth.models import User
+from app_auth.models import User
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.parsers import FormParser, MultiPartParser, JSONParser
 from rest_framework.permissions import AllowAny
-from custom_auth.api.serializers.user_serializers import (
+from app_auth.api.serializers.user_serializers import (
     UserCreationSerializer,
     UserRetrieveUpdateDestroySerializer,
 )
 from django.utils.translation import gettext_lazy as _
 from django.db import transaction
 from django.utils.timezone import now
-from custom_auth.tasks import change_converted_quantities
+from app_auth.tasks import change_converted_quantities
 from rest_framework.serializers import ValidationError
 from keycloak_client.django_client import get_keycloak_client
 

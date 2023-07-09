@@ -1,6 +1,6 @@
 import logging
 from celery import shared_task
-from custom_auth.models import User
+from app_auth.models import User
 from balance.models import MonthlyBalance, AnnualBalance
 from revenue.models import Revenue
 from expense.models import Expense

@@ -16,5 +16,5 @@ def schedule_unverified_users_deletion():
         name="Unverified users deletion",
         interval=day_schedule,
         args=args,
-        task="custom_auth.tasks.remove_unverified_users"
+        task="app_auth.tasks.remove_unverified_users"
     )

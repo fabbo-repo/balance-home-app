@@ -29,10 +29,7 @@
 
 | CODE  | DEFINITION                                                 | ENDPOINT                       |
 | ----- | ---------------------------------------------------------- | ------------------------------ |
-| 1     | No invitation code stored for an user                      | /api/v2/jwt                    |
 | 2     | Unverified email for an user                               | /api/v2/jwt                    |
-| 3     | Invalid refresh token                                      | /api/v2/jwt/refresh            |
-| 4     | No active account found for specified refresh token        | /api/v2/jwt/refresh            |
 | 5     | Username and email can not be the same                     | /api/v2/user                   |
 | 6     | Email already used                                         | /api/v2/user                   |
 | 7     | Cannot create user                                         | /api/v2/user                   |

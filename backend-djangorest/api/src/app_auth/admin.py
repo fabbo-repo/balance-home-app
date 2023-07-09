@@ -1,5 +1,5 @@
 from django.contrib import admin
-from custom_auth.models import InvitationCode, User
+from app_auth.models import InvitationCode, User
 from django.contrib.auth.models import Group
 
 # Remove Groups from admin
@@ -20,9 +20,6 @@ class InvitationCodeAdmin(admin.ModelAdmin):
 class UserAdmin(admin.ModelAdmin):
     fields = (
         "id",
-        "username",
-        "email",
-        "language",
         "image",
         "inv_code",
         "last_login",
@@ -32,18 +29,13 @@ class UserAdmin(admin.ModelAdmin):
             "is_staff",
         ),
         (
-            "verified",
             "is_active",
             "receive_email_balance",
         ),
-        "code_sent",
-        "date_code_sent",
-        "pass_reset",
-        "date_pass_reset",
         "count_pass_reset",
         (
             "balance",
-            "pref_coin_type",
+            "pref_currency_type",
         ),
         (
             "expected_annual_balance",
@@ -54,20 +46,12 @@ class UserAdmin(admin.ModelAdmin):
         "id",
         "last_login",
         "date_joined",
-        "email",
-        "date_pass_reset",
         "count_pass_reset",
         "balance",
     )
     list_display = (
-        "email",
-        "username",
         "last_login",
         "is_active",
     )
     list_filter = ("is_active",)
-    search_fields = (
-        "email",
-        "username",
-    )
     ordering = ("last_login",)

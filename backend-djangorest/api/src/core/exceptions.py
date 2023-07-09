@@ -1,13 +1,19 @@
+"""
+Provides a global Exception Handler.
+"""
+import logging
 from rest_framework.views import exception_handler
 from rest_framework import status
 from rest_framework.exceptions import APIException
 from rest_framework.serializers import ValidationError
-import logging
 
 logger = logging.getLogger(__name__)
 
 
 def app_exception_handler(exc: Exception, context):
+    """
+    App exception handler.
+    """
     response = exception_handler(exc, context)
     if isinstance(exc, AppBadRequestException):
         response.data['error_code'] = exc.error_code
@@ -27,6 +33,10 @@ def app_exception_handler(exc: Exception, context):
 
 
 class AppBadRequestException(APIException):
+    """
+    App generic bad request exception.
+    """
+
     def __init__(self, detail, code):
         self.error_code = code
         super().__init__(detail)

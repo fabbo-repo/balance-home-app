@@ -3,7 +3,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 from coin.models import CoinType
-from custom_auth.models import User, InvitationCode
+from app_auth.models import User, InvitationCode
 import logging
 import core.tests.utils as test_utils
 

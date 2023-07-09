@@ -1,7 +1,7 @@
 from django.utils.timezone import now
 from rest_framework.test import APITestCase
 from coin.models import CoinType
-from custom_auth.models import User
+from app_auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 

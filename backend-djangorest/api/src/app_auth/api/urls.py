@@ -1,9 +1,9 @@
 from django.urls import path
-from custom_auth.api.views.password_views import (
+from app_auth.api.views.password_views import (
     ChangePasswordView,
     ResetPasswordView,
 )
-from custom_auth.api.views.user_views import (
+from app_auth.api.views.user_views import (
     UserCreationView,
     UserRetrieveUpdateDestroyView
 )

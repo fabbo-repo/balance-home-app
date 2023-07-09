@@ -2,7 +2,7 @@ from django.utils.timezone import now, timedelta
 from celery import shared_task
 from balance.models import AnnualBalance, MonthlyBalance
 from coin.currency_converter_integration import convert_or_fetch
-from custom_auth.models import User
+from app_auth.models import User
 from balance import notifications
 
 

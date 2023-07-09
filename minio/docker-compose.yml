@@ -3,18 +3,17 @@ version: '3'
 services:
 
   minio:
-    image: minio/minio:RELEASE.2023-05-04T21-44-30Z
+    image: bitnami/minio:2023.7.7
     container_name: balhom-minio
     ports:
-      - "33090:33090"
-      - "33091:33091"
+      - "33090:9000"
+      - "33091:9001"
     env_file:
       - ./minio.env
     volumes:
       - ./data:/data
       #- ./certs/fullchain.pem:/etc/minio/certs/public.crt # Uncomment to enabe HTTPS
       #- ./certs/privkey.pem:/etc/minio/certs/private.key # Uncomment to enabe HTTPS
-    command: server -C "/etc/minio" --address ":33090" --console-address ":33091" /data
     restart: unless-stopped
     networks:
       - balhom_minio_net

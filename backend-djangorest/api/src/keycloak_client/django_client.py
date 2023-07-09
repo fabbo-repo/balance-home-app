@@ -1,4 +1,4 @@
-"""Imports."""
+"""Cache Keycloak client."""
 from functools import lru_cache
 from keycloak_client.client import KeycloakClient
 
