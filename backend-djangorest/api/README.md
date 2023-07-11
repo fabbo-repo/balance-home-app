@@ -29,13 +29,20 @@
 
 | CODE  | DEFINITION                                                 | ENDPOINT                       |
 | ----- | ---------------------------------------------------------- | ------------------------------ |
-| 2     | Unverified email for an user                               | /api/v2/jwt                    |
-| 5     | Username and email can not be the same                     | /api/v2/user                   |
-| 6     | Email already used                                         | /api/v2/user                   |
-| 7     | Cannot create user                                         | /api/v2/user                   |
-| 10    | Only three codes can be sent per day                       | /api/v2/user/password/reset    |
+| 1     | User not found                                             | /api/v2/user/send-verify-email , /api/v2/user/password/reset |
+| 2     | Unverified email                                           | /api/v2/user/password/reset    |
+| 3     | Cannot send verification mail                              | /api/v2/user/send-verify-email |
+| 4     | Cannot send reset password mail                            | /api/v2/user/password/reset    |
+| 5     | Username and email can not be the same                     | /api/v2/user [POST]            |
+| 6     | Email already used                                         | /api/v2/user [POST]            |
+| 7     | Cannot create user                                         | /api/v2/user [POST]            |
+| 8     | Cannot update user                                         | /api/v2/user [PUT]             |
+| 9     | Cannot delete user                                         | /api/v2/user [DEL]             |
+| 10    | Password can only be reset 3 times a day                   | /api/v2/user/password/reset    |
 | 11    | New password must be different from old password           | /api/v2/user/password/change   |
 | 12    | New password cannot match other profile data               | /api/v2/user/password/change   |
+| 13    | Currency type has already been changed in the las 24 hours | /api/v2/user [PUT]             |
+| 14    | Invalid old password                                       | /api/v2/user/password/change   |
 
 ## Directory tree example
 

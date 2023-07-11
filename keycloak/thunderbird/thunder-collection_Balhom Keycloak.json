@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "Balhom Keycloak",
-    "dateExported": "2023-07-06T07:04:41.076Z",
+    "dateExported": "2023-07-10T13:22:14.282Z",
     "version": "1.1",
     "folders": [],
     "requests": [
@@ -53,11 +53,12 @@
             "method": "GET",
             "sortNum": 20000,
             "created": "2023-07-06T06:45:45.941Z",
-            "modified": "2023-07-06T06:48:22.224Z",
+            "modified": "2023-07-06T07:05:58.936Z",
             "headers": [
                 {
                     "name": "client_id",
-                    "value": "balhom-api"
+                    "value": "balhom-api",
+                    "isDisabled": true
                 },
                 {
                     "name": "Accept-Encoding",

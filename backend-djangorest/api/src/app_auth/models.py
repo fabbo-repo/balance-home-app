@@ -29,9 +29,10 @@ class InvitationCode(models.Model):
 
 
 class BalanceUserManager(UserManager):
-    def create_user(self, keycloak_id, **extra_fields):
+    def create_user(self, keycloak_id, **extra_fields):  # pylint: disable=arguments-differ
         if not keycloak_id:
-            raise ValueError(_("A keycloak id must be provided"))
+            raise ValueError(_("A keycloak id must be provided")  # pylint: disable=used-before-assignment
+                             )
         currency_type, _ = CoinType.objects.get_or_create(  # pylint: disable=no-member
             code="EUR"
         )
@@ -46,9 +47,10 @@ class BalanceUserManager(UserManager):
             pref_currency_type=currency_type
         )
 
-    def create_superuser(self, keycloak_id, **extra_fields):
+    def create_superuser(self, keycloak_id, **extra_fields):  # pylint: disable=arguments-differ
         if not keycloak_id:
-            raise ValueError(_("A keycloak id must be provided"))
+            raise ValueError(_("A keycloak id must be provided")  # pylint: disable=used-before-assignment
+                             )
         currency_type, _ = CoinType.objects.get_or_create(  # pylint: disable=no-member
             code="EUR"
         )

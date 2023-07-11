@@ -10,8 +10,10 @@ from keycloak import (
     KeycloakAdmin,
     KeycloakOpenIDConnection,
     KeycloakPostError,
-    KeycloakGetError,
+    KeycloakPutError,
+    KeycloakDeleteError,
 )
+from keycloak.exceptions import KeycloakAuthenticationError
 
 logger = logging.getLogger(__name__)
 
@@ -58,22 +60,25 @@ class KeycloakClient:
 
     def verify_access_token(self, access_token: str) -> tuple[bool, dict]:
         """Tries to decode `acces_token` using keycloak's public key."""
-        options = {"verify_signature": True,
-                   "verify_aud": True, "verify_exp": True}
+        options = {
+            "verify_signature": True,
+            "verify_aud": False,
+            "verify_exp": True
+        }
         try:
             res = self.keycloak_openid.decode_token(
                 access_token, key=self.public_key, options=options
             )
             return (True, res)
-        except JWTError:
+        except JWTError as ex:
+            print(ex)
             return (False, {})
 
     def authenticate_user(self, email: str, password: str) -> dict | None:
         """Tries to authenticate an user with email and password."""
         try:
             return self.keycloak_openid.token(email, password)
-        except KeycloakPostError as err:
-            logger.debug(str(err))
+        except KeycloakAuthenticationError:
             return None
 
     def get_user_info_by_id(self, keycloak_id: str) -> dict | None:
@@ -97,7 +102,8 @@ class KeycloakClient:
             return None
         if "start" not in sessions[0]:
             return None
-        return datetime.fromtimestamp(sessions[0]["start"])
+        print(sessions[0]["start"])
+        return datetime.fromtimestamp(float(sessions[0]["start"]) / 1000)
 
     def get_user_id(self, email: str) -> str | None:
         """Get user keycloak id."""
@@ -108,7 +114,7 @@ class KeycloakClient:
 
     def create_user(
         self, email: str, username: str, password: str, locale: str
-    ) -> tuple[bool, int]:
+    ) -> tuple[bool, int, dict]:
         """
         User creation.
         :raises KeycloakGetError: user can not be created
@@ -119,7 +125,6 @@ class KeycloakClient:
                     "firstName": username,
                     "lastName": "",
                     "email": email,
-                    "username": username,
                     "enabled": True,
                     "emailVerified": False,
                     "attributes": {"locale": locale},
@@ -133,20 +138,20 @@ class KeycloakClient:
                 },
                 exist_ok=False,
             )
-            return True, 200
-        except KeycloakGetError as ex:
-            return False, ex.response_code
+            return True, 200, {}
+        except KeycloakPostError as ex:
+            return False, ex.response_code, ex.response_body
 
     def update_user_by_id(
         self, keycloak_id: str, username: str | None = None, locale: str | None = None
-    ) -> bool:
+    ) -> tuple[bool, int, dict]:
         """
         Update user by keycloak id.
         """
         try:
             payload = {}
             if username:
-                payload["username"] = username
+                payload["firstName"] = username
             if locale:
                 payload["attributes"] = {"locale": locale}
             if not payload:
@@ -155,34 +160,48 @@ class KeycloakClient:
                 user_id=keycloak_id,
                 payload=payload
             )
-            return True
-        except KeycloakGetError:
-            return False
+            return True, 200, {}
+        except KeycloakPutError as ex:
+            return False, ex.response_code, ex.response_body
 
-    def delete_user_by_id(self, keycloak_id: str):
+    def delete_user_by_id(self, keycloak_id: str) -> tuple[bool, int, dict]:
         """
         Delete user by keycloak id.
         """
-        self.keycloak_admin.delete_user(user_id=keycloak_id)
+        try:
+            self.keycloak_admin.delete_user(user_id=keycloak_id)
+            return True, 200, {}
+        except KeycloakDeleteError as ex:
+            return False, ex.response_code, ex.response_code
 
-    def send_verify_email(self, keycloak_id: str):
+    def send_verify_email(self, keycloak_id: str) -> bool:
         """
         Send verification mail.
         """
-        self.keycloak_admin.send_verify_email(user_id=keycloak_id)
+        try:
+            self.keycloak_admin.send_verify_email(user_id=keycloak_id)
+            return True
+        except KeycloakPutError:
+            return False
 
-    def send_reset_password_email(self, keycloak_id: str):
+    def send_reset_password_email(self, keycloak_id: str) -> bool:
         """
         Send password reset mail.
         """
-        self.keycloak_admin.send_update_account(
-            user_id=keycloak_id, payload=["UPDATE_PASSWORD"]
-        )
+        try:
+            self.keycloak_admin.send_update_account(
+                user_id=keycloak_id, payload=["UPDATE_PASSWORD"])
+            return True
+        except KeycloakPutError:
+            return False
 
-    def change_user_password(self, keycloak_id: str, password: str):
+    def change_user_password(self, keycloak_id: str, password: str) -> bool:
         """
         Change user password.
         """
-        self.keycloak_admin.set_user_password(
-            user_id=keycloak_id, password=password, temporary=False
-        )
+        try:
+            self.keycloak_admin.set_user_password(
+                user_id=keycloak_id, password=password, temporary=False)
+            return True
+        except KeycloakPutError:
+            return False

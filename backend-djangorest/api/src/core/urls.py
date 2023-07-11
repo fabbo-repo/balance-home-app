@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
+from django.conf.urls.static import static
 from core.swagger import urls as swagger_urls
 from core import api_urls
-from django.conf.urls.static import static
 from core.views import favicon_view
 
 handler404 = 'core.views.not_found_view'
@@ -14,7 +14,7 @@ handler400 = 'core.views.bad_request_view'
 urlpatterns = []
 
 # Swagger and documentation will only be available in DEBUG mode
-if settings.DEBUG:
+if settings.DEBUG or True:
     urlpatterns += [
         # Swagger:
         path("api/v2/swagger/", include(swagger_urls)),

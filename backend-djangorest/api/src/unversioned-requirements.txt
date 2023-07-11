@@ -13,6 +13,8 @@ django-filter
 django-cors-headers
 # Swagger
 drf-yasg
+pyyaml
+coreapi
 # Jwt Authentication
 python-keycloak
 PyJWT
@@ -28,8 +30,6 @@ django-celery-beat
 redis
 # Concurrent networking library for Celery
 eventlet
-# YAML parser
-pyyaml
 # Library to deal with URI
 uritemplate
 # Postgres driver
