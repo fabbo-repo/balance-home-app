@@ -1,5 +1,6 @@
 from django.db.models.signals import pre_save, pre_delete
 from django.dispatch import receiver
+from django.core.exceptions import ObjectDoesNotExist
 from expense.models import Expense
 from balance.utils import (
     check_dates_and_update_date_balances,
@@ -15,13 +16,13 @@ def expense_pre_save(sender, instance: Expense, **kwargs):
     new_instance = instance
     try:
         old_instance = Expense.objects.get(id=new_instance.id)
-    except:
+    except ObjectDoesNotExist:
         old_instance = None
     owner = User.objects.get(id=new_instance.owner.id)
     # Create action
     if not old_instance:
         coin_from = new_instance.coin_type
-        coin_to = owner.pref_coin_type
+        coin_to = owner.pref_currency_type
         real_quantity = new_instance.real_quantity
         converted_quantity = convert_or_fetch(
             coin_from, coin_to, real_quantity)
@@ -48,7 +49,7 @@ def expense_pre_save(sender, instance: Expense, **kwargs):
             or new_instance.coin_type != old_instance.coin_type
         ):
             coin_from = new_instance.coin_type
-            coin_to = owner.pref_coin_type
+            coin_to = owner.pref_currency_type
             real_quantity = new_instance.real_quantity
             converted_quantity = convert_or_fetch(
                 coin_from, coin_to, real_quantity
@@ -83,7 +84,7 @@ def expense_pre_save(sender, instance: Expense, **kwargs):
 @receiver(pre_delete, sender=Expense, dispatch_uid="expense_pre_delete")
 def expense_pre_delete(sender, instance: Expense, **kwargs):
     owner = User.objects.get(id=instance.owner.id)
-    coin_to = owner.pref_coin_type
+    coin_to = owner.pref_currency_type
     converted_quantity = convert_or_fetch(
         instance.coin_type, coin_to,
         instance.real_quantity

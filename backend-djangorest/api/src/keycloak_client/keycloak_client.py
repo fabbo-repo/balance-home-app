@@ -102,7 +102,6 @@ class KeycloakClient:
             return None
         if "start" not in sessions[0]:
             return None
-        print(sessions[0]["start"])
         return datetime.fromtimestamp(float(sessions[0]["start"]) / 1000)
 
     def get_user_id(self, email: str) -> str | None:
@@ -117,14 +116,13 @@ class KeycloakClient:
     ) -> tuple[bool, int, dict]:
         """
         User creation.
-        :raises KeycloakGetError: user can not be created
         """
         try:
             self.keycloak_admin.create_user(
                 payload={
                     "firstName": username,
                     "lastName": "",
-                    "email": email,
+                    "username": email,
                     "enabled": True,
                     "emailVerified": False,
                     "attributes": {"locale": locale},

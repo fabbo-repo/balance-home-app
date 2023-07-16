@@ -1,9 +1,11 @@
-from unittest import mock
+import logging
 from django.test import TestCase
-from app_auth.tasks import send_email_code, send_password_code
 
 
 class AuthTasksTests(TestCase):
+    def setUp(self):
+        # Avoid WARNING logs while testing wrong requests
+        logging.disable(logging.WARNING)
 
     def test_shared_task_used(self):
         """
@@ -12,30 +14,12 @@ class AuthTasksTests(TestCase):
         from app_auth.tasks import shared_task
         self.assertIsNotNone(
             shared_task
-        )  # assume if it's imported there then it's used as the decorator
+        )  # assume if it"s imported there then it"s used as the decorator
 
     def test_methods_shared_tasks(self):
         """
-        Checks that send_email_code and send_password_code are 
+        Checks that remove_unverified_users is 
         shared tasks
         """
-        self.assertIsNotNone(send_email_code.delay)
-        self.assertIsNotNone(send_password_code.delay)
-
-    def test_shared_tasks_behaviour(self):
-        """
-        Checks that send_email_code and send_password_code are 
-        shared tasks
-        """
-        with mock.patch(
-            "app_auth.tasks.notifications.send_email_code"
-        ) as notifications_send_email_code:
-            send_email_code('123456', 'test@gmail.com', 'en')
-            notifications_send_email_code.assert_any_call(
-                '123456', 'test@gmail.com', 'en')
-        with mock.patch(
-            "app_auth.tasks.notifications.send_password_code"
-        ) as notifications_send_password_code:
-            send_password_code('123456', 'test@gmail.com', 'en')
-            notifications_send_password_code.assert_any_call(
-                '123456', 'test@gmail.com', 'en')
+        from app_auth.tasks import remove_unverified_users
+        self.assertIsNotNone(remove_unverified_users.delay)

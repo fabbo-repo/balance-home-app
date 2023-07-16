@@ -14,20 +14,19 @@ class RevenueLogicTests(APITestCase):
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
 
-        self.revenue_url = reverse('revenue-list')
+        self.revenue_url = reverse("revenue-list")
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
-        self.coin_type = CoinType.objects.create(code='EUR')
+        self.coin_type = CoinType.objects.create(code="EUR")
         self.user_data = {
-            'username': "username",
-            'email': "email@test.com",
+            "username": "username",
+            "email": "email@test.com",
             "password": "password1@212",
-            "password2": "password1@212",
-            'inv_code': str(self.inv_code.code),
-            'pref_coin_type': str(self.coin_type.code)
+            "inv_code": str(self.inv_code.code),
+            "pref_currency_type": str(self.coin_type.code)
         }
         self.credentials = {
-            'email': "email@test.com",
+            "email": "email@test.com",
             "password": "password1@212"
         }
         self.user = self.create_user()
@@ -35,25 +34,25 @@ class RevenueLogicTests(APITestCase):
 
     def get_revenue_data(self):
         return {
-            'name': 'Test name',
-            'description': '',
-            'real_quantity': 2.0,
-            'coin_type': self.coin_type.code,
-            'rev_type': self.rev_type.name,
-            'date': str(now().date()),
-            'owner': str(self.user),
+            "name": "Test name",
+            "description": "",
+            "real_quantity": 2.0,
+            "coin_type": self.coin_type.code,
+            "rev_type": self.rev_type.name,
+            "date": str(now().date()),
+            "owner": str(self.user),
         }
 
     def create_user(self):
         user = User.objects.create(
-            username=self.user_data['username'],
-            email=self.user_data['email'],
+            username=self.user_data["username"],
+            email=self.user_data["email"],
             inv_code=self.inv_code,
             verified=True,
             balance=1,
-            pref_coin_type=self.coin_type,
+            pref_currency_type=self.coin_type,
         )
-        user.set_password(self.user_data['password'])
+        user.set_password(self.user_data["password"])
         user.save()
         return user
 
@@ -70,13 +69,13 @@ class RevenueLogicTests(APITestCase):
         data = self.get_revenue_data()
         test_utils.authenticate_user(self.client, self.credentials)
         test_utils.post(self.client, self.revenue_url, data)
-        user = User.objects.get(email=self.user_data['email'])
+        user = User.objects.get(email=self.user_data["email"])
         self.assertEqual(user.balance, 3)
         # Negative quantity not allowed
-        data['real_quantity'] = -10.0
+        data["real_quantity"] = -10.0
         response = test_utils.post(self.client, self.revenue_url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('real_quantity', [field["name"]
+        self.assertIn("real_quantity", [field["name"]
                       for field in response.data["fields"]])
 
     def test_revenue_patch(self):
@@ -86,11 +85,11 @@ class RevenueLogicTests(APITestCase):
         data = self.get_revenue_data()
         test_utils.authenticate_user(self.client, self.credentials)
         test_utils.post(self.client, self.revenue_url, data)
-        revenue = Revenue.objects.get(name='Test name')
+        revenue = Revenue.objects.get(name="Test name")
         # Patch method
-        test_utils.patch(self.client, self.revenue_url+'/' +
-                         str(revenue.id), {'real_quantity': 35.0})
-        user = User.objects.get(email=self.user_data['email'])
+        test_utils.patch(self.client, self.revenue_url+"/" +
+                         str(revenue.id), {"real_quantity": 35.0})
+        user = User.objects.get(email=self.user_data["email"])
         self.assertEqual(user.balance, 36)
 
     def test_revenue_delete_url(self):
@@ -101,10 +100,10 @@ class RevenueLogicTests(APITestCase):
         test_utils.authenticate_user(self.client, self.credentials)
         test_utils.post(self.client, self.revenue_url, data)
         data2 = data
-        data2['name'] = 'test'
+        data2["name"] = "test"
         test_utils.post(self.client, self.revenue_url, data2)
-        revenue = Revenue.objects.get(name='Test name')
+        revenue = Revenue.objects.get(name="Test name")
         # Delete method
-        test_utils.delete(self.client, self.revenue_url+'/'+str(revenue.id))
-        user = User.objects.get(email=self.user_data['email'])
+        test_utils.delete(self.client, self.revenue_url+"/"+str(revenue.id))
+        user = User.objects.get(email=self.user_data["email"])
         self.assertEqual(user.balance, 3)

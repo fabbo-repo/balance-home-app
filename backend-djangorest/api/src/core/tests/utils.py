@@ -1,16 +1,24 @@
-from rest_framework.test import APIClient
 import json
-from django.urls import reverse
+import random
+import string
+from rest_framework.test import APIClient
+from rest_framework.response import Response
+from keycloak_client.django_client import get_keycloak_client
 
 
-def get(client: APIClient, url: str, content_type="application/json"):
+def get_random_text(max_len: int) -> str:
+    letters = string.ascii_lowercase
+    return "".join(random.choice(letters) for i in range(max_len))
+
+
+def get(client: APIClient, url: str, content_type="application/json") -> Response:
     return client.get(
         url,
         content_type=content_type
     )
 
 
-def post(client: APIClient, url: str, data: dict, content_type="application/json"):
+def post(client: APIClient, url: str, data: dict, content_type="application/json") -> Response:
     return client.post(
         url,
         data=json.dumps(
@@ -20,7 +28,7 @@ def post(client: APIClient, url: str, data: dict, content_type="application/json
     )
 
 
-def put(client: APIClient, url: str, data: dict, content_type="application/json"):
+def put(client: APIClient, url: str, data: dict, content_type="application/json") -> Response:
     return client.put(
         url,
         data=json.dumps(
@@ -30,7 +38,7 @@ def put(client: APIClient, url: str, data: dict, content_type="application/json"
     )
 
 
-def patch(client: APIClient, url: str, data: dict, content_type="application/json"):
+def patch(client: APIClient, url: str, data: dict, content_type="application/json") -> Response:
     return client.patch(
         url,
         data=json.dumps(
@@ -40,47 +48,23 @@ def patch(client: APIClient, url: str, data: dict, content_type="application/jso
     )
 
 
-def patch_image(client: APIClient, url: str, data: dict):
+def patch_image(client: APIClient, url: str, data: dict) -> Response:
     return client.patch(
         url,
         data=data,
     )
 
 
-def delete(client: APIClient, url: str, content_type="application/json"):
+def delete(client: APIClient, url: str, content_type="application/json") -> Response:
     return client.delete(
         url,
         content_type=content_type
     )
 
 
-def authenticate_user(client: APIClient, credentials: dict):
-    jwt_obtain_url = reverse('jwt_obtain_pair')
-    # Get jwt token
-    response = post(client, jwt_obtain_url, credentials)
-    try:
-        jwt = response.data['access']
-        client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(jwt))
-    except:
-        pass
-    return response
-
-
-def get_access_token(client: APIClient, credentials: dict):
-    jwt_obtain_url = reverse('jwt_obtain_pair')
-    return post(client, jwt_obtain_url, credentials).data['access']
-
-
-def get_refresh_token(client: APIClient, credentials: dict):
-    jwt_obtain_url = reverse('jwt_obtain_pair')
-    return post(client, jwt_obtain_url, credentials).data['refresh']
-
-
-def access_token(client: APIClient, credentials: dict):
-    jwt_obtain_url = reverse('jwt_obtain_pair')
-    return post(client, jwt_obtain_url, credentials)
-
-
-def refresh_token(client: APIClient, token: str):
-    jwt_refresh_url = reverse('jwt_refresh')
-    return post(client, jwt_refresh_url, {'refresh': token})
+def authenticate_user(client: APIClient):
+    keycloak_client_mock = get_keycloak_client()
+    client.credentials(
+        HTTP_AUTHORIZATION="Bearer " +
+        keycloak_client_mock.access_token
+    )

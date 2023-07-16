@@ -36,7 +36,7 @@ class BalanceUserManager(UserManager):
         currency_type, _ = CoinType.objects.get_or_create(  # pylint: disable=no-member
             code="EUR"
         )
-        User.objects.create(
+        return User.objects.create(
             keycloak_id=keycloak_id,
             inv_code=InvitationCode.objects.create(  # pylint: disable=no-member
                 usage_left=0,
@@ -54,7 +54,7 @@ class BalanceUserManager(UserManager):
         currency_type, _ = CoinType.objects.get_or_create(  # pylint: disable=no-member
             code="EUR"
         )
-        User.objects.create(
+        return User.objects.create(
             keycloak_id=keycloak_id,
             inv_code=InvitationCode.objects.create(  # pylint: disable=no-member
                 usage_left=0,

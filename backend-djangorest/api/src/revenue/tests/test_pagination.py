@@ -13,19 +13,18 @@ class RevenuePaginationTests(APITestCase):
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
 
-        self.revenue_url = reverse('revenue-list')
+        self.revenue_url = reverse("revenue-list")
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
-        self.coin_type = CoinType.objects.create(code='EUR')
+        self.coin_type = CoinType.objects.create(code="EUR")
         self.user_data = {
-            'username': "username",
-            'email': "email@test.com",
+            "username": "username",
+            "email": "email@test.com",
             "password": "password1@212",
-            "password2": "password1@212",
-            'inv_code': str(self.inv_code.code),
+            "inv_code": str(self.inv_code.code),
         }
         self.credentials = {
-            'email': "email@test.com",
+            "email": "email@test.com",
             "password": "password1@212"
         }
         self.user = self.create_user()
@@ -34,24 +33,24 @@ class RevenuePaginationTests(APITestCase):
 
     def get_revenue_data(self):
         return {
-            'name': 'Test name',
-            'description': 'Test description',
-            'real_quantity': 2.0,
-            'coin_type': self.coin_type.code,
-            'rev_type': self.rev_type.name,
-            'date': str(now().date()),
-            'owner': str(self.user),
+            "name": "Test name",
+            "description": "Test description",
+            "real_quantity": 2.0,
+            "coin_type": self.coin_type.code,
+            "rev_type": self.rev_type.name,
+            "date": str(now().date()),
+            "owner": str(self.user),
         }
 
     def create_user(self):
         user = User.objects.create(
-            username=self.user_data['username'],
-            email=self.user_data['email'],
+            username=self.user_data["username"],
+            email=self.user_data["email"],
             inv_code=self.inv_code,
             verified=True,
-            pref_coin_type=self.coin_type,
+            pref_currency_type=self.coin_type,
         )
-        user.set_password(self.user_data['password'])
+        user.set_password(self.user_data["password"])
         user.save()
         return user
 
@@ -66,27 +65,27 @@ class RevenuePaginationTests(APITestCase):
         # Get revenue data
         response = test_utils.get(self.client, self.revenue_url)
         scheme = dict(response.data)
-        scheme['results'] = []
-        results = dict(response.data)['results']
+        scheme["results"] = []
+        results = dict(response.data)["results"]
 
         for result in results:
             result = dict(result)
-            result['rev_type'] = dict(result['rev_type'])
-            scheme['results'] += [result]
+            result["rev_type"] = dict(result["rev_type"])
+            scheme["results"] += [result]
         expected_scheme = {
-            'count': 1, 'next': None, 'previous': None,
-            'results': [
+            "count": 1, "next": None, "previous": None,
+            "results": [
                 {
-                    'id': 1,
-                    'name': 'Test name',
-                    'description': 'Test description',
-                    'real_quantity': 2.0,
-                    'converted_quantity': 2.0,
-                    'date': str(now().date()),
-                    'coin_type': 'EUR',
-                    'rev_type': {
-                        'name': 'test',
-                        'image': 'http://testserver/media/core/default_image.jpg'
+                    "id": 1,
+                    "name": "Test name",
+                    "description": "Test description",
+                    "real_quantity": 2.0,
+                    "converted_quantity": 2.0,
+                    "date": str(now().date()),
+                    "coin_type": "EUR",
+                    "rev_type": {
+                        "name": "test",
+                        "image": "http://testserver/media/core/default_image.jpg"
                     }
                 }
             ]
@@ -105,11 +104,11 @@ class RevenuePaginationTests(APITestCase):
         # Get First page revenue data
         response = test_utils.get(self.client, self.revenue_url)
         data = dict(response.data)
-        self.assertEqual(data['count'], 20)
+        self.assertEqual(data["count"], 20)
         # 10 revenues in the first page
-        self.assertEqual(len(data['results']), 10)
+        self.assertEqual(len(data["results"]), 10)
         # Second page
-        response = test_utils.get(self.client, data['next'])
-        self.assertEqual(data['count'], 20)
+        response = test_utils.get(self.client, data["next"])
+        self.assertEqual(data["count"], 20)
         # 10 revenues in the first page
-        self.assertEqual(len(data['results']), 10)
+        self.assertEqual(len(data["results"]), 10)

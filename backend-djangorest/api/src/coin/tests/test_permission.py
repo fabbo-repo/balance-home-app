@@ -13,36 +13,34 @@ class CoinPermissionsTests(APITestCase):
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
 
-        self.coin_type_list_url = reverse('coin_type_list')
-        self.coin_exchange_list_url = reverse('coin_exchange_list', args=['1'])
+        self.coin_type_list_url = reverse("coin_type_list")
+        self.coin_exchange_list_url = reverse("coin_exchange_list", args=["1"])
         self.coin_exchange_code_url = reverse(
-            'coin_exchange_code', args=['EUR'])
+            "coin_exchange_code", args=["EUR"])
 
         # Create InvitationCodes
         self.inv_code1 = InvitationCode.objects.create()
         self.inv_code2 = InvitationCode.objects.create()
-        self.coin_type = CoinType.objects.create(code='EUR')
+        self.coin_type = CoinType.objects.create(code="EUR")
         # Test user data
         self.user_data1 = {
-            'username': "username1",
-            'email': "email1@test.com",
+            "username": "username1",
+            "email": "email1@test.com",
             "password": "password1@212",
-            "password2": "password1@212",
-            'inv_code': str(self.inv_code1.code)
+            "inv_code": str(self.inv_code1.code)
         }
         self.user_data2 = {
-            'username': "username2",
-            'email': "email2@test.com",
+            "username": "username2",
+            "email": "email2@test.com",
             "password": "password1@212",
-            "password2": "password1@212",
-            'inv_code': str(self.inv_code2.code)
+            "inv_code": str(self.inv_code2.code)
         }
         self.credentials1 = {
-            'email': "email1@test.com",
+            "email": "email1@test.com",
             "password": "password1@212"
         }
         self.credentials2 = {
-            'email': "email2@test.com",
+            "email": "email2@test.com",
             "password": "password1@212"
         }
         # User creation
@@ -51,9 +49,9 @@ class CoinPermissionsTests(APITestCase):
             email=self.user_data1["email"],
             inv_code=self.inv_code1,
             verified=True,
-            pref_coin_type=self.coin_type
+            pref_currency_type=self.coin_type
         )
-        user1.set_password(self.user_data1['password'])
+        user1.set_password(self.user_data1["password"])
         user1.save()
         user2 = User.objects.create(
             username=self.user_data2["username"],
@@ -61,7 +59,7 @@ class CoinPermissionsTests(APITestCase):
             inv_code=self.inv_code2,
             verified=True
         )
-        user2.set_password(self.user_data2['password'])
+        user2.set_password(self.user_data2["password"])
         user2.save()
         return super().setUp()
 
@@ -71,12 +69,12 @@ class CoinPermissionsTests(APITestCase):
         """
         # Try with an specific coin
         response = test_utils.get(self.client, self.coin_type_list_url +
-                                  '/'+str(self.coin_type.code))
+                                  "/"+str(self.coin_type.code))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         # Try with an specific coin with authentication
         test_utils.authenticate_user(self.client, self.credentials1)
         response = test_utils.get(self.client, self.coin_type_list_url +
-                                  '/'+str(self.coin_type.code))
+                                  "/"+str(self.coin_type.code))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_coin_type_list_url(self):

@@ -9,9 +9,6 @@ from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import check_for_language, gettext_lazy as _
 from app_auth.models import InvitationCode, User
 from app_auth.api.serializers.utils import check_username_pass
-from app_auth.exceptions import (
-    SameUsernameEmailException,
-)
 
 
 class UserCreationSerializer(serializers.ModelSerializer):
@@ -80,8 +77,6 @@ class UserCreationSerializer(serializers.ModelSerializer):
         check_username_pass(
             attrs["username"], attrs["email"], attrs["password"]
         )
-        if attrs["username"] == attrs["email"]:
-            raise SameUsernameEmailException()
         return attrs
 
 

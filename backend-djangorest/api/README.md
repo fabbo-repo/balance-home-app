@@ -14,7 +14,7 @@
 | CELERY_BROKER_URL        | Celery url                                                       |
 | EMAIL_CODE_THRESHOLD     | Time to wait for a new email verification code generation        |
 | EMAIL_CODE_VALID         | Email verification code validity duration                        |
-| UNVERIFIED_USER_DAYS     | Days for a periodic deletion of unverified users                 |
+| UNVERIFIED_USER_DAYS     | Days for a periodic deletion of unverified users. Default: 2     |
 | DATABASE_URL             | Databse endpoint                                                 |
 | COIN_TYPE_CODES          | Coin type codes allowed (they have to be valid)                  |
 | FRONTEND_VERSION         | Minimum supported frontend version. Optional                     |
@@ -33,7 +33,6 @@
 | 2     | Unverified email                                           | /api/v2/user/password/reset    |
 | 3     | Cannot send verification mail                              | /api/v2/user/send-verify-email |
 | 4     | Cannot send reset password mail                            | /api/v2/user/password/reset    |
-| 5     | Username and email can not be the same                     | /api/v2/user [POST]            |
 | 6     | Email already used                                         | /api/v2/user [POST]            |
 | 7     | Cannot create user                                         | /api/v2/user [POST]            |
 | 8     | Cannot update user                                         | /api/v2/user [PUT]             |

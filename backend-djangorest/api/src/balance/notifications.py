@@ -13,7 +13,7 @@ def send_monthly_balance(
         email, month, year,
         monthly_balance,
         expected_monthly_balance,
-        lang='en'):
+        lang="en"):
 
     subject = render_to_string(
         "balance/notifications/{}/monthly_balance_subject.txt".format(lang)
@@ -41,7 +41,7 @@ def send_annual_balance(
         email, year,
         annual_balance,
         expected_annual_balance,
-        lang='en'):
+        lang="en"):
 
     subject = render_to_string(
         "balance/notifications/{}/annual_balance_subject.txt".format(lang)

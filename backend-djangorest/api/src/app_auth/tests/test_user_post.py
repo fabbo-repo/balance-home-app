@@ -1,35 +1,42 @@
+import logging
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 from django.core.cache import cache
 from coin.models import CoinType
 from app_auth.models import User, InvitationCode
-import logging
+from app_auth.exceptions import (
+    USER_EMAIL_CONFLICT_ERROR
+)
 import core.tests.utils as test_utils
-from app_auth.exceptions import SAME_USERNAME_EMAIL_ERROR
+from keycloak_client.django_client import get_keycloak_client
 
 
 class UserPostTests(APITestCase):
     def setUp(self):
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
+
         # Throttling is stored in cache
         cache.clear()
 
-        self.user_post_url = reverse('user_post')
+        self.user_post_url = reverse("user-post")
+
+        self.keycloak_client_mock = get_keycloak_client()
 
         # Create InvitationCode
-        self.inv_code = InvitationCode.objects.create()
+        self.inv_code = InvitationCode.objects.create(  # pylint: disable=no-member
+            usage_left=400)
         # Test user data
         self.user_data = {
-            "username": "username",
-            "email": "email@test.com",
-            "password": "password1@212",
-            "password2": "password1@212",
+            "username": self.keycloak_client_mock.username,
+            "email": self.keycloak_client_mock.email,
+            "password": self.keycloak_client_mock.password,
             "inv_code": str(self.inv_code.code),
-            'pref_coin_type':
-                str(CoinType.objects.create(code='EUR').code),
-            'language': 'en'
+            "locale": self.keycloak_client_mock.locale,
+            "pref_currency_type":
+                str(CoinType.objects.create(  # pylint: disable=no-member
+                    code="EUR").code)
         }
         return super().setUp()
 
@@ -39,33 +46,15 @@ class UserPostTests(APITestCase):
         """
         response = test_utils.post(
             self.client, self.user_post_url, self.user_data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        new_user = User.objects.get(email=self.user_data['email'])
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        new_user = User.objects.get(
+            keycloak_id=self.keycloak_client_mock.keycloak_id)
         self.assertIsNotNone(new_user)
-        self.assertEqual(new_user.email, self.user_data['email'])
-        self.assertEqual(new_user.username, self.user_data['username'])
-        self.assertEqual(str(new_user.inv_code), self.user_data['inv_code'])
-        self.assertEqual(str(new_user.pref_coin_type),
-                         self.user_data['pref_coin_type'])
-        self.assertEqual(new_user.language, self.user_data['language'])
-        self.assertEqual(new_user.verified, False)
-
-    def test_two_user_with_username(self):
-        """
-        Checks that an user with an used username is not created
-        """
-        # User 1 creation
-        response = test_utils.post(
-            self.client, self.user_post_url, self.user_data)
-        # User 2 creation
-        user_data2 = self.user_data
-        user_data2['email'] = 'email2@test.com'
-        response = test_utils.post(self.client, self.user_post_url, user_data2)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('username', [field["name"]
-                      for field in response.data["fields"]])
-        self.assertIn("This field must be unique.", [field["detail"]
-                      for field in response.data["fields"]])
+        self.assertEqual(new_user.keycloak_id,
+                         self.keycloak_client_mock.keycloak_id)
+        self.assertEqual(str(new_user.inv_code), self.user_data["inv_code"])
+        self.assertEqual(str(new_user.pref_currency_type),
+                         self.user_data["pref_currency_type"])
 
     def test_two_user_with_email(self):
         """
@@ -76,13 +65,13 @@ class UserPostTests(APITestCase):
             self.client, self.user_post_url, self.user_data)
         # User 2 creation
         user_data2 = self.user_data
-        user_data2['username'] = 'username2'
+        user_data2["email"] = self.keycloak_client_mock.email_for_conflict
         response = test_utils.post(self.client, self.user_post_url, user_data2)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('email', [field["name"]
-                      for field in response.data["fields"]])
-        self.assertIn("This field must be unique.", [field["detail"]
-                      for field in response.data["fields"]])
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertEqual(
+            USER_EMAIL_CONFLICT_ERROR,
+            response.data["error_code"]
+        )
 
     def test_empty_user(self):
         """
@@ -90,19 +79,17 @@ class UserPostTests(APITestCase):
         """
         response = test_utils.post(self.client, self.user_post_url, {})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('email', [field["name"]
+        self.assertIn("email", [field["name"]
                       for field in response.data["fields"]])
-        self.assertIn('username', [field["name"]
+        self.assertIn("username", [field["name"]
                       for field in response.data["fields"]])
-        self.assertIn('password', [field["name"]
+        self.assertIn("password", [field["name"]
                       for field in response.data["fields"]])
-        self.assertIn('password2', [field["name"]
+        self.assertIn("inv_code", [field["name"]
                       for field in response.data["fields"]])
-        self.assertIn('inv_code', [field["name"]
+        self.assertIn("pref_currency_type", [field["name"]
                       for field in response.data["fields"]])
-        self.assertIn('pref_coin_type', [field["name"]
-                      for field in response.data["fields"]])
-        self.assertIn('language', [field["name"]
+        self.assertIn("locale", [field["name"]
                       for field in response.data["fields"]])
 
     def test_none_email(self):
@@ -113,14 +100,13 @@ class UserPostTests(APITestCase):
             self.client,
             self.user_post_url,
             {
-                'username': self.user_data['username'],
-                'inv_code': self.user_data['inv_code'],
-                "password": self.user_data['password'],
-                "password2": self.user_data['password2']
+                "username": self.user_data["username"],
+                "inv_code": self.user_data["inv_code"],
+                "password": self.user_data["password"],
             }
         )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('email', [field["name"]
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertIn("email", [field["name"]
                       for field in response.data["fields"]])
 
     def test_none_username(self):
@@ -131,27 +117,13 @@ class UserPostTests(APITestCase):
             self.client,
             self.user_post_url,
             {
-                'email': self.user_data['email'],
-                'inv_code': self.user_data['inv_code'],
-                "password": self.user_data['password'],
-                "password2": self.user_data['password2']
+                "email": self.user_data["email"],
+                "inv_code": self.user_data["inv_code"],
+                "password": self.user_data["password"],
             }
         )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('username', [field["name"]
-                      for field in response.data["fields"]])
-
-    def test_different_passwords(self):
-        """
-        Checks that an user with diferent passwords is not created
-        """
-        data = self.user_data
-        data["password2"] = 'pass12'
-        response = test_utils.post(self.client, self.user_post_url, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('password', [field["name"]
-                      for field in response.data["fields"]])
-        self.assertIn("Password fields do not match", [field["detail"]
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertIn("username", [field["name"]
                       for field in response.data["fields"]])
 
     def test_short_password(self):
@@ -159,11 +131,10 @@ class UserPostTests(APITestCase):
         Checks that an user with a short password is not created
         """
         data = self.user_data
-        data["password"] = 'admin'
-        data["password2"] = 'admin'
+        data["password"] = "admin"
         response = test_utils.post(self.client, self.user_post_url, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('password', [field["name"]
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertIn("password", [field["name"]
                       for field in response.data["fields"]])
 
     def test_common_password(self):
@@ -171,36 +142,33 @@ class UserPostTests(APITestCase):
         Checks that an user with a too common password is not created
         """
         data = self.user_data
-        data["password"] = 'admin1234'
-        data["password2"] = 'admin1234'
+        data["password"] = "admin1234"
         response = test_utils.post(self.client, self.user_post_url, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('password', [field["name"]
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertIn("password", [field["name"]
                       for field in response.data["fields"]])
 
-    def test_only_username_user_post(self):
+    def test_username_same_password_user_post(self):
         """
-        Checks that an user with a too common password is not created
+        Checks that an user with same username as password is not created
         """
         data = self.user_data
-        data["username"] = 'username@1L24'
-        data["password"] = 'username@1L24'
-        data["password2"] = 'username@1L24'
+        data["username"] = "username1L24"
+        data["password"] = "username1L24"
         response = test_utils.post(self.client, self.user_post_url, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('password', [field["name"]
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertIn("password", [field["name"]
                       for field in response.data["fields"]])
 
-    def test_only_username_user_post(self):
+    def test_numeric_password_user_post(self):
         """
         Checks that an user with a numeric password is not created
         """
         data = self.user_data
-        data["password"] = '12345678'
-        data["password2"] = '12345678'
+        data["password"] = "12345678"
         response = test_utils.post(self.client, self.user_post_url, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('password', [field["name"]
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertIn("password", [field["name"]
                       for field in response.data["fields"]])
 
     def test_same_email_username(self):
@@ -208,19 +176,19 @@ class UserPostTests(APITestCase):
         Checks that an user with same email and username is not created
         """
         data = self.user_data
-        data["username"] = self.user_data['email']
+        data["username"] = self.user_data["email"]
         response = test_utils.post(self.client, self.user_post_url, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(
-            response.data["error_code"], SAME_USERNAME_EMAIL_ERROR)
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertIn("username", [field["name"]
+                      for field in response.data["fields"]])
 
-    def test_wrong_language(self):
+    def test_wrong_locale(self):
         """
-        Checks that an user with a wrong language is not created
+        Checks that an user with a wrong locale is not created
         """
         data = self.user_data
-        data["language"] = "lm"
+        data["locale"] = "lm"
         response = test_utils.post(self.client, self.user_post_url, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('language', [field["name"]
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertIn("locale", [field["name"]
                       for field in response.data["fields"]])

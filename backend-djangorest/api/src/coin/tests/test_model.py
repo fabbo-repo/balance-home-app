@@ -8,15 +8,15 @@ from django.utils.translation import gettext_lazy as _
 class BalanceModelTests(APITestCase):
     def setUp(self):
         self.user_data = {
-            'username': "username",
-            'email': "email@test.com",
+            "username": "username",
+            "email": "email@test.com",
             "password": "password1@212"
         }
         return super().setUp()
 
     def create_user(self):
         user = User.objects.create_user(**self.user_data)
-        user.set_password(self.user_data['password'])
+        user.set_password(self.user_data["password"])
         user.save()
         return user
 

@@ -14,20 +14,19 @@ class ExpenseFilterTests(APITestCase):
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
 
-        self.expense_url = reverse('expense-list')
+        self.expense_url = reverse("expense-list")
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
-        self.coin_type = CoinType.objects.create(code='EUR')
+        self.coin_type = CoinType.objects.create(code="EUR")
         self.user_data = {
-            'username': "username",
-            'email': "email@test.com",
+            "username": "username",
+            "email": "email@test.com",
             "password": "password1@212",
-            "password2": "password1@212",
-            'inv_code': str(self.inv_code.code),
-            'pref_coin_type': str(self.coin_type.code)
+            "inv_code": str(self.inv_code.code),
+            "pref_currency_type": str(self.coin_type.code)
         }
         self.credentials = {
-            'email': "email@test.com",
+            "email": "email@test.com",
             "password": "password1@212"
         }
         self.user = self.create_user()
@@ -36,24 +35,24 @@ class ExpenseFilterTests(APITestCase):
 
     def get_expense_data(self):
         return {
-            'name': 'Test name',
-            'description': 'Test description',
-            'real_quantity': 2.5,
-            'coin_type': self.coin_type.code,
-            'exp_type': self.exp_type.name,
-            'date': str(now().date()),
-            'owner': str(self.user),
+            "name": "Test name",
+            "description": "Test description",
+            "real_quantity": 2.5,
+            "coin_type": self.coin_type.code,
+            "exp_type": self.exp_type.name,
+            "date": str(now().date()),
+            "owner": str(self.user),
         }
 
     def create_user(self):
         user = User.objects.create(
-            username=self.user_data['username'],
-            email=self.user_data['email'],
+            username=self.user_data["username"],
+            email=self.user_data["email"],
             inv_code=self.inv_code,
             verified=True,
-            pref_coin_type=self.coin_type,
+            pref_currency_type=self.coin_type,
         )
-        user.set_password(self.user_data['password'])
+        user.set_password(self.user_data["password"])
         user.save()
         return user
 
@@ -69,11 +68,11 @@ class ExpenseFilterTests(APITestCase):
         """
         self.authenticate_add_expense()
         # Get expense data
-        url = self.expense_url+'?date='+str(now().date())
+        url = self.expense_url+"?date="+str(now().date())
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 1)
+        self.assertEqual(data["count"], 1)
 
     def test_expense_filter_date_from_to(self):
         """
@@ -81,17 +80,17 @@ class ExpenseFilterTests(APITestCase):
         """
         self.authenticate_add_expense()
         # Get expense data
-        url = self.expense_url+'?date_from=' \
+        url = self.expense_url+"?date_from=" \
             + str(
                 now().date() - timedelta(days=1)
-            )+'&date_to=' \
+            )+"&date_to=" \
             + str(
                 now().date() + timedelta(days=1)
             )
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 1)
+        self.assertEqual(data["count"], 1)
 
     def test_expense_filter_exp_type(self):
         """
@@ -99,11 +98,11 @@ class ExpenseFilterTests(APITestCase):
         """
         self.authenticate_add_expense()
         # Get expense data
-        url = self.expense_url+'?exp_type=test'
+        url = self.expense_url+"?exp_type=test"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 1)
+        self.assertEqual(data["count"], 1)
 
     def test_expense_filter_coin_type(self):
         """
@@ -111,11 +110,11 @@ class ExpenseFilterTests(APITestCase):
         """
         self.authenticate_add_expense()
         # Get expense data
-        url = self.expense_url+'?coin_type=EUR'
+        url = self.expense_url+"?coin_type=EUR"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 1)
+        self.assertEqual(data["count"], 1)
 
     def test_expense_filter_quantity_min_and_max(self):
         """
@@ -123,14 +122,14 @@ class ExpenseFilterTests(APITestCase):
         """
         self.authenticate_add_expense()
         # Get expense data
-        url = self.expense_url+'?converted_quantity_min=1.0&converted_quantity_max=3.0'
+        url = self.expense_url+"?converted_quantity_min=1.0&converted_quantity_max=3.0"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 1)
+        self.assertEqual(data["count"], 1)
         # Get expense data
-        url = self.expense_url+'?converted_quantity_min=6.0&converted_quantity_max=8.0'
+        url = self.expense_url+"?converted_quantity_min=6.0&converted_quantity_max=8.0"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 0)
+        self.assertEqual(data["count"], 0)

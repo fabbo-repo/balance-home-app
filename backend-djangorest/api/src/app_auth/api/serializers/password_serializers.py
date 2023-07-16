@@ -31,6 +31,6 @@ class ChangePasswordSerializer(serializers.Serializer):  # pylint: disable=abstr
     )
 
     def validate(self, attrs):
-        if attrs['old_password'] == attrs['new_password']:
+        if attrs["old_password"] == attrs["new_password"]:
             raise NewOldPasswordException()
         return attrs

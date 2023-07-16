@@ -6,13 +6,13 @@ class CoinTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CoinType
         fields = [
-            'code'
+            "code"
         ]
 
 class CoinExchangeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CoinType
         fields = [
-            'exchange_data',
-            'created'
+            "exchange_data",
+            "created"
         ]

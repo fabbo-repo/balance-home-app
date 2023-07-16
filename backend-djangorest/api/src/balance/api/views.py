@@ -15,13 +15,13 @@ class AnnualBalanceView(viewsets.ModelViewSet):
         """
         Filter objects by owner
         """
-        if getattr(self, 'swagger_fake_view', False):
+        if getattr(self, "swagger_fake_view", False):
             return AnnualBalance.objects.none()  # return empty queryset
-        return AnnualBalance.objects.filter(owner=self.request.user)
+        return AnnualBalance.objects.filter(owner=self.request.user)  # pylint: disable=no-member
 
 
 class MonthlyBalanceView(viewsets.ModelViewSet):
-    queryset = MonthlyBalance.objects.all()
+    queryset = MonthlyBalance.objects.all()  # pylint: disable=no-member
     serializer_class = MonthlyBalanceSerializer
     permission_classes = (IsCurrentVerifiedUser,)
     filterset_class = MonthlyBalanceFilterSet
@@ -30,6 +30,6 @@ class MonthlyBalanceView(viewsets.ModelViewSet):
         """
         Filter objects by owner
         """
-        if getattr(self, 'swagger_fake_view', False):
+        if getattr(self, "swagger_fake_view", False):
             return MonthlyBalance.objects.none()  # return empty queryset
-        return MonthlyBalance.objects.filter(owner=self.request.user)
+        return MonthlyBalance.objects.filter(owner=self.request.user)  # pylint: disable=no-member

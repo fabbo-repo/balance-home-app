@@ -83,7 +83,7 @@ class CoinExchangeListView(APIView):
             data={
                 "date_exchanges": [
                     {
-                        'exchanges': [
+                        "exchanges": [
                             {
                                 "code": code,
                                 "exchanges": [
@@ -94,7 +94,7 @@ class CoinExchangeListView(APIView):
                                 ]
                             } for code in json.loads(x.exchange_data).keys()
                         ], 
-                        'date': x.created.date()
+                        "date": x.created.date()
                     } for x in data
                 ]
             }

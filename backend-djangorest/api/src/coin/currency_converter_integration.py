@@ -10,19 +10,19 @@ logger = logging.getLogger(__name__)
 
 class NoCoinExchangeException(Exception):
     def __init__(self, *args, **kwargs):
-        self.message = _('No coin exchange')
+        self.message = _("No coin exchange")
         super().__init__(self.message)
 
 
 class OldExchangeException(Exception):
     def __init__(self, *args, **kwargs):
-        self.message = _('Exchange data not updated in the past 24 hours')
+        self.message = _("Exchange data not updated in the past 24 hours")
         super().__init__(self.message)
 
 
 class UnsupportedExchangeException(Exception):
     def __init__(self, *args, **kwargs):
-        self.message = _('No exchange data for the given coin type')
+        self.message = _("No exchange data for the given coin type")
         super().__init__(self.message)
 
 

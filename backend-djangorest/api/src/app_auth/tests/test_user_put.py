@@ -1,64 +1,62 @@
+import logging
+import os
+import tempfile
+import shutil
 from rest_framework.test import APITestCase
 from rest_framework import status
-from django.urls import reverse
 from coin.models import CoinType
 from app_auth.models import User, InvitationCode
-import logging
-from django.conf import settings
-import tempfile
+from app_auth.exceptions import (
+    CURRENCY_TYPE_CHANGED_ERROR
+)
 from PIL import Image
-import shutil
-import os
+from django.conf import settings
 from django.core.cache import cache
+from django.urls import reverse
 import core.tests.utils as test_utils
-from unittest import mock
+from keycloak_client.django_client import get_keycloak_client
 
 
 class UserPutTests(APITestCase):
     def setUp(self):
-        # Mock Celery tasks
         settings.CELERY_TASK_ALWAYS_EAGER = True
-        mock.patch("app_auth.tasks.notifications.send_email_code",
-                   return_value=None)
+
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
+
         # Throttling is stored in cache
         cache.clear()
 
-        self.user_post_url = reverse('user_post')
-        self.change_password_url = reverse('change_password')
-        self.user_put_url = reverse('user_put_get_del')
+        self.user_post_url = reverse("user-post")
+        self.change_password_url = reverse("change-password")
+        self.user_put_url = reverse("user-put-get-del")
+
+        self.keycloak_client_mock = get_keycloak_client()
 
         # Create InvitationCode
-        self.inv_code = InvitationCode.objects.create()
+        self.inv_code = InvitationCode.objects.create()  # pylint: disable=no-member
         # User data
-        CoinType.objects.create(code='USD')
-        pref_coin_type = CoinType.objects.create(code='EUR')
+        CoinType.objects.create(code="USD")  # pylint: disable=no-member
+        pref_currency_type = CoinType.objects.create(  # pylint: disable=no-member
+            code="EUR")
         self.user_data = {
-            "username": "username",
-            "email": "email@test.com",
-            "password": "password1@212",
-            "password2": "password1@212",
+            "username": self.keycloak_client_mock.username,
+            "email": self.keycloak_client_mock.email,
+            "password": self.keycloak_client_mock.password,
             "inv_code": str(self.inv_code.code),
-            'pref_coin_type': pref_coin_type.code,
-            'language': 'en'
-        }
-        self.credentials = {
-            "email": "email@test.com",
-            "password": "password1@212"
+            "pref_currency_type": str(pref_currency_type.code),
+            "locale": self.keycloak_client_mock.locale
         }
         # User creation
         user = User.objects.create(
-            username=self.user_data["username"],
-            email=self.user_data["email"],
+            keycloak_id=self.keycloak_client_mock.keycloak_id,
             inv_code=self.inv_code,
-            pref_coin_type=pref_coin_type,
-            verified=True
+            pref_currency_type=pref_currency_type
         )
-        user.set_password(self.user_data['password'])
+        user.set_password(self.user_data["password"])
         user.save()
         # Authenticate
-        test_utils.authenticate_user(self.client, self.credentials)
+        test_utils.authenticate_user(self.client)
         return super().setUp()
 
     def user_patch(self, data):
@@ -72,14 +70,14 @@ class UserPutTests(APITestCase):
         return test_utils.patch_image(
             self.client,
             self.user_put_url,
-            data={'image': image}
+            data={"image": image}
         )
 
     def temporary_image(self):
-        image = Image.new('RGB', (100, 100))
+        image = Image.new("RGB", (100, 100))
         tmp_file = tempfile.NamedTemporaryFile(
-            suffix='.jpg', prefix="test_img_")
-        image.save(tmp_file, 'jpeg')
+            suffix=".jpg", prefix="test_img_")
+        image.save(tmp_file, "jpeg")
         tmp_file.seek(0)
         return tmp_file
 
@@ -87,34 +85,18 @@ class UserPutTests(APITestCase):
         """
         Checks that username is changed
         """
-        response = self.user_patch({"username": "test_2"})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        user = User.objects.get(email=self.user_data["email"])
-        self.assertEqual(user.username, "test_2")
-
-    def test_change_user_email(self):
-        """
-        Checks that email is changed
-        """
-        self.user_patch({"email": "test2@gmail.com"})
-        try:
-            User.objects.get(email="test2@gmail.com")
-            self.assertTrue(False)
-        except:
-            self.assertTrue(True)
-        try:
-            User.objects.get(email=self.user_data["email"])
-            self.assertTrue(True)
-        except:
-            self.assertTrue(False)
+        response = self.user_patch({"username": "test2"})
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual("test2", self.keycloak_client_mock.updated_username)
 
     def test_change_user_annual_balance(self):
         """
         Checks that annual balance is changed
         """
         response = self.user_patch({"expected_annual_balance": 10})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        user = User.objects.get(email=self.user_data["email"])
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        keycloak_id = self.keycloak_client_mock.keycloak_id
+        user = User.objects.get(keycloak_id=keycloak_id)
         self.assertEqual(user.expected_annual_balance, 10)
 
     def test_change_user_monthly_balance(self):
@@ -122,8 +104,9 @@ class UserPutTests(APITestCase):
         Checks that montly balance is changed
         """
         response = self.user_patch({"expected_monthly_balance": 10})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        user = User.objects.get(email=self.user_data["email"])
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        keycloak_id = self.keycloak_client_mock.keycloak_id
+        user = User.objects.get(keycloak_id=keycloak_id)
         self.assertEqual(user.expected_monthly_balance, 10)
 
     def test_change_user_image(self):
@@ -131,10 +114,11 @@ class UserPutTests(APITestCase):
         Checks that image is uploaded
         """
         response = self.user_patch_image(self.temporary_image())
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        user = User.objects.get(email=self.user_data["email"])
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        keycloak_id = self.keycloak_client_mock.keycloak_id
+        user = User.objects.get(keycloak_id=keycloak_id)
         generated_dir = os.path.join(
-            str(settings.BASE_DIR), 'media', 'user_'+str(user.id))
+            str(settings.BASE_DIR), "media", "user_"+str(user.id))
         self.assertTrue(os.path.exists(generated_dir))
         if os.path.exists(generated_dir):
             shutil.rmtree(generated_dir)
@@ -152,52 +136,54 @@ class UserPutTests(APITestCase):
                 "new_password": "password1@213"
             }
         )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
         # Same password
         response = test_utils.post(
             self.client,
             self.change_password_url,
             data={
-                "old_password": "password1@212",
-                "new_password": "password1@212"
+                "old_password": self.keycloak_client_mock.password,
+                "new_password": self.keycloak_client_mock.password
             }
         )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
         # Correct passwords
         response = test_utils.post(
             self.client,
             self.change_password_url,
             data={
-                "old_password": "password1@212",
+                "old_password": self.keycloak_client_mock.password,
                 "new_password": "password1@213"
             }
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # Check authentication with new password
-        self.credentials["password"] = "password1@213"
-        response = test_utils.authenticate_user(self.client, self.credentials)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        # Check new password
+        self.assertEqual(
+            "password1@213", self.keycloak_client_mock.updated_password)
 
-    def test_change_pref_coin_type(self):
+    def test_change_pref_currency_type(self):
         """
-        Checks that pref coin type is changed
+        Checks that pref currency type is changed
         """
         response = test_utils.patch(
             self.client,
             self.user_put_url,
             data={
-                "pref_coin_type": "USD",
+                "pref_currency_type": "USD",
                 "balance": "0"
             }
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
         response = test_utils.patch(
             self.client,
             self.user_put_url,
             data={
-                "pref_coin_type": "EUR",
+                "pref_currency_type": "EUR",
                 "balance": "0"
             }
         )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertTrue("pref_coin_type" in str(response.content))
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertEqual(
+            CURRENCY_TYPE_CHANGED_ERROR,
+            response.data["error_code"]
+        )

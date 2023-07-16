@@ -15,6 +15,7 @@ from app_auth.exceptions import (
     UnverifiedEmailException,
     UserNotFoundException,
     ResetPasswordRetriesException,
+    CannotChangePasswordException,
 )
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
@@ -55,8 +56,12 @@ class ChangePasswordView(generics.CreateAPIView):
             if not tokens:
                 raise WronOldPasswordException()
 
-            keycloak_client.change_user_password(
+            changed = keycloak_client.change_user_password(
                 user.keycloak_id, new_password)
+
+            if not changed:
+                raise CannotChangePasswordException()
+
             return Response({}, status.HTTP_204_NO_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

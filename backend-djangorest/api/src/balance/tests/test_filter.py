@@ -14,20 +14,19 @@ class DateBalanceFilterTests(APITestCase):
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
 
-        self.annual_balance_list = reverse('annual-balance-list')
-        self.monthly_balance_list = reverse('monthly-balance-list')
-        self.coin_type = CoinType.objects.create(code='EUR')
+        self.annual_balance_list = reverse("annual-balance-list")
+        self.monthly_balance_list = reverse("monthly-balance-list")
+        self.coin_type = CoinType.objects.create(code="EUR")
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
         self.user_data = {
-            'username': "username",
-            'email': "email@test.com",
+            "username": "username",
+            "email": "email@test.com",
             "password": "password1@212",
-            "password2": "password1@212",
-            'inv_code': str(self.inv_code.code),
+            "inv_code": str(self.inv_code.code),
         }
         self.credentials = {
-            'email': "email@test.com",
+            "email": "email@test.com",
             "password": "password1@212"
         }
         self.user = self.create_user()
@@ -35,31 +34,31 @@ class DateBalanceFilterTests(APITestCase):
 
     def get_annual_balance_data(self):
         return {
-            'gross_quantity': 1.1,
-            'expected_quantity': 2.2,
-            'coin_type': self.coin_type,
-            'owner': self.user,
-            'year': now().date().year
+            "gross_quantity": 1.1,
+            "expected_quantity": 2.2,
+            "coin_type": self.coin_type,
+            "owner": self.user,
+            "year": now().date().year
         }
 
     def get_monthly_balance_data(self):
         return {
-            'gross_quantity': 1.1,
-            'expected_quantity': 2.2,
-            'coin_type': self.coin_type,
-            'owner': self.user,
-            'year': now().date().year,
-            'month': now().date().month
+            "gross_quantity": 1.1,
+            "expected_quantity": 2.2,
+            "coin_type": self.coin_type,
+            "owner": self.user,
+            "year": now().date().year,
+            "month": now().date().month
         }
 
     def create_user(self):
         user = User.objects.create(
-            username=self.user_data['username'],
-            email=self.user_data['email'],
+            username=self.user_data["username"],
+            email=self.user_data["email"],
             inv_code=self.inv_code,
             verified=True
         )
-        user.set_password(self.user_data['password'])
+        user.set_password(self.user_data["password"])
         user.save()
         return user
 
@@ -67,23 +66,23 @@ class DateBalanceFilterTests(APITestCase):
         test_utils.authenticate_user(self.client, self.credentials)
         data = self.get_annual_balance_data()
         AnnualBalance.objects.create(
-            gross_quantity=data['gross_quantity'],
-            expected_quantity=data['expected_quantity'],
-            coin_type=data['coin_type'],
-            owner=data['owner'],
-            year=data['year'],
+            gross_quantity=data["gross_quantity"],
+            expected_quantity=data["expected_quantity"],
+            coin_type=data["coin_type"],
+            owner=data["owner"],
+            year=data["year"],
         )
 
     def authenticate_add_monthly_balance(self):
         test_utils.authenticate_user(self.client, self.credentials)
         data = self.get_monthly_balance_data()
         MonthlyBalance.objects.create(
-            gross_quantity=data['gross_quantity'],
-            expected_quantity=data['expected_quantity'],
-            coin_type=data['coin_type'],
-            owner=data['owner'],
-            year=data['year'],
-            month=data['month']
+            gross_quantity=data["gross_quantity"],
+            expected_quantity=data["expected_quantity"],
+            coin_type=data["coin_type"],
+            owner=data["owner"],
+            year=data["year"],
+            month=data["month"]
         )
 
     def test_annual_balance_filter_coin_type(self):
@@ -91,70 +90,70 @@ class DateBalanceFilterTests(APITestCase):
         Checks AnnualBalance filter by coin_type
         """
         self.authenticate_add_annual_balance()
-        url = self.annual_balance_list+'?coin_type=EUR'
+        url = self.annual_balance_list+"?coin_type=EUR"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 1)
+        self.assertEqual(data["count"], 1)
 
     def test_monthly_balance_filter_coin_type(self):
         """
         Checks MonthlyBalance filter by coin_type
         """
         self.authenticate_add_monthly_balance()
-        url = self.monthly_balance_list+'?coin_type=EUR'
+        url = self.monthly_balance_list+"?coin_type=EUR"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 1)
+        self.assertEqual(data["count"], 1)
 
     def test_annual_balance_filter_gross_quantity_min_and_max(self):
         """
         Checks AnnualBalance filter by gross_quantity min and max
         """
         self.authenticate_add_annual_balance()
-        url = self.annual_balance_list+'?gross_quantity_min=1.0&gross_quantity_max=3.0'
+        url = self.annual_balance_list+"?gross_quantity_min=1.0&gross_quantity_max=3.0"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 1)
-        url = self.annual_balance_list+'?gross_quantity_min=6.0&gross_quantity_max=8.0'
+        self.assertEqual(data["count"], 1)
+        url = self.annual_balance_list+"?gross_quantity_min=6.0&gross_quantity_max=8.0"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 0)
+        self.assertEqual(data["count"], 0)
 
     def test_monthly_balance_filter_gross_quantity_min_and_max(self):
         """
         Checks MonthlyBalance filter by gross_quantity min and max
         """
         self.authenticate_add_monthly_balance()
-        url = self.monthly_balance_list+'?gross_quantity_min=1.0&gross_quantity_max=3.0'
+        url = self.monthly_balance_list+"?gross_quantity_min=1.0&gross_quantity_max=3.0"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 1)
-        url = self.monthly_balance_list+'?gross_quantity_min=6.0&gross_quantity_max=8.0'
+        self.assertEqual(data["count"], 1)
+        url = self.monthly_balance_list+"?gross_quantity_min=6.0&gross_quantity_max=8.0"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 0)
+        self.assertEqual(data["count"], 0)
 
     def test_annual_balance_filter_expected_quantity_min_and_max(self):
         """
         Checks AnnualBalance filter by expected_quantity min and max
         """
         self.authenticate_add_annual_balance()
-        url = self.annual_balance_list+'?expected_quantity_min=1.0&expected_quantity_max=3.0'
+        url = self.annual_balance_list+"?expected_quantity_min=1.0&expected_quantity_max=3.0"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 1)
-        url = self.annual_balance_list+'?expected_quantity_min=6.0&expected_quantity_max=8.0'
+        self.assertEqual(data["count"], 1)
+        url = self.annual_balance_list+"?expected_quantity_min=6.0&expected_quantity_max=8.0"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 0)
+        self.assertEqual(data["count"], 0)
 
     def test_monthly_balance_filter_expected_quantity_min_and_max(self):
         """ 
@@ -162,47 +161,47 @@ class DateBalanceFilterTests(APITestCase):
         """
         self.authenticate_add_monthly_balance()
         url = self.monthly_balance_list + \
-            '?expected_quantity_min=1.0&expected_quantity_max=3.0'
+            "?expected_quantity_min=1.0&expected_quantity_max=3.0"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 1)
+        self.assertEqual(data["count"], 1)
         url = self.monthly_balance_list + \
-            '?expected_quantity_min=6.0&expected_quantity_max=8.0'
+            "?expected_quantity_min=6.0&expected_quantity_max=8.0"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 0)
+        self.assertEqual(data["count"], 0)
 
     def test_annual_balance_filter_year(self):
         """
         Checks AnnualBalance filter by year
         """
         self.authenticate_add_annual_balance()
-        url = self.annual_balance_list+'?year='+str(now().date().year)
+        url = self.annual_balance_list+"?year="+str(now().date().year)
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 1)
+        self.assertEqual(data["count"], 1)
 
     def test_annual_monthly_filter_year(self):
         """
         Checks MonthlyBalance filter by year
         """
         self.authenticate_add_monthly_balance()
-        url = self.monthly_balance_list+'?year='+str(now().date().year)
+        url = self.monthly_balance_list+"?year="+str(now().date().year)
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 1)
+        self.assertEqual(data["count"], 1)
 
     def test_annual_monthly_filter_year(self):
         """
         Checks MonthlyBalance filter by month
         """
         self.authenticate_add_monthly_balance()
-        url = self.monthly_balance_list+'?month='+str(now().date().month)
+        url = self.monthly_balance_list+"?month="+str(now().date().month)
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)
-        self.assertEqual(data['count'], 1)
+        self.assertEqual(data["count"], 1)

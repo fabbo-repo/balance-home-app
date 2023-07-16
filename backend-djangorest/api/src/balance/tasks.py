@@ -14,13 +14,13 @@ def send_monthly_balance(user_email, month, year):
         year=year,
         month=month
     )
-    monthly_balance.coin_type = user.pref_coin_type
+    monthly_balance.coin_type = user.pref_currency_type
     # If an monthly_balance already existed, its gross_quantity
     # must be converted
     if not created:
         monthly_balance.gross_quantity = convert_or_fetch(
             monthly_balance.coin_type,
-            user.pref_coin_type,
+            user.pref_currency_type,
             monthly_balance.gross_quantity
         )
     monthly_balance.expected_quantity = round(user.expected_monthly_balance, 2)
@@ -43,13 +43,13 @@ def send_annual_balance(user_email, year):
         owner=user,
         year=year
     )
-    annual_balance.coin_type = user.pref_coin_type
+    annual_balance.coin_type = user.pref_currency_type
     # If an annual_balance already existed, its gross_quantity
     # must be converted
     if not created:
         annual_balance.gross_quantity = convert_or_fetch(
             annual_balance.coin_type,
-            user.pref_coin_type,
+            user.pref_currency_type,
             annual_balance.gross_quantity
         )
     annual_balance.expected_quantity = round(user.expected_annual_balance, 2)

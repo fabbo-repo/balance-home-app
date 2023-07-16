@@ -9,7 +9,6 @@ USER_NOT_FOUND_ERROR = 1
 UNVERIFIED_EMAIL_ERROR = 2
 CANNOT_SEND_VERIFY_EMAIL_ERROR = 3
 CANNOT_SEND_RESET_PASSWORD_EMAIL_ERROR = 4
-SAME_USERNAME_EMAIL_ERROR = 5
 USER_EMAIL_CONFLICT_ERROR = 6
 CANNOT_CREATE_USER_ERROR = 7
 CANNOT_UPDATE_USER_ERROR = 8
@@ -19,6 +18,7 @@ NEW_OLD_PASSW_ERROR = 11
 NEW_PASSW_USER_DATA_ERROR = 12
 CURRENCY_TYPE_CHANGED_ERROR = 13
 WRONG_OLD_PASSW_ERROR = 14
+CANNOT_CHANGE_PASSWORD_ERROR = 15
 
 
 class UserNotFoundException(AppBadRequestException):
@@ -59,16 +59,6 @@ class CannotSendResetPasswordEmailException(AppBadRequestException):
     def __init__(self):
         detail = _("Cannot send reset password mail")
         super().__init__(detail, CANNOT_SEND_RESET_PASSWORD_EMAIL_ERROR)
-
-
-class SameUsernameEmailException(AppBadRequestException):
-    """
-    Exception used when an username and email can not be the same.
-    """
-
-    def __init__(self):
-        detail = _("Username and email can not be the same")
-        super().__init__(detail, SAME_USERNAME_EMAIL_ERROR)
 
 
 class UserEmailConflictException(AppBadRequestException):
@@ -159,3 +149,13 @@ class WronOldPasswordException(AppBadRequestException):
     def __init__(self):
         detail = _("Invalid old password")
         super().__init__(detail, WRONG_OLD_PASSW_ERROR)
+
+
+class CannotChangePasswordException(AppBadRequestException):
+    """
+    Exception used when password cannot be changed.
+    """
+
+    def __init__(self):
+        detail = _("Cannot change password")
+        super().__init__(detail, CANNOT_CHANGE_PASSWORD_ERROR)

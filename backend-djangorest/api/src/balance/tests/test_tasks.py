@@ -23,7 +23,7 @@ class BalanceTasksTests(TestCase):
         # Create InvitationCodes
         self.inv_code1 = InvitationCode.objects.create()
         self.inv_code2 = InvitationCode.objects.create()
-        self.coin_type = CoinType.objects.create(code='EUR')
+        self.coin_type = CoinType.objects.create(code="EUR")
         # User creation
         self.user = User.objects.create(
             username="username1",

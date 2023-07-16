@@ -2,6 +2,7 @@
 Provides Settings classes for execution environments.
 """
 import os
+import sys
 from pathlib import Path
 import environ
 from configurations import Configuration
@@ -9,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.management.utils import get_random_secret_key
 
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Build paths inside the project like this: BASE_DIR / "subdir".
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 USE_HTTPS = env.bool("USE_HTTPS", default=False)
@@ -23,6 +24,8 @@ class Dev(Configuration):
     SECRET_KEY = get_random_secret_key()
 
     DEBUG = True
+
+    TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
 
     ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
     cors_hosts = env.list("CORS_HOSTS", default=[])
@@ -73,7 +76,7 @@ class Dev(Configuration):
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
-        # 'core.middlewares.HeadersLoggingMiddleware',
+        # "core.middlewares.HeadersLoggingMiddleware",
     ]
 
     ROOT_URLCONF = "core.urls"
@@ -176,13 +179,13 @@ class Dev(Configuration):
     }
 
     AUTHENTICATION_BACKENDS = (
-        'keycloak_client.backend.KeycloakAuthenticationBackend',
+        "keycloak_client.backend.KeycloakAuthenticationBackend",
     )
 
     # Django Rest Framework setting:
     REST_FRAMEWORK = {
         "DEFAULT_AUTHENTICATION_CLASSES": [
-            'keycloak_client.authentication.KeycloakAuthentication',
+            "keycloak_client.authentication.KeycloakAuthentication",
         ],
         "DEFAULT_PERMISSION_CLASSES": [
             "rest_framework.permissions.IsAuthenticated",
@@ -223,6 +226,9 @@ class Dev(Configuration):
     CELERY_RESULT_BACKEND = "django-db"
     CELERY_BROKER_URL = env.str(
         "CELERY_BROKER_URL", default="redis://localhost:6379/0")
+
+    # Days for a periodic deletion of unverified users
+    UNVERIFIED_USER_DAYS = env.int("UNVERIFIED_USER_DAYS", default=2)
 
     COIN_TYPE_CODES = env.list("COIN_TYPE_CODES", default=["EUR", "USD"])
 

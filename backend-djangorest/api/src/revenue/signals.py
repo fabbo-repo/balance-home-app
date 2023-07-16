@@ -21,7 +21,7 @@ def revenue_pre_save(sender, instance: Revenue, **kwargs):
     # Create action
     if not old_instance:
         coin_from = new_instance.coin_type
-        coin_to = owner.pref_coin_type
+        coin_to = owner.pref_currency_type
         real_quantity = new_instance.real_quantity
         converted_quantity = convert_or_fetch(
             coin_from, coin_to, real_quantity)
@@ -48,7 +48,7 @@ def revenue_pre_save(sender, instance: Revenue, **kwargs):
             or new_instance.coin_type != old_instance.coin_type
         ):
             coin_from = new_instance.coin_type
-            coin_to = owner.pref_coin_type
+            coin_to = owner.pref_currency_type
             real_quantity = new_instance.real_quantity
             converted_quantity = convert_or_fetch(
                 coin_from, coin_to, real_quantity
@@ -83,7 +83,7 @@ def revenue_pre_save(sender, instance: Revenue, **kwargs):
 @receiver(pre_delete, sender=Revenue, dispatch_uid="revenue_pre_delete")
 def revenue_pre_delete(sender, instance: Revenue, **kwargs):
     owner = User.objects.get(id=instance.owner.id)
-    coin_to = owner.pref_coin_type
+    coin_to = owner.pref_currency_type
     converted_quantity = convert_or_fetch(
         instance.coin_type, coin_to,
         instance.real_quantity

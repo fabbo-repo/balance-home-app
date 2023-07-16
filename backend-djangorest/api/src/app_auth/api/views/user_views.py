@@ -51,7 +51,7 @@ class UserCreationView(generics.CreateAPIView):
 
         keycloak_client = get_keycloak_client()
 
-        created, res_code = keycloak_client.create_user(  # pylint: disable=unbalanced-tuple-unpacking
+        created, res_code, _ = keycloak_client.create_user(
             email=validated_data["email"],
             username=validated_data["username"],
             password=validated_data["password"],
@@ -63,9 +63,13 @@ class UserCreationView(generics.CreateAPIView):
                 raise UserEmailConflictException()
             raise CannotCreateUserException()
 
+        keycloak_id = keycloak_client.get_user_id(
+            email=validated_data["email"])
+        if not keycloak_id:
+            raise CannotCreateUserException()
+
         user = User.objects.create(
-            keycloak_id=keycloak_client.get_user_id(
-                email=validated_data["email"]),
+            keycloak_id=keycloak_id,
             inv_code=inv_code,
             pref_currency_type=pref_currency_type
         )
@@ -81,7 +85,7 @@ class UserCreationView(generics.CreateAPIView):
                 inv_code.is_active = False
             inv_code.save()
         # Alternative:
-        # inv_code.usage_left = F('usage_left') - 1
+        # inv_code.usage_left = F("usage_left") - 1
         user.save()
 
 
@@ -113,7 +117,7 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
             else user_data["attributes"]["locale"][0]
 
         response = dict(serializer.data)
-        response["username"] = user_data["username"]
+        response["username"] = user_data["firstName"]
         response["email"] = user_data["email"]
         response["last_login"] = last_login
         response["locale"] = locale
@@ -133,9 +137,9 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         ):
             if "balance" in serializer.validated_data:
                 user = self.request.user
-                if user.date_coin_change:
+                if user.date_currency_change:
                     duration_s = (
-                        now() - user.date_coin_change).total_seconds()
+                        now() - user.date_currency_change).total_seconds()
                     if duration_s < 24 * 60 * 60:
                         raise CurrencyTypeChangedException()
                 serializer.validated_data["balance"] = convert_or_fetch(
@@ -168,11 +172,11 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
                     serializer.validated_data["expected_monthly_balance"],
                 )
                 change_converted_quantities.delay(
-                    user.email,
+                    user.keycloak_id,
                     user.pref_currency_type.code,
                     serializer.validated_data["pref_currency_type"].code,
                 )
-                serializer.validated_data["date_coin_change"] = now()
+                serializer.validated_data["date_currency_change"] = now()
             if "expected_annual_balance" in serializer.validated_data:
                 serializer.validated_data[
                     "expected_annual_balance"

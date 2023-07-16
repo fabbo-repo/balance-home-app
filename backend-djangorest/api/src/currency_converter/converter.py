@@ -9,13 +9,13 @@ CURRENCY_CONVERTER_URL = "https://www.xe.com/currencyconverter/convert/"
 
 class ConnectionException(Exception):
     def __init__(self, *args, **kwargs):
-        self.message = 'Currency converter connection error'
+        self.message = "Currency converter connection error"
         super().__init__(self.message)
 
 
 class HtmlParserException(Exception):
     def __init__(self, *args, **kwargs):
-        self.message = 'Html parser no longer valid'
+        self.message = "Html parser no longer valid"
         super().__init__(self.message)
 
 
@@ -56,18 +56,18 @@ class CurrencyConverterService:
             resp.raise_for_status()
         except:
             logger.error(
-                '[CURRENCY CONVERTER] currency converter connection error')
+                "[CURRENCY CONVERTER] currency converter connection error")
             raise ConnectionError()
         html = resp.content
         return self._filter_html_response(html)
 
     def _filter_html_response(self, html):
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(html, "html.parser")
         try:
-            return float(soup.body.find_all('p')[3].text.split(' ')[3])
+            return float(soup.body.find_all("p")[3].text.split(" ")[3])
         except:
-            logger.error('[CURRENCY CONVERTER] html parser no longer valid')
-            raise Exception('html parser no longer valid')
+            logger.error("[CURRENCY CONVERTER] html parser no longer valid")
+            raise Exception("html parser no longer valid")
 
     def get_currency_data(self):
         logger.info("[CURRENCY CONVERTER] Fetching currency data")
