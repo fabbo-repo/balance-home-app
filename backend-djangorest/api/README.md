@@ -210,6 +210,18 @@ python manage.py collectmedia
 python manage.py createbuckets
 ~~~
 
+* Schedule users deletion task:
+
+~~~bash
+python manage.py schedule_users_delete
+~~~
+
+* Create invitation code with X usage:
+
+~~~bash
+python manage.py inv_code --usage X
+~~~
+
 * Launch celery for development:
 
 ~~~bash
@@ -217,12 +229,6 @@ celery -A core worker -l INFO -P eventlet --scheduler django_celery_beat.schedul
 ~~~
 
 > ***redis*** must be launched too
-
-* Create invitation code with X usage:
-
-~~~bash
-python manage.py inv_code --usage X
-~~~
 
 * Generate locale messages files
 
