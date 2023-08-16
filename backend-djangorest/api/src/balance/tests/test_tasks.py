@@ -1,18 +1,18 @@
+import logging
 from unittest import mock
 from django.test import TestCase
+from django.conf import settings
+from django_celery_beat.models import CrontabSchedule
 from balance.tasks import (
     send_monthly_balance,
     send_annual_balance,
     periodic_monthly_balance,
-    periodic_annual_balance
+    periodic_annual_balance,
 )
 from balance.schedule_setup import schedule_setup
-from django_celery_beat.models import CrontabSchedule
-from app_auth.models import InvitationCode, User
-from balance.models import CoinType
-import logging
 from balance.tasks import periodic_monthly_balance, periodic_annual_balance
-from django.conf import settings
+from app_auth.models import User, InvitationCode
+from keycloak_client.django_client import get_keycloak_client
 
 
 class BalanceTasksTests(TestCase):
@@ -20,19 +20,20 @@ class BalanceTasksTests(TestCase):
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
 
-        # Create InvitationCodes
-        self.inv_code1 = InvitationCode.objects.create()
-        self.inv_code2 = InvitationCode.objects.create()
-        self.coin_type = CoinType.objects.create(code="EUR")
-        # User creation
-        self.user = User.objects.create(
-            username="username1",
-            email="email1@test.com",
-            inv_code=self.inv_code1,
-            verified=True
+        self.keycloak_client_mock = get_keycloak_client()
+
+        # Create InvitationCode
+        self.inv_code = InvitationCode.objects.create(  # pylint: disable=no-member
+            usage_left=400
         )
-        self.user.set_password("password1@212")
-        self.user.save()
+
+        # User creation
+        User.objects.create(
+            keycloak_id=self.keycloak_client_mock.keycloak_id,
+            inv_code=self.inv_code,
+            receive_email_balance=True,
+        )
+
         return super().setUp()
 
     def test_shared_task_used(self):
@@ -40,14 +41,15 @@ class BalanceTasksTests(TestCase):
         Checks that shared_task decorator is used
         """
         from balance.tasks import shared_task
+
         self.assertIsNotNone(
             shared_task
         )  # assume if it's imported there then it's used as the decorator
 
     def test_methods_shared_tasks(self):
         """
-        Checks that send_monthly_balance, send_annual_balance, 
-        periodic_monthly_balance and periodic_annual_balance are shared 
+        Checks that send_monthly_balance, send_annual_balance,
+        periodic_monthly_balance and periodic_annual_balance are shared
         task
         """
         self.assertIsNotNone(send_monthly_balance.delay)

@@ -1,5 +1,5 @@
 import json
-from coin.models import CoinExchange, CoinType
+from coin.models import CurrencyExchange, CoinType
 from coin.api.serializers import CoinTypeSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics, status
@@ -44,9 +44,9 @@ class CoinExchangeRetrieveView(APIView):
     permission_classes = (IsAuthenticated,)
     
     def get(self, request, code, format=None):
-        last_coin_exchange = CoinExchange.objects.last()
-        if last_coin_exchange:
-            exchange_data = last_coin_exchange.exchange_data
+        last_currency_exchange = CurrencyExchange.objects.last()
+        if last_currency_exchange:
+            exchange_data = last_currency_exchange.exchange_data
             json_data = json.loads(exchange_data)
             if code not in json_data:
                 return Response(
@@ -75,7 +75,7 @@ class CoinExchangeListView(APIView):
     def get(self, request, days, format=None):
         if days < 1: return Response(data=[])
         if days > 30: days = 30
-        data = CoinExchange.objects.filter(
+        data = CurrencyExchange.objects.filter(
             created__lte=timezone.now(), 
             created__gt=timezone.now() - timezone.timedelta(days=days)
         )

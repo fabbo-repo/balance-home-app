@@ -16,7 +16,7 @@ class RevenuePaginationTests(APITestCase):
         self.revenue_url = reverse("revenue-list")
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
-        self.coin_type = CoinType.objects.create(code="EUR")
+        self.currency_type = CoinType.objects.create(code="EUR")
         self.user_data = {
             "username": "username",
             "email": "email@test.com",
@@ -36,7 +36,7 @@ class RevenuePaginationTests(APITestCase):
             "name": "Test name",
             "description": "Test description",
             "real_quantity": 2.0,
-            "coin_type": self.coin_type.code,
+            "currency_type": self.currency_type.code,
             "rev_type": self.rev_type.name,
             "date": str(now().date()),
             "owner": str(self.user),
@@ -48,7 +48,7 @@ class RevenuePaginationTests(APITestCase):
             email=self.user_data["email"],
             inv_code=self.inv_code,
             verified=True,
-            pref_currency_type=self.coin_type,
+            pref_currency_type=self.currency_type,
         )
         user.set_password(self.user_data["password"])
         user.save()
@@ -82,7 +82,7 @@ class RevenuePaginationTests(APITestCase):
                     "real_quantity": 2.0,
                     "converted_quantity": 2.0,
                     "date": str(now().date()),
-                    "coin_type": "EUR",
+                    "currency_type": "EUR",
                     "rev_type": {
                         "name": "test",
                         "image": "http://testserver/media/core/default_image.jpg"

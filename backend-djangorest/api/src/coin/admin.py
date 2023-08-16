@@ -1,5 +1,5 @@
 from django.contrib import admin
-from coin.models import CoinExchange, CoinType
+from coin.models import CurrencyExchange, CoinType
 
 
 @admin.register(CoinType)
@@ -17,7 +17,7 @@ class CoinTypeAdmin(admin.ModelAdmin):
         return False
     
 
-@admin.register(CoinExchange)
+@admin.register(CurrencyExchange)
 class CoinExchangeAdmin(admin.ModelAdmin):
     fields = [
         "exchange_data",

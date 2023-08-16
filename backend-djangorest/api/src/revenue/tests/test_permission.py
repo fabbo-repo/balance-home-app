@@ -21,21 +21,21 @@ class RevenuePermissionsTests(APITestCase):
         # Create InvitationCodes
         self.inv_code1 = InvitationCode.objects.create()
         self.inv_code2 = InvitationCode.objects.create()
-        self.coin_type = CoinType.objects.create(code="EUR")
+        self.currency_type = CoinType.objects.create(code="EUR")
         # Test user data
         self.user_data1 = {
             "username": "username1",
             "email": "email1@test.com",
             "password": "password1@212",
             "inv_code": str(self.inv_code1.code),
-            "pref_currency_type": str(self.coin_type.code)
+            "pref_currency_type": str(self.currency_type.code)
         }
         self.user_data2 = {
             "username": "username2",
             "email": "email2@test.com",
             "password": "password1@212",
             "inv_code": str(self.inv_code2.code),
-            "pref_currency_type": str(self.coin_type.code)
+            "pref_currency_type": str(self.currency_type.code)
         }
         self.credentials1 = {
             "email": "email1@test.com",
@@ -51,7 +51,7 @@ class RevenuePermissionsTests(APITestCase):
             email=self.user_data1["email"],
             inv_code=self.inv_code1,
             verified=True,
-            pref_currency_type=self.coin_type
+            pref_currency_type=self.currency_type
         )
         user1.set_password(self.user_data1["password"])
         user1.save()
@@ -60,7 +60,7 @@ class RevenuePermissionsTests(APITestCase):
             email=self.user_data2["email"],
             inv_code=self.inv_code2,
             verified=True,
-            pref_currency_type=self.coin_type
+            pref_currency_type=self.currency_type
         )
         user2.set_password(self.user_data2["password"])
         user2.save()
@@ -79,7 +79,7 @@ class RevenuePermissionsTests(APITestCase):
             "name": "Test name",
             "description": "Test description",
             "real_quantity": 2.0,
-            "coin_type": self.coin_type.code,
+            "currency_type": self.currency_type.code,
             "rev_type": rev_type["name"],
             "date": str(now().date())
         }

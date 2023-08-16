@@ -2,10 +2,10 @@ import json
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
 
 def schedule_setup():
-    schedule_coin_exchanges_balance()
+    schedule_currency_exchanges_balance()
 
 
-def schedule_coin_exchanges_balance():
+def schedule_currency_exchanges_balance():
     schedule, _ = IntervalSchedule.objects.get_or_create(
         period=IntervalSchedule.HOURS, 
         every=12

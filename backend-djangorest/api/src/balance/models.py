@@ -33,9 +33,9 @@ class Balance(models.Model):
     date = models.DateField(
         verbose_name = _("date")
     )
-    coin_type = models.ForeignKey(
+    currency_type = models.ForeignKey(
         CoinType, 
-        verbose_name = _("coin type"),
+        verbose_name = _("currency type"),
         on_delete = models.DO_NOTHING
     )
     owner = models.ForeignKey(
@@ -73,9 +73,9 @@ class DateBalance(models.Model):
         verbose_name = _("expected quantity"),
         default = 0
     )
-    coin_type = models.ForeignKey(
+    currency_type = models.ForeignKey(
         CoinType,
-        verbose_name = _("coin type"),
+        verbose_name = _("currency type"),
         on_delete=models.DO_NOTHING,
         blank = True,
         null = True

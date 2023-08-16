@@ -20,7 +20,7 @@ class ExpensePostPutDelSerializer(serializers.ModelSerializer):
             "real_quantity",
             "converted_quantity",
             "date",
-            "coin_type",
+            "currency_type",
             "exp_type"
         ]
         read_only_fields = [

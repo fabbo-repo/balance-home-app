@@ -10,13 +10,13 @@ class RevenueModelTests(APITestCase):
     def setUp(self):
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
-        self.coin_type = CoinType.objects.create(code="EUR")
+        self.currency_type = CoinType.objects.create(code="EUR")
         self.user_data = {
             "username": "username1",
             "email": "email1@test.com",
             "password": "password1@212",
             "inv_code": str(self.inv_code.code),
-            "pref_currency_type": str(self.coin_type.code)
+            "pref_currency_type": str(self.currency_type.code),
         }
         self.rev_type = RevenueType.objects.create(name="test")
         return super().setUp()
@@ -26,10 +26,10 @@ class RevenueModelTests(APITestCase):
             "name": "Test name",
             "description": "Test description",
             "real_quantity": 2.0,
-            "coin_type": self.coin_type,
+            "currency_type": self.currency_type,
             "rev_type": self.rev_type,
             "date": now().date(),
-            "owner": self.create_user()
+            "owner": self.create_user(),
         }
 
     def create_user(self):
@@ -37,7 +37,7 @@ class RevenueModelTests(APITestCase):
             username=self.user_data["username"],
             email=self.user_data["email"],
             inv_code=self.inv_code,
-            pref_currency_type=self.coin_type,
+            pref_currency_type=self.currency_type,
         )
         user.set_password(self.user_data["password"])
         user.save()
@@ -60,9 +60,8 @@ class RevenueModelTests(APITestCase):
         self.assertEqual(revenue.name, data["name"])
         self.assertEqual(revenue.description, data["description"])
         self.assertEqual(revenue.real_quantity, data["real_quantity"])
-        self.assertEqual(revenue.converted_quantity,
-                         data["converted_quantity"])
-        self.assertEqual(revenue.coin_type, data["coin_type"])
+        self.assertEqual(revenue.converted_quantity, data["converted_quantity"])
+        self.assertEqual(revenue.currency_type, data["currency_type"])
         self.assertEqual(revenue.rev_type, data["rev_type"])
         self.assertEqual(revenue.date, data["date"])
         self.assertEqual(revenue.owner, data["owner"])

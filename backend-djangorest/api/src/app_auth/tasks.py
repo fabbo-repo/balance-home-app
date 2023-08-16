@@ -18,61 +18,55 @@ def remove_unverified_users():
     for user in User.objects.all():
         with transaction.atomic():
             user_info = keycloak_client.get_user_info_by_id(
-                keycloak_id=user.keycloak_id)
+                keycloak_id=user.keycloak_id
+            )
             if not user_info["emailVerified"]:
                 user.delete()
-                keycloak_client.delete_user_by_id(
-                    keycloak_id=user.keycloak_id)
+                keycloak_client.delete_user_by_id(keycloak_id=user.keycloak_id)
 
 
 @shared_task
-def change_converted_quantities(owner_keycloak_id, coin_from_code, coin_to_code):
-    coin_from = CoinType.objects.get(  # pylint: disable=no-member
-        code=coin_from_code)
-    coin_to = CoinType.objects.get(  # pylint: disable=no-member
-        code=coin_to_code)
+def change_converted_quantities(
+    owner_keycloak_id, currency_from_code, currency_to_code
+):
+    currency_from = CoinType.objects.get(  # pylint: disable=no-member
+        code=currency_from_code
+    )
+    currency_to = CoinType.objects.get(  # pylint: disable=no-member
+        code=currency_to_code
+    )
     with transaction.atomic():
         for revenue in Revenue.objects.filter(  # pylint: disable=no-member
-                owner=User.objects.get(
-                    keycloak_id=owner_keycloak_id
-                )):
+            owner=User.objects.get(keycloak_id=owner_keycloak_id)
+        ):
             revenue.converted_quantity = convert_or_fetch(
-                coin_from, coin_to,
-                revenue.converted_quantity
+                currency_from, currency_to, revenue.converted_quantity
             )
             revenue.save()
         for expense in Expense.objects.filter(  # pylint: disable=no-member
-                owner=User.objects.get(
-                    keycloak_id=owner_keycloak_id
-                )):
+            owner=User.objects.get(keycloak_id=owner_keycloak_id)
+        ):
             expense.converted_quantity = convert_or_fetch(
-                coin_from, coin_to,
-                expense.converted_quantity
+                currency_from, currency_to, expense.converted_quantity
             )
             expense.save()
         for dateBalance in MonthlyBalance.objects.filter(  # pylint: disable=no-member
-                owner=User.objects.get(
-                    keycloak_id=owner_keycloak_id
-                )):
+            owner=User.objects.get(keycloak_id=owner_keycloak_id)
+        ):
             dateBalance.gross_quantity = convert_or_fetch(
-                coin_from, coin_to,
-                dateBalance.gross_quantity
+                currency_from, currency_to, dateBalance.gross_quantity
             )
             dateBalance.expected_quantity = convert_or_fetch(
-                coin_from, coin_to,
-                dateBalance.expected_quantity
+                currency_from, currency_to, dateBalance.expected_quantity
             )
             dateBalance.save()
         for dateBalance in AnnualBalance.objects.filter(  # pylint: disable=no-member
-                owner=User.objects.get(
-                    keycloak_id=owner_keycloak_id
-                )):
+            owner=User.objects.get(keycloak_id=owner_keycloak_id)
+        ):
             dateBalance.gross_quantity = convert_or_fetch(
-                coin_from, coin_to,
-                dateBalance.gross_quantity
+                currency_from, currency_to, dateBalance.gross_quantity
             )
             dateBalance.expected_quantity = convert_or_fetch(
-                coin_from, coin_to,
-                dateBalance.expected_quantity
+                currency_from, currency_to, dateBalance.expected_quantity
             )
             dateBalance.save()

@@ -1,7 +1,7 @@
 ALLOWED_HOSTS=localhost
 CELERY_BROKER_URL=redis://redis:6379/0
 DATABASE_URL=postgres://balhom_api_user:password@db:31500/balhomdb
-COIN_TYPE_CODES=EUR,USD
+CURRENCY_TYPE_CODES=EUR,USD
 MINIO_STATIC_BUCKET_NAME=balhom-static-bucket
 MINIO_MEDIA_BUCKET_NAME=balhom-media-bucket
 MINIO_ENDPOINT=localhost:33090

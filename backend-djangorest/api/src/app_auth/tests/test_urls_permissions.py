@@ -9,7 +9,7 @@ import core.tests.utils as test_utils
 from keycloak_client.django_client import get_keycloak_client
 
 
-class UrlPermissionsTests(APITestCase):
+class AppAuthUrlsPermissionsTests(APITestCase):
     def setUp(self):
         settings.CELERY_TASK_ALWAYS_EAGER = True
 

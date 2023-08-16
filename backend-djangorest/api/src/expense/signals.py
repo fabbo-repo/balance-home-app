@@ -21,11 +21,11 @@ def expense_pre_save(sender, instance: Expense, **kwargs):
     owner = User.objects.get(id=new_instance.owner.id)
     # Create action
     if not old_instance:
-        coin_from = new_instance.coin_type
-        coin_to = owner.pref_currency_type
+        currency_from = new_instance.currency_type
+        currency_to = owner.pref_currency_type
         real_quantity = new_instance.real_quantity
         converted_quantity = convert_or_fetch(
-            coin_from, coin_to, real_quantity)
+            currency_from, currency_to, real_quantity)
         new_instance.converted_quantity = converted_quantity
         owner.balance -= converted_quantity
         owner.balance = round(owner.balance, 2)
@@ -46,17 +46,17 @@ def expense_pre_save(sender, instance: Expense, **kwargs):
         # In case there is a real quantity update
         if (
             new_instance.real_quantity != old_instance.real_quantity
-            or new_instance.coin_type != old_instance.coin_type
+            or new_instance.currency_type != old_instance.currency_type
         ):
-            coin_from = new_instance.coin_type
-            coin_to = owner.pref_currency_type
+            currency_from = new_instance.currency_type
+            currency_to = owner.pref_currency_type
             real_quantity = new_instance.real_quantity
             converted_quantity = convert_or_fetch(
-                coin_from, coin_to, real_quantity
+                currency_from, currency_to, real_quantity
             )
             new_instance.converted_quantity = converted_quantity
             converted_old_quantity = convert_or_fetch(
-                old_instance.coin_type, coin_to,
+                old_instance.currency_type, currency_to,
                 old_instance.real_quantity
             )
             owner.balance -= converted_quantity \
@@ -86,7 +86,7 @@ def expense_pre_delete(sender, instance: Expense, **kwargs):
     owner = User.objects.get(id=instance.owner.id)
     coin_to = owner.pref_currency_type
     converted_quantity = convert_or_fetch(
-        instance.coin_type, coin_to,
+        instance.currency_type, coin_to,
         instance.real_quantity
     )
     owner.balance += converted_quantity

@@ -10,13 +10,13 @@ class ExpenseModelTests(APITestCase):
     def setUp(self):
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
-        self.coin_type = CoinType.objects.create(code="EUR")
+        self.currency_type = CoinType.objects.create(code="EUR")
         self.user_data = {
             "username": "username1",
             "email": "email1@test.com",
             "password": "password1@212",
             "inv_code": str(self.inv_code.code),
-            "pref_currency_type": str(self.coin_type.code)
+            "pref_currency_type": str(self.currency_type.code)
         }
         self.exp_type = ExpenseType.objects.create(name="test")
         return super().setUp()
@@ -26,7 +26,7 @@ class ExpenseModelTests(APITestCase):
             "name": "Test name",
             "description": "Test description",
             "real_quantity": 2.0,
-            "coin_type": self.coin_type,
+            "currency_type": self.currency_type,
             "exp_type": self.exp_type,
             "date": now().date(),
             "owner": self.create_user()
@@ -38,7 +38,7 @@ class ExpenseModelTests(APITestCase):
             email=self.user_data["email"],
             inv_code=self.inv_code,
             verified=True,
-            pref_currency_type=self.coin_type,
+            pref_currency_type=self.currency_type,
         )
         user.set_password(self.user_data["password"])
         user.save()
@@ -63,7 +63,7 @@ class ExpenseModelTests(APITestCase):
         self.assertEqual(expense.real_quantity, data["real_quantity"])
         self.assertEqual(expense.converted_quantity,
                          data["converted_quantity"])
-        self.assertEqual(expense.coin_type, data["coin_type"])
+        self.assertEqual(expense.currency_type, data["currency_type"])
         self.assertEqual(expense.exp_type, data["exp_type"])
         self.assertEqual(expense.date, data["date"])
         self.assertEqual(expense.owner, data["owner"])

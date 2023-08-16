@@ -12,40 +12,25 @@ def get_random_text(max_len: int) -> str:
 
 
 def get(client: APIClient, url: str, content_type="application/json") -> Response:
-    return client.get(
-        url,
-        content_type=content_type
-    )
+    return client.get(url, content_type=content_type)
 
 
-def post(client: APIClient, url: str, data: dict, content_type="application/json") -> Response:
-    return client.post(
-        url,
-        data=json.dumps(
-            data
-        ),
-        content_type=content_type
-    )
+def post(
+    client: APIClient, url: str, data: dict, content_type="application/json"
+) -> Response:
+    return client.post(url, data=json.dumps(data), content_type=content_type)
 
 
-def put(client: APIClient, url: str, data: dict, content_type="application/json") -> Response:
-    return client.put(
-        url,
-        data=json.dumps(
-            data
-        ),
-        content_type=content_type
-    )
+def put(
+    client: APIClient, url: str, data: dict, content_type="application/json"
+) -> Response:
+    return client.put(url, data=json.dumps(data), content_type=content_type)
 
 
-def patch(client: APIClient, url: str, data: dict, content_type="application/json") -> Response:
-    return client.patch(
-        url,
-        data=json.dumps(
-            data
-        ),
-        content_type=content_type
-    )
+def patch(
+    client: APIClient, url: str, data: dict, content_type="application/json"
+) -> Response:
+    return client.patch(url, data=json.dumps(data), content_type=content_type)
 
 
 def patch_image(client: APIClient, url: str, data: dict) -> Response:
@@ -56,15 +41,11 @@ def patch_image(client: APIClient, url: str, data: dict) -> Response:
 
 
 def delete(client: APIClient, url: str, content_type="application/json") -> Response:
-    return client.delete(
-        url,
-        content_type=content_type
-    )
+    return client.delete(url, content_type=content_type)
 
 
-def authenticate_user(client: APIClient):
+def authenticate_user(client: APIClient, keycloak_id: str = None):
     keycloak_client_mock = get_keycloak_client()
-    client.credentials(
-        HTTP_AUTHORIZATION="Bearer " +
-        keycloak_client_mock.access_token
-    )
+    if keycloak_id:
+        keycloak_client_mock.keycloak_id = keycloak_id
+    client.credentials(HTTP_AUTHORIZATION="Bearer " + keycloak_client_mock.access_token)

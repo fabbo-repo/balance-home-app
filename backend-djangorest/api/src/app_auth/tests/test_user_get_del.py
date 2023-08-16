@@ -1,10 +1,10 @@
+import logging
+import core.tests.utils as test_utils
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 from coin.models import CoinType
 from app_auth.models import User, InvitationCode
-import logging
-import core.tests.utils as test_utils
 from keycloak_client.django_client import get_keycloak_client
 
 

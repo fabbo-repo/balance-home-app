@@ -17,13 +17,13 @@ class ExpensePaginationTests(APITestCase):
 
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
-        self.coin_type = CoinType.objects.create(code="EUR")
+        self.currency_type = CoinType.objects.create(code="EUR")
         self.user_data = {
             "username": "username",
             "email": "email@test.com",
             "password": "password1@212",
             "inv_code": str(self.inv_code.code),
-            "pref_currency_type": str(self.coin_type.code)
+            "pref_currency_type": str(self.currency_type.code)
         }
         self.credentials = {
             "email": "email@test.com",
@@ -38,7 +38,7 @@ class ExpensePaginationTests(APITestCase):
             "name": "Test name",
             "description": "Test description",
             "real_quantity": 2.0,
-            "coin_type": self.coin_type.code,
+            "currency_type": self.currency_type.code,
             "exp_type": self.exp_type.name,
             "date": str(now().date()),
             "owner": str(self.user),
@@ -50,7 +50,7 @@ class ExpensePaginationTests(APITestCase):
             email=self.user_data["email"],
             inv_code=self.inv_code,
             verified=True,
-            pref_currency_type=self.coin_type,
+            pref_currency_type=self.currency_type,
         )
         user.set_password(self.user_data["password"])
         user.save()
@@ -84,7 +84,7 @@ class ExpensePaginationTests(APITestCase):
                     "real_quantity": 2.0,
                     "converted_quantity": 2.0,
                     "date": str(now().date()),
-                    "coin_type": "EUR",
+                    "currency_type": "EUR",
                     "exp_type": {
                         "name": "test",
                         "image": "http://testserver/media/core/default_image.jpg"

@@ -17,13 +17,13 @@ class ExpenseLogicTests(APITestCase):
         self.expense_url = reverse("expense-list")
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
-        self.coin_type = CoinType.objects.create(code="EUR")
+        self.currency_type = CoinType.objects.create(code="EUR")
         self.user_data = {
             "username": "username",
             "email": "email@test.com",
             "password": "password1@212",
             "inv_code": str(self.inv_code.code),
-            "pref_currency_type": str(self.coin_type.code)
+            "pref_currency_type": str(self.currency_type.code)
         }
         self.credentials = {
             "email": "email@test.com",
@@ -37,7 +37,7 @@ class ExpenseLogicTests(APITestCase):
             "name": "Test name",
             "description": "",
             "real_quantity": 2.0,
-            "coin_type": self.coin_type.code,
+            "currency_type": self.currency_type.code,
             "exp_type": self.exp_type.name,
             "date": str(now().date()),
             "owner": str(self.user),
@@ -50,7 +50,7 @@ class ExpenseLogicTests(APITestCase):
             inv_code=self.inv_code,
             verified=True,
             balance=10,
-            pref_currency_type=self.coin_type,
+            pref_currency_type=self.currency_type,
         )
         user.set_password(self.user_data["password"])
         user.save()

@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
-from coin.models import CoinExchange, CoinType
+from coin.models import CurrencyExchange, CoinType
 from app_auth.models import User, InvitationCode
 import logging
 from expense.models import Expense, ExpenseType
@@ -35,9 +35,9 @@ class ExchangeLogicTests(APITestCase):
         # Create InvitationCode
         self.inv_code = InvitationCode.objects.create()
         # Create CoinTypes
-        self.coin_type1 = CoinType.objects.create(code="EUR")
-        self.coin_type2 = CoinType.objects.create(code="USD")
-        self.coin_type3 = CoinType.objects.create(code="CAD")
+        self.currency_type1 = CoinType.objects.create(code="EUR")
+        self.currency_type2 = CoinType.objects.create(code="USD")
+        self.currency_type3 = CoinType.objects.create(code="CAD")
         # Test user data
         self.user_data = {
             "username": "username1",
@@ -46,7 +46,7 @@ class ExchangeLogicTests(APITestCase):
             "verified": True,
             "balance": 10.0,
             "inv_code": str(self.inv_code.code),
-            "pref_currency_type": str(self.coin_type1.code),
+            "pref_currency_type": str(self.currency_type1.code),
             "language": "en"
         }
         self.credentials = {
@@ -60,7 +60,7 @@ class ExchangeLogicTests(APITestCase):
             inv_code=self.inv_code,
             balance=self.user_data["balance"],
             verified=True,
-            pref_currency_type=self.coin_type1,
+            pref_currency_type=self.currency_type1,
             language="en"
         )
         user.set_password(self.user_data["password"])
@@ -73,28 +73,28 @@ class ExchangeLogicTests(APITestCase):
         rev_type, created = RevenueType.objects.get_or_create(name=name)
         return rev_type
 
-    def get_revenue_data(self, coin_type):
+    def get_revenue_data(self, currency_type):
         rev_type = self.get_create_revenue_type_data()
         owner = User.objects.get(email=self.user_data["email"])
         return {
             "name": "Test name",
             "description": "Test description",
             "real_quantity": 1.0,
-            "coin_type": coin_type.code,
+            "currency_type": currency_type.code,
             "rev_type": rev_type.name,
             "date": str(now().date()),
             "owner": owner,
             "owner": str(owner.id)
         }
 
-    def get_create_revenue(self, coin_type):
+    def get_create_revenue(self, currency_type):
         rev_type = self.get_create_revenue_type_data()
         owner = User.objects.get(email=self.user_data["email"])
         return Revenue.objects.create(
             name="Test name",
             description="Test description",
             real_quantity=1.0,
-            coin_type=coin_type,
+            currency_type=currency_type,
             rev_type=rev_type,
             date=now(),
             owner=owner
@@ -104,20 +104,20 @@ class ExchangeLogicTests(APITestCase):
         exp_type, created = ExpenseType.objects.get_or_create(name=name)
         return exp_type
 
-    def get_expense_data(self, coin_type):
+    def get_expense_data(self, currency_type):
         exp_type = self.get_create_expense_type_data()
         owner = User.objects.get(email=self.user_data["email"])
         return {
             "name": "Test name",
             "description": "Test description",
             "real_quantity": 1.0,
-            "coin_type": coin_type.code,
+            "currency_type": currency_type.code,
             "exp_type": exp_type.name,
             "date": str(now().date()),
             "owner": str(owner.id)
         }
 
-    def get_create_expense(self, coin_type):
+    def get_create_expense(self, currency_type):
         exp_type = self.get_create_expense_type_data()
         owner = User.objects.get(email=self.user_data["email"])
         return Expense.objects.create(
@@ -125,7 +125,7 @@ class ExchangeLogicTests(APITestCase):
             description="Test description",
             real_quantity=1.0,
             converted_quantity=1.0,
-            coin_type=coin_type,
+            currency_type=currency_type,
             exp_type=exp_type,
             date=now(),
             owner=owner
@@ -137,7 +137,7 @@ class ExchangeLogicTests(APITestCase):
         """
         try:
             update_exchange_data()
-            CoinExchange.objects.get(created__date=now().date())
+            CurrencyExchange.objects.get(created__date=now().date())
             self.assertTrue(True)
         except:
             self.assertTrue(False)
@@ -149,8 +149,8 @@ class ExchangeLogicTests(APITestCase):
         self.assertRaises(
             NoCoinExchangeException,
             _convert,
-            self.coin_type1,
-            self.coin_type2,
+            self.currency_type1,
+            self.currency_type2,
             2
         )
 
@@ -163,16 +163,16 @@ class ExchangeLogicTests(APITestCase):
             "USD": {"CAD": 1.5, "EUR": 1.3},
             "CAD": {"USD": 0.6, "EUR": 0.8},
         }
-        coin_exchange = CoinExchange.objects.create(
+        currency_exchange = CurrencyExchange.objects.create(
             exchange_data=json.dumps(exchange)
         )
-        coin_exchange.created = now() - timedelta(days=2)
-        coin_exchange.save()
+        currency_exchange.created = now() - timedelta(days=2)
+        currency_exchange.save()
         self.assertRaises(
             OldExchangeException,
             _convert,
-            self.coin_type1,
-            self.coin_type2,
+            self.currency_type1,
+            self.currency_type2,
             2
         )
 
@@ -181,18 +181,18 @@ class ExchangeLogicTests(APITestCase):
         Checks if currency converter service raise `OldExchangeException`
         """
         exchange = {}
-        CoinExchange.objects.create(
+        CurrencyExchange.objects.create(
             exchange_data=json.dumps(exchange)
         )
         self.assertRaises(
             UnsupportedExchangeException,
             _convert,
-            self.coin_type1,
-            self.coin_type2,
+            self.currency_type1,
+            self.currency_type2,
             2
         )
 
-    def test_post_revenue_diff_coin_type(self):
+    def test_post_revenue_diff_currency_type(self):
         """
         Check `posting` an revenue with coin type different 
         from the user"s prefered coin type results in a conversion
@@ -203,10 +203,10 @@ class ExchangeLogicTests(APITestCase):
             "USD": {"CAD": 1.5, "EUR": 1.3},
             "CAD": {"USD": 0.6, "EUR": 0.8},
         }
-        CoinExchange.objects.create(
+        CurrencyExchange.objects.create(
             exchange_data=json.dumps(exchange)
         )
-        rev_data = self.get_revenue_data(self.coin_type2)
+        rev_data = self.get_revenue_data(self.currency_type2)
         resp = test_utils.post(self.client, self.revenue_url, rev_data)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(
@@ -214,7 +214,7 @@ class ExchangeLogicTests(APITestCase):
             self.user_data["balance"] + (rev_data["real_quantity"] * 1.3)
         )
 
-    def test_post_expense_diff_coin_type(self):
+    def test_post_expense_diff_currency_type(self):
         """
         Check `posting` an expense with coin type different 
         from the user"s prefered coin type results in a conversion
@@ -225,10 +225,10 @@ class ExchangeLogicTests(APITestCase):
             "USD": {"CAD": 1.5, "EUR": 1.3},
             "CAD": {"USD": 0.6, "EUR": 0.8},
         }
-        CoinExchange.objects.create(
+        CurrencyExchange.objects.create(
             exchange_data=json.dumps(exchange)
         )
-        exp_data = self.get_expense_data(self.coin_type2)
+        exp_data = self.get_expense_data(self.currency_type2)
         resp = test_utils.post(self.client, self.expense_url, exp_data)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(
@@ -236,11 +236,11 @@ class ExchangeLogicTests(APITestCase):
             self.user_data["balance"] - (exp_data["real_quantity"] * 1.3)
         )
 
-    def test_patch_revenue_diff_coin_type(self):
+    def test_patch_revenue_diff_currency_type(self):
         """
         Check `patching` an revenue with coin type different 
         from the user"s prefered coin type to a another different
-        `coin_type` results in an extra conversion of the revenue 
+        `currency_type` results in an extra conversion of the revenue 
         quantity
         """
         exchange = {
@@ -248,11 +248,11 @@ class ExchangeLogicTests(APITestCase):
             "USD": {"CAD": 1.5, "EUR": 1.3},
             "CAD": {"USD": 0.6, "EUR": 0.8},
         }
-        CoinExchange.objects.create(
+        CurrencyExchange.objects.create(
             exchange_data=json.dumps(exchange)
         )
         prev_balance = User.objects.get(email=self.user_data["email"]).balance
-        rev = self.get_create_revenue(self.coin_type2)
+        rev = self.get_create_revenue(self.currency_type2)
         new_balance = User.objects.get(email=self.user_data["email"]).balance
         self.assertEqual(
             new_balance,
@@ -265,7 +265,7 @@ class ExchangeLogicTests(APITestCase):
         prev_balance = User.objects.get(email=self.user_data["email"]).balance
         resp = test_utils.patch(self.client, self.revenue_url+"/"+str(rev.id), {
             "real_quantity": 2,
-            "coin_type": self.coin_type3.code
+            "currency_type": self.currency_type3.code
         })
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         new_balance = User.objects.get(email=self.user_data["email"]).balance
@@ -278,11 +278,11 @@ class ExchangeLogicTests(APITestCase):
             )
         )
 
-    def test_patch_expense_diff_coin_type(self):
+    def test_patch_expense_diff_currency_type(self):
         """
         Check `patching` an expense with coin type different 
         from the user"s prefered coin type to a another different
-        `coin_type` results in an extra conversion of the expense 
+        `currency_type` results in an extra conversion of the expense 
         quantity
         """
         exchange = {
@@ -290,14 +290,14 @@ class ExchangeLogicTests(APITestCase):
             "USD": {"CAD": 1.5, "EUR": 1.3},
             "CAD": {"USD": 0.6, "EUR": 0.8},
         }
-        CoinExchange.objects.create(
+        CurrencyExchange.objects.create(
             exchange_data=json.dumps(exchange)
         )
-        exp = self.get_create_expense(self.coin_type2)
+        exp = self.get_create_expense(self.currency_type2)
         prev_balance = User.objects.get(email=self.user_data["email"]).balance
         resp = test_utils.patch(self.client, self.expense_url+"/"+str(exp.id), {
             "real_quantity": 2,
-            "coin_type": self.coin_type3.code
+            "currency_type": self.currency_type3.code
         })
         new_balance = User.objects.get(email=self.user_data["email"]).balance
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -310,10 +310,10 @@ class ExchangeLogicTests(APITestCase):
             )
         )
 
-    def test_delete_revenue_diff_coin_type(self):
+    def test_delete_revenue_diff_currency_type(self):
         """
         Check `deleting` an revenue with coin type different 
-        from the user"s prefered `coin_type` results in a 
+        from the user"s prefered `currency_type` results in a 
         conversion of the revenue quantity
         """
         exchange = {
@@ -321,10 +321,10 @@ class ExchangeLogicTests(APITestCase):
             "USD": {"CAD": 1.5, "EUR": 1.3},
             "CAD": {"USD": 0.6, "EUR": 0.8},
         }
-        CoinExchange.objects.create(
+        CurrencyExchange.objects.create(
             exchange_data=json.dumps(exchange)
         )
-        rev = self.get_create_revenue(self.coin_type2)
+        rev = self.get_create_revenue(self.currency_type2)
         prev_balance = User.objects.get(email=self.user_data["email"]).balance
         resp = test_utils.delete(self.client, self.revenue_url+"/"+str(rev.id))
         new_balance = User.objects.get(email=self.user_data["email"]).balance
@@ -337,10 +337,10 @@ class ExchangeLogicTests(APITestCase):
             )
         )
 
-    def test_delete_expense_diff_coin_type(self):
+    def test_delete_expense_diff_currency_type(self):
         """
         Check `deleting` an expense with coin type different 
-        from the user"s prefered `coin_type` results in a 
+        from the user"s prefered `currency_type` results in a 
         conversion of the expense quantity
         """
         exchange = {
@@ -348,10 +348,10 @@ class ExchangeLogicTests(APITestCase):
             "USD": {"CAD": 1.5, "EUR": 1.3},
             "CAD": {"USD": 0.6, "EUR": 0.8},
         }
-        CoinExchange.objects.create(
+        CurrencyExchange.objects.create(
             exchange_data=json.dumps(exchange)
         )
-        exp = self.get_create_expense(self.coin_type2)
+        exp = self.get_create_expense(self.currency_type2)
         prev_balance = User.objects.get(email=self.user_data["email"]).balance
         resp = test_utils.delete(self.client, self.expense_url+"/"+str(exp.id))
         new_balance = User.objects.get(email=self.user_data["email"]).balance
@@ -374,19 +374,19 @@ class ExchangeLogicTests(APITestCase):
             "USD": {"CAD": 1.5, "EUR": 1.3},
             "CAD": {"USD": 0.6, "EUR": 0.8},
         }
-        CoinExchange.objects.create(
+        CurrencyExchange.objects.create(
             exchange_data=json.dumps(exchange)
         )
         resp = test_utils.patch(
             self.client, self.user_put_get_del_url,
             {
                 "balance": self.user_data["balance"],
-                "pref_currency_type": self.coin_type2.code
+                "pref_currency_type": self.currency_type2.code
             }
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         updated_user = User.objects.get(email=self.user_data["email"])
-        self.assertEqual(updated_user.pref_currency_type, self.coin_type2)
+        self.assertEqual(updated_user.pref_currency_type, self.currency_type2)
         self.assertEqual(
             updated_user.balance,
             round(

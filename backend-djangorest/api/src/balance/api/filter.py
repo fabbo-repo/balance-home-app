@@ -26,10 +26,10 @@ class AnnualBalanceFilterSet(filters.FilterSet):
     
     class Meta:
         model = AnnualBalance
-        fields = ["coin_type", "year"]
+        fields = ["currency_type", "year"]
 
 
 class MonthlyBalanceFilterSet(AnnualBalanceFilterSet):
     class Meta:
         model = MonthlyBalance
-        fields = ["coin_type", "year", "month"]
+        fields = ["currency_type", "year", "month"]

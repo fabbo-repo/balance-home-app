@@ -17,13 +17,13 @@ class RevenueFilterTests(APITestCase):
         self.revenue_url=reverse("revenue-list")
         # Create InvitationCodes
         self.inv_code = InvitationCode.objects.create()
-        self.coin_type = CoinType.objects.create(code="EUR")
+        self.currency_type = CoinType.objects.create(code="EUR")
         self.user_data={
             "username":"username",
             "email":"email@test.com",
             "password": "password1@212",
             "inv_code": str(self.inv_code.code),
-            "pref_currency_type": str(self.coin_type.code)
+            "pref_currency_type": str(self.currency_type.code)
         }
         self.credentials = {
             "email":"email@test.com",
@@ -38,7 +38,7 @@ class RevenueFilterTests(APITestCase):
             "name": "Test name",
             "description": "Test description",
             "real_quantity": 2.6,
-            "coin_type": self.coin_type.code,
+            "currency_type": self.currency_type.code,
             "rev_type": self.rev_type.name,
             "date": str(now().date()),
             "owner": str(self.user),
@@ -50,7 +50,7 @@ class RevenueFilterTests(APITestCase):
             email=self.user_data["email"],
             inv_code=self.inv_code,
             verified=True,
-            pref_currency_type=self.coin_type,
+            pref_currency_type=self.currency_type,
         )
         user.set_password(self.user_data["password"])
         user.save()
@@ -105,13 +105,13 @@ class RevenueFilterTests(APITestCase):
         data = dict(response.data)
         self.assertEqual(data["count"], 1)
 
-    def test_revenue_filter_coin_type(self):
+    def test_revenue_filter_currency_type(self):
         """
-        Checks Revenue filter by coin_type
+        Checks Revenue filter by currency_type
         """
         self.authenticate_add_revenue()
         # Get revenue data
-        url = self.revenue_url+"?coin_type=EUR"
+        url = self.revenue_url+"?currency_type=EUR"
         response = test_utils.get(self.client, url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = dict(response.data)

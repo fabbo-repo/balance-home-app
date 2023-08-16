@@ -19,7 +19,7 @@ class CoinType(models.Model):
         return self.code
 
 
-class CoinExchange(models.Model):
+class CurrencyExchange(models.Model):
     id = models.UUIDField(
         verbose_name = _("uuid"),
         primary_key = True, 

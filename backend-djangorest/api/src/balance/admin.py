@@ -9,7 +9,7 @@ class AnnualBalanceAdmin(admin.ModelAdmin):
         "id",
         "year",
         ("gross_quantity", "expected_quantity",),
-        "coin_type",
+        "currency_type",
         "owner",
         "created",
         "updated"
@@ -27,7 +27,7 @@ class MonthlyBalanceAdmin(admin.ModelAdmin):
         "id",
         ("month", "year",),
         ("gross_quantity", "expected_quantity",),
-        "coin_type",
+        "currency_type",
         "owner",
         "created",
         "updated"

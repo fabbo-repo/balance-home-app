@@ -13,8 +13,7 @@ class InvitationCode(models.Model):
         default=uuid.uuid4,
         editable=False,
     )
-    usage_left = models.PositiveIntegerField(
-        verbose_name=_("usage left"), default=1)
+    usage_left = models.PositiveIntegerField(verbose_name=_("usage left"), default=1)
     is_active = models.BooleanField(verbose_name=_("is active"), default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -29,40 +28,48 @@ class InvitationCode(models.Model):
 
 
 class BalanceUserManager(UserManager):
-    def create_user(self, keycloak_id, **extra_fields):  # pylint: disable=arguments-differ
+    def create_user(
+        self, keycloak_id, **extra_fields
+    ):  # pylint: disable=arguments-differ
         if not keycloak_id:
-            raise ValueError(_("A keycloak id must be provided")  # pylint: disable=used-before-assignment
-                             )
+            raise ValueError(
+                _(
+                    "A keycloak id must be provided"
+                )  # pylint: disable=used-before-assignment
+            )
         currency_type, _ = CoinType.objects.get_or_create(  # pylint: disable=no-member
             code="EUR"
         )
         return User.objects.create(
             keycloak_id=keycloak_id,
             inv_code=InvitationCode.objects.create(  # pylint: disable=no-member
-                usage_left=0,
-                is_active=False
+                usage_left=0, is_active=False
             ),
             is_staff=False,
             is_superuser=False,
-            pref_currency_type=currency_type
+            pref_currency_type=currency_type,
         )
 
-    def create_superuser(self, keycloak_id, **extra_fields):  # pylint: disable=arguments-differ
+    def create_superuser(
+        self, keycloak_id, **extra_fields
+    ):  # pylint: disable=arguments-differ
         if not keycloak_id:
-            raise ValueError(_("A keycloak id must be provided")  # pylint: disable=used-before-assignment
-                             )
+            raise ValueError(
+                _(
+                    "A keycloak id must be provided"
+                )  # pylint: disable=used-before-assignment
+            )
         currency_type, _ = CoinType.objects.get_or_create(  # pylint: disable=no-member
             code="EUR"
         )
         return User.objects.create(
             keycloak_id=keycloak_id,
             inv_code=InvitationCode.objects.create(  # pylint: disable=no-member
-                usage_left=0,
-                is_active=False
+                usage_left=0, is_active=False
             ),
             is_staff=True,
             is_superuser=True,
-            pref_currency_type=currency_type
+            pref_currency_type=currency_type,
         )
 
 
@@ -83,9 +90,7 @@ class User(AbstractUser):
     # an enumeration attack more difficult
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     keycloak_id = models.TextField(
-        verbose_name=_("keycloak id"),
-        unique=True,
-        editable=False
+        verbose_name=_("keycloak id"), unique=True, editable=False
     )
     image = models.ImageField(
         verbose_name=_("profile image"),
@@ -121,9 +126,7 @@ class User(AbstractUser):
     )
     # Date of the last password reset code sent
     date_pass_reset = models.DateTimeField(
-        verbose_name=_("date of last password reset code sent"),
-        blank=True,
-        null=True
+        verbose_name=_("date of last password reset code sent"), blank=True, null=True
     )
     # Number of requests for password reset
     count_pass_reset = models.IntegerField(

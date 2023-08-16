@@ -15,9 +15,9 @@ class CoinConfig(AppConfig):
             # Create Coin models
             from coin.currency_converter_integration import update_exchange_data
             from coin.models import CoinType
-            for coin_type_code in settings.COIN_TYPE_CODES:
+            for currency_type_code in settings.CURRENCY_TYPE_CODES:
                 CoinType.objects.update_or_create(
-                    code=coin_type_code
+                    code=currency_type_code
                 )
             update_exchange_data()
         except Exception:
