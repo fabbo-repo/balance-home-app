@@ -5,12 +5,12 @@ from app_auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 
-class BalanceModelTests(APITestCase):
+class CoinModelTests(APITestCase):
     def setUp(self):
         self.user_data = {
             "username": "username",
             "email": "email@test.com",
-            "password": "password1@212"
+            "password": "password1@212",
         }
         return super().setUp()
 

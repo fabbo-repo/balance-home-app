@@ -2,7 +2,7 @@ import logging
 from django.test import TestCase
 
 
-class AuthTasksTests(TestCase):
+class AppAuthTasksTests(TestCase):
     def setUp(self):
         # Avoid WARNING logs while testing wrong requests
         logging.disable(logging.WARNING)
