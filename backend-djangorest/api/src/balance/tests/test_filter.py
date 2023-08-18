@@ -1,12 +1,12 @@
-from django.utils.timezone import now
+import logging
+import core.tests.utils as test_utils
 from rest_framework.test import APITestCase
+from rest_framework import status
+from django.utils.timezone import now
 from django.urls import reverse
 from coin.models import CoinType
 from app_auth.models import InvitationCode, User
-import logging
 from balance.models import AnnualBalance, MonthlyBalance
-from rest_framework import status
-import core.tests.utils as test_utils
 from keycloak_client.django_client import get_keycloak_client
 
 
@@ -39,6 +39,7 @@ class BalanceFilterTests(APITestCase):
         # User creation
         self.user = User.objects.create(
             keycloak_id=self.user_data["keycloak_id"],
+            pref_currency_type=self.currency_type,
             inv_code=self.inv_code,
         )
         return super().setUp()

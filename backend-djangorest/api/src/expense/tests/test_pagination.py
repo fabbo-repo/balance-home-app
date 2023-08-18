@@ -1,11 +1,12 @@
-from django.utils.timezone import now
+import logging
+import core.tests.utils as test_utils
 from rest_framework.test import APITestCase
+from django.utils.timezone import now
 from django.urls import reverse
 from coin.models import CoinType
 from app_auth.models import InvitationCode, User
-import logging
 from expense.models import ExpenseType
-import core.tests.utils as test_utils
+from keycloak_client.django_client import get_keycloak_client
 
 
 class ExpensePaginationTests(APITestCase):
@@ -15,21 +16,30 @@ class ExpensePaginationTests(APITestCase):
 
         self.expense_url = reverse("expense-list")
 
+        self.keycloak_client_mock = get_keycloak_client()
+
         # Create InvitationCodes
-        self.inv_code = InvitationCode.objects.create()
+        self.inv_code = InvitationCode.objects.create(  # pylint: disable=no-member
+            usage_left=400
+        )
+        # Create CurrencyType
         self.currency_type = CoinType.objects.create(code="EUR")
+        # User data
         self.user_data = {
-            "username": "username",
-            "email": "email@test.com",
-            "password": "password1@212",
+            "keycloak_id": self.keycloak_client_mock.keycloak_id,
+            "username": self.keycloak_client_mock.username,
+            "email": self.keycloak_client_mock.email,
+            "password": self.keycloak_client_mock.password,
             "inv_code": str(self.inv_code.code),
-            "pref_currency_type": str(self.currency_type.code)
+            "locale": self.keycloak_client_mock.locale,
+            "pref_currency_type": str(self.currency_type.code),
         }
-        self.credentials = {
-            "email": "email@test.com",
-            "password": "password1@212"
-        }
-        self.user = self.create_user()
+        # User creation
+        self.user = User.objects.create(
+            keycloak_id=self.user_data["keycloak_id"],
+            pref_currency_type=self.currency_type,
+            inv_code=self.inv_code,
+        )
         self.exp_type = ExpenseType.objects.create(name="test")
         return super().setUp()
 
@@ -44,25 +54,13 @@ class ExpensePaginationTests(APITestCase):
             "owner": str(self.user),
         }
 
-    def create_user(self):
-        user = User.objects.create(
-            username=self.user_data["username"],
-            email=self.user_data["email"],
-            inv_code=self.inv_code,
-            verified=True,
-            pref_currency_type=self.currency_type,
-        )
-        user.set_password(self.user_data["password"])
-        user.save()
-        return user
-
     def test_expense_pagination_scheme(self):
         """
         Checks Expense pagination scheme is correct
         """
         data = self.get_expense_data()
         # Add new expense
-        test_utils.authenticate_user(self.client, self.credentials)
+        test_utils.authenticate_user(self.client)
         test_utils.post(self.client, self.expense_url, data)
         # Get expense data
         response = test_utils.get(self.client, self.expense_url)
@@ -75,7 +73,9 @@ class ExpensePaginationTests(APITestCase):
             result["exp_type"] = dict(result["exp_type"])
             scheme["results"] += [result]
         expected_scheme = {
-            "count": 1, "next": None, "previous": None,
+            "count": 1,
+            "next": None,
+            "previous": None,
             "results": [
                 {
                     "id": 1,
@@ -87,10 +87,10 @@ class ExpensePaginationTests(APITestCase):
                     "currency_type": "EUR",
                     "exp_type": {
                         "name": "test",
-                        "image": "http://testserver/media/core/default_image.jpg"
-                    }
+                        "image": "http://testserver/media/core/default_image.jpg",
+                    },
                 }
-            ]
+            ],
         }
         self.assertEqual(scheme, expected_scheme)
 
@@ -98,7 +98,7 @@ class ExpensePaginationTests(APITestCase):
         """
         Checks 2 pages of Expense data is correct
         """
-        test_utils.authenticate_user(self.client, self.credentials)
+        test_utils.authenticate_user(self.client)
         for i in range(20):
             data = self.get_expense_data()
             # Add new expense

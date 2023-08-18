@@ -1,9 +1,9 @@
 from django.urls import path, include
 from expense.api.views import (
-    ExpenseView, 
-    ExpenseTypeRetrieveView, 
+    ExpenseView,
+    ExpenseTypeRetrieveView,
     ExpenseTypeListView,
-    EspenseYearsRetrieveView
+    EspenseYearsRetrieveView,
 )
 from rest_framework import routers
 
@@ -13,8 +13,12 @@ router.register("expense", ExpenseView)
 
 
 urlpatterns = [
-    path("expense/type/<str:pk>", ExpenseTypeRetrieveView.as_view(), name="exp_type_get"),
-    path("expense/type", ExpenseTypeListView.as_view(), name="exp_type_list"),
-    path("expense/years", EspenseYearsRetrieveView.as_view(), name="exp_years"),
+    path(
+        "expense/type/<str:pk>",
+        ExpenseTypeRetrieveView.as_view(),
+        name="expense-type-get",
+    ),
+    path("expense/type", ExpenseTypeListView.as_view(), name="expense-type-list"),
+    path("expense/years", EspenseYearsRetrieveView.as_view(), name="expense-years"),
     path("", include(router.urls)),
 ]
