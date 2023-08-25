@@ -5,21 +5,21 @@ from django.utils.translation import gettext_lazy as _
 
 class CoinType(models.Model):
     code = models.CharField(
-        verbose_name = _('code'),
+        verbose_name = _("code"),
         max_length = 4, 
         primary_key = True
     )
 
     class Meta:
-        verbose_name = _('Coin type')
-        verbose_name_plural = _('Coin types')
-        ordering = ['code']
+        verbose_name = _("Coin type")
+        verbose_name_plural = _("Coin types")
+        ordering = ["code"]
     
     def __str__(self) -> str:
         return self.code
 
 
-class CoinExchange(models.Model):
+class CurrencyExchange(models.Model):
     id = models.UUIDField(
         verbose_name = _("uuid"),
         primary_key = True, 
@@ -33,16 +33,16 @@ class CoinExchange(models.Model):
     # json.loads(coinX.exchange_data)
     # Note: Every key and value would have type str
     exchange_data = models.TextField(
-        verbose_name = _('data exhange dictionary'),
-        default = '{}'
+        verbose_name = _("data exhange dictionary"),
+        default = "{}"
     )
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = _('Coin exchange')
-        verbose_name_plural = _('Coin exchanges')
+        verbose_name = _("Coin exchange")
+        verbose_name_plural = _("Coin exchanges")
         # Greater to lower date
-        ordering = ['-created']
+        ordering = ["-created"]
     
     def __str__(self) -> str:
         return str(self.created)

@@ -1,0 +1,244 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Balhom Keycloak",
+    "dateExported": "2023-07-10T13:22:14.282Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "aae19d97-808e-4ff2-899e-143c56b77be3",
+            "colId": "4ba4a9fa-dfd2-48e8-8088-726b506aa26f",
+            "containerId": "",
+            "name": "Realm Config",
+            "url": "http://localhost:39080/realms/balhom-realm/.well-known/openid-configuration",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-07-06T06:41:57.966Z",
+            "modified": "2023-07-06T06:54:22.920Z",
+            "headers": [
+                {
+                    "name": "Accept-Encoding",
+                    "value": "application/x-www-form-urlencoded"
+                },
+                {
+                    "name": "Accept",
+                    "value": "*/*",
+                    "isDisabled": true
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "grant_type",
+                        "value": ""
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "09c4ef61-d68a-4f5f-8554-381e058505ba",
+            "colId": "4ba4a9fa-dfd2-48e8-8088-726b506aa26f",
+            "containerId": "",
+            "name": "Certs JWT",
+            "url": "http://localhost:39080/realms/balhom-realm/protocol/openid-connect/certs",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-07-06T06:45:45.941Z",
+            "modified": "2023-07-06T07:05:58.936Z",
+            "headers": [
+                {
+                    "name": "client_id",
+                    "value": "balhom-api",
+                    "isDisabled": true
+                },
+                {
+                    "name": "Accept-Encoding",
+                    "value": "application/json"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "97cc59cf-7cb9-45af-b001-9b12476be877",
+            "colId": "4ba4a9fa-dfd2-48e8-8088-726b506aa26f",
+            "containerId": "",
+            "name": "Access JWT Client",
+            "url": "http://localhost:39080/realms/balhom-realm/protocol/openid-connect/token",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2023-07-06T06:49:05.232Z",
+            "modified": "2023-07-06T06:56:58.909Z",
+            "headers": [
+                {
+                    "name": "Accept-Encoding",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/x-www-form-urlencoded"
+                },
+                {
+                    "name": "Accept",
+                    "value": "*/*",
+                    "isDisabled": true
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "grant_type",
+                        "value": "password"
+                    },
+                    {
+                        "name": "client_id",
+                        "value": "balhom-client"
+                    },
+                    {
+                        "name": "username",
+                        "value": "test@test.com"
+                    },
+                    {
+                        "name": "password",
+                        "value": "test"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "f5954b5a-7b3a-4603-a796-e820532e8d49",
+            "colId": "4ba4a9fa-dfd2-48e8-8088-726b506aa26f",
+            "containerId": "",
+            "name": "Refresh JWT Client",
+            "url": "http://localhost:39080/realms/balhom-realm/protocol/openid-connect/token",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2023-07-06T06:57:07.755Z",
+            "modified": "2023-07-06T06:57:49.758Z",
+            "headers": [
+                {
+                    "name": "Accept-Encoding",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/x-www-form-urlencoded"
+                },
+                {
+                    "name": "Accept",
+                    "value": "*/*",
+                    "isDisabled": true
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "grant_type",
+                        "value": "refresh_token"
+                    },
+                    {
+                        "name": "client_id",
+                        "value": "balhom-client"
+                    },
+                    {
+                        "name": "refresh_token",
+                        "value": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIzMWQ2YjQzMi1mY2FlLTRiN2EtYWUwNy1hNDA2ZmEzNzUzNDAifQ.eyJleHAiOjE2ODg2Mjg0MjQsImlhdCI6MTY4ODYyNjYyNCwianRpIjoiMmM3MGU0OTQtYjdhOS00MTVhLWIyODUtYTMxOTQ2ZTg2NjVjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozOTA4MC9yZWFsbXMvYmFsaG9tLXJlYWxtIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozOTA4MC9yZWFsbXMvYmFsaG9tLXJlYWxtIiwic3ViIjoiNjk3YzkxMGMtNmM4YS00MjI4LTgwOGQtYjZlM2YwOGFhMjMwIiwidHlwIjoiUmVmcmVzaCIsImF6cCI6ImJhbGhvbS1jbGllbnQiLCJzZXNzaW9uX3N0YXRlIjoiNzVkMmNiNzUtNDI3Zi00YjEyLTgyN2UtYzQzNTgxMzQ5YjI5Iiwic2NvcGUiOiJwcm9maWxlIG9wZW5pZCBlbWFpbCIsInNpZCI6Ijc1ZDJjYjc1LTQyN2YtNGIxMi04MjdlLWM0MzU4MTM0OWIyOSJ9.FHvJTzV8_GTwogSQfdE6ldnV_IazwZYQVVN8sJZtxOg"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "75c7fc7e-3041-4ce4-b145-f6d56466fba3",
+            "colId": "4ba4a9fa-dfd2-48e8-8088-726b506aa26f",
+            "containerId": "",
+            "name": "Userinfo Client",
+            "url": "http://localhost:39080/realms/balhom-realm/protocol/openid-connect/userinfo",
+            "method": "POST",
+            "sortNum": 50000,
+            "created": "2023-07-06T06:58:35.816Z",
+            "modified": "2023-07-06T06:59:44.503Z",
+            "headers": [
+                {
+                    "name": "Accept-Encoding",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer <token>"
+                },
+                {
+                    "name": "Accept",
+                    "value": "*/*",
+                    "isDisabled": true
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "12522739-2f55-4eaf-9d70-fd50962baf03",
+            "colId": "4ba4a9fa-dfd2-48e8-8088-726b506aa26f",
+            "containerId": "",
+            "name": "Logout Client",
+            "url": "http://localhost:39080/realms/balhom-realm/protocol/openid-connect/logout",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2023-07-06T07:01:13.992Z",
+            "modified": "2023-07-06T07:01:27.111Z",
+            "headers": [
+                {
+                    "name": "Accept-Encoding",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer <token>"
+                },
+                {
+                    "name": "Accept",
+                    "value": "*/*",
+                    "isDisabled": true
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "tests": []
+        }
+    ]
+}

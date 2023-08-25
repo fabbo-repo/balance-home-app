@@ -1,11 +1,11 @@
 from django.contrib import admin
-from coin.models import CoinExchange, CoinType
+from coin.models import CurrencyExchange, CoinType
 
 
 @admin.register(CoinType)
 class CoinTypeAdmin(admin.ModelAdmin):
     fields = [
-        'code'
+        "code"
     ]
     
     # This will help disbale add functionality
@@ -17,14 +17,14 @@ class CoinTypeAdmin(admin.ModelAdmin):
         return False
     
 
-@admin.register(CoinExchange)
+@admin.register(CurrencyExchange)
 class CoinExchangeAdmin(admin.ModelAdmin):
     fields = [
-        'exchange_data',
-        'created'
+        "exchange_data",
+        "created"
     ]
     readonly_fields = [
-        'created'
+        "created"
     ]
     
     # This will help disbale add functionality

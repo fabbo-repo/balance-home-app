@@ -11,12 +11,13 @@ django-configurations
 django-filter
 # Cors
 django-cors-headers
-drf-yasg
 # Swagger
-djangorestframework-simplejwt
+drf-yasg
+pyyaml
+coreapi
 # Jwt Authentication
+python-keycloak
 PyJWT
-cryptography
 # Image library
 Pillow
 # Celery driver
@@ -29,8 +30,6 @@ django-celery-beat
 redis
 # Concurrent networking library for Celery
 eventlet
-# YAML parser
-pyyaml
 # Library to deal with URI
 uritemplate
 # Postgres driver
@@ -39,12 +38,8 @@ psycopg2-binary
 coverage
 # Web scrapping
 beautifulsoup4
-# Admin documentation
-docutils
 # Web server
 gunicorn
-# Cryptographic library
-pycryptodome
 # Minio driver
 minio
 # Storage provider drivers (AWS S3 will be used for minio)

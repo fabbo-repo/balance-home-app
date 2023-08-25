@@ -14,9 +14,9 @@
 | CELERY_BROKER_URL        | Celery url                                                       |
 | EMAIL_CODE_THRESHOLD     | Time to wait for a new email verification code generation        |
 | EMAIL_CODE_VALID         | Email verification code validity duration                        |
-| UNVERIFIED_USER_DAYS     | Days for a periodic deletion of unverified users                 |
+| UNVERIFIED_USER_DAYS     | Days for a periodic deletion of unverified users. Default: 2     |
 | DATABASE_URL             | Databse endpoint                                                 |
-| COIN_TYPE_CODES          | Coin type codes allowed (they have to be valid)                  |
+| CURRENCY_TYPE_CODES      | Coin type codes allowed (they have to be valid)                  |
 | FRONTEND_VERSION         | Minimum supported frontend version. Optional                     |
 | DISABLE_ADMIN_PANEL      | Disable admin panel url `/general/admin`. Default: ***false***   |
 | MINIO_ENDPOINT           | Minio api endpoint                                               |
@@ -29,18 +29,19 @@
 
 | CODE  | DEFINITION                                                 | ENDPOINT                       |
 | ----- | ---------------------------------------------------------- | ------------------------------ |
-| 1     | No invitation code stored for an user                      | /api/v1/jwt                    |
-| 2     | Unverified email for an user                               | /api/v1/jwt                    |
-| 3     | Invalid refresh token                                      | /api/v1/jwt/refresh            |
-| 4     | No active account found for specified refresh token        | /api/v1/jwt/refresh            |
-| 5     | Username and email can not be the same                     | /api/v1/user                   |
-| 6     | Code has already been sent, wait X seconds                 | /api/v1/email_code/send, /api/v1/user/password/reset/start |
-| 7     | No code sent                                               | /api/v1/email_code/verify, /api/v1/user/password/reset/verify |
-| 8     | Code is no longer valid                                    | /api/v1/email_code/verify, /api/v1/user/password/reset/verify |
-| 9     | Invalid code                                               | /api/v1/email_code/verify, /api/v1/user/password/reset/verify |
-| 10    | Only three codes can be sent per day                       | /api/v1/user/password/reset/start |
-| 11    | New password must be different from old password           | /api/v1/user/password/change   |
-| 12    | New password cannot match other profile data               | /api/v1/user/password/change   |
+| 1     | User not found                                             | /api/v2/user/send-verify-email , /api/v2/user/password/reset |
+| 2     | Unverified email                                           | /api/v2/user/password/reset    |
+| 3     | Cannot send verification mail                              | /api/v2/user/send-verify-email |
+| 4     | Cannot send reset password mail                            | /api/v2/user/password/reset    |
+| 6     | Email already used                                         | /api/v2/user [POST]            |
+| 7     | Cannot create user                                         | /api/v2/user [POST]            |
+| 8     | Cannot update user                                         | /api/v2/user [PUT]             |
+| 9     | Cannot delete user                                         | /api/v2/user [DEL]             |
+| 10    | Password can only be reset 3 times a day                   | /api/v2/user/password/reset    |
+| 11    | New password must be different from old password           | /api/v2/user/password/change   |
+| 12    | New password cannot match other profile data               | /api/v2/user/password/change   |
+| 13    | Currency type has already been changed in the las 24 hours | /api/v2/user [PUT]             |
+| 14    | Invalid old password                                       | /api/v2/user/password/change   |
 
 ## Directory tree example
 
@@ -209,6 +210,18 @@ python manage.py collectmedia
 python manage.py createbuckets
 ~~~
 
+* Schedule users deletion task:
+
+~~~bash
+python manage.py schedule_users_delete
+~~~
+
+* Create invitation code with X usage:
+
+~~~bash
+python manage.py inv_code --usage X
+~~~
+
 * Launch celery for development:
 
 ~~~bash
@@ -216,12 +229,6 @@ celery -A core worker -l INFO -P eventlet --scheduler django_celery_beat.schedul
 ~~~
 
 > ***redis*** must be launched too
-
-* Create invitation code with X usage:
-
-~~~bash
-python manage.py inv_code --usage X
-~~~
 
 * Generate locale messages files
 

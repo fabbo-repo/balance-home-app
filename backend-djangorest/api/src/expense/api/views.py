@@ -56,12 +56,12 @@ class ExpenseView(viewsets.ModelViewSet):
         """
         Filter objects by owner
         """
-        if getattr(self, 'swagger_fake_view', False):
+        if getattr(self, "swagger_fake_view", False):
             return Expense.objects.none()  # return empty queryset
         return Expense.objects.filter(owner=self.request.user)
     
     def get_serializer_class(self):
-        if self.request.method == 'GET':
+        if self.request.method == "GET":
             return ExpenseListDetailSerializer
         return ExpensePostPutDelSerializer
 

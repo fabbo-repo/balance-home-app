@@ -66,7 +66,7 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
               if (failure is ApiBadRequestFailure) {
                 return left(UnprocessableEntityFailure(detail: failure.detail));
               } else if (failure is InputBadRequestFailure) {
-                if (failure.containsFieldName("pref_coin_type")) {
+                if (failure.containsFieldName("pref_currency_type")) {
                   return left(UnprocessableEntityFailure(
                       detail: appLocalizations.userEditPrefCurrencyTypeError));
                 } else if (failure.containsFieldName("username")) {

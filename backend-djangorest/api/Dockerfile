@@ -42,8 +42,9 @@ RUN mkdir /app/
 WORKDIR /app/
 ADD src /app/
 
-# uWSGI will listen on this port
-EXPOSE 8000
+# gunicorn will listen on this ports
+EXPOSE 80
+EXPOSE 443
 
 # Log directory:
 RUN mkdir -p /var/log/api
@@ -56,12 +57,12 @@ RUN django-admin compilemessages --ignore=env
 ENV DJANGO_CONFIGURATION=OnPremise
 ENV WSGI_APLICATION="core.wsgi:application"
 
-# Change to a non-root user
-#USER ${APP_USER}:${APP_USER}
-
 # Entrypoint permissions
 RUN chmod a+x /app/api_entrypoint.sh
 RUN chmod a+x /app/celery_worker_entrypoint.sh
 RUN chmod a+x /app/celery_beat_entrypoint.sh
+
+# Change to a non-root user
+USER ${APP_USER}:${APP_USER}
 
 ENTRYPOINT ["/app/api_entrypoint.sh"]

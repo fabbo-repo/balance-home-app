@@ -1,3 +1,4 @@
+import logging
 from unittest import mock
 from django.test import TestCase
 from coin.tasks import periodic_update_exchange_data
@@ -6,6 +7,9 @@ from django_celery_beat.models import IntervalSchedule
 
 
 class CoinTasksTests(TestCase):
+    def setUp(self):
+        # Avoid WARNING logs while testing wrong requests
+        logging.disable(logging.WARNING)
 
     def test_shared_task_used(self):
         """

@@ -61,13 +61,13 @@ def update_or_create_annual_balance(converted_quantity, owner,
         owner = owner,
         year = year
     )
-    annual_balance.coin_type = owner.pref_coin_type
+    annual_balance.currency_type = owner.pref_currency_type
     # If an annual_balance already existed, its gross_quantity 
     # must be converted
     if not created:
         annual_balance.gross_quantity = convert_or_fetch(
-            annual_balance.coin_type, 
-            owner.pref_coin_type,
+            annual_balance.currency_type, 
+            owner.pref_currency_type,
             annual_balance.gross_quantity
         )
     # Update extra fields
@@ -90,13 +90,13 @@ def update_or_create_monthly_balance(converted_quantity, owner,
         year = year,
         month = month
     )
-    monthly_balance.coin_type = owner.pref_coin_type
+    monthly_balance.currency_type = owner.pref_currency_type
     # If a monthly_balance already existed, its gross_quantity 
     # must be converted
     if not created:
         monthly_balance.gross_quantity = convert_or_fetch(
-            monthly_balance.coin_type, 
-            owner.pref_coin_type,
+            monthly_balance.currency_type, 
+            owner.pref_currency_type,
             monthly_balance.gross_quantity
         )
     # Update extra fields
