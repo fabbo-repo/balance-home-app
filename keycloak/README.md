@@ -17,3 +17,5 @@
 8. Enable `Internatiolization` in `Localization` tab inside `Realm settings` section, and add "français" and "español" as `Supported locales`.
 
 9. In `Email` tab inside `Realm settings` section setup email settings.
+
+10. In `Sessions` tab inside `Realm settings` section change `SSO Session Idle` and `SSO Session Max` values to 5 Days.
