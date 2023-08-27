@@ -133,7 +133,7 @@ class BalanceLineChart extends ConsumerWidget {
                 maxY: getMaxQuantity(),
                 minY: 0,
               ),
-              swapAnimationDuration: const Duration(milliseconds: 250),
+              duration: const Duration(milliseconds: 250),
             ),
           ),
           Row(

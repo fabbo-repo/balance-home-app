@@ -26,7 +26,7 @@ dependencies:
   # Dependencies for internationalization with flutter:
   flutter_localizations:
     sdk: flutter
-  intl: ^0.17.0
+  intl: ^0.18.0
   # Get version info
   package_info_plus: ^4.0.0
   # Http request
@@ -34,7 +34,7 @@ dependencies:
   http_parser: ^4.0.2
   jwt_decoder: ^2.0.1
   # Routing
-  go_router: ^7.0.0
+  go_router: ^10.1.0
   # State management
   flutter_riverpod: ^2.0.2
   # Equals and hashCode override
@@ -57,14 +57,14 @@ dependencies:
   # Multiplatform IO package
   universal_io: ^2.0.4
   # Flags images
-  flag: ^6.0.0
+  flag: ^7.0.0
   # Graphics
-  fl_chart: ^0.62.0
-  syncfusion_flutter_charts: ^21.1.41
+  fl_chart: ^0.63.0
+  syncfusion_flutter_charts: ^22.2.10
   # Env code generation
   envied: ^0.3.0
   # Functional programing
-  fpdart: ^0.6.0
+  fpdart: ^1.1.0
   # File picker (used for images)
   file_picker: ^5.2.4
   # Path directory provider (not supported for Web)

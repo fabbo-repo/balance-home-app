@@ -51,8 +51,8 @@ final router = GoRouter(
             path: AuthLoadingView.routePath,
             builder: (context, state) {
               return AuthLoadingView(
-                  location: state.queryParameters['path'] != null
-                      ? state.queryParameters['path']!
+                  location: state.pathParameters['path'] != null
+                      ? state.pathParameters['path']!
                       : "/${AuthLoadingView.routePath}");
             },
           ),
@@ -120,7 +120,7 @@ final router = GoRouter(
                         BalanceEditView.routeName,
                     path: BalanceEditView.routePath,
                     builder: (context, state) => BalanceEditView(
-                          id: int.parse(state.queryParameters['id']!),
+                          id: int.parse(state.pathParameters['id']!),
                           balanceTypeMode: BalanceTypeMode.revenue,
                         )),
               ]),
@@ -148,7 +148,7 @@ final router = GoRouter(
                         BalanceEditView.routeName,
                     path: BalanceEditView.routePath,
                     builder: (context, state) => BalanceEditView(
-                          id: int.parse(state.queryParameters['id']!),
+                          id: int.parse(state.pathParameters['id']!),
                           balanceTypeMode: BalanceTypeMode.expense,
                         )),
               ]),
@@ -195,7 +195,7 @@ String? appGuard(BuildContext context, GoRouterState state) {
 
 @visibleForTesting
 String? rootGuard(BuildContext context, GoRouterState state) {
-  final goingToRoot = state.location == '/';
+  final goingToRoot = state.matchedLocation == '/';
   if (goingToRoot) {
     return "/${AppInfoLoadingView.routePath}";
   }
@@ -204,7 +204,7 @@ String? rootGuard(BuildContext context, GoRouterState state) {
 
 Future<String?> logoutGuard(BuildContext context, GoRouterState state) async {
   final loggedIn = authStateListenable.value;
-  final goingToLogout = state.location == '/${LogoutView.routePath}';
+  final goingToLogout = state.matchedLocation == '/${LogoutView.routePath}';
   if (!loggedIn && goingToLogout) {
     return "/";
   }
@@ -236,7 +236,7 @@ Future<String?> authGuardOrNone(
     return "/${ErrorView.noConnectionErrorPath}";
   }
   if (!loggedIn) {
-    return "/${AuthLoadingView.routePath}?path=${state.location}";
+    return "/${AuthLoadingView.routePath}?path=${state.matchedLocation}";
   }
   return null;
 }
@@ -246,7 +246,7 @@ Future<String?> passwordGuard(BuildContext context, GoRouterState state) async {
   if (!isConnected) {
     return "/${ErrorView.noConnectionErrorPath}";
   }
-  final goingToPassword = state.location == '/password';
+  final goingToPassword = state.matchedLocation == '/password';
   if (goingToPassword) return "/";
   return null;
 }

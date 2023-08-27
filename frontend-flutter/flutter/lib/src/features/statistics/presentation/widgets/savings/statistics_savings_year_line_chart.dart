@@ -110,7 +110,7 @@ class StatisticsSavingsYearLineChart extends ConsumerWidget {
                 maxY: getMinMaxQuantity().max.ceilToDouble(),
                 minY: getMinMaxQuantity().min.floorToDouble(),
               ),
-              swapAnimationDuration: const Duration(milliseconds: 250),
+              duration: const Duration(milliseconds: 250),
             ),
           ),
           Row(

@@ -95,7 +95,7 @@ class StatisticsCurrencyLineChart extends StatelessWidget {
           maxY: getMaxQuantity(),
           minY: 0,
         ),
-        swapAnimationDuration: const Duration(milliseconds: 250),
+        duration: const Duration(milliseconds: 250),
       ),
     );
   }

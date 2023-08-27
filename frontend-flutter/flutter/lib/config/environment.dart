@@ -7,5 +7,5 @@ part 'environment.g.dart';
 abstract class Environment {
   /// URL for API
   @EnviedField(varName: "API_URL", defaultValue: "localhost")
-  static const apiUrl = _Environment.apiUrl;
+  static const String apiUrl = _Environment.apiUrl;
 }

@@ -18,18 +18,23 @@ const unknownStatusCode = 600;
 /// Provides a [ValueNotifier] to the app to check http connection state
 final connectionStateListenable = ValueNotifier<bool>(true);
 
+/// The `ApiClient` class is responsible for managing the connection
+/// and making REST API requests.
 class ApiClient {
   @visibleForTesting
   late final Dio dioClient;
+  @visibleForTesting
   final bool displayRequestLogs;
+  @visibleForTesting
   final bool displayResponseLogs;
+  @visibleForTesting
   JwtEntity? jwtToken;
 
   final BaseOptions options = BaseOptions(
       baseUrl: Environment.apiUrl,
-      connectTimeout: const Duration(seconds: 15000),
-      receiveTimeout: const Duration(seconds: 15000),
-      sendTimeout: const Duration(seconds: 15000),
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+      sendTimeout: const Duration(seconds: 10),
       followRedirects: false,
       validateStatus: (status) => true,
       headers: {
@@ -37,6 +42,8 @@ class ApiClient {
         "accept": ContentType.json.toString(),
       });
 
+  /// Creates an instance of `ApiClient` with the Dio client as optional.
+  /// The Dio client is used to make requests to the API.
   ApiClient(
       {Dio? dio,
       this.displayRequestLogs = false,
@@ -70,6 +77,15 @@ class ApiClient {
     removeHeader("authorization");
   }
 
+  /// Handles the HTTP status codes of the responses.
+  /// Returns the correct Failures or, in case it went well, returns the response itself.
+  ///
+  /// HTTP status codes cases:
+  /// * 20X code: `Response`
+  /// * 400 code: `BadRequestFailure`
+  /// * 401 code: `UnauthorizedRequestFailure`
+  /// * 429 code: `TooManyRequestFailure`
+  /// * Other: `HttpRequestFailure`
   @visibleForTesting
   Either<HttpRequestFailure, Response> checkFailureOrResponse(
       {required String path, required Response response}) {
@@ -95,6 +111,9 @@ class ApiClient {
         detail: '', statusCode: response.statusCode ?? unknownStatusCode));
   }
 
+  /// Handles token expiration and renewal. It does not throw any exception,
+  /// in case of not being able to renew the access token,
+  /// it removes the authorization header
   @visibleForTesting
   Future<void> checkAccessJwt() async {
     try {
@@ -134,6 +153,9 @@ class ApiClient {
         "[HTTP RESPONSE] ${response.data} | Headers: ${response.headers}");
   }
 
+  /// Handles exceptions thrown by connection errors. 
+  /// 
+  /// Updates the connection state as disabled (`false`)
   @visibleForTesting
   HttpConnectionFailure handleConnectionError(final Exception error) {
     debugPrint("[HTTP ERROR] $error");
@@ -141,6 +163,10 @@ class ApiClient {
     return HttpConnectionFailure(detail: error.toString());
   }
 
+  /// Performs a GET request to the API with the provided path.
+  /// Path should not include the base url of the server.
+  ///
+  /// Returns either a HTTP failure or a HTTP response.
   Future<Either<HttpRequestFailure, Response>> getRequest(String path,
       {Map<String, dynamic>? queryParameters}) async {
     try {
@@ -153,6 +179,10 @@ class ApiClient {
     }
   }
 
+  /// Performs a POST request to the API with the provided path and data.
+  /// Path should not include the base url of the server.
+  ///
+  /// Returns either a HTTP failure or a HTTP response.
   Future<Either<HttpRequestFailure, Response>> postRequest(String path,
       {Object? data}) async {
     try {
@@ -165,6 +195,10 @@ class ApiClient {
     }
   }
 
+  /// Performs a PUT request to the API with the provided path and data.
+  /// Path should not include the base url of the server.
+  ///
+  /// Returns either a HTTP failure or a HTTP response.
   Future<Either<HttpRequestFailure, Response>> putRequest(String path,
       {Object? data}) async {
     try {
@@ -177,6 +211,10 @@ class ApiClient {
     }
   }
 
+  /// Performs a PATCH request to the API with the provided path and data.
+  /// Path should not include the base url of the server.
+  ///
+  /// Returns either a HTTP failure or a HTTP response.
   Future<Either<HttpRequestFailure, Response>> patchRequest(String path,
       {Object? data}) async {
     try {
@@ -189,6 +227,11 @@ class ApiClient {
     }
   }
 
+  /// Performs a PATCH image request to the API with the provided path, 
+  /// image bytes and image mime type.
+  /// Path should not include the base url of the server.
+  ///
+  /// Returns either a HTTP failure or a HTTP response.
   Future<Either<HttpRequestFailure, Response>> patchImageRequest(
       String path, Uint8List bytes, String type) async {
     if (displayRequestLogs) debugPrint("[HTTP REQUEST] Sending image...");
@@ -200,6 +243,10 @@ class ApiClient {
     return await patchRequest(path, data: data);
   }
 
+  /// Performs a DEL request to the API with the provided path.
+  /// Path should not include the base url of the server.
+  ///
+  /// Returns either a HTTP failure or a HTTP response.
   Future<Either<HttpRequestFailure, Response>> delRequest(String path) async {
     try {
       if (displayRequestLogs) logRequest(path, "DEL");
