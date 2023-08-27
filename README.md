@@ -1,39 +1,74 @@
+# BalHom - Balance Home App
+
 ![Alt text](./balance_home_app.png?raw=true "")
 
-# Balance Home App or *BalHom*
+Welcome to BalHom, your ultimate solution for managing your home finances with ease and precision. BalHom, short for Balance Home App, is designed to simplify the task of tracking your income and expenses while providing insightful visualizations of your financial health over time.
 
-[![Generic badge](https://img.shields.io/badge/os-android-GREEN.svg)](https://shields.io/)
-[![Generic badge](https://img.shields.io/badge/os-ios-GREEN.svg)](https://shields.io/)
-[![Generic badge](https://img.shields.io/badge/os-windows-GREEN.svg)](https://shields.io/)
-[![Generic badge](https://img.shields.io/badge/os-linux-GREEN.svg)](https://shields.io/)
-[![Generic badge](https://img.shields.io/badge/os-web-GREEN.svg)](https://shields.io/)
+## Key Features
 
-![Django](https://img.shields.io/badge/django-7B9D4B?style=for-the-badge&logo=django&logoColor=ffdd54)
+### Dynamic Visualizations
+
+BalHom utilizes informative graphs and charts to help you effortlessly visualize your financial balance as it evolves over time. Watch your income and expenses ebb and flow, giving you a clear understanding of your financial journey.
+
+### Currency Exchange
+
+One standout feature of BalHom is its ability to handle currency exchange seamlessly. Whether you're dealing with multiple currencies or frequently converting funds, BalHom ensures accurate and up-to-date exchange rates.
+
+### Monthly and Annual Budgets
+Set personalized spending thresholds for both monthly and annual budgets. BalHom keeps you on track and notifies you when you're approaching your limits, helping you maintain financial discipline.
+
+### Email Notifications
+Stay informed with monthly and annual balance summaries delivered right to your inbox. BalHom can send you convenient email updates, ensuring you're always in the loop about your financial status.
+
+### Secure Authentication
+Rest easy knowing your financial data is protected. BalHom features robust email and password authentication to keep your information secure.
+
+### Open Source Stack
+We believe in transparency and collaboration. BalHom is built on an entirely open-source stack, ensuring that our codebase is accessible for all. We're committed to the principles of open source software.
+
+## Backend Components
+
+![DjangoREST](https://img.shields.io/badge/DJANGO-REST-ff1709?style=for-the-badge&logo=django&logoColor=white&color=ff1709&labelColor=gray)
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+![Celery](https://a11ybadges.com/badge?logo=celery)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+
+BalHom's backend is powered by a robust set of services:
+
+- **DjangoREST API**: The backbone of our application, providing data management and access.
+
+- **Currency Conversion API**: Facilitating seamless currency exchange operations.
+
+- **PostgreSQL Database**: A reliable and scalable database solution, ensuring your financial data is stored securely.
+
+- **Keycloak**: Ensuring secure authentication for our users.
+
+- **Minio**: Managing images and static files efficiently.
+
+- **Celery**: Handling task execution for enhanced performance.
+
+- **Redis**: Serving as our message broker and message caching service.
+
+[Related docs](./backend-djangorest/api/README.md)
+
+## Frontend Platform
+
 ![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)
 
-**Balance Home App** or ***BalHom*** is an open source multi-platform app that helps people to manage their day-to-day expenses and revenues.
+The frontend of BalHom is developed as a cross-platform application using Flutter. This choice ensures a consistent and user-friendly experience on various devices and operating systems.
 
-Some of its advantages are:
+[Related docs](./frontend-flutter/flutter/README.md)
 
-* The useof different types of currencies, managing in a transparent way the exchange between currencies by adding an expense or income, as well as, including the possibility to add new currencies.
+## Contribute
 
-* By default, at the end of each month it sends an email with the summary of the monthly balance. It also applies to an annual period.
+BalHom is an open-source project, and we welcome contributions from the community. Whether you're a developer, designer, or financial enthusiast, you can help make BalHom even better.
 
-* Classification tool for expenses and incomes. More categories can be added to those that come by default from the admin panel.
+## License
 
-* Options to manage monthly or annual balance thanks to an expectation threshold that can be configured from the user profile.
+BalHom is licensed under the [Apache License](link_to_license). Feel free to use, modify, and distribute our code, following the terms of the license.
 
-* Support for different languages (English, French and Spanish).
+## Support
 
-## For developers
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/FabboMaster)
 
-This app is divided into two components, backend and frontend. On the bckend side, the Django framework was chosen with Celery and Redis for tasks scheduling. On the other hand, the Flutter framework was used in fronted, due to its multiplatform capability.
-
-Extra information is available for people interested in checking the source code or testing the system. Just check the next links:
-
-* [Frontend Documentation](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/frontend/flutter#readme)
-* [Backend Documentation](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/backend/djangorest#readme)
-
-## Usage
-
-To use the app, the server of the content located in the [deployment](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/backend) folder must be previously deployed. It is recommended to read its [documentation](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/backend/djangorest#readme)
+If you have any questions, concerns, or need assistance, please don't hesitate to reach out. We are here to help you make the most of our BalHom.
