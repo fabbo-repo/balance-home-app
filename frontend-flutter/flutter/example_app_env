@@ -1,1 +1,5 @@
 API_URL="http://127.0.0.1:8000"
+
+KEYCLOAK_URL="http://127.0.0.1:39080"
+KEYCLOAK_REALM=balhom-realm
+KEYCLOAK_CLIENT_ID=balhom-client
