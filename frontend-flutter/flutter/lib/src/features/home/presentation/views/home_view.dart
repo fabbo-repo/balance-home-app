@@ -1,7 +1,7 @@
 import 'package:adaptive_navigation/adaptive_navigation.dart';
-import 'package:balance_home_app/config/api_client.dart';
+import 'package:balance_home_app/src/core/clients/api_client.dart';
 import 'package:balance_home_app/src/core/providers.dart';
-import 'package:balance_home_app/config/platform_utils.dart';
+import 'package:balance_home_app/src/core/utils/platform_utils.dart';
 import 'package:balance_home_app/src/features/balance/presentation/views/balance_view.dart';
 import 'package:balance_home_app/src/features/home/presentation/views/home_tabs.dart';
 import 'package:balance_home_app/src/features/home/presentation/widgets/app_bar.dart';

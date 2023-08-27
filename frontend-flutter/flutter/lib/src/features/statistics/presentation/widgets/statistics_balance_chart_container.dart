@@ -1,5 +1,5 @@
-import 'package:balance_home_app/config/api_client.dart';
-import 'package:balance_home_app/config/platform_utils.dart';
+import 'package:balance_home_app/src/core/clients/api_client.dart';
+import 'package:balance_home_app/src/core/utils/platform_utils.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/presentation/states/selected_date_state.dart';

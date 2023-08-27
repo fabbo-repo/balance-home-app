@@ -1,4 +1,4 @@
-import 'package:balance_home_app/config/api_client.dart';
+import 'package:balance_home_app/src/core/clients/api_client.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 
 /// Represents Http request error

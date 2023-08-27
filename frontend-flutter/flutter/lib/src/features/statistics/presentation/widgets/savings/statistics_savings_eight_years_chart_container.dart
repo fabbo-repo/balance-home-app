@@ -1,4 +1,4 @@
-import 'package:balance_home_app/config/platform_utils.dart';
+import 'package:balance_home_app/src/core/utils/platform_utils.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/statistics/domain/entities/annual_balance_entity.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings/statistics_savings_eight_years_line_chart.dart';

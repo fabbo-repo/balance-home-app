@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:balance_home_app/src/core/providers.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:balance_home_app/config/providers.dart' as providers;
 
 /// Initializes services and controllers before the start of the application
 Future<ProviderContainer> bootstrap() async {
@@ -11,7 +11,7 @@ Future<ProviderContainer> bootstrap() async {
     overrides: [],
     observers: [if (kDebugMode) _Logger()],
   );
-  await providers.initializeProviders(container);
+  await initializeProviders(container);
   return container;
 }
 

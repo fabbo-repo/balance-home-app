@@ -1,5 +1,5 @@
-import 'package:balance_home_app/config/local_preferences_client.dart';
 import 'package:balance_home_app/config/theme.dart';
+import 'package:balance_home_app/src/core/clients/local_preferences_client.dart';
 import 'package:flutter/material.dart';
 
 /// Manage Settings in device storage

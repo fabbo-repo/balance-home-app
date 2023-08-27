@@ -1,4 +1,4 @@
-import 'package:balance_home_app/config/router.dart';
+import 'package:balance_home_app/src/core/router.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/no_local_entity_failure.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/double_form_field.dart';

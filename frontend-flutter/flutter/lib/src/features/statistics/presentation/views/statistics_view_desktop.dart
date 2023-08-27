@@ -1,6 +1,6 @@
-import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/theme.dart';
+import 'package:balance_home_app/src/core/clients/api_client.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/no_local_entity_failure.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';

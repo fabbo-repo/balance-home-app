@@ -1,4 +1,4 @@
-import 'package:balance_home_app/config/router.dart';
+import 'package:balance_home_app/src/core/router.dart';
 import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/info_dialog.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';

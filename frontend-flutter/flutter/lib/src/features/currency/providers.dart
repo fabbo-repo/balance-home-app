@@ -1,5 +1,5 @@
-import 'package:balance_home_app/config/providers.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
+import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/currency/application/currency_type_list_controller.dart';
 import 'package:balance_home_app/src/features/currency/domain/entities/currency_type_entity.dart';
 import 'package:balance_home_app/src/features/currency/domain/repositories/currency_conversion_repository_interface.dart';

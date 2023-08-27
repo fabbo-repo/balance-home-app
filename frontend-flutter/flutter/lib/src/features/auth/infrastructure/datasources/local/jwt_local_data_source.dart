@@ -1,4 +1,4 @@
-import 'package:balance_home_app/config/local_preferences_client.dart';
+import 'package:balance_home_app/src/core/clients/local_preferences_client.dart';
 import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/jwt_entity.dart';

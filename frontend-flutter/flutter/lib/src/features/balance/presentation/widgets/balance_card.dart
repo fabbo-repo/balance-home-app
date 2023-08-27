@@ -1,6 +1,6 @@
-import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/config/app_layout.dart';
-import 'package:balance_home_app/config/router.dart';
+import 'package:balance_home_app/src/core/clients/api_client.dart';
+import 'package:balance_home_app/src/core/router.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/info_dialog.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';

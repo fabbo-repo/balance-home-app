@@ -1,5 +1,4 @@
-import 'package:balance_home_app/config/providers.dart';
-import 'package:balance_home_app/config/router.dart';
+import 'package:balance_home_app/src/core/router.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:flutter/material.dart';

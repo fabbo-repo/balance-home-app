@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:balance_home_app/config/api_client.dart';
+import 'package:balance_home_app/src/core/clients/api_client.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_info_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/auth_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/error_view.dart';

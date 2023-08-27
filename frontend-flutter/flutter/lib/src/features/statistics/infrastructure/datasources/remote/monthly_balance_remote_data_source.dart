@@ -1,5 +1,5 @@
-import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/config/api_contract.dart';
+import 'package:balance_home_app/src/core/clients/api_client.dart';
 import 'package:balance_home_app/src/core/domain/entities/pagination_entity.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_request_failure.dart';

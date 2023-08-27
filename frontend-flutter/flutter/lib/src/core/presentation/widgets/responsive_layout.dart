@@ -6,14 +6,13 @@ class ResponsiveLayout extends StatelessWidget {
   final Widget desktopChild;
 
   /// Layout used to display three diferent [Widgets] depending
-  /// on the shortest distance from the device. Distances will be 
+  /// on the shortest distance from the device. Distances will be
   /// related to mobile, tablet and desktop platforms.
-  const ResponsiveLayout({
-    super.key, 
-    required this.mobileChild, 
-    required this.tabletChild, 
-    required this.desktopChild
-  });
+  const ResponsiveLayout(
+      {super.key,
+      required this.mobileChild,
+      required this.tabletChild,
+      required this.desktopChild});
 
   /// Gets the side of the screen with the shortest distance
   /// from the device, and compares it with a magic number
@@ -27,9 +26,10 @@ class ResponsiveLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        double width = MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-          .size
-          .width;
+        double width = MediaQueryData.fromView(
+                WidgetsBinding.instance.platformDispatcher.views.first)
+            .size
+            .width;
         if (width < 550) {
           return mobileChild;
         } else if (width < 1024) {

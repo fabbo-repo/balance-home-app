@@ -1,4 +1,4 @@
-import 'package:balance_home_app/config/local_db_client.dart';
+import 'package:balance_home_app/src/core/clients/local_db_client.dart';
 import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/no_local_entity_failure.dart';
