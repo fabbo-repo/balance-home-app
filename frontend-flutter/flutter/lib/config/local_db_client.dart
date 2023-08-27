@@ -20,7 +20,7 @@ class LocalDbClient {
       final collection = await BoxCollection.open(
         dbName,
         tableNames,
-        path: path, // Only used for Dart IO
+        path: path,
       );
       return collection;
     });

@@ -1,7 +1,7 @@
 import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/router.dart';
-import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
+import 'package:balance_home_app/src/core/presentation/views/app_title.dart';
 import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
@@ -47,7 +47,7 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
               : "${data.lastLogin!.toLocal().day}/${data.lastLogin!.toLocal().month}/${data.lastLogin!.toLocal().year} - ${data.lastLogin!.toLocal().hour}:${data.lastLogin!.toLocal().minute}:${data.lastLogin!.toLocal().second}";
       widget.cache.value = Scaffold(
           appBar: AppBar(
-            title: const AppTittle(fontSize: 30),
+            title: const AppTitle(fontSize: 30),
             backgroundColor: AppColors.appBarBackgroundColor,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),

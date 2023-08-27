@@ -2,10 +2,10 @@ import 'package:balance_home_app/src/core/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AppTittle extends ConsumerWidget {
+class AppTitle extends ConsumerWidget {
   final double? fontSize;
 
-  const AppTittle({this.fontSize, super.key});
+  const AppTitle({this.fontSize, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,20 +16,18 @@ class AppTittle extends ConsumerWidget {
         Text(
           appLocalizations.appTitle1,
           style: TextStyle(
-            color: Colors.red,
-            fontWeight: FontWeight.bold,
-            fontSize: fontSize ?? 40,
-            fontStyle: FontStyle.italic
-          ),
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: fontSize ?? 40,
+              fontStyle: FontStyle.italic),
         ),
         Text(
           appLocalizations.appTitle2,
           style: TextStyle(
-            color: Colors.green,
-            fontWeight: FontWeight.bold,
-            fontSize: fontSize ?? 40,
-            fontStyle: FontStyle.italic
-          ),
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+              fontSize: fontSize ?? 40,
+              fontStyle: FontStyle.italic),
         ),
       ],
     );

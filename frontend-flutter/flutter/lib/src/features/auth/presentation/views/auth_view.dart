@@ -2,7 +2,7 @@ import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/app_layout.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/no_local_entity_failure.dart';
-import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
+import 'package:balance_home_app/src/core/presentation/views/app_title.dart';
 import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/language_picker_dropdown.dart';
 import 'package:balance_home_app/src/core/providers.dart';
@@ -58,7 +58,7 @@ class AuthView extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-            title: const AppTittle(fontSize: 30),
+            title: const AppTitle(fontSize: 30),
             backgroundColor: AppColors.appBarBackgroundColor,
             automaticallyImplyLeading: false),
         body: SafeArea(

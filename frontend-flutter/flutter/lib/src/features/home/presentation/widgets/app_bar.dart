@@ -2,7 +2,7 @@ import 'package:balance_home_app/config/api_client.dart';
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/platform_utils.dart';
 import 'package:balance_home_app/config/router.dart';
-import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
+import 'package:balance_home_app/src/core/presentation/views/app_title.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/logout_view.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
@@ -38,7 +38,7 @@ class CustomAppBar extends ConsumerWidget {
       // else cases a balance counter should be rendered
       title: (PlatformUtils().isLargeWindow(context) ||
               PlatformUtils().isMediumWindow(context))
-          ? const AppTittle(fontSize: 30)
+          ? const AppTitle(fontSize: 30)
           : _balanceBox(appLocalizations, user),
       leading: (PlatformUtils().isLargeWindow(context) ||
               PlatformUtils().isMediumWindow(context))

@@ -1,6 +1,6 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/config/router.dart';
-import 'package:balance_home_app/src/core/presentation/views/app_titlle.dart';
+import 'package:balance_home_app/src/core/presentation/views/app_title.dart';
 import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
@@ -29,7 +29,7 @@ class SettingsView extends ConsumerWidget {
     return user.when(data: (data) {
       cache.value = Scaffold(
           appBar: AppBar(
-            title: const AppTittle(fontSize: 30),
+            title: const AppTitle(fontSize: 30),
             backgroundColor: AppColors.appBarBackgroundColor,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
