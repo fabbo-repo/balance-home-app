@@ -1,6 +1,6 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/src/core/utils/platform_utils.dart';
-import 'package:balance_home_app/config/theme.dart';
+import 'package:balance_home_app/config/app_theme.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/date_util.dart';

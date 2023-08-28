@@ -1,4 +1,4 @@
-import 'package:balance_home_app/config/theme.dart';
+import 'package:balance_home_app/config/app_theme.dart';
 import 'package:balance_home_app/src/core/application/app_version_controller.dart';
 import 'package:balance_home_app/src/core/clients/api_client.dart';
 import 'package:balance_home_app/src/core/clients/local_db_client.dart';
@@ -9,7 +9,7 @@ import 'package:balance_home_app/src/core/infrastructure/datasources/remote/app_
 import 'package:balance_home_app/src/core/infrastructure/repositories/app_info_repository.dart';
 import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
 import 'package:balance_home_app/src/core/presentation/states/app_localizations_state.dart';
-import 'package:balance_home_app/src/core/presentation/states/theme_mode_state.dart';
+import 'package:balance_home_app/src/core/presentation/states/theme_data_state.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/user_local_data_source.dart';
 import 'package:balance_home_app/src/features/balance/infrastructure/datasources/local/balance_local_data_source.dart';
 import 'package:balance_home_app/src/features/balance/infrastructure/datasources/local/balance_type_local_data_source.dart';

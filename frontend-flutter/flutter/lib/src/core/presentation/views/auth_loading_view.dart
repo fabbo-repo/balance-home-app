@@ -1,5 +1,5 @@
 import 'package:balance_home_app/src/core/router.dart';
-import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
+import 'package:balance_home_app/src/core/presentation/views/app_error_view.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
@@ -28,14 +28,14 @@ class AuthLoadingView extends ConsumerWidget {
         return const Scaffold(body: LoadingWidget());
       }
       value.fold((_) {
-        ErrorView.go404();
+        AppErrorView.go404();
         return const Scaffold(body: LoadingWidget());
       }, (_) {
         if (location != "/$routePath") {
           goLocation();
           return const Scaffold(body: LoadingWidget());
         } else {
-          ErrorView.go404();
+          AppErrorView.go404();
           return const Scaffold(body: LoadingWidget());
         }
       });

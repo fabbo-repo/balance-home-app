@@ -1,5 +1,5 @@
 import 'package:balance_home_app/src/core/router.dart';
-import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
+import 'package:balance_home_app/src/core/presentation/views/app_error_view.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/info_dialog.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/core/providers.dart';
@@ -28,7 +28,7 @@ class UserDeleteView extends ConsumerWidget {
           .then((value) async {
         if (value) {
           (await authController.deleteUser()).fold((_) {
-            ErrorView.go();
+            AppErrorView.go();
           }, (_) {
             navigatorKey.currentContext!.goNamed(AuthView.routeName);
           });

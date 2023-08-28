@@ -1,4 +1,4 @@
-import 'package:balance_home_app/config/theme.dart';
+import 'package:balance_home_app/config/app_theme.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';

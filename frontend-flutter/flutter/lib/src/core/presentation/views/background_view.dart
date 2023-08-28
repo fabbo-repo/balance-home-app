@@ -1,4 +1,4 @@
-import 'package:balance_home_app/config/theme.dart';
+import 'package:balance_home_app/config/app_theme.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

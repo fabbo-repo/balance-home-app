@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class ErrorDialog extends StatelessWidget {
+class AppErrorDialog extends StatelessWidget {
   final String dialogTitle;
   final String dialogDescription;
   final String cancelText;
   final void Function()? onCancel;
 
-  const ErrorDialog({
+  const AppErrorDialog({
     required this.dialogTitle, 
     required this.dialogDescription, 
     required this.cancelText, 

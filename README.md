@@ -17,6 +17,10 @@ One standout feature of BalHom is its ability to handle currency exchange seamle
 ### Monthly and Annual Budgets
 Set personalized spending thresholds for both monthly and annual budgets. BalHom keeps you on track and notifies you when you're approaching your limits, helping you maintain financial discipline.
 
+### Internationalization
+
+BalHom speaks your language! With support for English, Spanish, and French, you can use BalHom in the language you're most comfortable with, making financial management a breeze no matter where you're from.
+
 ### Email Notifications
 Stay informed with monthly and annual balance summaries delivered right to your inbox. BalHom can send you convenient email updates, ensuring you're always in the loop about your financial status.
 

@@ -1,4 +1,4 @@
-import 'package:balance_home_app/config/theme.dart';
+import 'package:balance_home_app/config/app_theme.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/language_picker_dropdown.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/text_check_box.dart';
 import 'package:balance_home_app/src/core/providers.dart';

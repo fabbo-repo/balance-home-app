@@ -5,7 +5,7 @@ import 'package:balance_home_app/src/core/presentation/models/selected_date.dart
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/presentation/states/selected_date_state.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/error_dialog.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_error_dialog.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/responsive_layout.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/date_util.dart';
@@ -170,7 +170,7 @@ class BalanceView extends ConsumerWidget {
     if (years.isEmpty) {
       await showDialog(
           context: navigatorKey.currentContext!,
-          builder: (context) => ErrorDialog(
+          builder: (context) => AppErrorDialog(
                 dialogTitle: appLocalizations.date,
                 dialogDescription: appLocalizations.genericError,
                 cancelText: appLocalizations.cancel,

@@ -1,5 +1,5 @@
 import 'package:balance_home_app/src/core/router.dart';
-import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
+import 'package:balance_home_app/src/core/presentation/views/app_error_view.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
@@ -22,7 +22,7 @@ class LogoutView extends ConsumerWidget {
     Future.delayed(Duration.zero, () async {
       final value = await authController.signOut();
       value.fold((_) {
-        ErrorView.go();
+        AppErrorView.go();
       }, (_) {
         navigatorKey.currentContext!.goNamed(AuthView.routeName);
       });

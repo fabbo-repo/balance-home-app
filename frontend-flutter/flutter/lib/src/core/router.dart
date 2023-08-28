@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:balance_home_app/src/core/clients/api_client.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_info_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/auth_loading_view.dart';
-import 'package:balance_home_app/src/core/presentation/views/error_view.dart';
+import 'package:balance_home_app/src/core/presentation/views/app_error_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/loading_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/logout_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
@@ -25,14 +25,14 @@ final router = GoRouter(
   errorBuilder: (context, state) {
     if (state.error
         .toString()
-        .contains("/${ErrorView.noConnectionErrorPath}")) {
-      return const ErrorView(location: "/${ErrorView.noConnectionErrorPath}");
+        .contains("/${AppErrorView.noConnectionErrorPath}")) {
+      return const AppErrorView(location: "/${AppErrorView.noConnectionErrorPath}");
     }
-    if (state.error.toString().contains("/${ErrorView.notFoundPath}")) {
-      return const ErrorView(location: "/${ErrorView.notFoundPath}");
+    if (state.error.toString().contains("/${AppErrorView.notFoundPath}")) {
+      return const AppErrorView(location: "/${AppErrorView.notFoundPath}");
     }
     debugPrint(state.error.toString());
-    return const ErrorView(location: '/${ErrorView.routePath}');
+    return const AppErrorView(location: '/${AppErrorView.routePath}');
   },
   navigatorKey: navigatorKey,
   debugLogDiagnostics: true,
@@ -233,7 +233,7 @@ Future<String?> authGuardOrNone(
           state.name == BalanceCreateView.routeName ||
           state.name == UserDeleteView.routeName ||
           state.name == LogoutView.routeName)) {
-    return "/${ErrorView.noConnectionErrorPath}";
+    return "/${AppErrorView.noConnectionErrorPath}";
   }
   if (!loggedIn) {
     return "/${AuthLoadingView.routePath}?path=${state.matchedLocation}";
@@ -244,7 +244,7 @@ Future<String?> authGuardOrNone(
 Future<String?> passwordGuard(BuildContext context, GoRouterState state) async {
   final isConnected = connectionStateListenable.value;
   if (!isConnected) {
-    return "/${ErrorView.noConnectionErrorPath}";
+    return "/${AppErrorView.noConnectionErrorPath}";
   }
   final goingToPassword = state.matchedLocation == '/password';
   if (goingToPassword) return "/";
