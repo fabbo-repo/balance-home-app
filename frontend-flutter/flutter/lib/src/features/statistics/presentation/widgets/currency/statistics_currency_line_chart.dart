@@ -54,11 +54,11 @@ class StatisticsCurrencyLineChart extends StatelessWidget {
           sideTitles: bottomTitles,
         ),
         // Ignore right details
-        rightTitles: AxisTitles(
+        rightTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
         // Ignore top details
-        topTitles: AxisTitles(
+        topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
         leftTitles: AxisTitles(
@@ -86,7 +86,7 @@ class StatisticsCurrencyLineChart extends StatelessWidget {
       padding: const EdgeInsets.all(15),
       child: LineChart(
         LineChartData(
-          gridData: FlGridData(show: true),
+          gridData: const FlGridData(show: true),
           titlesData: titlesData,
           borderData: borderData,
           lineBarsData: lineBarsData,
@@ -113,7 +113,7 @@ class StatisticsCurrencyLineChart extends StatelessWidget {
         color: const Color.fromARGB(200, 0, 65, 205),
         barWidth: 2,
         isStrokeCapRound: true,
-        dotData: FlDotData(show: false),
+        dotData: const FlDotData(show: false),
         belowBarData: BarAreaData(
           show: true,
           color: const Color.fromARGB(55, 0, 65, 205),

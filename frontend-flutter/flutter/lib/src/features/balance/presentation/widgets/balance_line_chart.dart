@@ -64,11 +64,11 @@ class BalanceLineChart extends ConsumerWidget {
           sideTitles: bottomTitles,
         ),
         // Ignore right details
-        rightTitles: AxisTitles(
+        rightTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
         // Ignore top details
-        topTitles: AxisTitles(
+        topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
         leftTitles: AxisTitles(
@@ -114,7 +114,7 @@ class BalanceLineChart extends ConsumerWidget {
           Expanded(
             child: LineChart(
               LineChartData(
-                gridData: FlGridData(show: true),
+                gridData: const FlGridData(show: true),
                 titlesData: titlesData,
                 borderData: borderData,
                 lineBarsData: [
@@ -202,7 +202,7 @@ class BalanceLineChart extends ConsumerWidget {
             : const Color.fromARGB(184, 0, 175, 15),
         barWidth: 2,
         isStrokeCapRound: true,
-        dotData: FlDotData(show: false),
+        dotData: const FlDotData(show: false),
         belowBarData: BarAreaData(
           show: true,
           color: (balanceType == BalanceTypeMode.expense)

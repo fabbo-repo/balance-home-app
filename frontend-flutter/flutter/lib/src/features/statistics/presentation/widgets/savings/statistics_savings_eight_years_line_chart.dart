@@ -60,11 +60,11 @@ class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
           sideTitles: bottomTitles,
         ),
         // Ignore right details
-        rightTitles: AxisTitles(
+        rightTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
         // Ignore top details
-        topTitles: AxisTitles(
+        topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
         leftTitles: AxisTitles(
@@ -96,7 +96,7 @@ class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
           Expanded(
             child: LineChart(
               LineChartData(
-                gridData: FlGridData(show: true),
+                gridData: const FlGridData(show: true),
                 titlesData: titlesData,
                 borderData: borderData,
                 lineBarsData: lineBarsData,
@@ -162,7 +162,7 @@ class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
         color: const Color.fromARGB(184, 7, 95, 15),
         barWidth: 2,
         isStrokeCapRound: true,
-        dotData: FlDotData(show: false),
+        dotData: const FlDotData(show: false),
         belowBarData: BarAreaData(
           show: true,
           color: const Color.fromARGB(34, 9, 82, 15),
@@ -198,7 +198,7 @@ class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
         color: const Color.fromARGB(225, 224, 167, 231),
         barWidth: 2,
         isStrokeCapRound: true,
-        dotData: FlDotData(show: false),
+        dotData: const FlDotData(show: false),
         belowBarData: BarAreaData(
           show: true,
           color: const Color.fromARGB(47, 224, 167, 231),
