@@ -1,6 +1,6 @@
 import 'package:balance_home_app/config/app_theme.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/language_picker_dropdown.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/text_check_box.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_language_picker_dropdown.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_check_box.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/dialog_utils.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
@@ -48,7 +48,7 @@ class SettingsWidget extends ConsumerWidget {
                       color: Color.fromARGB(255, 70, 70, 70), fontSize: 18),
                 ),
                 horizontalSpace(),
-                CustomLanguagePickerDropdown(
+                AppLanguagePickerDropdown(
                     appLocalizations: appLocalizations,
                     onValuePicked: (Language language) async {
                       Locale locale = Locale(language.isoCode);
@@ -66,7 +66,7 @@ class SettingsWidget extends ConsumerWidget {
             ),
             verticalSpace(),
             verticalSpace(),
-            TextCheckBox(
+            AppTextCheckBox(
                 title: appLocalizations.darkMode,
                 isChecked: theme == AppTheme.darkTheme,
                 fillColor: const Color.fromARGB(255, 70, 70, 70),
@@ -80,7 +80,7 @@ class SettingsWidget extends ConsumerWidget {
                 }),
             verticalSpace(),
             verticalSpace(),
-            TextCheckBox(
+            AppTextCheckBox(
                 title: appLocalizations.receiveEmailBalance,
                 isChecked: user.receiveEmailBalance,
                 fillColor: const Color.fromARGB(255, 70, 70, 70),

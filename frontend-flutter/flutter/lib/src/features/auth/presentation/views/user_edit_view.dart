@@ -2,9 +2,9 @@ import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/src/core/router.dart';
 import 'package:balance_home_app/src/core/clients/api_client.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_title.dart';
-import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/auth_background_view.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_loading_widget.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/user_delete_view.dart';
@@ -13,7 +13,7 @@ import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/views/statistics_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class UserEditView extends ConsumerStatefulWidget {
   /// Route name
@@ -21,6 +21,8 @@ class UserEditView extends ConsumerStatefulWidget {
 
   /// Route path
   static const routePath = 'user-edit';
+
+  final DateFormat dateFormatter = DateFormat('dd/MM/yyyy');
 
   @visibleForTesting
   final cache = ValueNotifier<Widget>(Container());
@@ -44,15 +46,14 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
           ? "-"
           : data.lastLogin == null
               ? "-"
-              : "${data.lastLogin!.toLocal().day}/${data.lastLogin!.toLocal().month}/${data.lastLogin!.toLocal().year} - ${data.lastLogin!.toLocal().hour}:${data.lastLogin!.toLocal().minute}:${data.lastLogin!.toLocal().second}";
+              : widget.dateFormatter.format(data.lastLogin!);
       widget.cache.value = Scaffold(
           appBar: AppBar(
             title: const AppTitle(fontSize: 30),
             backgroundColor: AppColors.appBarBackgroundColor,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => navigatorKey.currentContext!
-                  .goNamed(StatisticsView.routeName),
+              onPressed: () => router.goNamed(StatisticsView.routeName),
             ),
             actions: [
               if (isConnected)
@@ -70,20 +71,19 @@ class _UserEditViewState extends ConsumerState<UserEditView> {
             ],
           ),
           body: SafeArea(
-              child: BackgroundWidget(
+              child: AuthBackgroundWidget(
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   (data == null)
-                      ? const LoadingWidget()
+                      ? const AppLoadingWidget()
                       : UserEditForm(edit: editable, user: data),
                   if (!editable && isConnected)
                     AppTextButton(
                       text: appLocalizations.userDelete,
                       height: 40,
                       onPressed: () async {
-                        navigatorKey.currentContext!
-                            .pushNamed(UserDeleteView.routeName);
+                        router.pushNamed(UserDeleteView.routeName);
                       },
                       backgroundColor: const Color.fromARGB(220, 221, 65, 54),
                     ),

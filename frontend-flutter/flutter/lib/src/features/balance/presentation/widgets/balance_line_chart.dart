@@ -25,7 +25,7 @@ class BalanceLineChart extends ConsumerWidget {
   SideTitles get bottomTitles => SideTitles(
         showTitles: true,
         reservedSize: 22,
-        interval: PlatformUtils().isSmallWindow(navigatorKey.currentContext!) &&
+        interval: PlatformUtils.isSmallWindow(navigatorKey.currentContext!) &&
                 selectedDateMode == SelectedDateMode.month
             ? 2
             : 1,

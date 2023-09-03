@@ -8,7 +8,6 @@ import 'package:balance_home_app/src/features/balance/presentation/views/balance
 import 'package:balance_home_app/src/features/balance/presentation/widgets/balance_create_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class BalanceCreateView extends ConsumerWidget {
   /// Route name
@@ -37,7 +36,7 @@ class BalanceCreateView extends ConsumerWidget {
         backgroundColor: AppColors.appBarBackgroundColor,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => navigatorKey.currentContext!.goNamed(
+          onPressed: () => router.goNamed(
               balanceTypeMode == BalanceTypeMode.expense
                   ? BalanceView.routeExpenseName
                   : BalanceView.routeRevenueName),

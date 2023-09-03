@@ -3,10 +3,10 @@ import 'package:balance_home_app/src/core/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BackgroundWidget extends ConsumerWidget {
+class AuthBackgroundWidget extends ConsumerWidget {
   final Widget child;
 
-  const BackgroundWidget({required this.child, super.key});
+  const AuthBackgroundWidget({required this.child, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -1,8 +1,8 @@
 import 'package:balance_home_app/src/core/router.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/password_text_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_password_text_form_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_form_field.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/text_check_box.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_check_box.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/login_password.dart';
@@ -12,7 +12,6 @@ import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/views/statistics_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
   @visibleForTesting
@@ -80,7 +79,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 validator: (value) => email?.validate,
               ),
               verticalSpace(),
-              PasswordTextFormField(
+              AppPasswordTextFormField(
                 maxWidth: 400,
                 maxCharacters: 400,
                 title: appLocalizations.password,
@@ -90,7 +89,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 validator: (value) => password?.validate,
               ),
               verticalSpace(),
-              TextCheckBox(
+              AppTextCheckBox(
                 title: appLocalizations.storeCredentials,
                 fillColor: const Color.fromARGB(255, 65, 65, 65),
                 onChanged: (value) {
@@ -133,8 +132,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                 appLocalizations, failure.detail);
                           }
                         }, (_) {
-                          navigatorKey.currentContext!
-                              .go("/${StatisticsView.routePath}");
+                          router.goNamed(StatisticsView.routeName);
                         });
                       },
                       text: appLocalizations.signIn)),

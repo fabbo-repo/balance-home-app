@@ -1,5 +1,5 @@
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/password_text_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_password_text_form_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
@@ -84,7 +84,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                 controller: widget.emailController,
               ),
               verticalSpace(),
-              PasswordTextFormField(
+              AppPasswordTextFormField(
                 onChanged: (value) =>
                     password = UserPassword(appLocalizations, value),
                 title: appLocalizations.password,
@@ -94,7 +94,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                 maxWidth: 400,
                 controller: widget.passwordController,
               ),
-              PasswordTextFormField(
+              AppPasswordTextFormField(
                 onChanged: (value) => repeatPassword = UserRepeatPassword(
                     appLocalizations, widget.passwordController.text, value),
                 title: appLocalizations.repeatPassword,

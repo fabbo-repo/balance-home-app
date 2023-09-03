@@ -74,8 +74,7 @@ class BalanceCard extends ConsumerWidget {
                   ),
                   onPressed: (isConnected)
                       ? () async {
-                          if (await showDeleteAdviceDialog(
-                              navigatorKey.currentContext!, appLocalizations)) {
+                          if (await showDeleteAdviceDialog(appLocalizations)) {
                             balanceListController.deleteBalance(balance);
                             authController.refreshUserData();
                           }
@@ -95,10 +94,9 @@ class BalanceCard extends ConsumerWidget {
     );
   }
 
-  Future<bool> showDeleteAdviceDialog(
-      BuildContext context, AppLocalizations appLocalizations) async {
+  Future<bool> showDeleteAdviceDialog(AppLocalizations appLocalizations) async {
     return (await showDialog(
-            context: context,
+            context: navigatorKey.currentContext!,
             builder: (context) => InfoDialog(
                   dialogTitle: balanceTypeMode == BalanceTypeMode.expense
                       ? appLocalizations.expenseDeleteDialogTitle

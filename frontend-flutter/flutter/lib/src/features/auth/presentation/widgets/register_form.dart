@@ -1,4 +1,4 @@
-import 'package:balance_home_app/src/core/presentation/widgets/password_text_form_field.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_password_text_form_field.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_form_field.dart';
 import 'package:balance_home_app/src/core/providers.dart';
@@ -114,7 +114,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 validator: (value) => email?.validate,
               ),
               verticalSpace(),
-              PasswordTextFormField(
+              AppPasswordTextFormField(
                 title: appLocalizations.password,
                 maxWidth: 400,
                 maxCharacters: 400,
@@ -124,7 +124,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 validator: (value) => password?.validate,
               ),
               verticalSpace(),
-              PasswordTextFormField(
+              AppPasswordTextFormField(
                 title: appLocalizations.repeatPassword,
                 maxWidth: 400,
                 maxCharacters: 400,

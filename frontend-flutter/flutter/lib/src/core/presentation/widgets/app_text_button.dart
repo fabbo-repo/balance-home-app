@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppTextButton extends StatelessWidget {
-  final void Function() onPressed;
   final String text;
+  final void Function() onPressed;
+  final double? fontSize;
   final Color? backgroundColor;
   final Color? textColor;
   final Color? foregroundColor;
@@ -14,6 +15,7 @@ class AppTextButton extends StatelessWidget {
   const AppTextButton(
       {required this.text,
       required this.onPressed,
+      this.fontSize,
       this.backgroundColor,
       this.textColor,
       this.foregroundColor,
@@ -25,8 +27,9 @@ class AppTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color backColor = backgroundColor ?? Theme.of(context).colorScheme.primary;
-    ButtonStyle? style = ButtonStyle(
+    final Color backColor =
+        backgroundColor ?? Theme.of(context).colorScheme.primary;
+    final ButtonStyle style = ButtonStyle(
       backgroundColor:
           MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
         if (states.contains(MaterialState.pressed) ||
@@ -50,8 +53,7 @@ class AppTextButton extends StatelessWidget {
             : Text(
                 text,
                 textAlign: TextAlign.center,
-                style:
-                    TextStyle(fontSize: 16, color: textColor ?? Colors.white),
+                style: TextStyle(fontSize: fontSize, color: textColor),
               ),
       ),
     );

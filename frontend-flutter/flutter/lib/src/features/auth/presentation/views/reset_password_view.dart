@@ -1,12 +1,11 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:balance_home_app/src/core/router.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_title.dart';
-import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/auth_background_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/widgets/reset_password_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class ResetPasswordView extends ConsumerWidget {
   /// Route name
@@ -31,10 +30,10 @@ class ResetPasswordView extends ConsumerWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () =>
-              navigatorKey.currentContext!.goNamed(AuthView.routeName),
+              router.goNamed(AuthView.routeName),
         ),
       ),
-      body: SafeArea(child: BackgroundWidget(child: ResetPasswordForm())),
+      body: SafeArea(child: AuthBackgroundWidget(child: ResetPasswordForm())),
     );
   }
 }

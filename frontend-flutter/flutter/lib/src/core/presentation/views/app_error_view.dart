@@ -3,7 +3,6 @@ import 'package:balance_home_app/src/core/presentation/widgets/app_error_widget.
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class AppErrorView extends ConsumerWidget {
   /// Named route for [AppErrorView].
@@ -42,11 +41,11 @@ class AppErrorView extends ConsumerWidget {
 
   /// Redirects current view to [AppErrorView] using a gneric error.
   static void go() {
-    navigatorKey.currentContext!.go('/$routePath');
+    router.go('/$routePath');
   }
 
   /// Redirects current view to [AppErrorView] using a not found error.
   static void go404() {
-    navigatorKey.currentContext!.go('/$notFoundPath');
+    router.go('/$notFoundPath');
   }
 }

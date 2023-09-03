@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:go_router/go_router.dart';
 
 class CustomAppBar extends ConsumerWidget {
   const CustomAppBar({Key? key}) : super(key: key);
@@ -36,16 +35,16 @@ class CustomAppBar extends ConsumerWidget {
       // If platform window is considered as large or medium, then the [AppTittle]
       // should be shown, otherwise if mobile is the current platform nothing will be shown,
       // else cases a balance counter should be rendered
-      title: (PlatformUtils().isLargeWindow(context) ||
-              PlatformUtils().isMediumWindow(context))
+      title: (PlatformUtils.isLargeWindow(context) ||
+              PlatformUtils.isMediumWindow(context))
           ? const AppTitle(fontSize: 30)
           : _balanceBox(appLocalizations, user),
-      leading: (PlatformUtils().isLargeWindow(context) ||
-              PlatformUtils().isMediumWindow(context))
+      leading: (PlatformUtils.isLargeWindow(context) ||
+              PlatformUtils.isMediumWindow(context))
           ? _balanceBox(appLocalizations, user)
           : null,
-      leadingWidth: (PlatformUtils().isLargeWindow(context) ||
-              PlatformUtils().isMediumWindow(context))
+      leadingWidth: (PlatformUtils.isLargeWindow(context) ||
+              PlatformUtils.isMediumWindow(context))
           ? 250
           : 0,
       actions: [
@@ -82,13 +81,13 @@ class CustomAppBar extends ConsumerWidget {
     return PopupMenuButton(
       onSelected: (value) {
         if (value == 0) {
-          navigatorKey.currentContext!.pushNamed(UserEditView.routeName);
+          router.pushNamed(UserEditView.routeName);
         } else if (value == 1) {
-          navigatorKey.currentContext!.pushNamed(SettingsView.routeName);
+          router.pushNamed(SettingsView.routeName);
         } else if (value == 2) {
           // It cannot call authController because it would change provider
           // while changing the entire three and that leads to an error
-          navigatorKey.currentContext!.goNamed(LogoutView.routeName);
+          router.goNamed(LogoutView.routeName);
         }
       },
       itemBuilder: (context) {
@@ -125,7 +124,7 @@ class CustomAppBar extends ConsumerWidget {
                   : Image.network(user.image!),
             ),
           if (user != null)
-            if (!PlatformUtils().isMobile)
+            if (!PlatformUtils.isMobile)
               Container(
                 margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: Text(

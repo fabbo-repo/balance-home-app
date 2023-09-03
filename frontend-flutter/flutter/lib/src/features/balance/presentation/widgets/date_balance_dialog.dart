@@ -2,7 +2,7 @@ import 'package:balance_home_app/config/app_theme.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date.dart';
 import 'package:balance_home_app/src/core/presentation/models/selected_date_mode.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/text_check_box.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_text_check_box.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/date_util.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
@@ -82,7 +82,7 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        TextCheckBox(
+        AppTextCheckBox(
           title: appLocalizations.day,
           fillColor: !isDay!
               ? null
@@ -122,7 +122,7 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        TextCheckBox(
+        AppTextCheckBox(
           title: appLocalizations.month,
           fillColor: !isMonth!
               ? null

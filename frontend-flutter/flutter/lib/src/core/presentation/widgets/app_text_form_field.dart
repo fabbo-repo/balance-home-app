@@ -3,8 +3,16 @@ import 'package:flutter/material.dart';
 class AppTextFormField extends StatelessWidget {
   final String title;
   final TextEditingController controller;
+  final Color? textColor;
+  final Color? readOnlyColor;
+  final Color? fillColor;
+  final Color? focusedColor;
+  final Color? enabledBorderColor;
+  final Color? borderColor;
+  final bool? filled;
   final double? maxWidth;
   final double? maxHeight;
+  final double? fontSize;
   final int? maxCharacters;
   final bool readOnly;
   final int? minLines;
@@ -19,11 +27,19 @@ class AppTextFormField extends StatelessWidget {
   const AppTextFormField(
       {required this.title,
       required this.controller,
+      this.textColor,
+      this.readOnlyColor,
+      this.fillColor,
+      this.focusedColor,
+      this.enabledBorderColor,
+      this.borderColor,
+      this.filled,
       this.maxWidth,
       this.maxHeight,
       this.onChanged,
       this.onTap,
       this.validator,
+      this.fontSize = 14,
       this.maxCharacters,
       this.readOnly = false,
       this.minLines,
@@ -55,28 +71,31 @@ class AppTextFormField extends StatelessWidget {
               onTap: readOnly ? null : onTap,
               controller: controller,
               validator: validator,
+              style: TextStyle(color: textColor),
               decoration: InputDecoration(
                 counterText: showCounterText ? null : '',
                 labelText: title,
-                errorStyle: const TextStyle(fontSize: 14),
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
-                ),
-                border: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black)),
-                labelStyle: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.black
-                        : Colors.white),
-                filled: true,
+                errorStyle: TextStyle(fontSize: fontSize),
+                enabledBorder: enabledBorderColor != null
+                    ? OutlineInputBorder(
+                        borderSide: BorderSide(color: enabledBorderColor!),
+                      )
+                    : null,
+                focusedBorder: focusedColor != null
+                    ? OutlineInputBorder(
+                        borderSide: BorderSide(color: focusedColor!),
+                      )
+                    : null,
+                border: borderColor != null
+                    ? OutlineInputBorder(
+                        borderSide: BorderSide(color: borderColor!))
+                    : null,
+                labelStyle: TextStyle(color: textColor),
+                hintStyle: TextStyle(color: textColor),
+                filled: filled,
                 fillColor: readOnly
-                    ? const Color.fromARGB(108, 167, 167, 167)
-                    : Theme.of(context).brightness == Brightness.light
-                        ? Colors.white
-                        : const Color.fromARGB(255, 119, 119, 119),
+                    ? readOnlyColor ?? const Color.fromARGB(108, 167, 167, 167)
+                    : fillColor,
               ),
             ),
           ),

@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:balance_home_app/src/core/clients/api_client.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_info_loading_view.dart';
+import 'package:balance_home_app/src/core/presentation/views/fade_transition_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_error_view.dart';
-import 'package:balance_home_app/src/core/presentation/views/loading_view.dart';
+import 'package:balance_home_app/src/core/presentation/views/app_loading_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/logout_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/reset_password_view.dart';
@@ -26,7 +27,8 @@ final router = GoRouter(
     if (state.error
         .toString()
         .contains("/${AppErrorView.noConnectionErrorPath}")) {
-      return const AppErrorView(location: "/${AppErrorView.noConnectionErrorPath}");
+      return const AppErrorView(
+          location: "/${AppErrorView.noConnectionErrorPath}");
     }
     if (state.error.toString().contains("/${AppErrorView.notFoundPath}")) {
       return const AppErrorView(location: "/${AppErrorView.notFoundPath}");
@@ -43,7 +45,7 @@ final router = GoRouter(
     GoRoute(
         name: 'root',
         path: '/',
-        builder: (_, __) => const LoadingView(),
+        builder: (_, __) => const AppLoadingView(),
         redirect: rootGuard,
         routes: [
           GoRoute(
@@ -51,8 +53,11 @@ final router = GoRouter(
             path: AuthLoadingView.routePath,
             builder: (context, state) {
               return AuthLoadingView(
-                  location: state.pathParameters['path'] != null
-                      ? state.pathParameters['path']!
+                  location: GoRouterState.of(context)
+                              .uri
+                              .queryParameters['path'] !=
+                          null
+                      ? GoRouterState.of(context).uri.queryParameters['path']!
                       : "/${AuthLoadingView.routePath}");
             },
           ),
@@ -90,7 +95,7 @@ final router = GoRouter(
             name: StatisticsView.routeName,
             path: StatisticsView.routePath,
             redirect: authGuardOrNone,
-            pageBuilder: (context, state) => FadeTransitionPage(
+            pageBuilder: (context, state) => FadeTransitionView(
                 key: _homeScaffoldKey,
                 child: const HomeView(
                     selectedSection: HomeTab.statistics,
@@ -100,7 +105,7 @@ final router = GoRouter(
               name: BalanceView.routeRevenueName,
               path: BalanceView.routeRevenuePath,
               redirect: authGuardOrNone,
-              pageBuilder: (context, state) => FadeTransitionPage(
+              pageBuilder: (context, state) => FadeTransitionView(
                   key: _homeScaffoldKey,
                   child: HomeView(
                       selectedSection: HomeTab.revenues,
@@ -120,7 +125,9 @@ final router = GoRouter(
                         BalanceEditView.routeName,
                     path: BalanceEditView.routePath,
                     builder: (context, state) => BalanceEditView(
-                          id: int.parse(state.pathParameters['id']!),
+                          id: int.parse(GoRouterState.of(context)
+                              .uri
+                              .queryParameters['id']!),
                           balanceTypeMode: BalanceTypeMode.revenue,
                         )),
               ]),
@@ -128,7 +135,7 @@ final router = GoRouter(
               name: BalanceView.routeExpenseName,
               path: BalanceView.routeExpensePath,
               redirect: authGuardOrNone,
-              pageBuilder: (context, state) => FadeTransitionPage(
+              pageBuilder: (context, state) => FadeTransitionView(
                   key: _homeScaffoldKey,
                   child: HomeView(
                       selectedSection: HomeTab.expenses,
@@ -148,7 +155,9 @@ final router = GoRouter(
                         BalanceEditView.routeName,
                     path: BalanceEditView.routePath,
                     builder: (context, state) => BalanceEditView(
-                          id: int.parse(state.pathParameters['id']!),
+                          id: int.parse(GoRouterState.of(context)
+                              .uri
+                              .queryParameters['id']!),
                           balanceTypeMode: BalanceTypeMode.expense,
                         )),
               ]),
@@ -158,15 +167,15 @@ final router = GoRouter(
             builder: (context, state) => const AppInfoLoadingView(),
           ),
           GoRoute(
-            name: LoadingView.routeName,
-            path: LoadingView.routePath,
-            builder: (context, state) => const LoadingView(),
+            name: AppLoadingView.routeName,
+            path: AppLoadingView.routePath,
+            builder: (context, state) => const AppLoadingView(),
           ),
           GoRoute(
               name: 'passwordRoot',
               path: 'password',
               redirect: passwordGuard,
-              builder: (_, __) => LoadingView(func: (context) {
+              builder: (_, __) => AppLoadingView(func: (context) {
                     context.go("/${AuthView.routePath}");
                   }),
               routes: [
@@ -249,25 +258,4 @@ Future<String?> passwordGuard(BuildContext context, GoRouterState state) async {
   final goingToPassword = state.matchedLocation == '/password';
   if (goingToPassword) return "/";
   return null;
-}
-
-/// A page that fades in an out.
-class FadeTransitionPage extends CustomTransitionPage<void> {
-  /// Creates a [FadeTransitionPage].
-  FadeTransitionPage({
-    required LocalKey key,
-    required Widget child,
-  }) : super(
-            key: key,
-            transitionsBuilder: (BuildContext context,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation,
-                    Widget child) =>
-                FadeTransition(
-                  opacity: animation.drive(_curveTween),
-                  child: child,
-                ),
-            child: child);
-
-  static final CurveTween _curveTween = CurveTween(curve: Curves.easeIn);
 }

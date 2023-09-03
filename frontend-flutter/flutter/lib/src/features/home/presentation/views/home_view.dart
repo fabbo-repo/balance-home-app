@@ -94,8 +94,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @visibleForTesting
   NavigationType navigationTypeResolver(BuildContext context) {
-    if (PlatformUtils().isLargeWindow(context) ||
-        PlatformUtils().isMediumWindow(context)) {
+    if (PlatformUtils.isLargeWindow(context) ||
+        PlatformUtils.isMediumWindow(context)) {
       return NavigationType.rail;
     } else {
       return NavigationType.bottom;

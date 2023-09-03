@@ -20,7 +20,6 @@ import 'package:balance_home_app/src/features/currency/presentation/widgets/drop
 import 'package:balance_home_app/src/features/currency/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class BalanceCreateForm extends ConsumerStatefulWidget {
   @visibleForTesting
@@ -240,11 +239,10 @@ class _BalanceCreateFormState extends ConsumerState<BalanceCreateForm> {
                               showErrorBalanceCreationDialog(appLocalizations,
                                   failure.detail, widget.balanceTypeMode);
                             }, (entity) {
-                              navigatorKey.currentContext!.go(
-                                  widget.balanceTypeMode ==
-                                          BalanceTypeMode.expense
-                                      ? "/${BalanceView.routeExpensePath}"
-                                      : "/${BalanceView.routeRevenuePath}");
+                              router.goNamed(widget.balanceTypeMode ==
+                                      BalanceTypeMode.expense
+                                  ? BalanceView.routeExpenseName
+                                  : BalanceView.routeRevenueName);
                               balanceListController.addBalance(entity);
                               authController.refreshUserData();
                             });

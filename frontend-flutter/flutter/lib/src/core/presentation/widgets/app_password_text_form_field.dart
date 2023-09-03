@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 
-class PasswordTextFormField extends StatefulWidget {
+class AppPasswordTextFormField extends StatefulWidget {
   final String title;
   final TextEditingController controller;
-  final String? error;
+  final Color? textColor;
+  final Color? readOnlyColor;
+  final Color? fillColor;
+  final Color? focusedColor;
+  final Color? enabledBorderColor;
+  final Color? borderColor;
+  final bool? filled;
   final double? maxWidth;
   final double? maxHeight;
+  final double? fontSize;
   final int? maxCharacters;
-  final bool? readOnly;
+  final bool readOnly;
   final int? minLines;
   final int? maxLines;
   final bool multiLine;
@@ -17,17 +24,24 @@ class PasswordTextFormField extends StatefulWidget {
   final Function()? onTap;
   final String? Function(String?)? validator;
 
-  const PasswordTextFormField(
+  const AppPasswordTextFormField(
       {required this.title,
       required this.controller,
-      this.error,
+      this.textColor,
+      this.readOnlyColor,
+      this.fillColor,
+      this.focusedColor,
+      this.enabledBorderColor,
+      this.borderColor,
+      this.filled,
       this.maxWidth,
       this.maxHeight,
       this.onChanged,
       this.onTap,
       this.validator,
+      this.fontSize = 14,
       this.maxCharacters,
-      this.readOnly,
+      this.readOnly = false,
       this.minLines,
       this.maxLines = 1,
       this.multiLine = false,
@@ -37,10 +51,11 @@ class PasswordTextFormField extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<PasswordTextFormField> createState() => _PasswordTextFormFieldState();
+  State<AppPasswordTextFormField> createState() =>
+      _AppPasswordTextFormFieldState();
 }
 
-class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
+class _AppPasswordTextFormFieldState extends State<AppPasswordTextFormField> {
   bool showPassword = false;
 
   @override
@@ -58,40 +73,40 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
               keyboardType: widget.multiLine ? TextInputType.multiline : null,
               minLines: widget.minLines,
               maxLines: widget.maxLines,
-              readOnly: widget.readOnly ?? false,
+              readOnly: widget.readOnly,
               textAlign: widget.textAlign ?? TextAlign.start,
               maxLength: widget.maxCharacters,
               onChanged: widget.onChanged,
               onTap: widget.onTap,
               controller: widget.controller,
               validator: widget.validator,
+              style: TextStyle(color: widget.textColor),
               decoration: InputDecoration(
                 counterText: widget.showCounterText ? null : '',
                 labelText: widget.title,
-                errorText: widget.error,
-                errorStyle: const TextStyle(fontSize: 14),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: (widget.error != null && widget.error != "")
-                      ? const BorderSide(color: Colors.red)
-                      : const BorderSide(color: Colors.black),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: (widget.error != null && widget.error != "")
-                      ? const BorderSide(color: Colors.red)
-                      : const BorderSide(color: Colors.blue),
-                ),
-                border: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black)),
-                labelStyle: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.black
-                        : Colors.white),
-                filled: true,
-                fillColor: widget.readOnly != null && widget.readOnly!
-                    ? const Color.fromARGB(108, 167, 167, 167)
-                    : Theme.of(context).brightness == Brightness.light
-                        ? Colors.white
-                        : const Color.fromARGB(255, 119, 119, 119),
+                errorStyle: TextStyle(fontSize: widget.fontSize),
+                enabledBorder: widget.enabledBorderColor != null
+                    ? OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: widget.enabledBorderColor!),
+                      )
+                    : null,
+                focusedBorder: widget.focusedColor != null
+                    ? OutlineInputBorder(
+                        borderSide: BorderSide(color: widget.focusedColor!),
+                      )
+                    : null,
+                border: widget.borderColor != null
+                    ? OutlineInputBorder(
+                        borderSide: BorderSide(color: widget.borderColor!))
+                    : null,
+                labelStyle: TextStyle(color: widget.textColor),
+                hintStyle: TextStyle(color: widget.textColor),
+                filled: widget.filled,
+                fillColor: widget.readOnly
+                    ? widget.readOnlyColor ??
+                        const Color.fromARGB(108, 167, 167, 167)
+                    : widget.fillColor,
                 suffixIcon: InkWell(
                   onTap: () {
                     setState(() {
@@ -99,8 +114,8 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
                     });
                   },
                   child: (showPassword)
-                      ? const Icon(Icons.visibility)
-                      : const Icon(Icons.visibility_off),
+                      ? Icon(Icons.visibility, color: widget.textColor)
+                      : Icon(Icons.visibility_off, color: widget.textColor),
                 ),
               ),
             ),

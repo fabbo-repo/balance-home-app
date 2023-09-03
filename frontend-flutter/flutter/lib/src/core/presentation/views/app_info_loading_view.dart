@@ -1,12 +1,11 @@
 import 'package:balance_home_app/src/core/router.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/loading_widget.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_loading_widget.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class AppInfoLoadingView extends ConsumerStatefulWidget {
   /// Named route for [AuthView]
@@ -33,7 +32,7 @@ class _AppInfoLoadingViewState extends ConsumerState<AppInfoLoadingView> {
       return failureOrAppVersion.fold((failure) {
         if (failure is HttpConnectionFailure) {
           Future.delayed(Duration.zero, () {
-            navigatorKey.currentContext!.go("/${AuthView.routePath}");
+            router.goNamed(AuthView.routeName);
           });
           return showError(
               icon: Icons.network_wifi_1_bar,
@@ -45,9 +44,9 @@ class _AppInfoLoadingViewState extends ConsumerState<AppInfoLoadingView> {
       }, (appVersion) {
         if (appVersion.isLower != null && !appVersion.isLower!) {
           Future.delayed(Duration.zero, () {
-            navigatorKey.currentContext!.go("/${AuthView.routePath}");
+            router.goNamed(AuthView.routeName);
           });
-          return LoadingWidget(
+          return AppLoadingWidget(
             color: Colors.green,
             text: "${appLocalizations.version} "
                 "${appVersion.x}.${appVersion.y}.${appVersion.z}",

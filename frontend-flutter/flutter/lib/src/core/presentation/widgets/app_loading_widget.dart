@@ -1,12 +1,12 @@
 import 'package:balance_home_app/config/app_layout.dart';
 import 'package:flutter/material.dart';
 
-class LoadingWidget extends StatelessWidget {
+class AppLoadingWidget extends StatelessWidget {
   final Color color;
   final String? text;
   final double? strokeWidth;
 
-  const LoadingWidget(
+  const AppLoadingWidget(
       {this.color = Colors.green, this.text, this.strokeWidth, Key? key})
       : super(key: key);
 

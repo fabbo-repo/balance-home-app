@@ -4,11 +4,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:language_picker/language_picker.dart';
 import 'package:language_picker/languages.dart';
 
-class CustomLanguagePickerDropdown extends StatelessWidget {
+class AppLanguagePickerDropdown extends StatelessWidget {
   final AppLocalizations appLocalizations;
   final void Function(Language) onValuePicked;
 
-  const CustomLanguagePickerDropdown(
+  const AppLanguagePickerDropdown(
       {required this.appLocalizations, required this.onValuePicked, super.key});
 
   @override

@@ -3,8 +3,8 @@ import 'package:balance_home_app/config/app_layout.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/no_local_entity_failure.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_title.dart';
-import 'package:balance_home_app/src/core/presentation/views/background_view.dart';
-import 'package:balance_home_app/src/core/presentation/widgets/language_picker_dropdown.dart';
+import 'package:balance_home_app/src/features/auth/presentation/views/auth_background_view.dart';
+import 'package:balance_home_app/src/core/presentation/widgets/app_language_picker_dropdown.dart';
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/presentation/widgets/login_form.dart';
@@ -62,7 +62,7 @@ class AuthView extends ConsumerWidget {
             backgroundColor: AppColors.appBarBackgroundColor,
             automaticallyImplyLeading: false),
         body: SafeArea(
-          child: BackgroundWidget(
+          child: AuthBackgroundWidget(
               child: currencyTypeListController.when<Widget>(data: (data) {
             return data.fold((failure) {
               if (failure is HttpConnectionFailure ||
@@ -77,7 +77,7 @@ class AuthView extends ConsumerWidget {
                 children: [
                   Align(
                     alignment: Alignment.topRight,
-                    child: CustomLanguagePickerDropdown(
+                    child: AppLanguagePickerDropdown(
                         appLocalizations: appLocalizations,
                         onValuePicked: (Language language) {
                           Locale locale = Locale(language.isoCode);
