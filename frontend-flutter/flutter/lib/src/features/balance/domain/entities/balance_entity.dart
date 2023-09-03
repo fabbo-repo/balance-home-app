@@ -1,5 +1,6 @@
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_type_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
 
 part 'balance_entity.freezed.dart';
 part 'balance_entity.g.dart';
@@ -7,7 +8,9 @@ part 'balance_entity.g.dart';
 /// [BalanceEntity] model
 @freezed
 class BalanceEntity with _$BalanceEntity {
-  const BalanceEntity._();
+  final DateFormat dateFormatter = DateFormat("yyyy-MM-dd");
+
+  BalanceEntity._();
 
   /// Factory constructor
   /// [id] - [int] id
@@ -22,8 +25,7 @@ class BalanceEntity with _$BalanceEntity {
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory BalanceEntity({
     // ignore: invalid_annotation_target
-    @JsonKey(includeIfNull: false)
-    required int? id,
+    @JsonKey(includeIfNull: false) required int? id,
     required String name,
     required String description,
     // ignore: non_constant_identifier_names
@@ -69,5 +71,5 @@ class BalanceEntity with _$BalanceEntity {
     return map;
   }
 
-  String _dateToJson(DateTime date) => "${date.year}-${date.month}-${date.day}";
+  String _dateToJson(DateTime date) => dateFormatter.format(date);
 }

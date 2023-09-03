@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppPasswordTextFormField extends StatefulWidget {
   final String title;
@@ -80,11 +81,11 @@ class _AppPasswordTextFormFieldState extends State<AppPasswordTextFormField> {
               onTap: widget.onTap,
               controller: widget.controller,
               validator: widget.validator,
-              style: TextStyle(color: widget.textColor),
+              style: GoogleFonts.openSans(color: widget.textColor),
               decoration: InputDecoration(
                 counterText: widget.showCounterText ? null : '',
                 labelText: widget.title,
-                errorStyle: TextStyle(fontSize: widget.fontSize),
+                errorStyle: GoogleFonts.openSans(fontSize: widget.fontSize),
                 enabledBorder: widget.enabledBorderColor != null
                     ? OutlineInputBorder(
                         borderSide:
@@ -100,8 +101,8 @@ class _AppPasswordTextFormFieldState extends State<AppPasswordTextFormField> {
                     ? OutlineInputBorder(
                         borderSide: BorderSide(color: widget.borderColor!))
                     : null,
-                labelStyle: TextStyle(color: widget.textColor),
-                hintStyle: TextStyle(color: widget.textColor),
+                labelStyle: GoogleFonts.openSans(color: widget.textColor),
+                hintStyle: GoogleFonts.openSans(color: widget.textColor),
                 filled: widget.filled,
                 fillColor: widget.readOnly
                     ? widget.readOnlyColor ??

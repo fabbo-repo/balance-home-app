@@ -8,6 +8,7 @@ import 'package:balance_home_app/src/features/statistics/presentation/widgets/sa
 import 'package:balance_home_app/src/features/statistics/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StatisticsSavingsYearChartContainer extends ConsumerWidget {
   final List<MonthlyBalanceEntity> monthlyBalances;
@@ -31,7 +32,8 @@ class StatisticsSavingsYearChartContainer extends ConsumerWidget {
     List<int> years = <int>{...revenueYears, ...expenseYears}.toList();
     int selectedYear = selectedDate.year;
     // Month names list
-    List<String> months = DateUtil.getMonthList(appLocalizations);
+    final List<String> months =
+        DateUtil.getMonthDict(appLocalizations).values.toList();
     // Adding selected year to years list
     if (!years.contains(selectedYear)) years.add(selectedYear);
     // Adding current year to years list
@@ -59,7 +61,7 @@ class StatisticsSavingsYearChartContainer extends ConsumerWidget {
                   : screenWidth * 0.35,
               child: Center(
                   child: Text(
-                      style: const TextStyle(
+                      style: GoogleFonts.openSans(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold),

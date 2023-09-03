@@ -6,6 +6,7 @@ import 'package:balance_home_app/src/features/statistics/domain/entities/annual_
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
   /// Border chart lines decoration
@@ -24,7 +25,7 @@ class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
         reservedSize: 22,
         interval: 1,
         getTitlesWidget: (double value, TitleMeta meta) {
-          const style = TextStyle(
+          final style = GoogleFonts.openSans(
             fontSize: 12,
           );
           return SideTitleWidget(
@@ -37,7 +38,7 @@ class StatisticsSavingsEightYearsLineChart extends ConsumerWidget {
 
   SideTitles get leftTitles => SideTitles(
         getTitlesWidget: (double value, TitleMeta meta) {
-          const style = TextStyle(
+          final style = GoogleFonts.openSans(
             fontWeight: FontWeight.bold,
             fontSize: 12,
           );

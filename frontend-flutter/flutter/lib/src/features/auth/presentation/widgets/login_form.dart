@@ -12,6 +12,7 @@ import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/views/statistics_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
   @visibleForTesting
@@ -146,8 +147,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 },
                 child: Text(
                   appLocalizations.forgotPassword,
-                  style:
-                      const TextStyle(color: Color.fromARGB(255, 65, 65, 65)),
+                  style: GoogleFonts.openSans(
+                      color: const Color.fromARGB(255, 65, 65, 65)),
                 ),
               ),
             ],

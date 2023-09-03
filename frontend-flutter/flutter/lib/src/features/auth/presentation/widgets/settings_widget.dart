@@ -8,6 +8,7 @@ import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.d
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:language_picker/languages.dart';
 
 class SettingsWidget extends ConsumerWidget {
@@ -44,8 +45,9 @@ class SettingsWidget extends ConsumerWidget {
               children: [
                 Text(
                   appLocalizations.language,
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 70, 70, 70), fontSize: 18),
+                  style: GoogleFonts.openSans(
+                      color: const Color.fromARGB(255, 70, 70, 70),
+                      fontSize: 18),
                 ),
                 horizontalSpace(),
                 AppLanguagePickerDropdown(

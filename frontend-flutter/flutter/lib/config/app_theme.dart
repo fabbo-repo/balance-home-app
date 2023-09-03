@@ -1,5 +1,6 @@
 import 'package:balance_home_app/config/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Default [ThemeData]
 class AppTheme {
@@ -23,6 +24,7 @@ class AppTheme {
       primaryColor: AppColors.primaryColor,
       navigationRailTheme: navigationRailTheme,
       bottomNavigationBarTheme: bottomNavigationBarTheme,
+      textTheme: GoogleFonts.openSansTextTheme(),
       colorScheme: ColorScheme.fromSwatch(
               brightness: Brightness.light,
               primarySwatch: AppColors.primaryColor)
@@ -34,6 +36,7 @@ class AppTheme {
       primaryColor: AppColors.primaryColor,
       navigationRailTheme: navigationRailTheme,
       bottomNavigationBarTheme: bottomNavigationBarTheme,
+      textTheme: GoogleFonts.openSansTextTheme(),
       colorScheme: ColorScheme.fromSwatch(primarySwatch: AppColors.primaryColor)
           .copyWith(
               brightness: Brightness.dark,

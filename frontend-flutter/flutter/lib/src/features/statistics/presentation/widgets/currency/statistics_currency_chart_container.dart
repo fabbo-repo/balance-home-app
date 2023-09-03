@@ -6,6 +6,7 @@ import 'package:balance_home_app/src/features/statistics/presentation/widgets/cu
 import 'package:balance_home_app/src/features/statistics/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StatisticsCurrencyChartContainer extends ConsumerWidget {
   final DateCurrencyConversionListEntity dateCurrencyConversion;
@@ -45,7 +46,7 @@ class StatisticsCurrencyChartContainer extends ConsumerWidget {
               width: screenWidth * 0.70,
               child: Center(
                   child: Text(
-                      style: const TextStyle(
+                      style: GoogleFonts.openSans(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTextButton extends StatelessWidget {
   final String text;
@@ -53,7 +54,8 @@ class AppTextButton extends StatelessWidget {
             : Text(
                 text,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: fontSize, color: textColor),
+                style:
+                    GoogleFonts.openSans(fontSize: fontSize, color: textColor),
               ),
       ),
     );

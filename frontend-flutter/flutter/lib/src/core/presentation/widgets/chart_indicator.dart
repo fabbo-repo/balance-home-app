@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ChartIndicator extends StatelessWidget {
   const ChartIndicator({
@@ -32,7 +33,7 @@ class ChartIndicator extends StatelessWidget {
         ),
         Text(
           text,
-          style: TextStyle(
+          style: GoogleFonts.openSans(
             fontSize: 14,
             fontWeight: FontWeight.bold,
             color: textColor,

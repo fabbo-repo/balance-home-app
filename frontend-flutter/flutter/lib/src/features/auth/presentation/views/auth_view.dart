@@ -12,6 +12,7 @@ import 'package:balance_home_app/src/features/auth/presentation/widgets/register
 import 'package:balance_home_app/src/features/currency/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:language_picker/languages.dart';
 import 'package:universal_io/io.dart';
 
@@ -99,16 +100,18 @@ class AuthView extends ConsumerWidget {
                                 Tab(
                                   child: Text(
                                     appLocalizations.signIn,
-                                    style: const TextStyle(
-                                        color: Color.fromARGB(255, 27, 27, 27),
+                                    style: GoogleFonts.openSans(
+                                        color: const Color.fromARGB(
+                                            255, 27, 27, 27),
                                         fontSize: 20),
                                   ),
                                 ),
                                 Tab(
                                   child: Text(
                                     appLocalizations.register,
-                                    style: const TextStyle(
-                                        color: Color.fromARGB(255, 27, 27, 27),
+                                    style: GoogleFonts.openSans(
+                                        color: const Color.fromARGB(
+                                            255, 27, 27, 27),
                                         fontSize: 20),
                                   ),
                                 )

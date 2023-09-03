@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DoubleFormField extends StatelessWidget {
   final String title;
@@ -75,7 +76,7 @@ class DoubleFormField extends StatelessWidget {
               decoration: InputDecoration(
                 counterText: '',
                 labelText: title,
-                errorStyle: const TextStyle(fontSize: 14),
+                errorStyle: GoogleFonts.openSans(fontSize: 14),
                 enabledBorder: const OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.black),
                 ),
@@ -84,7 +85,7 @@ class DoubleFormField extends StatelessWidget {
                 ),
                 border: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black)),
-                labelStyle: TextStyle(
+                labelStyle: GoogleFonts.openSans(
                     color: Theme.of(context).brightness == Brightness.light
                         ? Colors.black
                         : Colors.white),

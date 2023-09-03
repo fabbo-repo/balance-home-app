@@ -1,6 +1,7 @@
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTitle extends ConsumerWidget {
   final double? fontSize;
@@ -15,7 +16,7 @@ class AppTitle extends ConsumerWidget {
       children: [
         Text(
           appLocalizations.appTitle1,
-          style: TextStyle(
+          style: GoogleFonts.openSans(
               color: Colors.red,
               fontWeight: FontWeight.bold,
               fontSize: fontSize ?? 40,
@@ -23,7 +24,7 @@ class AppTitle extends ConsumerWidget {
         ),
         Text(
           appLocalizations.appTitle2,
-          style: TextStyle(
+          style: GoogleFonts.openSans(
               color: Colors.green,
               fontWeight: FontWeight.bold,
               fontSize: fontSize ?? 40,

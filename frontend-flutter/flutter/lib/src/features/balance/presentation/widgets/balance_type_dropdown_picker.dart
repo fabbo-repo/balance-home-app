@@ -3,6 +3,7 @@ import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_type_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BalanceTypeDropdownPicker extends StatefulWidget {
   final String name;
@@ -42,7 +43,7 @@ class _BalanceTypeDropdownPickerState extends State<BalanceTypeDropdownPicker> {
             padding: const EdgeInsets.fromLTRB(0, 0, 18, 0),
             child: Text(
               widget.name,
-              style: TextStyle(
+              style: GoogleFonts.openSans(
                   color: Theme.of(context).brightness == Brightness.light
                       ? Colors.black
                       : Colors.white,

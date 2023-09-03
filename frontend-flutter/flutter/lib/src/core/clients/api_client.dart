@@ -1,5 +1,5 @@
 import 'package:balance_home_app/config/api_contract.dart';
-import 'package:balance_home_app/config/environment.dart';
+import 'package:balance_home_app/config/app_environment.dart';
 import 'package:balance_home_app/src/core/domain/failures/bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_request_failure.dart';
@@ -31,7 +31,7 @@ class ApiClient {
   JwtEntity? jwtToken;
 
   final BaseOptions options = BaseOptions(
-      baseUrl: Environment.apiUrl,
+      baseUrl: AppEnvironment.apiUrl,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       sendTimeout: const Duration(seconds: 10),

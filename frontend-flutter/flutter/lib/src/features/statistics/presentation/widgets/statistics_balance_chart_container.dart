@@ -11,6 +11,7 @@ import 'package:balance_home_app/src/features/statistics/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StatisticsBalanceChartContainer extends ConsumerWidget {
   final SelectedDateMode dateMode;
@@ -30,17 +31,18 @@ class StatisticsBalanceChartContainer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appLocalizations = ref.watch(appLocalizationsProvider);
+
     final selectedDate = ref.watch(statisticsBalanceSelectedDateProvider);
     final selectedDateState =
         ref.read(statisticsBalanceSelectedDateProvider.notifier);
-    List<int> years = <int>{...revenueYears, ...expenseYears}.toList();
-    int selectedYear = selectedDate.year;
-    // Month names list
-    List<String> months = DateUtil.getMonthList(appLocalizations);
-    String selectedMonth =
+
+    final years = <int>{...revenueYears, ...expenseYears}.toList();
+
+    final selectedMonthAsStr =
         DateUtil.monthNumToString(selectedDate.month, appLocalizations);
+
     // Adding selected year to years list
-    if (!years.contains(selectedYear)) years.add(selectedYear);
+    if (!years.contains(selectedDate.year)) years.add(selectedDate.year);
     // Adding current year to years list
     if (!years.contains(DateTime.now().year)) years.add(DateTime.now().year);
     years.sort();
@@ -67,21 +69,15 @@ class StatisticsBalanceChartContainer extends ConsumerWidget {
               child: Center(
                   child: Text(
                       dateMode == SelectedDateMode.month
-                          ? "${appLocalizations.balanceChartTitle} $selectedMonth"
-                          : "${appLocalizations.balanceChartTitle} $selectedYear",
-                      style: const TextStyle(
+                          ? "${appLocalizations.balanceChartTitle} $selectedMonthAsStr"
+                          : "${appLocalizations.balanceChartTitle} $selectedDate.year",
+                      style: GoogleFonts.openSans(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold))),
             ),
-            dateButton(
-                selectedMonth,
-                selectedYear,
-                DateUtil.getMonthList(appLocalizations, year: selectedYear),
-                years.map((e) => e.toString()).toList(),
-                selectedDate,
-                selectedDateState,
-                appLocalizations)
+            dateButton(selectedMonthAsStr, years, selectedDate,
+                selectedDateState, appLocalizations)
           ],
         ),
         SizedBox(
@@ -90,7 +86,10 @@ class StatisticsBalanceChartContainer extends ConsumerWidget {
                 ? screenWidth * 0.95
                 : screenWidth * 0.45,
             child: BalanceLineChart(
-              monthList: months,
+              monthList: DateUtil.getMonthDict(appLocalizations,
+                      year: selectedDate.year)
+                  .values
+                  .toList(),
               revenues: dateMode == SelectedDateMode.month
                   ? getRevenues(selectedDate.month)
                   : revenues,
@@ -98,8 +97,7 @@ class StatisticsBalanceChartContainer extends ConsumerWidget {
                   ? getExpenses(selectedDate.month)
                   : expenses,
               selectedDateMode: dateMode,
-              selectedMonth:
-                  DateUtil.monthStringToNum(selectedMonth, appLocalizations),
+              selectedMonth: selectedDate.month,
               selectedYear: selectedDate.year,
             )),
       ],
@@ -109,40 +107,42 @@ class StatisticsBalanceChartContainer extends ConsumerWidget {
   @visibleForTesting
   Widget dateButton(
       String selectedMonth,
-      int selectedYear,
-      List<String> months,
-      List<String> years,
+      List<int> years,
       SelectedDate selectedDate,
       SelectedDateState selectedDateState,
       AppLocalizations appLocalizations) {
-    List<String> values = (dateMode == SelectedDateMode.month) ? months : years;
+    final List<int> dropdownValues = (dateMode == SelectedDateMode.month)
+        ? DateUtil.getMonthDict(appLocalizations, year: selectedDate.year)
+            .keys
+            .toList()
+        : years;
     final isConnected = connectionStateListenable.value;
     return Container(
       margin: const EdgeInsets.only(top: 20, bottom: 10),
       color: const Color.fromARGB(255, 195, 187, 56),
       padding: const EdgeInsets.only(left: 10, right: 10),
       height: 45,
-      child: DropdownButton<String>(
+      child: DropdownButton<int>(
           value: (dateMode == SelectedDateMode.month)
-              ? selectedMonth
-              : "$selectedYear",
-          items: values.map((value) {
-            return DropdownMenuItem<String>(
+              ? selectedDate.month
+              : selectedDate.year,
+          items: dropdownValues.map((value) {
+            final strValue = (dateMode == SelectedDateMode.month)
+                ? DateUtil.monthNumToString(value, appLocalizations)
+                : value.toString();
+            return DropdownMenuItem<int>(
               value: value,
-              child: Text(value),
+              child: Text(strValue),
             );
           }).toList(),
           onChanged: (isConnected)
               ? (value) {
                   if (dateMode == SelectedDateMode.month) {
-                    int newMonth =
-                        DateUtil.monthStringToNum(value!, appLocalizations);
-                    if (newMonth == selectedDate.month) return;
-                    selectedDateState.setMonth(newMonth);
+                    if (value == selectedDate.month) return;
+                    selectedDateState.setMonth(value!);
                   } else if (dateMode == SelectedDateMode.year) {
-                    int newYear = int.parse(value!);
-                    if (newYear == selectedDate.year) return;
-                    selectedDateState.setYear(newYear);
+                    if (value == selectedDate.year) return;
+                    selectedDateState.setYear(value!);
                   }
                 }
               : null),

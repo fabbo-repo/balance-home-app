@@ -118,7 +118,6 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
   }
 
   Widget monthRow(AppLocalizations appLocalizations, ThemeData theme) {
-    List<String> months = DateUtil.getMonthList(appLocalizations, year: year!);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -137,18 +136,19 @@ class _DateBalanceDialogState extends ConsumerState<DateBalanceDialog> {
           },
           isChecked: isMonth!,
         ),
-        DropdownButton<String>(
-          value: DateUtil.monthNumToString(month!, appLocalizations),
-          items: months.map((value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
+        DropdownButton<int>(
+          value: month,
+          items: List<int>.generate(12, (i) => i + 1).map((monthIndex) {
+            return DropdownMenuItem<int>(
+              value: monthIndex,
+              child:
+                  Text(DateUtil.monthNumToString(monthIndex, appLocalizations)),
             );
           }).toList(),
           onChanged: isMonth!
               ? (value) {
                   setState(() {
-                    month = DateUtil.monthStringToNum(value!, appLocalizations);
+                    month = value;
                     isDay = false;
                     day = 1;
                   });

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DropdownPickerField extends StatefulWidget {
   final String? name;
@@ -39,7 +40,7 @@ class _DropdownPickerFieldState extends State<DropdownPickerField> {
               padding: const EdgeInsets.fromLTRB(0, 0, 18, 0),
               child: Text(
                 widget.name!,
-                style: TextStyle(
+                style: GoogleFonts.openSans(
                     color: Theme.of(context).brightness == Brightness.light
                         ? Colors.black
                         : Colors.white,

@@ -4,6 +4,7 @@ import 'package:balance_home_app/src/features/statistics/domain/entities/annual_
 import 'package:balance_home_app/src/features/statistics/presentation/widgets/savings/statistics_savings_eight_years_line_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StatisticsSavingsEightYearsChartContainer extends ConsumerWidget {
   final List<AnnualBalanceEntity> annualBalances;
@@ -36,7 +37,7 @@ class StatisticsSavingsEightYearsChartContainer extends ConsumerWidget {
                   : screenWidth * 0.35,
               child: Center(
                   child: Text(
-                      style: const TextStyle(
+                      style: GoogleFonts.openSans(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold),

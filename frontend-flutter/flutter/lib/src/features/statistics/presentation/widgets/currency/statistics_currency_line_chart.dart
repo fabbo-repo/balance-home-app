@@ -4,8 +4,12 @@ import 'package:balance_home_app/src/features/currency/domain/entities/date_curr
 import 'package:balance_home_app/src/features/currency/domain/entities/date_currency_conversion_list_entity.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class StatisticsCurrencyLineChart extends StatelessWidget {
+  final dayMonthFormatter = DateFormat("dd/MM");
+
   /// Border chart lines decoration
   FlBorderData get borderData => FlBorderData(
         show: true,
@@ -24,20 +28,20 @@ class StatisticsCurrencyLineChart extends StatelessWidget {
         getTitlesWidget: (double value, TitleMeta meta) {
           DateTime date =
               DateTime.now().subtract(Duration(days: 19 - value.toInt()));
-          const style = TextStyle(
+          final style = GoogleFonts.openSans(
             fontSize: 12,
           );
           return SideTitleWidget(
             axisSide: meta.axisSide,
             space: 5,
-            child: Text("${date.day}/${date.month}", style: style),
+            child: Text(dayMonthFormatter.format(date), style: style),
           );
         },
       );
 
   SideTitles get leftTitles => SideTitles(
         getTitlesWidget: (double value, TitleMeta meta) {
-          const style = TextStyle(
+          final style = GoogleFonts.openSans(
             fontWeight: FontWeight.bold,
             fontSize: 12,
           );
@@ -74,7 +78,7 @@ class StatisticsCurrencyLineChart extends StatelessWidget {
   final String selectedCoinTo;
   final DateCurrencyConversionListEntity dateCurrencyConversion;
 
-  const StatisticsCurrencyLineChart(
+  StatisticsCurrencyLineChart(
       {required this.selectedCoinFrom,
       required this.selectedCoinTo,
       required this.dateCurrencyConversion,

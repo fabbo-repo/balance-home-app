@@ -8,7 +8,6 @@ import 'package:balance_home_app/src/core/presentation/widgets/app_text_button.d
 import 'package:balance_home_app/src/core/presentation/widgets/app_error_dialog.dart';
 import 'package:balance_home_app/src/core/presentation/widgets/responsive_layout.dart';
 import 'package:balance_home_app/src/core/providers.dart';
-import 'package:balance_home_app/src/core/utils/date_util.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/balance/domain/entities/balance_entity.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
@@ -19,6 +18,8 @@ import 'package:balance_home_app/src/features/balance/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class BalanceView extends ConsumerWidget {
   /// Named route for revenues [BalanceView]
@@ -52,10 +53,13 @@ class BalanceView extends ConsumerWidget {
     final selectedDate = balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseSelectedDateProvider)
         : ref.watch(revenueSelectedDateProvider);
+
     final appLocalizations = ref.watch(appLocalizationsProvider);
+
     final selectedDateState = balanceTypeMode == BalanceTypeMode.expense
         ? ref.watch(expenseSelectedDateProvider.notifier)
         : ref.watch(revenueSelectedDateProvider.notifier);
+
     return balanceList.when<Widget>(data: (data) {
       final balanceYears = balanceListController.getAllBalanceYears();
       return data.fold((failure) {
@@ -117,15 +121,19 @@ class BalanceView extends ConsumerWidget {
       SelectedDateState selectedDateState,
       SelectedDate selectedDate,
       Future<List<int>> balanceYears) {
-    String monthText =
-        DateUtil.getMonthList(appLocalizations)[selectedDate.month - 1];
-    String dateText = (selectedDate.selectedDateMode == SelectedDateMode.year)
-        ? "${selectedDate.year}"
+    // All posible date formatters
+    final dayFormatter = DateFormat("dd MMM yyyy", appLocalizations.localeName);
+    final monthFormatter = DateFormat("MMM yyyy", appLocalizations.localeName);
+    final yearFormatter = DateFormat("yyyy");
+
+    final dateText = (selectedDate.selectedDateMode == SelectedDateMode.year)
+        ? yearFormatter.format(selectedDate.dateFrom)
         : (selectedDate.selectedDateMode == SelectedDateMode.month)
-            ? "$monthText ${selectedDate.year}"
-            : "${selectedDate.day} $monthText ${selectedDate.year}";
-    double screenWidth = MediaQuery.of(context).size.width;
-    Widget topContainer = Container(
+            ? monthFormatter.format(selectedDate.dateFrom)
+            : dayFormatter.format(selectedDate.dateFrom);
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final topContainer = Container(
       color: balanceTypeMode == BalanceTypeMode.expense
           ? const Color.fromARGB(255, 212, 112, 78)
           : const Color.fromARGB(255, 76, 122, 52),
@@ -138,12 +146,13 @@ class BalanceView extends ConsumerWidget {
                   : screenWidth - 173),
       child: Center(
           child: Text(dateText,
-              style: const TextStyle(
+              style: GoogleFonts.openSans(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold))),
     );
-    Widget dateBtn = AppTextButton(
+
+    final dateBtn = AppTextButton(
       text: appLocalizations.date,
       backgroundColor: balanceTypeMode == BalanceTypeMode.expense
           ? const Color.fromARGB(255, 160, 71, 41)
@@ -155,6 +164,7 @@ class BalanceView extends ConsumerWidget {
       height: 45,
       width: screenWidth < 550 ? screenWidth : 100,
     );
+
     return ResponsiveLayout(
         mobileChild: Column(children: [dateBtn, topContainer]),
         tabletChild: Row(children: [dateBtn, topContainer]),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTextCheckBox extends StatefulWidget {
   final String title;
@@ -39,7 +40,8 @@ class _AppTextCheckBoxState extends State<AppTextCheckBox> {
             },
             child: Text(
               widget.title,
-              style: TextStyle(color: widget.fillColor, fontSize: 14),
+              style:
+                  GoogleFonts.openSans(color: widget.fillColor, fontSize: 14),
             ),
           )
         ],

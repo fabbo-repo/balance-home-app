@@ -13,12 +13,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class BalanceCard extends ConsumerWidget {
   final BalanceEntity balance;
   final BalanceTypeMode balanceTypeMode;
+  final dateFormat = DateFormat("dd-MM-yyyy");
 
-  const BalanceCard(
+  BalanceCard(
       {required this.balance, required this.balanceTypeMode, super.key});
 
   @override
@@ -53,8 +55,7 @@ class BalanceCard extends ConsumerWidget {
               title: Text(balance.name, overflow: TextOverflow.ellipsis),
               subtitle: Text("${balance.real_quantity} ${balance.coinType}",
                   overflow: TextOverflow.ellipsis),
-              trailing: Text(
-                  "${balance.date.day}-${balance.date.month}-${balance.date.year}"),
+              trailing: Text(dateFormat.format(balance.date)),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

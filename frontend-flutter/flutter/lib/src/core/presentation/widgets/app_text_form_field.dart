@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTextFormField extends StatelessWidget {
   final String title;
@@ -71,11 +72,11 @@ class AppTextFormField extends StatelessWidget {
               onTap: readOnly ? null : onTap,
               controller: controller,
               validator: validator,
-              style: TextStyle(color: textColor),
+              style: GoogleFonts.openSans(color: textColor),
               decoration: InputDecoration(
                 counterText: showCounterText ? null : '',
                 labelText: title,
-                errorStyle: TextStyle(fontSize: fontSize),
+                errorStyle: GoogleFonts.openSans(fontSize: fontSize),
                 enabledBorder: enabledBorderColor != null
                     ? OutlineInputBorder(
                         borderSide: BorderSide(color: enabledBorderColor!),
@@ -90,8 +91,8 @@ class AppTextFormField extends StatelessWidget {
                     ? OutlineInputBorder(
                         borderSide: BorderSide(color: borderColor!))
                     : null,
-                labelStyle: TextStyle(color: textColor),
-                hintStyle: TextStyle(color: textColor),
+                labelStyle: GoogleFonts.openSans(color: textColor),
+                hintStyle: GoogleFonts.openSans(color: textColor),
                 filled: filled,
                 fillColor: readOnly
                     ? readOnlyColor ?? const Color.fromARGB(108, 167, 167, 167)

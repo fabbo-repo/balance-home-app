@@ -22,18 +22,19 @@ import 'package:balance_home_app/src/features/currency/presentation/widgets/drop
 import 'package:balance_home_app/src/features/currency/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class BalanceEditForm extends ConsumerStatefulWidget {
   @visibleForTesting
   final formKey = GlobalKey<FormState>();
-  @visibleForTesting
+
   final nameController = TextEditingController();
-  @visibleForTesting
   final descriptionController = TextEditingController();
-  @visibleForTesting
   final quantityController = TextEditingController();
-  @visibleForTesting
   final dateController = TextEditingController();
+
+  final dateFormatter = DateFormat("dd/MM/yyyy");
+
   @visibleForTesting
   final bool edit;
   @visibleForTesting
@@ -80,7 +81,7 @@ class _BalanceEditFormState extends ConsumerState<BalanceEditForm> {
         widget.balance.real_quantity.toString().replaceAll(".", ",");
     if (widget.dateController.text.isEmpty) {
       widget.dateController.text =
-          "${widget.balance.date.day}/${widget.balance.date.month}/${widget.balance.date.year}";
+          widget.dateFormatter.format(widget.balance.date);
     }
     name = BalanceName(appLocalizations, widget.nameController.text);
     description =
@@ -207,7 +208,7 @@ class _BalanceEditFormState extends ConsumerState<BalanceEditForm> {
                             if (newDate != null) {
                               date = BalanceDate(appLocalizations, newDate);
                               widget.dateController.text =
-                                  "${newDate.day}/${newDate.month}/${newDate.year}";
+                                  widget.dateFormatter.format(newDate);
                             }
                           },
                           textAlign: TextAlign.center,

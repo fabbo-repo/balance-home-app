@@ -1,5 +1,6 @@
 import 'package:balance_home_app/config/app_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppErrorWidget extends StatelessWidget {
   final Color? color;
@@ -35,7 +36,7 @@ class AppErrorWidget extends StatelessWidget {
                 child: Text(
                   text ?? "",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 14),
+                  style: GoogleFonts.openSans(fontSize: 14),
                 ),
               ),
           ],

@@ -69,6 +69,8 @@ dependencies:
   file_picker: ^5.2.4
   # Path directory provider (not supported for Web)
   path_provider: ^2.0.15
+  # Google fonts
+  google_fonts: ^5.1.0
   
 
 dev_dependencies:

@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomAppBar extends ConsumerWidget {
   const CustomAppBar({Key? key}) : super(key: key);
@@ -69,7 +70,7 @@ class CustomAppBar extends ConsumerWidget {
             "${appLocalizations.balance}: ${user == null ? "-" : user.balance} "
             "${user == null ? "" : user.prefCoinType}",
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 17, color: Colors.white),
+            style: GoogleFonts.openSans(fontSize: 17, color: Colors.white),
           ),
         ));
   }
@@ -129,8 +130,9 @@ class CustomAppBar extends ConsumerWidget {
                 margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: Text(
                   user.username,
-                  style: const TextStyle(
-                      fontSize: 17, color: Color.fromARGB(255, 202, 202, 202)),
+                  style: GoogleFonts.openSans(
+                      fontSize: 17,
+                      color: const Color.fromARGB(255, 202, 202, 202)),
                 ),
               )
         ],

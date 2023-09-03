@@ -1,5 +1,6 @@
 import 'package:balance_home_app/config/app_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppLoadingWidget extends StatelessWidget {
   final Color color;
@@ -37,7 +38,7 @@ class AppLoadingWidget extends StatelessWidget {
                 padding: const EdgeInsets.only(top: AppLayout.genericPadding),
                 child: Text(
                   text ?? "",
-                  style: const TextStyle(fontSize: 14),
+                  style: GoogleFonts.openSans(fontSize: 14),
                 ),
               ),
           ],

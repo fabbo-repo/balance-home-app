@@ -60,7 +60,6 @@ class BalanaceLeftPanel extends ConsumerWidget {
                     ? screenWidth * 0.95
                     : screenWidth * 0.45,
                 child: BalanceLineChart(
-                  monthList: DateUtil.getMonthList(appLocalizations),
                   revenues: (balanceTypeMode == BalanceTypeMode.revenue)
                       ? balances
                       : null,
@@ -70,6 +69,8 @@ class BalanaceLeftPanel extends ConsumerWidget {
                   selectedDateMode: selectedDate.selectedDateMode,
                   selectedMonth: selectedDate.month,
                   selectedYear: selectedDate.year,
+                  monthList:
+                      DateUtil.getMonthDict(appLocalizations).values.toList(),
                 ),
               )
           ],
