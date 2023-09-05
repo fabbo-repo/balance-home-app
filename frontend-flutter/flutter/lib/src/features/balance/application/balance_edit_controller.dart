@@ -50,11 +50,11 @@ class BalanceEditController extends StateNotifier<AsyncValue<BalanceEntity?>> {
                     id: id,
                     name: name,
                     description: description,
-                    real_quantity: quantity,
+                    realQuantity: quantity,
                     date: date,
                     coinType: coinType,
                     balanceType: balanceType,
-                    converted_quantity: null),
+                    convertedQuantity: null),
                 _balanceTypeMode);
             return res.fold((_) {
               state = const AsyncValue.data(null);

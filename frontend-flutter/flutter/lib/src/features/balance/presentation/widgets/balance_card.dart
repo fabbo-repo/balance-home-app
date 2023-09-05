@@ -53,7 +53,7 @@ class BalanceCard extends ConsumerWidget {
             ListTile(
               leading: Image.network(balance.balanceType.image),
               title: Text(balance.name, overflow: TextOverflow.ellipsis),
-              subtitle: Text("${balance.real_quantity} ${balance.coinType}",
+              subtitle: Text("${balance.realQuantity} ${balance.coinType}",
                   overflow: TextOverflow.ellipsis),
               trailing: Text(dateFormat.format(balance.date)),
             ),

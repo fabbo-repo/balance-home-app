@@ -5,8 +5,8 @@ import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_f
 import 'package:balance_home_app/src/features/auth/domain/entities/reset_password_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/failures/failure_constants.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/reset_password_repository_interface.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_password.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/email.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/register_password.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/verification_code.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';

@@ -1,11 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'user_entity.freezed.dart';
-part 'user_entity.g.dart';
+part 'account_entity.freezed.dart';
+part 'account_entity.g.dart';
 
-/// [UserEntity] model
+/// [AccountEntity] model
 @freezed
-class UserEntity with _$UserEntity {
+class AccountEntity with _$AccountEntity {
   /// Factory constructor
   /// [username] - [String] username
   /// [email] - [String] email
@@ -19,7 +19,7 @@ class UserEntity with _$UserEntity {
   /// [lastLogin] - [DateTime] last login date
   // ignore: invalid_annotation_target
   @JsonSerializable(fieldRename: FieldRename.snake)
-  const factory UserEntity({
+  const factory AccountEntity({
     required String username,
     required String email,
     required bool receiveEmailBalance,
@@ -32,9 +32,9 @@ class UserEntity with _$UserEntity {
     @JsonKey(includeIfNull: false) required String? image,
     // ignore: invalid_annotation_target
     @JsonKey(includeIfNull: false) required DateTime? lastLogin,
-  }) = _UserEntity;
+  }) = _AccountEntity;
 
   // Serialization
-  factory UserEntity.fromJson(Map<String, dynamic> json) =>
-      _$UserEntityFromJson(json);
+  factory AccountEntity.fromJson(Map<String, dynamic> json) =>
+      _$AccountEntityFromJson(json);
 }

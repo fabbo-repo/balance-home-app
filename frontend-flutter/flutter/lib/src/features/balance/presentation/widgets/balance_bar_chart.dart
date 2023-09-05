@@ -49,9 +49,9 @@ class BalanceBarChart extends ConsumerWidget {
     for (BalanceEntity balance in balances) {
       String key = balance.balanceType.name;
       if (dataMap.containsKey(key)) {
-        dataMap[key] = dataMap[key]! + balance.converted_quantity!;
+        dataMap[key] = dataMap[key]! + balance.convertedQuantity!;
       } else {
-        dataMap[key] = balance.converted_quantity!;
+        dataMap[key] = balance.convertedQuantity!;
       }
     }
     for (String balanceType in dataMap.keys) {
@@ -68,9 +68,9 @@ class BalanceBarChart extends ConsumerWidget {
     for (BalanceEntity balance in balances) {
       String key = balance.balanceType.name;
       if (dataMap.containsKey(key)) {
-        dataMap[key] = dataMap[key]! + balance.converted_quantity!;
+        dataMap[key] = dataMap[key]! + balance.convertedQuantity!;
       } else {
-        dataMap[key] = balance.converted_quantity!;
+        dataMap[key] = balance.convertedQuantity!;
       }
     }
     for (String balanceType in dataMap.keys) {

@@ -2,10 +2,10 @@ import 'package:balance_home_app/src/core/domain/failures/empty_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/http_connection_failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/credentials_entity.dart';
-import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/user_local_data_source.dart';
+import 'package:balance_home_app/src/features/account/infrastructure/datasources/local/account_local_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/jwt_remote_data_source.dart';
-import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/user_remote_data_source.dart';
-import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
+import 'package:balance_home_app/src/features/account/infrastructure/datasources/remote/account_remote_data_source.dart';
+import 'package:balance_home_app/src/features/account/domain/entities/account_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/register_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/jwt_local_data_source.dart';
@@ -40,7 +40,7 @@ class AuthRepository implements AuthRepositoryInterface {
   }
 
   @override
-  Future<Either<Failure, UserEntity>> updateUser(UserEntity user) async {
+  Future<Either<Failure, AccountEntity>> updateUser(AccountEntity user) async {
     return await userRemoteDataSource.update(user);
   }
 
@@ -51,7 +51,7 @@ class AuthRepository implements AuthRepositoryInterface {
   }
 
   @override
-  Future<Either<Failure, UserEntity>> getUser() async {
+  Future<Either<Failure, AccountEntity>> getUser() async {
     final response = await userRemoteDataSource.get();
     return await response.fold((failure) async {
       if (failure is HttpConnectionFailure) {

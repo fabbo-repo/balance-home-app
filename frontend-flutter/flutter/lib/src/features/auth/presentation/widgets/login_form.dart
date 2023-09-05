@@ -6,7 +6,7 @@ import 'package:balance_home_app/src/core/presentation/widgets/app_text_check_bo
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/login_password.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/email.dart';
 import 'package:balance_home_app/src/core/utils/dialog_utils.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/statistics/presentation/views/statistics_view.dart';

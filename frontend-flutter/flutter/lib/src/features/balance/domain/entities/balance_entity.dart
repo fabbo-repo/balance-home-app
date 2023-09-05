@@ -8,16 +8,14 @@ part 'balance_entity.g.dart';
 /// [BalanceEntity] model
 @freezed
 class BalanceEntity with _$BalanceEntity {
-  final DateFormat dateFormatter = DateFormat("yyyy-MM-dd");
-
-  BalanceEntity._();
+  const BalanceEntity._();
 
   /// Factory constructor
   /// [id] - [int] id
   /// [name] - [String] name
   /// [description] - [String] description
-  /// [real_quantity] - [double] quantity
-  /// [converted_quantity] - [double] quantity
+  /// [realQuantity] - [double] quantity
+  /// [convertedQuantity] - [double] quantity
   /// [date] - [DateTime] date
   /// [coinType] - [String] coin type code
   /// [balanceType] - [BalanceTypeEntity] balance type
@@ -28,12 +26,9 @@ class BalanceEntity with _$BalanceEntity {
     @JsonKey(includeIfNull: false) required int? id,
     required String name,
     required String description,
-    // ignore: non_constant_identifier_names
-    required double real_quantity,
+    required double realQuantity,
     // ignore: invalid_annotation_target
-    @JsonKey(includeIfNull: false)
-    // ignore: non_constant_identifier_names
-    required double? converted_quantity,
+    @JsonKey(includeIfNull: false) required double? convertedQuantity,
     required DateTime date,
     required String coinType,
     required BalanceTypeEntity balanceType,
@@ -71,5 +66,5 @@ class BalanceEntity with _$BalanceEntity {
     return map;
   }
 
-  String _dateToJson(DateTime date) => dateFormatter.format(date);
+  String _dateToJson(DateTime date) => DateFormat("yyyy-MM-dd").format(date);
 }

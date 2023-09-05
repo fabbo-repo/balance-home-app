@@ -1,8 +1,8 @@
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
-import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
+import 'package:balance_home_app/src/features/account/domain/entities/account_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
-import 'package:balance_home_app/src/features/auth/domain/repositories/settings_repository_interface.dart';
+import 'package:balance_home_app/src/features/settings/domain/repositories/settings_repository_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -15,11 +15,11 @@ class SettingsController extends StateNotifier<AsyncValue<void>> {
   SettingsController(this._authRepository, this._settingsRepository)
       : super(const AsyncValue.data(null));
 
-  Future<Either<Failure, UserEntity>> handleLanguage(UserEntity oldUser,
+  Future<Either<Failure, AccountEntity>> handleLanguage(AccountEntity oldUser,
       Locale lang, AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
     final res = await _authRepository.updateUser(
-      UserEntity(
+      AccountEntity(
           username: oldUser.username,
           email: oldUser.email,
           receiveEmailBalance: oldUser.receiveEmailBalance,
@@ -41,13 +41,13 @@ class SettingsController extends StateNotifier<AsyncValue<void>> {
     });
   }
 
-  Future<Either<Failure, UserEntity>> handleReceiveEmailBalance(
-      UserEntity oldUser,
+  Future<Either<Failure, AccountEntity>> handleReceiveEmailBalance(
+      AccountEntity oldUser,
       bool receiveEmailBalance,
       AppLocalizations appLocalizations) async {
     state = const AsyncValue.loading();
     final res = await _authRepository.updateUser(
-      UserEntity(
+      AccountEntity(
           username: oldUser.username,
           email: oldUser.email,
           receiveEmailBalance: receiveEmailBalance,

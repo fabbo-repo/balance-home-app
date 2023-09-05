@@ -78,7 +78,7 @@ class _BalanceEditFormState extends ConsumerState<BalanceEditForm> {
     widget.nameController.text = widget.balance.name;
     widget.descriptionController.text = widget.balance.description;
     widget.quantityController.text =
-        widget.balance.real_quantity.toString().replaceAll(".", ",");
+        widget.balance.realQuantity.toString().replaceAll(".", ",");
     if (widget.dateController.text.isEmpty) {
       widget.dateController.text =
           widget.dateFormatter.format(widget.balance.date);

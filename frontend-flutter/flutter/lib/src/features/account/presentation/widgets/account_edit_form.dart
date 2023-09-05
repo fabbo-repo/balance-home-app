@@ -7,9 +7,9 @@ import 'package:balance_home_app/src/core/presentation/widgets/app_text_form_fie
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/dialog_utils.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
-import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_name.dart';
+import 'package:balance_home_app/src/features/account/domain/entities/account_entity.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/email.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/register_name.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/values/balance_quantity.dart';
 import 'package:balance_home_app/src/features/currency/presentation/widgets/dropdown_picker_field.dart';
@@ -21,48 +21,36 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // ignore: depend_on_referenced_packages
 import 'package:mime/mime.dart' as mm;
 
-class UserEditForm extends ConsumerStatefulWidget {
+class AccountEditForm extends ConsumerStatefulWidget {
   @visibleForTesting
   final formKey = GlobalKey<FormState>();
-  @visibleForTesting
+  
   final usernameController = TextEditingController();
-  @visibleForTesting
   final emailController = TextEditingController();
-  @visibleForTesting
   final expectedMonthlyBalanceController = TextEditingController();
-  @visibleForTesting
   final expectedAnnualBalanceController = TextEditingController();
-  @visibleForTesting
+  
   final bool edit;
-  @visibleForTesting
-  final UserEntity user;
-  @visibleForTesting
+  final AccountEntity user;
   final cache = ValueNotifier<Widget>(Container());
 
-  UserEditForm({
+  AccountEditForm({
     required this.edit,
     required this.user,
     super.key,
   });
 
   @override
-  ConsumerState<UserEditForm> createState() => _UserEditFormState();
+  ConsumerState<AccountEditForm> createState() => _UserEditFormState();
 }
 
-class _UserEditFormState extends ConsumerState<UserEditForm> {
-  @visibleForTesting
+class _UserEditFormState extends ConsumerState<AccountEditForm> {
   UserName? username;
-  @visibleForTesting
   UserEmail? email;
-  @visibleForTesting
   BalanceQuantity? expectedMonthlyBalance;
-  @visibleForTesting
   BalanceQuantity? expectedAnnualBalance;
-  @visibleForTesting
   String? prefCoinType;
-  @visibleForTesting
   Uint8List? imageBytes;
-  @visibleForTesting
   String? imageType;
 
   @override

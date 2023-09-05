@@ -171,9 +171,9 @@ class BalanceLineChart extends ConsumerWidget {
           ? balance.date.month
           : balance.date.day;
       if (spotsMap.containsKey(key)) {
-        spotsMap[key] = spotsMap[key]! + balance.converted_quantity!;
+        spotsMap[key] = spotsMap[key]! + balance.convertedQuantity!;
       } else {
-        spotsMap[key] = balance.converted_quantity!;
+        spotsMap[key] = balance.convertedQuantity!;
       }
       spotsMap[key] = (spotsMap[key]! * 100).roundToDouble() / 100;
     }
@@ -223,9 +223,9 @@ class BalanceLineChart extends ConsumerWidget {
             ? "${revenue.date.month}"
             : "${revenue.date.day}";
         if (quantityMap.containsKey(key)) {
-          quantityMap[key] = quantityMap[key]! + revenue.converted_quantity!;
+          quantityMap[key] = quantityMap[key]! + revenue.convertedQuantity!;
         } else {
-          quantityMap[key] = revenue.converted_quantity!;
+          quantityMap[key] = revenue.convertedQuantity!;
         }
       }
       if (revenues!.isNotEmpty) {
@@ -239,9 +239,9 @@ class BalanceLineChart extends ConsumerWidget {
             ? "${expense.date.month}"
             : "${expense.date.day}";
         if (quantityMap.containsKey(key)) {
-          quantityMap[key] = quantityMap[key]! + expense.converted_quantity!;
+          quantityMap[key] = quantityMap[key]! + expense.convertedQuantity!;
         } else {
-          quantityMap[key] = expense.converted_quantity!;
+          quantityMap[key] = expense.convertedQuantity!;
         }
       }
       if (expenses!.isNotEmpty && quantity < quantityMap.values.reduce(max)) {

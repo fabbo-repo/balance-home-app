@@ -4,10 +4,10 @@ import 'package:balance_home_app/src/core/presentation/widgets/app_text_form_fie
 import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/core/utils/widget_utils.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/invitation_code.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_name.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_password.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_repeat_password.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/email.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/register_name.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/register_password.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/register_repeat_password.dart';
 import 'package:balance_home_app/src/core/utils/dialog_utils.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/currency/domain/entities/currency_type_entity.dart';

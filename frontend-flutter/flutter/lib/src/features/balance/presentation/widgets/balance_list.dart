@@ -74,8 +74,8 @@ class BalanceList extends ConsumerWidget {
             balance.date.isAfter(aux.elementAt(i).date)) break;
         // Case Quantity ordering
         if (orderingType == BalanceOrderingType.quantity &&
-            balance.converted_quantity! >
-                aux.elementAt(i).converted_quantity!) {
+            balance.convertedQuantity! >
+                aux.elementAt(i).convertedQuantity!) {
           break;
         }
         // Case Name ordering

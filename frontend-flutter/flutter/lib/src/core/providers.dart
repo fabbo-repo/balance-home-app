@@ -10,7 +10,7 @@ import 'package:balance_home_app/src/core/infrastructure/repositories/app_info_r
 import 'package:balance_home_app/src/core/presentation/models/app_version.dart';
 import 'package:balance_home_app/src/core/presentation/states/app_localizations_state.dart';
 import 'package:balance_home_app/src/core/presentation/states/theme_data_state.dart';
-import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/user_local_data_source.dart';
+import 'package:balance_home_app/src/features/account/infrastructure/datasources/local/account_local_data_source.dart';
 import 'package:balance_home_app/src/features/balance/infrastructure/datasources/local/balance_local_data_source.dart';
 import 'package:balance_home_app/src/features/balance/infrastructure/datasources/local/balance_type_local_data_source.dart';
 import 'package:balance_home_app/src/features/currency/infrastructure/datasources/local/currency_type_local_data_source.dart';

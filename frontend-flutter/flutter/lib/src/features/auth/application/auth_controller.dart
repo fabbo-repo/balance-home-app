@@ -5,15 +5,15 @@ import 'package:balance_home_app/src/core/domain/failures/unauthorized_request_f
 import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/credentials_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/register_entity.dart';
-import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
+import 'package:balance_home_app/src/features/account/domain/entities/account_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/failures/failure_constants.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/invitation_code.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/login_password.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_name.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_password.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_repeat_password.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/email.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/register_name.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/register_password.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/register_repeat_password.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +21,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// State controller for authentication
-class AuthController extends StateNotifier<AsyncValue<UserEntity?>> {
+class AuthController extends StateNotifier<AsyncValue<AccountEntity?>> {
   @visibleForTesting
   final AuthRepositoryInterface repository;
 

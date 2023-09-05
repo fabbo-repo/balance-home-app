@@ -2,15 +2,15 @@ import 'dart:async';
 import 'package:balance_home_app/src/core/clients/api_client.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_info_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/fade_transition_view.dart';
+import 'package:balance_home_app/src/features/account/presentation/views/account_delete_view.dart';
+import 'package:balance_home_app/src/features/account/presentation/views/account_edit_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_loading_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_error_view.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_loading_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/logout_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/auth_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/reset_password_view.dart';
-import 'package:balance_home_app/src/features/auth/presentation/views/settings_view.dart';
-import 'package:balance_home_app/src/features/auth/presentation/views/user_delete_view.dart';
-import 'package:balance_home_app/src/features/auth/presentation/views/user_edit_view.dart';
+import 'package:balance_home_app/src/features/settings/presentation/views/settings_view.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:balance_home_app/src/features/balance/domain/repositories/balance_type_mode.dart';
 import 'package:balance_home_app/src/features/balance/presentation/views/balance_create_view.dart';
@@ -74,16 +74,16 @@ final router = GoRouter(
             builder: (context, state) => const LogoutView(),
           ),
           GoRoute(
-            name: UserEditView.routeName,
-            path: UserEditView.routePath,
+            name: AccountEditView.routeName,
+            path: AccountEditView.routePath,
             redirect: authGuardOrNone,
-            builder: (context, state) => UserEditView(),
+            builder: (context, state) => AccountEditView(),
           ),
           GoRoute(
-            name: UserDeleteView.routeName,
-            path: UserDeleteView.routePath,
+            name: AccountDeleteView.routeName,
+            path: AccountDeleteView.routePath,
             redirect: authGuardOrNone,
-            builder: (context, state) => const UserDeleteView(),
+            builder: (context, state) => const AccountDeleteView(),
           ),
           GoRoute(
             name: SettingsView.routeName,
@@ -240,7 +240,7 @@ Future<String?> authGuardOrNone(
   if (!isConnected &&
       (state.name == SettingsView.routeName ||
           state.name == BalanceCreateView.routeName ||
-          state.name == UserDeleteView.routeName ||
+          state.name == AccountDeleteView.routeName ||
           state.name == LogoutView.routeName)) {
     return "/${AppErrorView.noConnectionErrorPath}";
   }

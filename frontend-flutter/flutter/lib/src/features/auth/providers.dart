@@ -2,24 +2,20 @@ import 'package:balance_home_app/src/core/providers.dart';
 import 'package:balance_home_app/src/features/auth/application/auth_controller.dart';
 import 'package:balance_home_app/src/features/auth/application/email_code_controller.dart';
 import 'package:balance_home_app/src/features/auth/application/reset_password_controller.dart';
-import 'package:balance_home_app/src/features/auth/application/settings_controller.dart';
 import 'package:balance_home_app/src/features/auth/application/user_edit_controller.dart';
-import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
+import 'package:balance_home_app/src/features/account/domain/entities/account_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/email_code_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/reset_password_repository_interface.dart';
-import 'package:balance_home_app/src/features/auth/domain/repositories/settings_repository_interface.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/jwt_local_data_source.dart';
-import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/theme_local_data_source.dart';
-import 'package:balance_home_app/src/features/auth/infrastructure/datasources/local/user_local_data_source.dart';
+import 'package:balance_home_app/src/features/account/infrastructure/datasources/local/account_local_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/email_code_remote_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/jwt_remote_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/reset_password_remote_data_source.dart';
-import 'package:balance_home_app/src/features/auth/infrastructure/datasources/remote/user_remote_data_source.dart';
+import 'package:balance_home_app/src/features/account/infrastructure/datasources/remote/account_remote_data_source.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/repositories/auth_repository.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/repositories/email_code_repository.dart';
 import 'package:balance_home_app/src/features/auth/infrastructure/repositories/reset_password_repository.dart';
-import 'package:balance_home_app/src/features/auth/infrastructure/repositories/settings_repository.dart';
 import 'package:balance_home_app/src/features/currency/providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,13 +51,6 @@ final emailCodeRepositoryProvider =
   );
 });
 
-final settingsRepositoryProvider = Provider<SettingsRepositoryInterface>((ref) {
-  return SettingsRepository(
-    themeLocalDataSource: ThemeLocalDataSource(
-        storageClient: ref.read(localPreferencesClientProvider)),
-  );
-});
-
 ///
 /// Application dependencies
 ///
@@ -70,7 +59,7 @@ final settingsRepositoryProvider = Provider<SettingsRepositoryInterface>((ref) {
 final authStateListenable = ValueNotifier<bool>(false);
 
 final authControllerProvider =
-    StateNotifierProvider<AuthController, AsyncValue<UserEntity?>>((ref) {
+    StateNotifierProvider<AuthController, AsyncValue<AccountEntity?>>((ref) {
   final repo = ref.read(authRepositoryProvider);
   return AuthController(repository: repo);
 });
@@ -94,11 +83,4 @@ final userEditControllerProvider =
   return UserEditController(
       authRepository: authRepo,
       currencyConversionRepository: currencyConversionRepo);
-});
-
-final settingsControllerProvider =
-    StateNotifierProvider<SettingsController, AsyncValue<void>>((ref) {
-  final authRepo = ref.read(authRepositoryProvider);
-  final settingsRepo = ref.read(settingsRepositoryProvider);
-  return SettingsController(authRepo, settingsRepo);
 });

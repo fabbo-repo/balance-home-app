@@ -4,7 +4,7 @@ import 'package:balance_home_app/src/core/domain/failures/input_bad_request_fail
 import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
 import 'package:balance_home_app/src/features/auth/domain/entities/email_code_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/email_code_repository_interface.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/email.dart';
 import 'package:balance_home_app/src/features/auth/domain/values/verification_code.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';

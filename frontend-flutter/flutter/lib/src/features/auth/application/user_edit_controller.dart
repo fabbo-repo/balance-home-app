@@ -2,10 +2,10 @@ import 'package:balance_home_app/src/core/domain/failures/api_bad_request_failur
 import 'package:balance_home_app/src/core/domain/failures/failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/input_bad_request_failure.dart';
 import 'package:balance_home_app/src/core/domain/failures/unprocessable_entity_failure.dart';
-import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
+import 'package:balance_home_app/src/features/account/domain/entities/account_entity.dart';
 import 'package:balance_home_app/src/features/auth/domain/repositories/auth_repository_interface.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_email.dart';
-import 'package:balance_home_app/src/features/auth/domain/values/user_name.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/email.dart';
+import 'package:balance_home_app/src/features/auth/domain/values/register_name.dart';
 import 'package:balance_home_app/src/features/balance/domain/values/balance_quantity.dart';
 import 'package:balance_home_app/src/features/currency/domain/entities/currency_conversion_entity.dart';
 import 'package:balance_home_app/src/features/currency/domain/repositories/currency_conversion_repository_interface.dart';
@@ -23,8 +23,8 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
       required this.currencyConversionRepository})
       : super(const AsyncValue.data(null));
 
-  Future<Either<Failure, UserEntity>> handle(
-      UserEntity oldUser,
+  Future<Either<Failure, AccountEntity>> handle(
+      AccountEntity oldUser,
       UserName username,
       UserEmail email,
       BalanceQuantity expectedMonthlyBalance,
@@ -49,7 +49,7 @@ class UserEditController extends StateNotifier<AsyncValue<void>> {
             return left(failure);
           }, (expectedAnnualBalance) async {
             final res = await authRepository.updateUser(
-              UserEntity(
+              AccountEntity(
                   username: username,
                   email: email,
                   receiveEmailBalance: oldUser.receiveEmailBalance,

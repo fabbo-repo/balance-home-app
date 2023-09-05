@@ -3,11 +3,11 @@ import 'package:balance_home_app/src/core/clients/api_client.dart';
 import 'package:balance_home_app/src/core/utils/platform_utils.dart';
 import 'package:balance_home_app/src/core/router.dart';
 import 'package:balance_home_app/src/core/presentation/views/app_title.dart';
+import 'package:balance_home_app/src/features/account/presentation/views/account_edit_view.dart';
 import 'package:balance_home_app/src/features/auth/presentation/views/logout_view.dart';
 import 'package:balance_home_app/src/core/providers.dart';
-import 'package:balance_home_app/src/features/auth/domain/entities/user_entity.dart';
-import 'package:balance_home_app/src/features/auth/presentation/views/settings_view.dart';
-import 'package:balance_home_app/src/features/auth/presentation/views/user_edit_view.dart';
+import 'package:balance_home_app/src/features/account/domain/entities/account_entity.dart';
+import 'package:balance_home_app/src/features/settings/presentation/views/settings_view.dart';
 import 'package:balance_home_app/src/features/auth/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -60,7 +60,7 @@ class CustomAppBar extends ConsumerWidget {
 
   /// Returns a [Widget] that includes an account balance counter and
   /// the coint type setup in the account.
-  Widget _balanceBox(AppLocalizations appLocalizations, UserEntity? user) {
+  Widget _balanceBox(AppLocalizations appLocalizations, AccountEntity? user) {
     return Container(
         width: 400,
         height: 100,
@@ -77,12 +77,12 @@ class CustomAppBar extends ConsumerWidget {
 
   /// Returns a [Widget] that includes a button with the image
   /// profile and name of the user account.
-  Widget _profileButton(AppLocalizations appLocalizations, UserEntity? user) {
+  Widget _profileButton(AppLocalizations appLocalizations, AccountEntity? user) {
     final isConnected = connectionStateListenable.value;
     return PopupMenuButton(
       onSelected: (value) {
         if (value == 0) {
-          router.pushNamed(UserEditView.routeName);
+          router.pushNamed(AccountEditView.routeName);
         } else if (value == 1) {
           router.pushNamed(SettingsView.routeName);
         } else if (value == 2) {
