@@ -26,7 +26,7 @@ This directory serves as a reference guide for developers working on the fronten
 
 ### Requests
 
-* [User Request](./requests/user-request.md)
+* [User Requests](./requests/user-requests.md)
 
 ### Responses
 

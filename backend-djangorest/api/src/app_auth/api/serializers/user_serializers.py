@@ -101,12 +101,11 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "username",
+            "locale",
             "receive_email_balance",
             "balance",
             "expected_annual_balance",
             "expected_monthly_balance",
-            "receive_email_balance",
-            "locale",
             "pref_currency_type",
             "image",
             "last_login",
