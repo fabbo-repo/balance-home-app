@@ -22,12 +22,12 @@ This directory serves as a reference guide for developers working on the fronten
 
 ### Endpoints
 
-* [Account Endpoints](./endpoints/account-endpoints.md)
+* [User Endpoints](./endpoints/user-endpoints.md)
 
 ### Requests
 
-* [Account Request](./requests/account-request.md)
+* [User Request](./requests/user-request.md)
 
 ### Responses
 
-* [Account Response](./responses/account-response.md)
+* [User Response](./responses/user-response.md)

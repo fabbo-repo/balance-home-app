@@ -6,7 +6,9 @@ from rest_framework.response import Response
 from app_auth.models import User
 from app_auth.api.serializers.password_serializers import (
     ChangePasswordSerializer,
-    ResetPasswordSerializer,
+)
+from app_auth.api.serializers.user_serializers import (
+    EmailSerializer
 )
 from app_auth.exceptions import (
     NewPasswordUserDataException,
@@ -70,7 +72,7 @@ class ResetPasswordView(generics.CreateAPIView):
     """
     An endpoint for password reset 
     """
-    serializer_class = ResetPasswordSerializer
+    serializer_class = EmailSerializer
     permission_classes = (AllowAny,)
     parser_classes = (JSONParser,)
 

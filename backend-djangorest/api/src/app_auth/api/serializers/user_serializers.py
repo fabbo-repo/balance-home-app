@@ -124,9 +124,9 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
         return locale
 
 
-class SendVerifyEmailSerializer(serializers.Serializer):  # pylint: disable=abstract-method
+class EmailSerializer(serializers.Serializer):  # pylint: disable=abstract-method
     """
-    Serializer to send verification email
+    Serializer to send email
     """
 
     email = serializers.EmailField(

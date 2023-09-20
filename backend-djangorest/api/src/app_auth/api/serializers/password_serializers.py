@@ -9,13 +9,6 @@ from app_auth.exceptions import (
 )
 
 
-class ResetPasswordSerializer(serializers.Serializer):  # pylint: disable=abstract-method
-    """
-    Serializer for password reset (code creation)
-    """
-    email = serializers.EmailField(required=True)
-
-
 class ChangePasswordSerializer(serializers.Serializer):  # pylint: disable=abstract-method
     """
     Serializer for password change (needs old password)

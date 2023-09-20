@@ -15,7 +15,7 @@ from app_auth.models import InvitationCode, User
 from app_auth.api.serializers.user_serializers import (
     UserCreationSerializer,
     UserRetrieveUpdateDestroySerializer,
-    SendVerifyEmailSerializer
+    EmailSerializer
 )
 from app_auth.tasks import change_converted_quantities
 from app_auth.exceptions import (
@@ -246,7 +246,7 @@ class SendVerifyEmailView(generics.CreateAPIView):
     """
 
     permission_classes = (AllowAny,)
-    serializer_class = SendVerifyEmailSerializer
+    serializer_class = EmailSerializer
     parser_classes = (JSONParser,)
 
     @transaction.atomic
