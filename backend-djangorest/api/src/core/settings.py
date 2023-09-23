@@ -222,7 +222,8 @@ class Dev(Configuration):
     # Days for a periodic deletion of unverified users
     UNVERIFIED_USER_DAYS = env.int("UNVERIFIED_USER_DAYS", default=2)
 
-    CURRENCY_TYPE_CODES = env.list("CURRENCY_TYPE_CODES", default=["EUR", "USD"])
+    CURRENCY_TYPE_CODES = env.list(
+        "CURRENCY_TYPE_CODES", default=["EUR", "USD"])
 
     FRONTEND_VERSION = env.str("FRONTEND_VERSION", default="1.4.0")
 
