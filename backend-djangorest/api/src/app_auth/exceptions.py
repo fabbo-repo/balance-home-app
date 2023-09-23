@@ -9,14 +9,12 @@ USER_NOT_FOUND_ERROR = 1
 UNVERIFIED_EMAIL_ERROR = 2
 CANNOT_SEND_VERIFY_EMAIL_ERROR = 3
 CANNOT_SEND_RESET_PASSWORD_EMAIL_ERROR = 4
+RESET_PASSW_RETRIES_ERROR = 5
 USER_EMAIL_CONFLICT_ERROR = 6
 CANNOT_CREATE_USER_ERROR = 7
 CANNOT_UPDATE_USER_ERROR = 8
 CANNOT_DELETE_USER_ERROR = 9
-RESET_PASSW_RETRIES_ERROR = 10
-NEW_OLD_PASSW_ERROR = 11
-NEW_PASSW_USER_DATA_ERROR = 12
-CURRENCY_TYPE_CHANGED_ERROR = 13
+CURRENCY_TYPE_CHANGED_ERROR = 10
 
 
 class UserNotFoundException(AppBadRequestException):
@@ -107,16 +105,6 @@ class ResetPasswordRetriesException(AppBadRequestException):
     def __init__(self):
         detail = _("Password can only be reset 3 times a day")
         super().__init__(detail, RESET_PASSW_RETRIES_ERROR)
-
-
-class NewOldPasswordException(AppBadRequestException):
-    """
-    Exception used when new password must be different from old password.
-    """
-
-    def __init__(self):
-        detail = _("New password must be different from old password")
-        super().__init__(detail, NEW_OLD_PASSW_ERROR)
 
 
 class CurrencyTypeChangedException(AppBadRequestException):

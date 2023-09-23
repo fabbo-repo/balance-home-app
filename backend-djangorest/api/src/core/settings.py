@@ -195,14 +195,6 @@ class Dev(Configuration):
         "DEFAULT_FILTER_BACKENDS": [
             "django_filters.rest_framework.DjangoFilterBackend",
         ],
-        "DEFAULT_THROTTLE_CLASSES": [
-            "rest_framework.throttling.AnonRateThrottle",
-            "rest_framework.throttling.UserRateThrottle",
-        ],
-        "DEFAULT_THROTTLE_RATES": {
-            "anon": "50/minute",
-            "user": "5000/minute",
-        },
         "EXCEPTION_HANDLER": "core.exceptions.app_exception_handler",
     }
 
