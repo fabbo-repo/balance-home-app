@@ -24,13 +24,23 @@ This directory serves as a reference guide for developers working on the fronten
 
 * [User Endpoints](./endpoints/user-endpoints.md)
 
+* [Balance Endpoints](./endpoints/balance-endpoints.md)
+
+* [Verion Endpoints](./endpoints/version-endpoints.md)
+
 ### Requests
 
 * [User Requests](./requests/user-requests.md)
 
+* [Balance Requests](./requests/balance-requests.md)
+
 ### Responses
 
 * [User Response](./responses/user-response.md)
+
+* [Balance Response](./responses/balance-response.md)
+
+* [Version Response](./responses/version-response.md)
 
 
 ## Error Codes
