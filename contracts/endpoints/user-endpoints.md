@@ -7,5 +7,4 @@
 | /api/v2/user/profile           | PATCH  | 204        | -             | -          | -         | user-request            |                                            |
 | /api/v2/user/profile           | DEL    | 204        | -             | -          | -         | -                       | Delete current authenticated user          |
 | /api/v2/user/send-verify-email | POST   | 204        | -             | -          | -         | email-request           | Send email verification mail               |
-| /api/v2/user/password/change   | POST   | 204        | -             | -          | -         | change-password-request | Change current authenticated user password |
-| /api/v2/user/password/reset    | POST   | 204        | -             | -          | -         | email-request           | Send mail to reset user password           |
+| /api/v2/user/password-reset    | POST   | 204        | -             | -          | -         | email-request           | Send mail to reset user password           |

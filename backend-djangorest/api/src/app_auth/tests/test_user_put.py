@@ -28,7 +28,6 @@ class UserPutTests(APITestCase):
         cache.clear()
 
         self.user_post_url = reverse("user-post")
-        self.change_password_url = reverse("change-password")
         self.user_put_url = reverse("user-put-get-del")
 
         self.keycloak_client_mock = get_keycloak_client()
@@ -122,44 +121,6 @@ class UserPutTests(APITestCase):
         self.assertTrue(os.path.exists(generated_dir))
         if os.path.exists(generated_dir):
             shutil.rmtree(generated_dir)
-
-    def test_change_password(self):
-        """
-        Checks that password is changed
-        """
-        # Wrong old password
-        response = test_utils.post(
-            self.client,
-            self.change_password_url,
-            data={
-                "old_password": "password1@214",
-                "new_password": "password1@213"
-            }
-        )
-        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
-        # Same password
-        response = test_utils.post(
-            self.client,
-            self.change_password_url,
-            data={
-                "old_password": self.keycloak_client_mock.password,
-                "new_password": self.keycloak_client_mock.password
-            }
-        )
-        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
-        # Correct passwords
-        response = test_utils.post(
-            self.client,
-            self.change_password_url,
-            data={
-                "old_password": self.keycloak_client_mock.password,
-                "new_password": "password1@213"
-            }
-        )
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        # Check new password
-        self.assertEqual(
-            "password1@213", self.keycloak_client_mock.updated_password)
 
     def test_change_pref_currency_type(self):
         """

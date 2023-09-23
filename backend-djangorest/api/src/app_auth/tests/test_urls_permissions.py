@@ -18,7 +18,6 @@ class AppAuthUrlsPermissionsTests(APITestCase):
 
         self.user_post_url = reverse("user-post")
         self.user_put_get_del_url = reverse("user-put-get-del")
-        self.change_password_url = reverse("change-password")
         self.reset_password_url = reverse("reset-password")
         self.send_verify_email_url = reverse("send-verify-email")
 
@@ -133,23 +132,6 @@ class AppAuthUrlsPermissionsTests(APITestCase):
                 "email": self.user_data1["email"]})
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self.keycloak_client_mock.email_verified = True
-
-    def test_change_password_url(self):
-        """
-        Checks permissions with change password
-        """
-        # Try without authentications
-        data = {
-            "old_password": self.user_data1["password"],
-            "new_password": "pass@123ua3ss"
-        }
-        response = test_utils.post(self.client, self.change_password_url, data)
-        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
-        # Authenticate user1
-        test_utils.authenticate_user(self.client)
-        # Try with authentication
-        response = test_utils.post(self.client, self.change_password_url, data)
-        self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
 
     def test_reset_password_url(self):
         """

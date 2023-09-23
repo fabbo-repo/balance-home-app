@@ -17,8 +17,6 @@ RESET_PASSW_RETRIES_ERROR = 10
 NEW_OLD_PASSW_ERROR = 11
 NEW_PASSW_USER_DATA_ERROR = 12
 CURRENCY_TYPE_CHANGED_ERROR = 13
-WRONG_OLD_PASSW_ERROR = 14
-CANNOT_CHANGE_PASSWORD_ERROR = 15
 
 
 class UserNotFoundException(AppBadRequestException):
@@ -121,16 +119,6 @@ class NewOldPasswordException(AppBadRequestException):
         super().__init__(detail, NEW_OLD_PASSW_ERROR)
 
 
-class NewPasswordUserDataException(AppBadRequestException):
-    """
-    Exception used when new password cannot match other profile data.
-    """
-
-    def __init__(self):
-        detail = _("New password cannot match other profile data")
-        super().__init__(detail, NEW_PASSW_USER_DATA_ERROR)
-
-
 class CurrencyTypeChangedException(AppBadRequestException):
     """
     Exception used when currency type has already been changed in the las 24 hours
@@ -139,23 +127,3 @@ class CurrencyTypeChangedException(AppBadRequestException):
     def __init__(self):
         detail = _("Currency type has already been changed in the las 24 hours")
         super().__init__(detail, CURRENCY_TYPE_CHANGED_ERROR)
-
-
-class WronOldPasswordException(AppBadRequestException):
-    """
-    Exception used when old password is invalid
-    """
-
-    def __init__(self):
-        detail = _("Invalid old password")
-        super().__init__(detail, WRONG_OLD_PASSW_ERROR)
-
-
-class CannotChangePasswordException(AppBadRequestException):
-    """
-    Exception used when password cannot be changed.
-    """
-
-    def __init__(self):
-        detail = _("Cannot change password")
-        super().__init__(detail, CANNOT_CHANGE_PASSWORD_ERROR)
