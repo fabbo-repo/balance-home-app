@@ -1,12 +1,8 @@
-![Alt text](./balance_home_app.png?raw=true "")
-
 # Balance Home App or *BalHom*
 
-[![Generic badge](https://img.shields.io/badge/os-android-GREEN.svg)](https://shields.io/)
-[![Generic badge](https://img.shields.io/badge/os-ios-GREEN.svg)](https://shields.io/)
-[![Generic badge](https://img.shields.io/badge/os-windows-GREEN.svg)](https://shields.io/)
-[![Generic badge](https://img.shields.io/badge/os-linux-GREEN.svg)](https://shields.io/)
-[![Generic badge](https://img.shields.io/badge/os-web-GREEN.svg)](https://shields.io/)
+> **DEPRECATED**
+> 
+> This repo is deprecated, new repo can be found in [BalHom](https://github.com/balhom)
 
 ![Django](https://img.shields.io/badge/django-7B9D4B?style=for-the-badge&logo=django&logoColor=ffdd54)
 ![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)
@@ -31,9 +27,5 @@ This app is divided into two components, backend and frontend. On the bckend sid
 
 Extra information is available for people interested in checking the source code or testing the system. Just check the next links:
 
-* [Frontend Documentation](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/frontend/flutter#readme)
-* [Backend Documentation](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/backend/djangorest#readme)
-
-## Usage
-
-To use the app, the server of the content located in the [deployment](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/backend) folder must be previously deployed. It is recommended to read its [documentation](https://github.com/fabbo-repo/BalanceHomeApp/tree/main/backend/djangorest#readme)
+* [New Flutter Documentation](https://github.com/balhom/balhom-flutter-ui)
+* [New DRF API Documentation](https://github.com/balhom/balhom-djangorest-api)
